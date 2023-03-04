@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HaddySimHub.App", "HaddySimHub.App\HaddySimHub.App.csproj", "{4D5C7470-E2DB-4233-89E5-09E145DA5378}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HaddySimHub.AssettoCorsa", "HaddySimHub.AssettoCorsa\HaddySimHub.AssettoCorsa.csproj", "{6CEDE839-30F4-4783-AF00-ABC32D2187E9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HaddySimHub.Raceroom", "HaddySimHub.Raceroom\HaddySimHub.Raceroom.csproj", "{DEFDC296-D176-4DCB-B7A8-765A25AA82E8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HaddySimHub.Ets2", "HaddySimHub.Ets2\HaddySimHub.Ets2.csproj", "{8BDD4779-A7E3-49E6-BD1E-31999650F6A1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HaddySimHub.Telemetry", "HaddySimHub.Telemetry\HaddySimHub.Telemetry.csproj", "{0744FBC0-EF69-49CE-A246-2851928A7C7D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HaddySimHub.Raceroom.Test", "HaddySimHub.Raceroom.Test\HaddySimHub.Raceroom.Test.csproj", "{8F092EED-5B8C-4522-BECD-BFB861EF48F3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4D5C7470-E2DB-4233-89E5-09E145DA5378}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D5C7470-E2DB-4233-89E5-09E145DA5378}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D5C7470-E2DB-4233-89E5-09E145DA5378}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D5C7470-E2DB-4233-89E5-09E145DA5378}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CEDE839-30F4-4783-AF00-ABC32D2187E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CEDE839-30F4-4783-AF00-ABC32D2187E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CEDE839-30F4-4783-AF00-ABC32D2187E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CEDE839-30F4-4783-AF00-ABC32D2187E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEFDC296-D176-4DCB-B7A8-765A25AA82E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEFDC296-D176-4DCB-B7A8-765A25AA82E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEFDC296-D176-4DCB-B7A8-765A25AA82E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEFDC296-D176-4DCB-B7A8-765A25AA82E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BDD4779-A7E3-49E6-BD1E-31999650F6A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BDD4779-A7E3-49E6-BD1E-31999650F6A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BDD4779-A7E3-49E6-BD1E-31999650F6A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BDD4779-A7E3-49E6-BD1E-31999650F6A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0744FBC0-EF69-49CE-A246-2851928A7C7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0744FBC0-EF69-49CE-A246-2851928A7C7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0744FBC0-EF69-49CE-A246-2851928A7C7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0744FBC0-EF69-49CE-A246-2851928A7C7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F092EED-5B8C-4522-BECD-BFB861EF48F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F092EED-5B8C-4522-BECD-BFB861EF48F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F092EED-5B8C-4522-BECD-BFB861EF48F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F092EED-5B8C-4522-BECD-BFB861EF48F3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A6C2F9A8-1E12-4F5A-A4F6-515A28544B9F}
+	EndGlobalSection
+EndGlobal
