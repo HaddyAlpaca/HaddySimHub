@@ -11,7 +11,7 @@ jobs:
     runs-on: windows-latest
 
     env:
-      SolutionFile: HaddySimHub.sln
+      SolutionFile: HaddySimHhub/src/HaddySimHub.sln
       Configuration: x64
 
     steps:
