@@ -11,7 +11,7 @@ jobs:
     runs-on: windows-latest
 
     env:
-      solution-file: ./src/HaddySimHub.sln
+      SolutionFile: ./src/HaddySimHub.sln
 
     steps:
     - name: Checkout
@@ -23,7 +23,7 @@ jobs:
         dotnet-version: 6.0.x
 
     - name: Restore dependencies
-      run:  dotnet restore $env:solution-file
+      run:  dotnet restore $env:SolutionFile
     
     # - name: Build
     #   run:  dotnet build --no-restore
