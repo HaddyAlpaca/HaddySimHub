@@ -25,7 +25,7 @@ jobs:
         dotnet-version: 6.0.x
 
     - name: Restore dependencies
-      run:  dotnet restore $env:SolutionFile -c $env:Runtime
+      run:  dotnet restore $env:SolutionFile -r $env:Runtime
     
     - name: Build
       run:  dotnet build --no-restore
