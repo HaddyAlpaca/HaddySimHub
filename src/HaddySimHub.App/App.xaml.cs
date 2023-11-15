@@ -3,6 +3,8 @@ using HaddySimHub.Telemetry.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,6 +22,8 @@ namespace HaddySimHub
 
         public App()
         {
+            this.UpdateWebContent();
+
             AppHost = Host.CreateDefaultBuilder()
                 .ConfigureServices((hostContext, services) =>
                 {
@@ -61,8 +65,12 @@ namespace HaddySimHub
             };
 
             //Start monitoring telemetry
+            bool rawData = e.Args.Contains("--raw");
             this.watcher = new TelemetryWatcher(readers, AppHost.Services.GetRequiredService<IProcessMonitor>());
-            this.watcher.Start(token);
+            this.watcher.Start(rawData, token);
+
+            //Wait some time to show the splash screen
+            await Task.Delay(2000);
 
             //Close the splash screen and create the main window
             var mainWindow = AppHost.Services.GetRequiredService<MainWindow>();
@@ -77,6 +85,24 @@ namespace HaddySimHub
             await AppHost!.StopAsync();
 
             base.OnExit(e);
+        }
+
+        private void UpdateWebContent()
+        {
+            string rootfolder = "wwwroot";
+            if (!Directory.Exists(rootfolder))
+            {
+                try
+                {
+                    Directory.CreateDirectory(rootfolder);
+                }
+                catch {}
+            }
+
+            if (Directory.Exists(rootfolder))
+            {
+                //Check if new content needs to be downloaded
+            }
         }
     }
 }

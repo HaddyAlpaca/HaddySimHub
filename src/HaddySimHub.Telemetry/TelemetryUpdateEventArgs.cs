@@ -13,6 +13,8 @@ namespace HaddySimHub.Telemetry
                 TelemetryType = TelemetryType.Race;
             else if (data is TruckData)
                 TelemetryType = TelemetryType.Truck;
+            else
+                TelemetryType = TelemetryType.Raw;
 
             Data = data;
         }

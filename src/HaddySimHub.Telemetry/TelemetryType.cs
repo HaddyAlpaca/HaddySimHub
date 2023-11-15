@@ -4,6 +4,7 @@
     {
         Unknown,
         Race,
-        Truck
+        Truck,
+        Raw
     }
 }

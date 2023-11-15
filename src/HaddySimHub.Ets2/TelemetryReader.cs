@@ -20,6 +20,8 @@ public sealed class TelemetryReader : ITelemetryReader, IDisposable
 
     public void Dispose() => sharedMemory?.Dispose();
 
+    public object ReadRawData() => sharedMemory.Read();
+
     public object ReadTelemetry()
     {
         //Read the current data from ETS2

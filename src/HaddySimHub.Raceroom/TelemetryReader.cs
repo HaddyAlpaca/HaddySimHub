@@ -14,6 +14,8 @@ public sealed class TelemetryReader : ITelemetryReader, IDisposable
         this.mmf = sharedMemoryReaderFactory.Create<Shared>("$R3E");
     }
 
+    public object ReadRawData() => this.mmf.Read();
+
     public object ReadTelemetry()
     {
         Shared rawData = this.mmf.Read();

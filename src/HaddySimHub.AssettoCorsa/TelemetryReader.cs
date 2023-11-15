@@ -25,6 +25,15 @@ public sealed class TelemetryReader : ITelemetryReader, IDisposable
         this.staticInfoFile.Dispose();
     }
 
+    public object ReadRawData()
+    {
+        return new {
+            physicsInfo = this.physicsFile.Read(),
+            graphicsInfo = this.graphicsFile.Read(),
+            staticInfo = this.staticInfoFile.Read()
+        };
+    }
+
     public object ReadTelemetry()
     {
         //Read all data

@@ -3,12 +3,12 @@
 public interface ITelemetryWatcher
 {
     event EventHandler<TelemetryUpdateEventArgs>? TelemetryUpdated;
-    void Start(CancellationToken cancellationToken);
+    void Start(bool emitRawData, CancellationToken cancellationToken);
 }
 
 public class TelemetryWatcher : ITelemetryWatcher
 {
-    private readonly object lockObject = new object();
+    private readonly object lockObject = new();
     private readonly IEnumerable<ITelemetryReader> readers;
     private readonly IProcessMonitor processMonitor;
     private Timer? processTimer;
@@ -25,7 +25,7 @@ public class TelemetryWatcher : ITelemetryWatcher
         this.processMonitor = processMonitor;
     }
 
-    public void Start(CancellationToken cancellationToken)
+    public void Start(bool emitRawData, CancellationToken cancellationToken)
     {
         //Monitor processes every 10 seconds
         processTimer = new Timer(_ =>
@@ -47,7 +47,8 @@ public class TelemetryWatcher : ITelemetryWatcher
             {
                 if (telemetryReader != null)
                 {
-                    TelemetryUpdated?.Invoke(this, new TelemetryUpdateEventArgs(telemetryReader.ReadTelemetry()));
+                    var data = emitRawData ? telemetryReader.ReadRawData() : telemetryReader.ReadTelemetry();
+                    TelemetryUpdated?.Invoke(this, new TelemetryUpdateEventArgs(data));
                 }
             }
         }, cancellationToken, TimeSpan.Zero, TimeSpan.FromMilliseconds(16));

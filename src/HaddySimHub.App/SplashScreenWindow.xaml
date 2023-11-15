@@ -14,4 +14,38 @@
     <Window.Background>
         <ImageBrush ImageSource="/Images/splash.png" Stretch="Fill" />
     </Window.Background>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.OpacityMask>
+            <VisualBrush Visual="{Binding ElementName=Border1}" />
+        </Grid.OpacityMask>
+        <Border x:Name="Border1" CornerRadius="20" Background="DarkSlateGray" Grid.Row="1" Grid.Column="1" />
+        <TextBlock
+            Grid.Row="1"
+             Grid.Column="1"
+            Width="auto"
+            Text="Haddy SimHub"
+            TextWrapping="NoWrap"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Left"
+            FontSize="24"
+            Foreground="White"
+            Padding="20">
+            <TextBlock.Effect>
+                <DropShadowEffect
+                ShadowDepth="5"
+                Direction="330"
+                Color="Black"
+                Opacity="0.5"
+                BlurRadius="4"/>
+            </TextBlock.Effect>
+        </TextBlock>
+    </Grid>
 </Window>
