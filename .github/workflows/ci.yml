@@ -9,14 +9,12 @@ jobs:
     runs-on: windows-latest
 
     env:
-      solution_file: ./git/src/HaddySimHub.sln
+      solution_file: ./src/HaddySimHub.sln
       dotnet_version: '8.0.100'
 
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-      with:
-        path: git
 
     - name: Install .NET Core
       uses: actions/setup-dotnet@v3
@@ -35,8 +33,6 @@ jobs:
     - name: Run unit tests
       shell: pwsh
       run: |
-        Write-Host "connecting to: $env:SqlServer__ServerInstance"
-        cd git
         dotnet test ${{ env.solution_file }} `
             --collect:"XPlat Code Coverage" `
             --logger "trx;LogFileName=test-results.trx"
@@ -47,13 +43,12 @@ jobs:
       with:
         name: Test Results - DotNet
         reporter: dotnet-trx
-        working-directory: ./git
-        path: 'git/test/**/test-results.trx'
+        path: 'test/**/test-results.trx'
 
     - name: Upload cobertura coverage data artifact
       uses: actions/upload-artifact@v3
       with:
         name: code-coverage
-        path: git/test/**/TestResults/**/coverage.cobertura.xml
+        path: test/**/TestResults/**/coverage.cobertura.xml
         retention-days: 5
 
