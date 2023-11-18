@@ -10,6 +10,7 @@ jobs:
 
     env:
       solution_file: ./src/HaddySimHub.sln
+      dotnet_version: '8.0.100'
 
     steps:
     - name: Checkout
@@ -18,13 +19,39 @@ jobs:
     - name: Install .NET Core
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: ${{ env.dotnet_version }}
 
     - name: Restore dependencies
-      run:  dotnet restore $env:solution_file
+      run:  dotnet restore ${{ env.solution_file }}
     
     - name: Build
-      run:  dotnet build $env:solution_file --no-restore
+      run:  dotnet build ${{ env.solution_file }} --no-restore
     
     - name: Test
-      run:  dotnet test $env:solution_file --no-build
+      run:  dotnet test ${{ env.solution_file }} --no-build
+
+    - name: Run unit tests
+      shell: pwsh
+      run: |
+        Write-Host "connecting to: $env:SqlServer__ServerInstance"
+        cd git
+        dotnet test ${{ env.solution_file }} `
+            --collect:"XPlat Code Coverage" `
+            --logger "trx;LogFileName=test-results.trx"
+
+    - name: Create dotnet Test Report
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: Test Results - DotNet
+        reporter: dotnet-trx
+        working-directory: ./git
+        path: 'test/**/test-results.trx'
+
+    - name: Upload cobertura coverage data artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: code-coverage
+        path: test/**/TestResults/**/coverage.cobertura.xml
+        retention-days: 5
+
