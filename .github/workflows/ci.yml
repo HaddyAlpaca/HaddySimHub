@@ -34,7 +34,6 @@ jobs:
       shell: pwsh
       run: |
         Write-Host "connecting to: $env:SqlServer__ServerInstance"
-        cd git
         dotnet test ${{ env.solution_file }} `
             --collect:"XPlat Code Coverage" `
             --logger "trx;LogFileName=test-results.trx"
