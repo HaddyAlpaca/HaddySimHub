@@ -15,6 +15,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
+      with:
+        path: git
 
     - name: Install .NET Core
       uses: actions/setup-dotnet@v3
@@ -34,6 +36,7 @@ jobs:
       shell: pwsh
       run: |
         Write-Host "connecting to: $env:SqlServer__ServerInstance"
+        cd git
         dotnet test ${{ env.solution_file }} `
             --collect:"XPlat Code Coverage" `
             --logger "trx;LogFileName=test-results.trx"
@@ -45,12 +48,12 @@ jobs:
         name: Test Results - DotNet
         reporter: dotnet-trx
         working-directory: ./git
-        path: 'test/**/test-results.trx'
+        path: 'git/test/**/test-results.trx'
 
     - name: Upload cobertura coverage data artifact
       uses: actions/upload-artifact@v3
       with:
         name: code-coverage
-        path: test/**/TestResults/**/coverage.cobertura.xml
+        path: git/test/**/TestResults/**/coverage.cobertura.xml
         retention-days: 5
 
