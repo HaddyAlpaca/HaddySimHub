@@ -39,16 +39,15 @@ jobs:
 
     - name: Create dotnet Test Report
       uses: dorny/test-reporter@v1
-      if: always()
       with:
         name: Test Results - DotNet
         reporter: dotnet-trx
         path: 'test/**/test-results.trx'
 
-    - name: Upload cobertura coverage data artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: code-coverage
-        path: test/**/TestResults/**/coverage.cobertura.xml
-        retention-days: 5
+    # - name: Upload cobertura coverage data artifact
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: code-coverage
+    #     path: test/**/TestResults/**/coverage.cobertura.xml
+    #     retention-days: 5
 
