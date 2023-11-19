@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HaddySimHub.Telemetry.Models;
+namespace HaddySimHub.GameData.Models;
 
 public enum GearRange
 {

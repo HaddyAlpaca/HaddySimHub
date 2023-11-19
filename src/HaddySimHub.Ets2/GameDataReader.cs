@@ -1,28 +1,23 @@
-﻿using HaddySimHub.Telemetry;
-using HaddySimHub.Telemetry.Models;
+﻿using HaddySimHub.GameData;
+using HaddySimHub.GameData.Models;
 using System.Text;
 
 namespace HaddySimHub.Ets2;
 
-public sealed class TelemetryReader : ITelemetryReader, IDisposable 
+public sealed class GameDataReader(ISharedMemoryReaderFactory sharedMemoryReaderFactory) : IGameDataReader, IDisposable 
 {
     /// <summary>
     /// ETS2 telemetry plugin maps the data to this mapped file name.
     /// </summary>
-    private readonly ISharedMemoryReader<Datastruct> sharedMemory;
+    private readonly ISharedMemoryReader<Datastruct> sharedMemory = sharedMemoryReaderFactory.Create<Datastruct>("Local\\Ets2TelemetryServer");
 
     public string ProcessName => "eurotrucks2";
-
-    public TelemetryReader(ISharedMemoryReaderFactory sharedMemoryReaderFactory)
-    {
-        this.sharedMemory = sharedMemoryReaderFactory.Create<Datastruct>("Local\\Ets2TelemetryServer");
-    }
 
     public void Dispose() => sharedMemory?.Dispose();
 
     public object ReadRawData() => sharedMemory.Read();
 
-    public object ReadTelemetry()
+    public object ReadData()
     {
         //Read the current data from ETS2
         Datastruct rawData = sharedMemory.Read();

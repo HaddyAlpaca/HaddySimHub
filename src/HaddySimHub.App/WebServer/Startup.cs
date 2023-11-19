@@ -6,14 +6,9 @@ using System.IO;
 
 namespace HaddySimHub.WebServer;
 
-internal class Startup
+internal class Startup(IConfiguration configuration)
 {
-    public Startup(IConfiguration configuration)
-    {
-        Configuration = configuration;
-    }
-
-    public IConfiguration Configuration { get; }
+    public IConfiguration Configuration { get; } = configuration;
 
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
@@ -45,7 +40,7 @@ internal class Startup
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
-            endpoints.MapHub<TelemetryHub>("/telemetry");
+            endpoints.MapHub<GameDataHub>("/gamedata");
         });
         app.UseCors();
     }

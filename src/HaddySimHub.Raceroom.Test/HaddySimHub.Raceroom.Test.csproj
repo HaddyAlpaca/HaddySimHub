@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HaddySimHub.Raceroom\HaddySimHub.Raceroom.csproj" />
-    <ProjectReference Include="..\HaddySimHub.Telemetry\HaddySimHub.Telemetry.csproj" />
+    <ProjectReference Include="..\HaddySimHub.GameData\HaddySimHub.GameData.csproj" />
   </ItemGroup>
 
 </Project>

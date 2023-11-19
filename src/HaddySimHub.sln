@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HaddySimHub.Raceroom", "Had
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HaddySimHub.Ets2", "HaddySimHub.Ets2\HaddySimHub.Ets2.csproj", "{8BDD4779-A7E3-49E6-BD1E-31999650F6A1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HaddySimHub.Telemetry", "HaddySimHub.Telemetry\HaddySimHub.Telemetry.csproj", "{0744FBC0-EF69-49CE-A246-2851928A7C7D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HaddySimHub.GameData", "HaddySimHub.GameData\HaddySimHub.GameData.csproj", "{0744FBC0-EF69-49CE-A246-2851928A7C7D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HaddySimHub.Raceroom.Test", "HaddySimHub.Raceroom.Test\HaddySimHub.Raceroom.Test.csproj", "{8F092EED-5B8C-4522-BECD-BFB861EF48F3}"
 EndProject

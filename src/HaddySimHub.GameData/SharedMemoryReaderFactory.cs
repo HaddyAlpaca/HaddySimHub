@@ -1,4 +1,4 @@
-﻿namespace HaddySimHub.Telemetry
+﻿namespace HaddySimHub.GameData
 {
     public interface ISharedMemoryReaderFactory
     {

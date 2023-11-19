@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace HaddySimHub.Telemetry;
+namespace HaddySimHub.GameData;
 
 public interface IProcessMonitor
 {

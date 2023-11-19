@@ -1,22 +1,17 @@
-﻿using HaddySimHub.Telemetry;
-using HaddySimHub.Telemetry.Models;
+﻿using HaddySimHub.GameData;
+using HaddySimHub.GameData.Models;
 using HaddySimHub.Raceroom.Data;
 
 namespace HaddySimHub.Raceroom;
 
-public sealed class TelemetryReader : ITelemetryReader, IDisposable
+public sealed class GameDateReader(ISharedMemoryReaderFactory sharedMemoryReaderFactory) : IGameDataReader, IDisposable
 {
-    private readonly ISharedMemoryReader<Shared> mmf;
+    private readonly ISharedMemoryReader<Shared> mmf = sharedMemoryReaderFactory.Create<Shared>("$R3E");
     public string ProcessName => "rrre";
-
-    public TelemetryReader(ISharedMemoryReaderFactory sharedMemoryReaderFactory)
-    {
-        this.mmf = sharedMemoryReaderFactory.Create<Shared>("$R3E");
-    }
 
     public object ReadRawData() => this.mmf.Read();
 
-    public object ReadTelemetry()
+    public object ReadData()
     {
         Shared rawData = this.mmf.Read();
 

@@ -1,24 +1,24 @@
 using FluentAssertions;
 using HaddySimHub.Raceroom.Data;
-using HaddySimHub.Telemetry;
-using HaddySimHub.Telemetry.Models;
+using HaddySimHub.GameData;
+using HaddySimHub.GameData.Models;
 using Moq;
 
 namespace HaddySimHub.Raceroom.Test;
 
 [TestClass]
-public class TelemetryReaderTests
+public class GameDataReaderTests
 {
-    private readonly TelemetryReader telemetryReader;
+    private readonly GameDateReader _reader;
     private readonly Mock<ISharedMemoryReaderFactory> sharedMemoryReaderFactory = new();
     private readonly Mock<ISharedMemoryReader<Shared>> mmf = new();
 
-    public TelemetryReaderTests()
+    public GameDataReaderTests()
     {
         //Setup shared memory reader factory
         this.sharedMemoryReaderFactory.Setup(f => f.Create<Shared>("$R3E")).Returns(this.mmf.Object);
 
-        this.telemetryReader = new TelemetryReader(sharedMemoryReaderFactory.Object);
+        this._reader = new GameDateReader(sharedMemoryReaderFactory.Object);
     }
 
     [TestMethod]
@@ -32,11 +32,11 @@ public class TelemetryReaderTests
         this.mmf.Setup(mmf => mmf.Read()).Returns(data);
 
         //Act
-        RaceData telemetry = (RaceData)this.telemetryReader.ReadTelemetry();
+        RaceData raceData = (RaceData)this._reader.ReadData();
 
         //Assert
-        telemetry.Should().NotBeNull();
-        telemetry.Gear.Should().Be(4);
+        raceData.Should().NotBeNull();
+        raceData.Gear.Should().Be(4);
     }
 
     [TestMethod]
@@ -50,11 +50,11 @@ public class TelemetryReaderTests
         this.mmf.Setup(mmf => mmf.Read()).Returns(data);
 
         //Act
-        RaceData telemetry = (RaceData)this.telemetryReader.ReadTelemetry();
+        RaceData raceData = (RaceData)this._reader.ReadData();
 
         //Assert
-        telemetry.Should().NotBeNull();
-        telemetry.Speed.Should().Be(180);
+        raceData.Should().NotBeNull();
+        raceData.Speed.Should().Be(180);
     }
 
     [TestMethod]
@@ -69,11 +69,11 @@ public class TelemetryReaderTests
         this.mmf.Setup(mmf => mmf.Read()).Returns(data);
 
         //Act
-        RaceData telemetry = (RaceData)this.telemetryReader.ReadTelemetry();
+        RaceData raceData = (RaceData)this._reader.ReadData();
 
         //Assert
-        telemetry.Should().NotBeNull();
-        telemetry.Rpm.Should().Be(1500);
-        telemetry.RpmMax.Should().Be(6000);
+        raceData.Should().NotBeNull();
+        raceData.Rpm.Should().Be(1500);
+        raceData.RpmMax.Should().Be(6000);
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace HaddySimHub.Telemetry.Models;
+﻿namespace HaddySimHub.GameData.Models;
 
 public struct TyreData<T>
 {

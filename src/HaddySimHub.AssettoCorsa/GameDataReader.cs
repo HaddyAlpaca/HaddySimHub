@@ -1,22 +1,15 @@
-﻿using HaddySimHub.Telemetry;
-using HaddySimHub.Telemetry.Models;
+﻿using HaddySimHub.GameData;
+using HaddySimHub.GameData.Models;
 
 namespace HaddySimHub.AssettoCorsa;
 
-public sealed class TelemetryReader : ITelemetryReader, IDisposable
+public sealed class GameDataReader(ISharedMemoryReaderFactory sharedMemoryReaderFactory) : IGameDataReader, IDisposable
 {
-    private readonly ISharedMemoryReader<Physics> physicsFile;
-    private readonly ISharedMemoryReader<Graphics> graphicsFile;
-    private readonly ISharedMemoryReader<StaticInfo> staticInfoFile;
+    private readonly ISharedMemoryReader<Physics> physicsFile = sharedMemoryReaderFactory.Create<Physics>("Local\\acpmf_physics");
+    private readonly ISharedMemoryReader<Graphics> graphicsFile = sharedMemoryReaderFactory.Create<Graphics>("Local\\acpmf_graphics");
+    private readonly ISharedMemoryReader<StaticInfo> staticInfoFile = sharedMemoryReaderFactory.Create<StaticInfo>("Local\\acpmf_static");
 
     public string ProcessName => "acs";
-
-    public TelemetryReader(ISharedMemoryReaderFactory sharedMemoryReaderFactory)
-    {
-        this.physicsFile = sharedMemoryReaderFactory.Create<Physics>("Local\\acpmf_physics");
-        this.graphicsFile = sharedMemoryReaderFactory.Create<Graphics>("Local\\acpmf_graphics");
-        this.staticInfoFile = sharedMemoryReaderFactory.Create<StaticInfo>("Local\\acpmf_static");
-    }
 
     public void Dispose()
     {
@@ -34,7 +27,7 @@ public sealed class TelemetryReader : ITelemetryReader, IDisposable
         };
     }
 
-    public object ReadTelemetry()
+    public object ReadData()
     {
         //Read all data
         Physics physicsInfo = this.physicsFile.Read();

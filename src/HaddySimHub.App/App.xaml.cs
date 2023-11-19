@@ -1,5 +1,5 @@
-﻿using HaddySimHub.Telemetry;
-using HaddySimHub.Telemetry.Models;
+﻿using HaddySimHub.GameData;
+using HaddySimHub.GameData.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Collections.Generic;
@@ -18,11 +18,11 @@ namespace HaddySimHub
     {
         private static IHost? AppHost { get; set; }
         private readonly CancellationTokenSource cancellationTokenSource = new();
-        private TelemetryWatcher? watcher;
+        private GameDataWatcher? watcher;
 
         public App()
         {
-            this.UpdateWebContent();
+            UpdateWebContent();
 
             AppHost = Host.CreateDefaultBuilder()
                 .ConfigureServices((hostContext, services) =>
@@ -31,9 +31,9 @@ namespace HaddySimHub
                     services.AddSingleton<MainWindow>();
                     services.AddSingleton<ISharedMemoryReaderFactory, SharedMemoryReaderFactory>();
                     services.AddSingleton<IProcessMonitor, ProcessMonitor>();
-                    services.AddSingleton<AssettoCorsa.TelemetryReader>();
-                    services.AddSingleton<Ets2.TelemetryReader>();
-                    services.AddSingleton<Raceroom.TelemetryReader>();
+                    services.AddSingleton<AssettoCorsa.GameDataReader>();
+                    services.AddSingleton<Ets2.GameDataReader>();
+                    services.AddSingleton<Raceroom.GameDateReader>();
                 })
                 .Build();
         }
@@ -56,17 +56,17 @@ namespace HaddySimHub
             var webServer = new WebServer.Server();
             webServer.Start(token);
 
-            //Create the telemetry readers for the supported games
-            var readers = new List<ITelemetryReader>
+            //Create the game data readers for the supported games
+            var readers = new List<IGameDataReader>
             {
-                AppHost.Services.GetRequiredService<AssettoCorsa.TelemetryReader>(),
-                AppHost.Services.GetRequiredService<Raceroom.TelemetryReader>(),
-                AppHost.Services.GetRequiredService<Ets2.TelemetryReader>()
+                AppHost.Services.GetRequiredService<AssettoCorsa.GameDataReader>(),
+                AppHost.Services.GetRequiredService<Raceroom.GameDateReader>(),
+                AppHost.Services.GetRequiredService<Ets2.GameDataReader>()
             };
 
-            //Start monitoring telemetry
+            //Start monitoring game data
             bool rawData = e.Args.Contains("--raw");
-            this.watcher = new TelemetryWatcher(readers, AppHost.Services.GetRequiredService<IProcessMonitor>());
+            this.watcher = new GameDataWatcher(readers, AppHost.Services.GetRequiredService<IProcessMonitor>());
             this.watcher.Start(rawData, token);
 
             //Wait some time to show the splash screen
@@ -87,7 +87,7 @@ namespace HaddySimHub
             base.OnExit(e);
         }
 
-        private void UpdateWebContent()
+        private static void UpdateWebContent()
         {
             string rootfolder = "wwwroot";
             if (!Directory.Exists(rootfolder))

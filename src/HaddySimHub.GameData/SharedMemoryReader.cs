@@ -1,7 +1,7 @@
 ﻿using System.IO.MemoryMappedFiles;
 using System.Runtime.InteropServices;
 
-namespace HaddySimHub.Telemetry
+namespace HaddySimHub.GameData
 {
     public interface ISharedMemoryReader<T> where T : struct
     {

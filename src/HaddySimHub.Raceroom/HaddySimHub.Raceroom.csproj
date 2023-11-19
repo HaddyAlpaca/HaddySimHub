@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HaddySimHub.Telemetry\HaddySimHub.Telemetry.csproj" />
+    <ProjectReference Include="..\HaddySimHub.GameData\HaddySimHub.GameData.csproj" />
   </ItemGroup>
 
 	<ItemGroup>
