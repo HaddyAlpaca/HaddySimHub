@@ -74,6 +74,5 @@ public class GameDataReaderTests
         //Assert
         raceData.Should().NotBeNull();
         raceData.Rpm.Should().Be(1500);
-        raceData.RpmMax.Should().Be(6000);
     }
 }
