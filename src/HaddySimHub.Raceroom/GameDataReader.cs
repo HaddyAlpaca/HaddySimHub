@@ -20,7 +20,8 @@ public sealed class GameDateReader(ISharedMemoryReaderFactory sharedMemoryReader
             Speed = (int)MpsToKph(rawData.CarSpeed),
             Gear = rawData.Gear,
             Rpm = (int)RpsToRpm(rawData.EngineRps),
-            RpmMax = (int)RpsToRpm(rawData.MaxEngineRps)
+            BrakeBias = rawData.BrakeBias,
+            SessionTimeRemaining = rawData.SessionTimeRemaining
         };
     }
 

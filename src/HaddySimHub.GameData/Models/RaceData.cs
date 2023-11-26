@@ -1,43 +1,11 @@
 ﻿namespace HaddySimHub.GameData.Models;
 
-public enum Flag
+public readonly struct RaceData
 {
-    None,
-    Green,
-    Blue,
-    Yellow,
-    Red,
-    BlackAndOrange,
-    Black,
-    White,
-    Chequered
-}
-
-public enum GripLevel
-{
-    Unknown,
-    Green,
-    Fast,
-    Optimum,
-    Greasy,
-    Damp,
-    Wet,
-    Flooded
-}
-
-public enum WeatherType
-{
-    Unknown,
-    Dry,
-    Drizzle,
-    LightRain,
-    MediumRain,
-    HeavyRain,
-    Thunderstorm
-}
-
-public struct RaceData
-{
+    /// <summary>
+    /// Session type description
+    /// </summary>
+    public string SessionType { get; init; }
     /// <summary>
     /// Is this session timed instead of a fixed number of laps?
     /// </summary>
@@ -75,22 +43,6 @@ public struct RaceData
     /// </summary>
     public int Rpm { get; init; }
     /// <summary>
-    /// Maximum engine revs
-    /// </summary>
-    public int RpmMax { get; init; }
-    /// <summary>
-    /// Current grip level
-    /// </summary>
-    public GripLevel GripLevel { get; init; }
-    /// <summary>
-    /// Current flag
-    /// </summary>
-    public Flag Flag { get; init; }
-    /// <summary>
-    /// Current weather type
-    /// </summary>
-    public WeatherType WeatherType { get; init; }
-    /// <summary>
     /// Track temperature
     /// </summary>
     public float TrackTemp { get; init; }
@@ -99,45 +51,13 @@ public struct RaceData
     /// </summary>
     public float AirTemp { get; init; }
     /// <summary>
-    /// Remaining fuel
+    /// Number of remaining for current fuel
     /// </summary>
-    public float Fuel { get; init; }
-    /// <summary>
-    /// Fuel used per lap
-    /// </summary>
-    public float FuelPerLap { get; init; }
-    /// <summary>
-    /// Tyres temperatures [LF, RF, LR, RR]
-    /// </summary>
-    public TyreData<float> TyreTemps { get; init; }
-    /// <summary>
-    /// Tyres pressures [LF, RF, LR, RR]
-    /// </summary>
-    public TyreData<float> TyrePressures { get; init; }
-    /// <summary>
-    /// Brake temperatures [LF, RF, LR, RR]
-    /// </summary>
-    public TyreData<float> BrakeTemps { get; init; }
-    /// <summary>
-    /// Traction control level
-    /// </summary>
-    public int TcLevel { get; init; }
-    /// <summary>
-    /// ABS level
-    /// </summary>
-    public int AbsLevel { get; init; }
-    /// <summary>
-    /// Engine mapping
-    /// </summary>
-    public int EngineMapping { get; init; }
+    public float FuelLaps { get; init; }
     /// <summary>
     /// Brake bias
     /// </summary>
     public float BrakeBias { get; init; }
-    /// <summary>
-    /// Estimated laptime in milliseconds
-    /// </summary>
-    public int EstimatedLapTime { get; init; }
     /// <summary>
     /// Last laptime in milliseconds
     /// </summary>
@@ -155,7 +75,23 @@ public struct RaceData
     /// </summary>
     public int GapBehind { get; init; }
     /// <summary>
+    /// Driver behind
+    /// </summary>
+    public string DriverBehind { get; init; }
+    /// <summary>
     /// Gap ahead in milliseconds
     /// </summary>
     public int GapAhead { get; init; }
+    /// <summary>
+    /// Driver ahead
+    /// </summary>
+    public string DriverAhead { get; init; }
+    /// <summary>
+    /// Throttle percentage
+    /// </summary>
+    public int ThrottlePct { get; init; }
+    /// <summary>
+    /// Brake percentage
+    /// </summary>
+    public int BrakePct { get; init; }
 }
