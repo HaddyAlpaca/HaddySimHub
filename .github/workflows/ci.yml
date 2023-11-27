@@ -29,25 +29,3 @@ jobs:
     
     - name: Test
       run:  dotnet test ${{ env.solution_file }} --no-build
-
-    - name: Run unit tests
-      shell: pwsh
-      run: |
-        dotnet test ${{ env.solution_file }} `
-            --collect:"XPlat Code Coverage" `
-            --logger "trx;LogFileName=test-results.trx"
-
-    - name: Create dotnet Test Report
-      uses: dorny/test-reporter@v1
-      with:
-        name: Test Results - DotNet
-        reporter: dotnet-trx
-        path: 'test/**/test-results.trx'
-
-    # - name: Upload cobertura coverage data artifact
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: code-coverage
-    #     path: test/**/TestResults/**/coverage.cobertura.xml
-    #     retention-days: 5
-
