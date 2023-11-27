@@ -37,9 +37,7 @@ jobs:
       run:  dotnet build ${{ env.solution_file }} --no-restore
 
     - name: Zip build result
-      run: |
-        cd src/HaddySimHub.App/bin/Debug/net8.0-windows
-        zip -r haddy-simhub-client *
+      run: Compress-Archive -Path src/HaddySimHub.App/bin/Debug/net8.0-windows/* -Destination haddy-simhub.zip
 
     - name: Create release
       id: create_release
@@ -52,17 +50,16 @@ jobs:
         draft: true
         prerelease: false
 
-    # - name: Upload release assets
-    #   uses: actions/upload-release-asset@v1.0.1
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   with:
-    #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-    #     asset_path: ./src/HaddySimHub.App/bin/Debug/net8.0-windows/haddy-simhub-client.zip
-    #     asset_name: haddy-simhub.zip
-    #     asset_content_type: application/zip
+    - name: Upload release assets
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: haddy-simhub.zip
+        asset_name: haddy-simhub.zip
+        asset_content_type: application/zip
     
-
     - name: Publish Release
       uses: eregon/publish-release@v1
       env:
