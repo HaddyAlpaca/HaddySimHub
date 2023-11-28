@@ -21,7 +21,12 @@ public sealed class GameDateReader(ISharedMemoryReaderFactory sharedMemoryReader
             Gear = rawData.Gear,
             Rpm = (int)RpsToRpm(rawData.EngineRps),
             BrakeBias = rawData.BrakeBias,
-            SessionTimeRemaining = rawData.SessionTimeRemaining
+            SessionTimeRemaining = rawData.SessionTimeRemaining,
+            CompletedLaps = rawData.CompletedLaps,
+            TotalLaps = rawData.NumberOfLaps,
+            GapBehind = rawData.TimeDeltaBehind,
+            ThrottlePct = Convert.ToInt32(rawData.Throttle * 100),
+            BrakePct = Convert.ToInt32(rawData.Brake * 100)
         };
     }
 

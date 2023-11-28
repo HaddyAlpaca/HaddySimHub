@@ -35,7 +35,7 @@ public readonly struct RaceData
     /// </summary>
     public int Speed { get; init; }
     /// <summary>
-    /// Gear (-1 = Reverse, 0 = Neutral, >= 1 Forward gears)
+    /// Gear (-2 = N/A, -1 = Reverse, 0 = Neutral, >= 1 Forward gears)
     /// </summary>
     public int Gear { get; init; }
     /// <summary>
@@ -63,25 +63,25 @@ public readonly struct RaceData
     /// </summary>
     public int LastLapTime { get; init; }
     /// <summary>
-    /// Best laptime in milliseconds
+    /// Best laptime in secondss
     /// </summary>
-    public int BestLapTime { get; init; }
+    public float BestLapTime { get; init; }
     /// <summary>
-    /// Delta time in milliseconds
+    /// Delta time in seconds
     /// </summary>
-    public int DeltaTime { get; init; }
+    public float DeltaTime { get; init; }
     /// <summary>
-    /// Gap behind in milliseconds
+    /// Gap behind in seconds
     /// </summary>
-    public int GapBehind { get; init; }
+    public float GapBehind { get; init; }
     /// <summary>
     /// Driver behind
     /// </summary>
     public string DriverBehind { get; init; }
     /// <summary>
-    /// Gap ahead in milliseconds
+    /// Gap ahead in seconds
     /// </summary>
-    public int GapAhead { get; init; }
+    public float GapAhead { get; init; }
     /// <summary>
     /// Driver ahead
     /// </summary>
