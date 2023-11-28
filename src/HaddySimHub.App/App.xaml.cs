@@ -127,8 +127,6 @@ namespace HaddySimHub
                     
                         HttpResponseMessage response = await client.GetAsync($"{baseUri}/releases/download/v{version}/haddy-simhub-client.zip");
                         
-                        //https://github.com/HaddyAlpaca/HaddySimHubClient/releases/download/v0.1.20/haddy-simhub-client.zip
-
                         using Stream fileStream = await response.Content.ReadAsStreamAsync();
                         using FileStream outputFileStream = File.Create(zipFile);
                         await fileStream.CopyToAsync(outputFileStream);
