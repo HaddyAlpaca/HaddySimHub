@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using HaddySimHub.Raceroom.Enums;
 
 namespace HaddySimHub.Raceroom.Data;
 
@@ -61,7 +62,7 @@ internal struct Shared
 
     // Which session the player is in (practice, qualifying, race, etc.)
     // Note: See the R3E.Constant.Session enum
-    public int SessionType;
+    public Session SessionType;
 
     // The current iteration of the current type of session (second qualifying session, etc.)
     // Note: 1 = first, 2 = second etc, -1 = N/A

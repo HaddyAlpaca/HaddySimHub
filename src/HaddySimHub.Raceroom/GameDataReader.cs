@@ -15,6 +15,31 @@ public sealed class GameDateReader(ISharedMemoryReaderFactory sharedMemoryReader
     {
         Shared rawData = this.mmf.Read();
 
+        //Set session type
+        string sessionType;
+        switch(rawData.SessionType)
+        {
+            case Enums.Session.Practice:
+                sessionType = "Practice";
+                break;
+            
+            case Enums.Session.Qualify:
+                sessionType = "Qualifying";
+                break;
+
+            case Enums.Session.Warmup:
+                sessionType = "Warmup";
+                break;
+
+            case Enums.Session.Race:
+                sessionType = "Race";
+                break;
+            
+            default:
+                sessionType = string.Empty;
+                break; 
+        }
+
         return new RaceData
         {
             Speed = (int)MpsToKph(rawData.CarSpeed),
@@ -26,7 +51,8 @@ public sealed class GameDateReader(ISharedMemoryReaderFactory sharedMemoryReader
             TotalLaps = rawData.NumberOfLaps,
             GapBehind = rawData.TimeDeltaBehind,
             ThrottlePct = Convert.ToInt32(rawData.Throttle * 100),
-            BrakePct = Convert.ToInt32(rawData.Brake * 100)
+            BrakePct = Convert.ToInt32(rawData.Brake * 100),
+            SessionType = sessionType
         };
     }
 
