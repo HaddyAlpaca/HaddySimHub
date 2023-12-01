@@ -5,8 +5,6 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HaddySimHub.App", "HaddySimHub.App\HaddySimHub.App.csproj", "{4D5C7470-E2DB-4233-89E5-09E145DA5378}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HaddySimHub.AssettoCorsa", "HaddySimHub.AssettoCorsa\HaddySimHub.AssettoCorsa.csproj", "{6CEDE839-30F4-4783-AF00-ABC32D2187E9}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HaddySimHub.Ets2", "HaddySimHub.Ets2\HaddySimHub.Ets2.csproj", "{8BDD4779-A7E3-49E6-BD1E-31999650F6A1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HaddySimHub.GameData", "HaddySimHub.GameData\HaddySimHub.GameData.csproj", "{0744FBC0-EF69-49CE-A246-2851928A7C7D}"
