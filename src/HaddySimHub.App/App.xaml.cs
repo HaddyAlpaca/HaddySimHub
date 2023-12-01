@@ -34,9 +34,7 @@ namespace HaddySimHub
                     services.AddSingleton<MainWindow>();
                     services.AddSingleton<ISharedMemoryReaderFactory, SharedMemoryReaderFactory>();
                     services.AddSingleton<IProcessMonitor, ProcessMonitor>();
-                    services.AddSingleton<AssettoCorsa.GameDataReader>();
                     services.AddSingleton<Ets2.GameDataReader>();
-                    services.AddSingleton<Raceroom.GameDateReader>();
                 })
                 .Build();
         }
@@ -64,8 +62,6 @@ namespace HaddySimHub
             //Create the game data readers for the supported games
             var readers = new List<IGameDataReader>
             {
-                AppHost.Services.GetRequiredService<AssettoCorsa.GameDataReader>(),
-                AppHost.Services.GetRequiredService<Raceroom.GameDateReader>(),
                 AppHost.Services.GetRequiredService<Ets2.GameDataReader>()
             };
 
