@@ -40,7 +40,7 @@ internal class Startup(IConfiguration configuration)
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
-            endpoints.MapHub<GameDataHub>("/gamedata");
+            endpoints.MapHub<GameDataHub>("/game-data");
         });
         app.UseCors();
     }
