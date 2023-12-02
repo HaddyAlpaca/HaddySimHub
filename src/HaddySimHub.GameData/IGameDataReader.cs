@@ -2,8 +2,7 @@
 
 public interface IGameDataReader
 {
-    string ProcessName { get; }
+    event EventHandler<object> RawDataUpdate;
 
-    object ReadRawData();
-    object ReadData();
+    object Convert(object rawData);
 }

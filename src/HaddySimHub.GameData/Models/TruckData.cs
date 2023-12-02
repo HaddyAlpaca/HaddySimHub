@@ -2,20 +2,12 @@
 
 namespace HaddySimHub.GameData.Models;
 
-public enum GearRange
-{
-    Low,
-    High
-}
-
 public struct TruckData
 {
-    /*  Navigation data */
-
-    /// <summary>
-    /// Description of the destination
-    /// </summary>
-    public string Destination { get; init; }
+    public string DestinationCity { get; init; }
+    public string DestinationCompany { get; init; }
+    public string SourceCity { get; init; }
+    public string SourceCompany { get; set; }
     /// <summary>
     /// Distance remaining (meters)
     /// </summary>
@@ -63,8 +55,19 @@ public struct TruckData
     /// <summary>
     /// Income for the current job
     /// </summary>
-    public int JobIncome { get; init; }
+    public ulong JobIncome { get; init; }
+    public string JobCargoName { get; init; }
+    public int JobCargoMass { get; init; }
+    public int JobCargoDamage { get; init; }
 
+    /* Damage */
+    public int DamageCabin { get; init; }
+    public int DamageTransmission { get; init; }
+    public int DamageWheels { get; init; }
+    public int DamageEngine { get; init; }
+    public int DamageChassis { get; init; }
+    public int DamageTrailer { get; init; }
+    public bool TrailerAttached { get; init; }
     /*  Dashboard data    */
 
     /// <summary>
@@ -87,10 +90,6 @@ public struct TruckData
     /// Selected gear
     /// </summary>
     public short Gear { get; init; }
-    /// <summary>
-    /// Selected gear range
-    /// </summary>
-    public GearRange GearRange { get; init; }
     /// <summary>
     /// Cruise control is active
     /// </summary>
@@ -115,4 +114,8 @@ public struct TruckData
     /// Battery warning active
     /// </summary>
     public bool BatteryWarningOn { get; init; }
+    /// <summary>
+    /// Description of the current truck
+    /// </summary>
+    public string TruckName { get; init; }
 }

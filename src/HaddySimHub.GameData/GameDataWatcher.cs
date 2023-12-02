@@ -12,15 +12,15 @@ public interface IGameDataWatcher
 }
 
 public class GameDataWatcher(
-    IEnumerable<IGameDataReader> readers,
+    Dictionary<string, Type> readers,
     IProcessMonitor processMonitor) : IGameDataWatcher
 {
-    private readonly IEnumerable<IGameDataReader> readers = readers;
+    private readonly Dictionary<string, Type> readers = readers;
     private readonly IProcessMonitor processMonitor = processMonitor;
+    private string _currentGameProcess = string.Empty;
     private Timer? _processTimer;
-    private Timer? _dataTimer;
     private IGameDataReader? _gameDataReader;
-
+    
     public event EventHandler? GameDataIdle;
 
     public event EventHandler<object>? RawDataUpdated;
@@ -29,49 +29,62 @@ public class GameDataWatcher(
 
     public void Start(bool emitRawData, CancellationToken cancellationToken)
     {
+        this._currentGameProcess = string.Empty;
+
         //Monitor processes every 10 seconds
         this._processTimer = new Timer(_ =>
         {
             //Get the process that is running
-            IGameDataReader? currentReader = readers.FirstOrDefault(reader => processMonitor.IsRunning(reader.ProcessName));
+            var runningGameProcesses = readers.Where(r => processMonitor.IsRunning(r.Key));
 
-            if (this._gameDataReader != currentReader)
+            if (!runningGameProcesses.Any())
             {
-                this._gameDataReader = currentReader;
+                //No games running
+                this._gameDataReader = null;
+                this.GameDataIdle?.Invoke(this, new EventArgs());
+                return;
+            }
+
+            var runningGame = runningGameProcesses.First();
+            if (
+                string.IsNullOrEmpty(this._currentGameProcess) ||
+                this._currentGameProcess != runningGame.Key)
+            {
+                //Switch to new game
+
+                //Stop the previous game data stream
+                this._gameDataReader = null;
+
+                //Set new process
+                this._currentGameProcess = runningGame.Key;
+
+                this._gameDataReader = Activator.CreateInstance(runningGame.Value) as IGameDataReader;
+                if (this._gameDataReader != null)
+                {
+                    this._gameDataReader.RawDataUpdate += (object? sender, object rawData) =>
+                    {
+                        if (emitRawData)
+                        {
+                            this.RawDataUpdated?.Invoke(this, rawData);
+                            return;
+                        }
+
+                        //Convert to general format
+                        var data = this._gameDataReader.Convert(rawData);
+                        if (data is RaceData raceData)
+                        {
+                            this.RaceDataUpdated?.Invoke(this, raceData);
+                            return;
+                        }
+
+                        if (data is TruckData truckData)
+                        {
+                            this.TruckDataUpdated?.Invoke(this, truckData);
+                            return;
+                        }
+                    };
+                }
             }
         }, cancellationToken, TimeSpan.Zero, TimeSpan.FromSeconds(10));
-
-        //Monitor game data at approx. 60Hz
-        this._dataTimer = new Timer(_ =>
-        {
-            //Read the current game data
-            if (this._gameDataReader != null)
-            {
-                //A game is active
-                if (emitRawData)
-                {
-                    var data = this._gameDataReader.ReadRawData();
-                    this.RawDataUpdated?.Invoke(this, data);
-                }
-                else
-                {
-                    //Read the data from the game
-                    var data = this._gameDataReader.ReadData();
-                    if (data is RaceData raceData)
-                    {
-                        this.RaceDataUpdated?.Invoke(this, raceData);
-                    }
-                    else if (data is TruckData truckData)
-                    {
-                        this.TruckDataUpdated?.Invoke(this, truckData);
-                    }
-                }
-            }
-            else
-            {
-                //No game is active
-                this.GameDataIdle?.Invoke(this, new EventArgs());
-            }
-        }, cancellationToken, TimeSpan.Zero, TimeSpan.FromMilliseconds(16));
     }
 }
