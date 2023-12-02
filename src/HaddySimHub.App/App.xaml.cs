@@ -69,9 +69,6 @@ namespace HaddySimHub
             this.watcher = new GameDataWatcher(readers, AppHost.Services.GetRequiredService<IProcessMonitor>());
             this.watcher.Start(rawData, token);
 
-            //Wait some time to show the splash screen
-            await Task.Delay(2000);
-
             //Close the splash screen and create the main window
             var mainWindow = AppHost.Services.GetRequiredService<MainWindow>();
             this.MainWindow = mainWindow;
@@ -128,7 +125,7 @@ namespace HaddySimHub
                         outputFileStream.Close();
 
                         // Extract the downloaded ZIP file to the specified folder
-                        ZipFile.ExtractToDirectory(zipFile, rootfolder);
+                        ZipFile.ExtractToDirectory(zipFile, rootfolder, true);
                     }
                 }
                 catch (Exception ex)
