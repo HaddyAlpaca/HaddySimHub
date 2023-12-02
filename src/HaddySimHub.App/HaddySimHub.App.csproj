@@ -17,9 +17,7 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HaddySimHub.AssettoCorsa\HaddySimHub.AssettoCorsa.csproj" />
     <ProjectReference Include="..\HaddySimHub.Ets2\HaddySimHub.Ets2.csproj" />
-    <ProjectReference Include="..\HaddySimHub.Raceroom\HaddySimHub.Raceroom.csproj" />
     <ProjectReference Include="..\HaddySimHub.GameData\HaddySimHub.GameData.csproj" />
   </ItemGroup>
   <ItemGroup>

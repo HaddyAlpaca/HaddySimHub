@@ -1,69 +1,79 @@
 ﻿using HaddySimHub.GameData;
 using HaddySimHub.GameData.Models;
-using System.Text;
+using SCSSdkClient;
 
 namespace HaddySimHub.Ets2;
 
-public sealed class GameDataReader(ISharedMemoryReaderFactory sharedMemoryReaderFactory) : IGameDataReader, IDisposable 
+public sealed class GameDataReader : IGameDataReader 
 {
-    /// <summary>
-    /// ETS2 telemetry plugin maps the data to this mapped file name.
-    /// </summary>
-    private readonly ISharedMemoryReader<Datastruct> sharedMemory = sharedMemoryReaderFactory.Create<Datastruct>("Local\\Ets2TelemetryServer");
+    private readonly SCSSdkTelemetry _telemetry;
 
-    public string ProcessName => "eurotrucks2";
+    public event EventHandler<object>? RawDataUpdate;
 
-    public void Dispose() => sharedMemory?.Dispose();
-
-    public object ReadRawData() => sharedMemory.Read();
-
-    public object ReadData()
+    public GameDataReader()
     {
-        //Read the current data from ETS2
-        Datastruct rawData = sharedMemory.Read();
-
-        if (rawData.ets2_telemetry_plugin_revision != 0 && rawData.timeAbsolute != 0)
+        this._telemetry = new SCSSdkTelemetry();
+        this._telemetry.Data += (SCSSdkClient.Object.SCSTelemetry data, bool newTimestamp) =>
         {
-            //Convert the data to the generic format
-            string destination = BytesToString(rawData.jobCityDestination);
-            string destinationCompany = BytesToString(rawData.jobCompanyDestination);
-            if (!string.IsNullOrEmpty(destinationCompany))
-                destination += $" ({destinationCompany})";
-
-            return new TruckData()
-            {
-                Destination = destination,
-                DistanceRemaining = (int)rawData.navigationDistance,
-                TimeRemaining = rawData.jobDeadline - rawData.timeAbsolute,
-                JobIncome = rawData.jobIncome,
-                JobTimeRemaining = rawData.jobDeadline,
-                Gear = (short)rawData.gear,
-                GearRange = rawData.gearRangeActive == 1 ? GearRange.Low : GearRange.High,
-                Rpm = (int)rawData.engineRpm,
-                RpmMax = (int)rawData.engineRpmMax,
-                Speed = MetersPerSecondToKmPerHour(rawData.speed),
-                SpeedLimit = MetersPerSecondToKmPerHour(rawData.navigationSpeedLimit),
-                CruiseControlOn = rawData.cruiseControl == 1,
-                CruiseControlSpeed = MetersPerSecondToKmPerHour(rawData.cruiseControlSpeed),
-                LowBeamOn = rawData.lightsBeamLow == 1,
-                HighBeamOn = rawData.lightsBeamHigh == 1,
-                ParkingBrakeOn = rawData.parkBrake == 1,
-                BatteryWarningOn = rawData.batteryVoltageWarning == 1,
-            };
-        }
-        else
-        {
-            //Return empty object
-            return new TruckData();
-        }
+            this.RawDataUpdate?.Invoke(this, data);
+        };
     }
 
-    private static DateTime SecondsToDate(uint seconds) => 
-        new((long)Math.Max(seconds, 0) * 10000000, DateTimeKind.Utc);
+    public object Convert(object rawData)
+    {
+        if (rawData is not SCSSdkClient.Object.SCSTelemetry typedRawData)
+        {
+            return new TruckData();
+        }
 
-    private static short MetersPerSecondToKmPerHour(float ms) =>
-        Convert.ToInt16(ms * 3.6);
+        return new TruckData()
+        {
+            //Navigation info
+            SourceCity = typedRawData.JobValues.CitySource,
+            SourceCompany = typedRawData.JobValues.CompanySource,
+            DestinationCity = typedRawData.JobValues.CityDestination,
+            DestinationCompany = typedRawData.JobValues.CompanyDestination,
+            DistanceRemaining = (int)typedRawData.NavigationValues.NavigationDistance,
+            TimeRemaining = (int)Math.Ceiling(typedRawData.NavigationValues.NavigationTime / 60),
+            TimeRemainingIrl = (int)Math.Ceiling(this.ConvertToIrlTimeSpan(typedRawData.NavigationValues.NavigationTime / 60)),
+            RestTimeRemaining = typedRawData.CommonValues.NextRestStop.Value,
+            RestTimeRemainingIrl = (int)Math.Ceiling(this.ConvertToIrlTimeSpan(typedRawData.CommonValues.NextRestStop.Value)),
+            //Job info
+            JobTimeRemaining = typedRawData.JobValues.RemainingDeliveryTime.Value,
+            JobTimeRemainingIrl = (long)Math.Ceiling(this.ConvertToIrlTimeSpan(typedRawData.JobValues.RemainingDeliveryTime.Value)),
+            JobIncome = typedRawData.JobValues.Income,
+            JobCargoName = typedRawData.JobValues.CargoValues.Name,
+            JobCargoMass = (int)Math.Ceiling(typedRawData.JobValues.CargoValues.Mass),
+            JobCargoDamage = (int)Math.Round(typedRawData.JobValues.CargoValues.CargoDamage * 100),
+            //Damage
+            DamageCabin = (int)Math.Round(typedRawData.TruckValues.CurrentValues.DamageValues.Cabin * 100),
+            DamageWheels = (int)Math.Round(typedRawData.TruckValues.CurrentValues.DamageValues.WheelsAvg * 100),
+            DamageTransmission = (int)Math.Round(typedRawData.TruckValues.CurrentValues.DamageValues.Transmission * 100),
+            DamageEngine = (int)Math.Round(typedRawData.TruckValues.CurrentValues.DamageValues.Engine * 100),
+            DamageChassis = (int)Math.Round(typedRawData.TruckValues.CurrentValues.DamageValues.Chassis * 100),
+            //TODO
+            DamageTrailer = 0,
+            TrailerAttached = typedRawData.TrailerValues.Any(),
+            //Dashboard
+            Gear = (short)typedRawData.TruckValues.CurrentValues.DashboardValues.GearDashboards,
+            Rpm = (int)typedRawData.TruckValues.CurrentValues.DashboardValues.RPM,
+            RpmMax = (int)typedRawData.TruckValues.ConstantsValues.MotorValues.EngineRpmMax,
+            Speed = (short)typedRawData.TruckValues.CurrentValues.DashboardValues.Speed.Kph,
+            SpeedLimit = (short)typedRawData.NavigationValues.SpeedLimit.Kph,
+            CruiseControlOn = typedRawData.TruckValues.CurrentValues.DashboardValues.CruiseControl,
+            CruiseControlSpeed = (short)typedRawData.TruckValues.CurrentValues.DashboardValues.CruiseControlSpeed.Kph,
+            LowBeamOn = typedRawData.TruckValues.CurrentValues.LightsValues.BeamLow,
+            HighBeamOn = typedRawData.TruckValues.CurrentValues.LightsValues.BeamHigh,
+            ParkingBrakeOn = typedRawData.TruckValues.CurrentValues.MotorValues.BrakeValues.ParkingBrake,
+            BatteryWarningOn = typedRawData.TruckValues.CurrentValues.DashboardValues.WarningValues.BatteryVoltage,
+            FuelDistance = (int)typedRawData.TruckValues.CurrentValues.DashboardValues.FuelValue.Range,
+            TruckName = $"{typedRawData.TruckValues.ConstantsValues.Brand} {typedRawData.TruckValues.ConstantsValues.Name}",
+        };
+    }
 
-    private static string BytesToString(byte[] bytes) =>
-        bytes == null ? string.Empty : Encoding.UTF8.GetString(bytes, 0, Array.FindIndex(bytes, b => b == 0));
+    private float ConvertToIrlTimeSpan(float minutes)
+    {
+        //Assume 1 minute = 15 minutes
+        return minutes / 15;
+    }
 }

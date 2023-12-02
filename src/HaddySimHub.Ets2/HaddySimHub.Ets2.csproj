@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HaddySimHub.GameData\HaddySimHub.GameData.csproj" />
+    <ProjectReference Include="..\SCSSdkClient\SCSSdkClient.csproj" />
   </ItemGroup>
 
 	<ItemGroup>

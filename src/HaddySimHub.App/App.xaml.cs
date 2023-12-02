@@ -32,7 +32,6 @@ namespace HaddySimHub
                 {
                     services.AddSingleton<SplashScreenWindow>();
                     services.AddSingleton<MainWindow>();
-                    services.AddSingleton<ISharedMemoryReaderFactory, SharedMemoryReaderFactory>();
                     services.AddSingleton<IProcessMonitor, ProcessMonitor>();
                     services.AddSingleton<Ets2.GameDataReader>();
                 })
@@ -60,9 +59,9 @@ namespace HaddySimHub
             webServer.Start(token);
 
             //Create the game data readers for the supported games
-            var readers = new List<IGameDataReader>
+            var readers = new Dictionary<string, Type>
             {
-                AppHost.Services.GetRequiredService<Ets2.GameDataReader>()
+                { "eurotrucks2", typeof(Ets2.GameDataReader) }
             };
 
             //Start monitoring game data
