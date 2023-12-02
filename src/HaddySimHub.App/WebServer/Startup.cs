@@ -25,7 +25,10 @@ internal class Startup(IConfiguration configuration)
             });
         });
         services.AddControllers();
-        services.AddSignalR();
+        services.AddSignalR(o =>
+        {
+            o.EnableDetailedErrors = true;
+        });
     }
 
     public void Configure(IApplicationBuilder app)
