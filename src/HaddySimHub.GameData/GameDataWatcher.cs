@@ -8,7 +8,13 @@ public interface IGameDataWatcher
     event EventHandler<object>? RawDataUpdated;
     event EventHandler<TruckData>? TruckDataUpdated;
     event EventHandler<RaceData>? RaceDataUpdated;
-    void Start(bool emitRawData, CancellationToken cancellationToken);
+    void Start(GameDataWatcherOptions options, CancellationToken cancellationToken);
+}
+
+public class GameDataWatcherOptions
+{
+    public bool EmitRawData { get; init; }
+    public bool RunDemoMode { get; init; }
 }
 
 public class GameDataWatcher(
@@ -20,71 +26,100 @@ public class GameDataWatcher(
     private string _currentGameProcess = string.Empty;
     private Timer? _processTimer;
     private IGameDataReader? _gameDataReader;
-    
-    public event EventHandler? GameDataIdle;
 
+    public event EventHandler? GameDataIdle;
     public event EventHandler<object>? RawDataUpdated;
     public event EventHandler<TruckData>? TruckDataUpdated;
     public event EventHandler<RaceData>? RaceDataUpdated;
 
-    public void Start(bool emitRawData, CancellationToken cancellationToken)
+    public void Start(GameDataWatcherOptions options, CancellationToken cancellationToken)
     {
         this._currentGameProcess = string.Empty;
 
-        //Monitor processes every 10 seconds
-        this._processTimer = new Timer(_ =>
+        if (options.RunDemoMode || true)
         {
-            //Get the process that is running
-            var runningGameProcesses = readers.Where(r => processMonitor.IsRunning(r.Key));
-
-            if (!runningGameProcesses.Any())
+            Task.Run(() =>
             {
-                //No games running
-                this._gameDataReader = null;
-                this.GameDataIdle?.Invoke(this, new EventArgs());
-                return;
-            }
+                Thread.Sleep(10000);
 
-            var runningGame = runningGameProcesses.First();
-            if (
-                string.IsNullOrEmpty(this._currentGameProcess) ||
-                this._currentGameProcess != runningGame.Key)
-            {
-                //Switch to new game
-
-                //Stop the previous game data stream
-                this._gameDataReader = null;
-
-                //Set new process
-                this._currentGameProcess = runningGame.Key;
-
-                this._gameDataReader = Activator.CreateInstance(runningGame.Value) as IGameDataReader;
-                if (this._gameDataReader != null)
+                //Truck data
+                for (short i = 1; i <= 12; i++)
                 {
-                    this._gameDataReader.RawDataUpdate += (object? sender, object rawData) =>
-                    {
-                        if (emitRawData)
-                        {
-                            this.RawDataUpdated?.Invoke(this, rawData);
-                            return;
-                        }
+                    this.TruckDataUpdated?.Invoke(this, new TruckData { Gear = i });
 
-                        //Convert to general format
-                        var data = this._gameDataReader.Convert(rawData);
-                        if (data is RaceData raceData)
-                        {
-                            this.RaceDataUpdated?.Invoke(this, raceData);
-                            return;
-                        }
-
-                        if (data is TruckData truckData)
-                        {
-                            this.TruckDataUpdated?.Invoke(this, truckData);
-                            return;
-                        }
-                    };
+                    Thread.Sleep(1000);
                 }
-            }
-        }, cancellationToken, TimeSpan.Zero, TimeSpan.FromSeconds(10));
+
+                //Race data
+                for (short i = 1; i <= 12; i++)
+                {
+                    this.RaceDataUpdated?.Invoke(this, new RaceData { Gear = i });
+
+                    Thread.Sleep(1000);
+                }
+
+                //Idle
+                this.GameDataIdle?.Invoke(this, new EventArgs());
+            });
+
+        }
+        else
+        {
+            //Monitor processes every 10 seconds
+            this._processTimer = new Timer(_ =>
+            {
+                //Get the process that is running
+                var runningGameProcesses = readers.Where(r => processMonitor.IsRunning(r.Key));
+
+                if (!runningGameProcesses.Any())
+                {
+                    //No games running
+                    this._gameDataReader = null;
+                    this.GameDataIdle?.Invoke(this, new EventArgs());
+                    return;
+                }
+
+                var runningGame = runningGameProcesses.First();
+                if (
+                    string.IsNullOrEmpty(this._currentGameProcess) ||
+                    this._currentGameProcess != runningGame.Key)
+                {
+                    //Switch to new game
+
+                    //Stop the previous game data stream
+                    this._gameDataReader = null;
+
+                    //Set new process
+                    this._currentGameProcess = runningGame.Key;
+
+                    this._gameDataReader = Activator.CreateInstance(runningGame.Value) as IGameDataReader;
+                    if (this._gameDataReader != null)
+                    {
+                        this._gameDataReader.RawDataUpdate += (object? sender, object rawData) =>
+                        {
+                            if (options.EmitRawData)
+                            {
+                                this.RawDataUpdated?.Invoke(this, rawData);
+                                return;
+                            }
+
+                            //Convert to general format
+                            var data = this._gameDataReader.Convert(rawData);
+                            if (data is RaceData raceData)
+                            {
+                                this.RaceDataUpdated?.Invoke(this, raceData);
+                                return;
+                            }
+
+                            if (data is TruckData truckData)
+                            {
+                                this.TruckDataUpdated?.Invoke(this, truckData);
+                                return;
+                            }
+                        };
+                    }
+                }
+            }, cancellationToken, TimeSpan.Zero, TimeSpan.FromSeconds(10));
+        }
     }
 }
