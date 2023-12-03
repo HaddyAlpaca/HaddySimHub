@@ -36,7 +36,7 @@ public class GameDataWatcher(
     {
         this._currentGameProcess = string.Empty;
 
-        if (options.RunDemoMode || true)
+        if (options.RunDemoMode)
         {
             Task.Run(() =>
             {
