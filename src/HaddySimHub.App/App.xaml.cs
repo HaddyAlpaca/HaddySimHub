@@ -1,5 +1,6 @@
 ﻿using HaddySimHub.GameData;
 using HaddySimHub.GameData.Models;
+using HaddySimHub.WebServer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -13,6 +14,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace HaddySimHub
 {
@@ -65,9 +67,18 @@ namespace HaddySimHub
             };
 
             //Start monitoring game data
+            var options = new GameDataWatcherOptions
+            {
+                EmitRawData = e.Args.Contains("--raw"),
+                RunDemoMode = e.Args.Contains("--demo")
+            };
             bool rawData = e.Args.Contains("--raw");
             this.watcher = new GameDataWatcher(readers, AppHost.Services.GetRequiredService<IProcessMonitor>());
-            this.watcher.Start(rawData, token);
+            this.watcher.Start(options, token);
+            this.watcher.GameDataIdle += async (sender, e) => { await NotificationService.SendIdle(); };
+            this.watcher.RawDataUpdated += async (sender, data) => { await NotificationService.SendRawData(data); };
+            this.watcher.TruckDataUpdated += async (sender, data) => { await NotificationService.SendTruckData(data); };
+            this.watcher.RaceDataUpdated += async (sender, data) => { await NotificationService.SendRaceData(data); };
 
             //Close the splash screen and create the main window
             var mainWindow = AppHost.Services.GetRequiredService<MainWindow>();

@@ -6,7 +6,7 @@ using System.IO;
 
 namespace HaddySimHub.WebServer;
 
-internal class Startup(IConfiguration configuration)
+public class Startup(IConfiguration configuration)
 {
     public IConfiguration Configuration { get; } = configuration;
 
@@ -21,7 +21,7 @@ internal class Startup(IConfiguration configuration)
                     .AllowAnyOrigin()
                     .AllowAnyHeader()
                     .AllowAnyMethod()
-                    .WithOrigins("http://localhost:4200");
+                    .SetIsOriginAllowed(origin => true);
             });
         });
         services.AddControllers();
