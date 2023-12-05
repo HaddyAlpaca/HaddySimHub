@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HaddySimHub.Ets2", "HaddySi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HaddySimHub.GameData", "HaddySimHub.GameData\HaddySimHub.GameData.csproj", "{0744FBC0-EF69-49CE-A246-2851928A7C7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCSSdkClient", "SCSSdkClient\SCSSdkClient.csproj", "{84A64D07-8BC6-41AF-A337-019268C073CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCSSdkClient", "SCSSdkClient\SCSSdkClient.csproj", "{84A64D07-8BC6-41AF-A337-019268C073CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iRacingSDK.Net", "iRacingSDK.Net\iRacingSDK.Net.csproj", "{9BA3407D-0295-4196-851E-8DB3E522178A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{84A64D07-8BC6-41AF-A337-019268C073CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84A64D07-8BC6-41AF-A337-019268C073CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84A64D07-8BC6-41AF-A337-019268C073CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BA3407D-0295-4196-851E-8DB3E522178A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BA3407D-0295-4196-851E-8DB3E522178A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BA3407D-0295-4196-851E-8DB3E522178A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BA3407D-0295-4196-851E-8DB3E522178A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
