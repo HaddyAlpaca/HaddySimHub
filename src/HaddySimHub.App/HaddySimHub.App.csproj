@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\HaddySimHub.Ets2\HaddySimHub.Ets2.csproj" />
     <ProjectReference Include="..\HaddySimHub.GameData\HaddySimHub.GameData.csproj" />
+    <ProjectReference Include="..\HaddySimHub.iRacing\HaddySimHub.iRacing.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\helmet.ico" />

@@ -11,9 +11,9 @@ public readonly struct RaceData
     /// </summary>
     public bool IsTimedSession { get; init; }
     /// <summary>
-    /// No of completed laps in this session
+    /// No of laps started in this session
     /// </summary>
-    public int CompletedLaps { get; init; }
+    public int Laps { get; init; }
     /// <summary>
     /// Total laps in this session
     /// </summary>

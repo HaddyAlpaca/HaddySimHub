@@ -1,0 +1,1 @@
+https://github.com/RenCloud/scs-sdk-plugin

@@ -1,5 +1,4 @@
 ﻿using HaddySimHub.GameData;
-using HaddySimHub.GameData.Models;
 using HaddySimHub.WebServer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -8,13 +7,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace HaddySimHub
 {
@@ -63,7 +60,8 @@ namespace HaddySimHub
             //Create the game data readers for the supported games
             var readers = new Dictionary<string, Type>
             {
-                { "eurotrucks2", typeof(Ets2.GameDataReader) }
+                { "eurotrucks2", typeof(Ets2.GameDataReader) },
+                { "iracing", typeof(iRacing.GameDataReader) }
             };
 
             //Start monitoring game data
