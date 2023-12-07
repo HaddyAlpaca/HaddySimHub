@@ -11,9 +11,9 @@ public readonly struct RaceData
     /// </summary>
     public bool IsTimedSession { get; init; }
     /// <summary>
-    /// No of laps started in this session
+    /// Current lap this session
     /// </summary>
-    public int Laps { get; init; }
+    public int CurrentLap { get; init; }
     /// <summary>
     /// Total laps in this session
     /// </summary>
@@ -26,10 +26,6 @@ public readonly struct RaceData
     /// Position
     /// </summary>
     public int Position { get; init; }
-    /// <summary>
-    /// Total number of cars in session
-    /// </summary>
-    public int NumberOfCars { get; init; }
     /// <summary>
     /// Speed in Km/h
     /// </summary>
@@ -51,19 +47,19 @@ public readonly struct RaceData
     /// </summary>
     public float AirTemp { get; init; }
     /// <summary>
-    /// Number of remaining for current fuel
+    /// Liters of remaining fuel
     /// </summary>
-    public float FuelLaps { get; init; }
+    public float FuelRemaining { get; init; }
     /// <summary>
     /// Brake bias
     /// </summary>
     public float BrakeBias { get; init; }
     /// <summary>
-    /// Last laptime in milliseconds
+    /// Last laptime in seconds
     /// </summary>
-    public int LastLapTime { get; init; }
+    public float LastLapTime { get; init; }
     /// <summary>
-    /// Best laptime in secondss
+    /// Best laptime in seconds
     /// </summary>
     public float BestLapTime { get; init; }
     /// <summary>
@@ -87,6 +83,10 @@ public readonly struct RaceData
     /// </summary>
     public string DriverAhead { get; init; }
     /// <summary>
+    /// Clutch percentage
+    /// </summary>
+    public int ClutchPct { get; init; }
+    /// <summary>
     /// Throttle percentage
     /// </summary>
     public int ThrottlePct { get; init; }
@@ -94,4 +94,12 @@ public readonly struct RaceData
     /// Brake percentage
     /// </summary>
     public int BrakePct { get; init; }
+    /// <summary>
+    /// Incidents occured
+    /// </summary>
+    public int Incidents { get; init; }
+    /// <summary>
+    /// Maximum incidents allowed
+    /// </summary>
+    public int MaxIncidents { get; init; }
 }

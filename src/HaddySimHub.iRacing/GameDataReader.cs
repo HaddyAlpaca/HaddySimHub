@@ -23,16 +23,31 @@ namespace HaddySimHub.iRacing
                 return new RaceData();
             }
 
+            var session = typedRawData.SessionData.SessionInfo.Sessions.First(s => s.SessionNum == typedRawData.Telemetry.SessionNum);
+
             return new RaceData
             {
+                SessionType = session.SessionType,
+                DeltaTime = typedRawData.Telemetry.LapDeltaToSessionBestLap,
+                IsTimedSession = session.IsLimitedTime,
+                CurrentLap = typedRawData.Telemetry.Lap,
+                //MaxIncidents = typedRawData.Telemetry.,
+                //TotalLaps = 
+                SessionTimeRemaining = (float)typedRawData.Telemetry.SessionTimeRemain,
+                Position = typedRawData.Telemetry.PlayerCarPosition,
+                Incidents = typedRawData.Telemetry.PlayerCarDriverIncidentCount,
+                LastLapTime = typedRawData.Telemetry.LapLastLapTime,
+                BestLapTime = typedRawData.Telemetry.LapDeltaToSessionBestLap,
                 Gear = typedRawData.Telemetry.Gear,
                 Rpm = (int)typedRawData.Telemetry.RPM,
+                Speed = (int)Math.Round(typedRawData.Telemetry.Speed * 3.6),
+                BrakeBias = typedRawData.Telemetry.dcBrakeBias,
+                FuelRemaining = typedRawData.Telemetry.FuelLevel,
                 AirTemp = typedRawData.Telemetry.AirTemp,
                 TrackTemp = typedRawData.Telemetry.TrackTemp,
-                Laps = typedRawData.Telemetry.Lap,
+                ClutchPct = (int)typedRawData.Telemetry.Clutch * 100,
                 ThrottlePct = (int)typedRawData.Telemetry.Throttle * 100,
-                BrakePct = (int)typedRawData.Telemetry.Brake * 100,
-                DeltaTime = typedRawData.Telemetry.LapDeltaToSessionBestLap
+                BrakePct = (int)typedRawData.Telemetry.Brake * 100
             };
         }
     }
