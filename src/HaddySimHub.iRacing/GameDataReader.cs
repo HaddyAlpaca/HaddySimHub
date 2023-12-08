@@ -25,6 +25,41 @@ namespace HaddySimHub.iRacing
 
             var session = typedRawData.SessionData.SessionInfo.Sessions.First(s => s.SessionNum == typedRawData.Telemetry.SessionNum);
 
+            //Set flag
+            string flag = string.Empty;
+            switch (typedRawData.Telemetry.SessionFlags)
+            {
+                case SessionFlags.checkered:
+                    break;
+                case SessionFlags.white:
+                    flag = "white";
+                    break;
+                case SessionFlags.green:
+                    flag = "green"; 
+                    break;
+                case SessionFlags.yellow:
+                    flag = "yellow";
+                    break;
+                case SessionFlags.red:
+                    flag = "red";
+                    break;
+                case SessionFlags.blue:
+                    flag = "blue";
+                    break;
+                case SessionFlags.yellowWaving:
+                    flag = "yellow";
+                    break;
+                case SessionFlags.greenHeld:
+                    flag = "green";
+                    break;
+                case SessionFlags.black:
+                    flag = "black";
+                    break;
+                case SessionFlags.repair:
+                    flag = "black-orange";
+                    break;
+            }
+
             return new RaceData
             {
                 SessionType = session.SessionType,
@@ -47,7 +82,8 @@ namespace HaddySimHub.iRacing
                 TrackTemp = typedRawData.Telemetry.TrackTemp,
                 ClutchPct = (int)typedRawData.Telemetry.Clutch * 100,
                 ThrottlePct = (int)typedRawData.Telemetry.Throttle * 100,
-                BrakePct = (int)typedRawData.Telemetry.Brake * 100
+                BrakePct = (int)typedRawData.Telemetry.Brake * 100,
+                Flag = flag
             };
         }
     }
