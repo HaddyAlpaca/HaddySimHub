@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HaddySimHub.GameData\HaddySimHub.GameData.csproj" />
+    <ProjectReference Include="..\HaddySimHub.Logging\HaddySimHub.Logging.csproj" />
     <ProjectReference Include="..\iRacingSDK.Net\iRacingSDK.Net.csproj" />
   </ItemGroup>
 

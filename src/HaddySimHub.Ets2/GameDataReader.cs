@@ -1,5 +1,6 @@
 ﻿using HaddySimHub.GameData;
 using HaddySimHub.GameData.Models;
+using HaddySimHub.Logging;
 using SCSSdkClient;
 
 namespace HaddySimHub.Ets2;
@@ -10,7 +11,7 @@ public sealed class GameDataReader : IGameDataReader
 
     public event EventHandler<object>? RawDataUpdate;
 
-    public GameDataReader()
+    public GameDataReader(ILogger logger)
     {
         this._telemetry = new SCSSdkTelemetry();
         this._telemetry.Data += (SCSSdkClient.Object.SCSTelemetry data, bool newTimestamp) =>

@@ -1,4 +1,5 @@
 ﻿using HaddySimHub.GameData.Models;
+using HaddySimHub.Logging;
 
 namespace HaddySimHub.GameData;
 
@@ -19,10 +20,12 @@ public class GameDataWatcherOptions
 
 public class GameDataWatcher(
     Dictionary<string, Type> readers,
-    IProcessMonitor processMonitor) : IGameDataWatcher
+    IProcessMonitor processMonitor,
+    ILogger logger) : IGameDataWatcher
 {
     private readonly Dictionary<string, Type> readers = readers;
     private readonly IProcessMonitor processMonitor = processMonitor;
+    private readonly ILogger _logger = logger;
     private string _currentGameProcess = string.Empty;
     private Timer? _processTimer;
     private IGameDataReader? _gameDataReader;
@@ -36,8 +39,12 @@ public class GameDataWatcher(
     {
         this._currentGameProcess = string.Empty;
 
+        this._logger.Info("Start watching games");
+
         if (options.RunDemoMode)
         {
+            this._logger.Info("Running demo mode");
+
             Task.Run(() =>
             {
                 Thread.Sleep(10000);
@@ -85,14 +92,23 @@ public class GameDataWatcher(
                     this._currentGameProcess != runningGame.Key)
                 {
                     //Switch to new game
+                    this._logger.Info($"Game activated: {runningGame.Key}");
 
                     //Stop the previous game data stream
                     this._gameDataReader = null;
 
-                    //Set new process
-                    this._currentGameProcess = runningGame.Key;
+                    try
+                    {
+                        this._gameDataReader = Activator.CreateInstance(runningGame.Value, new object[] { this._logger }) as IGameDataReader;
 
-                    this._gameDataReader = Activator.CreateInstance(runningGame.Value) as IGameDataReader;
+                        //Set new process
+                        this._currentGameProcess = runningGame.Key;
+                    }
+                    catch (Exception ex)
+                    {
+                        this._logger.Error($"Error creating game data reader '{runningGame.Value}': {ex.Message}");
+                    }
+
                     if (this._gameDataReader != null)
                     {
                         this._gameDataReader.RawDataUpdate += (object? sender, object rawData) =>
@@ -104,7 +120,22 @@ public class GameDataWatcher(
                             }
 
                             //Convert to general format
-                            var data = this._gameDataReader.Convert(rawData);
+                            object? data = null;
+                            try
+                            {
+                                data = this._gameDataReader.Convert(rawData);
+                            }
+                            catch (Exception ex)
+                            {
+                                this._logger.Error($"Error converting game data: {ex.Message}");
+                            }
+
+                            if (data == null)
+                            {
+                                //No data
+                                return;
+                            }
+
                             if (data is RaceData raceData)
                             {
                                 this.RaceDataUpdated?.Invoke(this, raceData);

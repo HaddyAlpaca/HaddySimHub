@@ -97,11 +97,11 @@ public readonly struct RaceData
     /// <summary>
     /// Incidents occured
     /// </summary>
-    public int Incidents { get; init; }
+    public long Incidents { get; init; }
     /// <summary>
     /// Maximum incidents allowed
     /// </summary>
-    public int MaxIncidents { get; init; }
+    public long MaxIncidents { get; init; }
     /// <summary>
     /// Pit limiter is on
     /// </summary>
