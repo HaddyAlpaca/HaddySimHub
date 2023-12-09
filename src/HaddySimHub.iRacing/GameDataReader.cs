@@ -1,6 +1,5 @@
 ﻿using HaddySimHub.GameData;
 using HaddySimHub.GameData.Models;
-using HaddySimHub.Logging;
 using iRacingSDK;
 
 namespace HaddySimHub.iRacing
@@ -9,7 +8,7 @@ namespace HaddySimHub.iRacing
     {
         public event EventHandler<object>? RawDataUpdate;
 
-        public GameDataReader(ILogger logger)
+        public GameDataReader()
         {
             iRacingSDK.iRacing.NewData += (DataSample obj) =>
             {
