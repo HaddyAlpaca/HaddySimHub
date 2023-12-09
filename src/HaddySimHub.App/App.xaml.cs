@@ -1,4 +1,5 @@
 ﻿using HaddySimHub.GameData;
+using HaddySimHub.Logging;
 using HaddySimHub.WebServer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,6 +24,7 @@ namespace HaddySimHub
         private static IHost? AppHost { get; set; }
         private readonly CancellationTokenSource cancellationTokenSource = new();
         private GameDataWatcher? watcher;
+        private readonly ILogger _logger;
 
         public App()
         {
@@ -32,9 +34,27 @@ namespace HaddySimHub
                     services.AddSingleton<SplashScreenWindow>();
                     services.AddSingleton<MainWindow>();
                     services.AddSingleton<IProcessMonitor, ProcessMonitor>();
+                    services.AddSingleton<ILogger, Logger>();
                     services.AddSingleton<Ets2.GameDataReader>();
                 })
                 .Build();
+
+            this._logger = AppHost.Services.GetRequiredService<ILogger>();
+            AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+            {
+                if (e.ExceptionObject is Exception exception)
+                {
+                    this._logger.Fatal($"Unhandled Exception: {exception.Message}");
+                }
+            };
+        }
+
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            if (e.ExceptionObject is Exception exception)
+            {
+                this._logger.Fatal($"Unhandled Exception: {exception.Message}");
+            }
         }
 
         protected override async void OnStartup(StartupEventArgs e)
@@ -64,6 +84,9 @@ namespace HaddySimHub
                 { "iracing", typeof(iRacing.GameDataReader) }
             };
 
+            //Create logger
+            var logger = new Logger();
+
             //Start monitoring game data
             var options = new GameDataWatcherOptions
             {
@@ -71,7 +94,10 @@ namespace HaddySimHub
                 RunDemoMode = e.Args.Contains("--demo")
             };
             bool rawData = e.Args.Contains("--raw");
-            this.watcher = new GameDataWatcher(readers, AppHost.Services.GetRequiredService<IProcessMonitor>());
+            this.watcher = new GameDataWatcher(
+                readers,
+                AppHost.Services.GetRequiredService<IProcessMonitor>(),
+                this._logger);
             this.watcher.Start(options, token);
             this.watcher.GameDataIdle += async (sender, e) => { await NotificationService.SendIdle(); };
             this.watcher.RawDataUpdated += async (sender, data) => { await NotificationService.SendRawData(data); };

@@ -1,5 +1,6 @@
 ﻿using HaddySimHub.GameData;
 using HaddySimHub.GameData.Models;
+using HaddySimHub.Logging;
 using iRacingSDK;
 
 namespace HaddySimHub.iRacing
@@ -8,7 +9,7 @@ namespace HaddySimHub.iRacing
     {
         public event EventHandler<object>? RawDataUpdate;
 
-        public GameDataReader()
+        public GameDataReader(ILogger logger)
         {
             iRacingSDK.iRacing.NewData += (DataSample obj) =>
             {
@@ -24,7 +25,8 @@ namespace HaddySimHub.iRacing
             }
 
             var session = typedRawData.SessionData.SessionInfo.Sessions.First(s => s.SessionNum == typedRawData.Telemetry.SessionNum);
-
+            var x = typedRawData.SessionData.DriverInfo.CompetingDrivers.First();
+            
             //Set flag
             string flag = string.Empty;
             switch (typedRawData.Telemetry.SessionFlags)
@@ -66,11 +68,11 @@ namespace HaddySimHub.iRacing
                 DeltaTime = typedRawData.Telemetry.LapDeltaToSessionBestLap,
                 IsTimedSession = session.IsLimitedTime,
                 CurrentLap = typedRawData.Telemetry.Lap,
-                //MaxIncidents = typedRawData.Telemetry.,
-                //TotalLaps = 
+                TotalLaps = session._SessionLaps,
+                Incidents = typedRawData.Telemetry.PlayerCarDriverIncidentCount,
+                MaxIncidents = typedRawData.SessionData.WeekendInfo.WeekendOptions._IncidentLimit,
                 SessionTimeRemaining = (float)typedRawData.Telemetry.SessionTimeRemain,
                 Position = typedRawData.Telemetry.PlayerCarPosition,
-                Incidents = typedRawData.Telemetry.PlayerCarDriverIncidentCount,
                 LastLapTime = typedRawData.Telemetry.LapLastLapTime,
                 BestLapTime = typedRawData.Telemetry.LapDeltaToSessionBestLap,
                 Gear = typedRawData.Telemetry.Gear,
@@ -83,7 +85,8 @@ namespace HaddySimHub.iRacing
                 ClutchPct = (int)typedRawData.Telemetry.Clutch * 100,
                 ThrottlePct = (int)typedRawData.Telemetry.Throttle * 100,
                 BrakePct = (int)typedRawData.Telemetry.Brake * 100,
-                Flag = flag
+                Flag = flag,
+                PitLimiterOn = typedRawData.Telemetry.EngineWarnings.HasFlag(EngineWarnings.PitSpeedLimiter)
             };
         }
     }
