@@ -99,7 +99,7 @@ public class GameDataWatcher(
 
                     try
                     {
-                        this._gameDataReader = Activator.CreateInstance(runningGame.Value, new object[] { this._logger }) as IGameDataReader;
+                        this._gameDataReader = Activator.CreateInstance(runningGame.Value) as IGameDataReader;
 
                         //Set new process
                         this._currentGameProcess = runningGame.Key;

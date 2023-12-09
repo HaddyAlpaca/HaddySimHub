@@ -1,6 +1,5 @@
 ﻿using HaddySimHub.GameData;
 using HaddySimHub.GameData.Models;
-using HaddySimHub.Logging;
 using SCSSdkClient;
 
 namespace HaddySimHub.Ets2;
@@ -11,7 +10,7 @@ public sealed class GameDataReader : IGameDataReader
 
     public event EventHandler<object>? RawDataUpdate;
 
-    public GameDataReader(ILogger logger)
+    public GameDataReader()
     {
         this._telemetry = new SCSSdkTelemetry();
         this._telemetry.Data += (SCSSdkClient.Object.SCSTelemetry data, bool newTimestamp) =>
@@ -36,12 +35,12 @@ public sealed class GameDataReader : IGameDataReader
             DestinationCompany = typedRawData.JobValues.CompanyDestination,
             DistanceRemaining = (int)typedRawData.NavigationValues.NavigationDistance,
             TimeRemaining = (int)Math.Ceiling(typedRawData.NavigationValues.NavigationTime / 60),
-            TimeRemainingIrl = (int)Math.Ceiling(this.ConvertToIrlTimeSpan(typedRawData.NavigationValues.NavigationTime / 60)),
+            TimeRemainingIrl = (int)Math.Ceiling(ConvertToIrlTimeSpan(typedRawData.NavigationValues.NavigationTime / 60)),
             RestTimeRemaining = typedRawData.CommonValues.NextRestStop.Value,
-            RestTimeRemainingIrl = (int)Math.Ceiling(this.ConvertToIrlTimeSpan(typedRawData.CommonValues.NextRestStop.Value)),
+            RestTimeRemainingIrl = (int)Math.Ceiling(ConvertToIrlTimeSpan(typedRawData.CommonValues.NextRestStop.Value)),
             //Job info
             JobTimeRemaining = typedRawData.JobValues.RemainingDeliveryTime.Value,
-            JobTimeRemainingIrl = (long)Math.Ceiling(this.ConvertToIrlTimeSpan(typedRawData.JobValues.RemainingDeliveryTime.Value)),
+            JobTimeRemainingIrl = (long)Math.Ceiling(ConvertToIrlTimeSpan(typedRawData.JobValues.RemainingDeliveryTime.Value)),
             JobIncome = typedRawData.JobValues.Income,
             JobCargoName = typedRawData.JobValues.CargoValues.Name,
             JobCargoMass = (int)Math.Ceiling(typedRawData.JobValues.CargoValues.Mass),
@@ -72,7 +71,7 @@ public sealed class GameDataReader : IGameDataReader
         };
     }
 
-    private float ConvertToIrlTimeSpan(float minutes)
+    private static float ConvertToIrlTimeSpan(float minutes)
     {
         //Assume 1 minute = 15 minutes
         return minutes / 15;
