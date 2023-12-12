@@ -61,6 +61,9 @@ namespace HaddySimHub.iRacing
                     break;
             }
 
+            Car? carBehind = typedRawData.Telemetry.RaceCars.FirstOrDefault(c => c.Position == typedRawData.Telemetry.PlayerCarClassPosition + 1);
+            Car? carAhead = typedRawData.Telemetry.RaceCars.FirstOrDefault(c => c.Position == typedRawData.Telemetry.PlayerCarClassPosition - 1);
+
             return new RaceData
             {
                 SessionType = session.SessionType,
@@ -85,7 +88,9 @@ namespace HaddySimHub.iRacing
                 ThrottlePct = (int)typedRawData.Telemetry.Throttle * 100,
                 BrakePct = (int)typedRawData.Telemetry.Brake * 100,
                 Flag = flag,
-                PitLimiterOn = typedRawData.Telemetry.EngineWarnings.HasFlag(EngineWarnings.PitSpeedLimiter)
+                PitLimiterOn = typedRawData.Telemetry.EngineWarnings.HasFlag(EngineWarnings.PitSpeedLimiter),
+                DriverAhead = carAhead?.Details.UserName ?? string.Empty,
+                DriverBehind = carBehind?.Details.UserName ?? string.Empty
             };
         }
     }
