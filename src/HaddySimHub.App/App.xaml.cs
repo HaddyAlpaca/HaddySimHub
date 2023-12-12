@@ -81,7 +81,7 @@ namespace HaddySimHub
             var readers = new Dictionary<string, Type>
             {
                 { "eurotrucks2", typeof(Ets2.GameDataReader) },
-                { "iracing", typeof(iRacing.GameDataReader) }
+                { "iracingui", typeof(iRacing.GameDataReader) }
             };
 
             //Create logger
