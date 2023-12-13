@@ -127,7 +127,7 @@ public class GameDataWatcher(
                             }
                             catch (Exception ex)
                             {
-                                this._logger.Error($"Error converting game data: {ex.Message}");
+                                this._logger.Error($"Error converting game data: {ex.Message}\n\n{ex.StackTrace}");
                             }
 
                             if (data == null)
