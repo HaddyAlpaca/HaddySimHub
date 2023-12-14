@@ -14,7 +14,14 @@ public interface IGameDataWatcher
 
 public class GameDataWatcherOptions
 {
+    /// <summary>
+    /// Emit raw data received from game
+    /// </summary>
     public bool EmitRawData { get; init; }
+    /// <summary>
+    /// Emit converted raw data (e.g. RaceData() or TruckData())
+    /// </summary>
+    public bool EmitConvertedRawData { get; set; }
     public bool RunDemoMode { get; init; }
 }
 
@@ -133,6 +140,12 @@ public class GameDataWatcher(
                             if (data == null)
                             {
                                 //No data
+                                return;
+                            }
+
+                            if (options.EmitConvertedRawData)
+                            {
+                                this.RawDataUpdated?.Invoke(this, data);
                                 return;
                             }
 

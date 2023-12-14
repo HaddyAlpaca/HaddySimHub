@@ -91,9 +91,9 @@ namespace HaddySimHub
             var options = new GameDataWatcherOptions
             {
                 EmitRawData = e.Args.Contains("--raw"),
+                EmitConvertedRawData = e.Args.Contains("--raw-converted"),
                 RunDemoMode = e.Args.Contains("--demo")
             };
-            bool rawData = e.Args.Contains("--raw");
             this.watcher = new GameDataWatcher(
                 readers,
                 AppHost.Services.GetRequiredService<IProcessMonitor>(),
