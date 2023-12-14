@@ -64,6 +64,12 @@ namespace HaddySimHub.iRacing
             Car? carBehind = typedRawData.Telemetry.RaceCars.FirstOrDefault(c => c.Position == typedRawData.Telemetry.PlayerCarClassPosition + 1);
             Car? carAhead = typedRawData.Telemetry.RaceCars.FirstOrDefault(c => c.Position == typedRawData.Telemetry.PlayerCarClassPosition - 1);
 
+            long incidentLimit = typedRawData.SessionData.WeekendInfo.WeekendOptions._IncidentLimit;
+            if (incidentLimit == long.MaxValue)
+            {
+                incidentLimit = 0;
+            }
+
             return new RaceData
             {
                 SessionType = session.SessionType,
@@ -72,7 +78,7 @@ namespace HaddySimHub.iRacing
                 CurrentLap = typedRawData.Telemetry.Lap,
                 TotalLaps = session._SessionLaps,
                 Incidents = typedRawData.Telemetry.PlayerCarDriverIncidentCount,
-                MaxIncidents = typedRawData.SessionData.WeekendInfo.WeekendOptions._IncidentLimit,
+                MaxIncidents = incidentLimit,
                 SessionTimeRemaining = (float)typedRawData.Telemetry.SessionTimeRemain,
                 Position = typedRawData.Telemetry.PlayerCarPosition,
                 LastLapTime = typedRawData.Telemetry.LapLastLapTime,
