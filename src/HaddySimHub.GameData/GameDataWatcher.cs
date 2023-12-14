@@ -54,26 +54,45 @@ public class GameDataWatcher(
 
             Task.Run(() =>
             {
-                Thread.Sleep(10000);
-
-                //Truck data
-                for (short i = 1; i <= 12; i++)
+                while(!cancellationToken.IsCancellationRequested)
                 {
-                    this.TruckDataUpdated?.Invoke(this, new TruckData { Gear = i });
+                    //Truck data
+                    for (short i = 1; i <= 12; i++)
+                    {
+                        var data = new TruckData { Gear = i };
+                        if (options.EmitConvertedRawData)
+                        {
+                            this.RawDataUpdated?.Invoke(this, data);
+                        }
+                        else
+                        {
+                            this.TruckDataUpdated?.Invoke(this, data);
+                        }
 
-                    Thread.Sleep(1000);
+                        Thread.Sleep(1000);
+                    }
+
+                    //Race data
+                    for (short i = 1; i <= 12; i++)
+                    {
+                        var data = new RaceData { Gear = i };
+                        if (options.EmitConvertedRawData)
+                        {
+                            this.RawDataUpdated?.Invoke(this, data);
+                        }
+                        else
+                        {
+                            this.RaceDataUpdated?.Invoke(this, data);
+                        }
+
+                        Thread.Sleep(1000);
+                    }
+
+                    //Idle
+                    this.GameDataIdle?.Invoke(this, new EventArgs());
+
+                    Thread.Sleep(3000);
                 }
-
-                //Race data
-                for (short i = 1; i <= 12; i++)
-                {
-                    this.RaceDataUpdated?.Invoke(this, new RaceData { Gear = i });
-
-                    Thread.Sleep(1000);
-                }
-
-                //Idle
-                this.GameDataIdle?.Invoke(this, new EventArgs());
             });
 
         }
