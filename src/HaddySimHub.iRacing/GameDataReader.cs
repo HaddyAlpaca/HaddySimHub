@@ -82,7 +82,7 @@ namespace HaddySimHub.iRacing
                 SessionTimeRemaining = (float)typedRawData.Telemetry.SessionTimeRemain,
                 Position = typedRawData.Telemetry.PlayerCarPosition,
                 LastLapTime = typedRawData.Telemetry.LapLastLapTime,
-                BestLapTime = typedRawData.Telemetry.LapDeltaToSessionBestLap,
+                BestLapTime = typedRawData.Telemetry.LapBestLapTime,
                 Gear = typedRawData.Telemetry.Gear,
                 Rpm = (int)typedRawData.Telemetry.RPM,
                 Speed = (int)Math.Round(typedRawData.Telemetry.Speed * 3.6),
