@@ -26,6 +26,8 @@ public sealed class GameDataReader : IGameDataReader
             return new TruckData();
         }
 
+        typedRawData.TruckValues.CurrentValues.LightsValues.
+
         return new TruckData()
         {
             //Navigation info
@@ -35,12 +37,12 @@ public sealed class GameDataReader : IGameDataReader
             DestinationCompany = typedRawData.JobValues.CompanyDestination,
             DistanceRemaining = (int)typedRawData.NavigationValues.NavigationDistance,
             TimeRemaining = (int)Math.Ceiling(typedRawData.NavigationValues.NavigationTime / 60),
-            TimeRemainingIrl = (int)Math.Ceiling(ConvertToIrlTimeSpan(typedRawData.NavigationValues.NavigationTime / 60)),
+            TimeRemainingIrl = (int)Math.Ceiling((typedRawData.NavigationValues.NavigationTime / 60) * typedRawData.CommonValues.Scale),
             RestTimeRemaining = typedRawData.CommonValues.NextRestStop.Value,
-            RestTimeRemainingIrl = (int)Math.Ceiling(ConvertToIrlTimeSpan(typedRawData.CommonValues.NextRestStop.Value)),
+            RestTimeRemainingIrl = (int)Math.Ceiling(typedRawData.CommonValues.NextRestStop.Value * typedRawData.CommonValues.Scale),
             //Job info
             JobTimeRemaining = typedRawData.JobValues.RemainingDeliveryTime.Value,
-            JobTimeRemainingIrl = (long)Math.Ceiling(ConvertToIrlTimeSpan(typedRawData.JobValues.RemainingDeliveryTime.Value)),
+            JobTimeRemainingIrl = (long)Math.Ceiling(typedRawData.JobValues.RemainingDeliveryTime.Value * typedRawData.CommonValues.Scale),
             JobIncome = typedRawData.JobValues.Income,
             JobCargoName = typedRawData.JobValues.CargoValues.Name,
             JobCargoMass = (int)Math.Ceiling(typedRawData.JobValues.CargoValues.Mass),
@@ -53,7 +55,7 @@ public sealed class GameDataReader : IGameDataReader
             DamageChassis = (int)Math.Round(typedRawData.TruckValues.CurrentValues.DamageValues.Chassis * 100),
             //TODO
             DamageTrailer = 0,
-            TrailerAttached = typedRawData.TrailerValues.Any(),
+            TrailerAttached = typedRawData.TrailerValues.Length != 0,
             //Dashboard
             Gear = (short)typedRawData.TruckValues.CurrentValues.DashboardValues.GearDashboards,
             Rpm = (int)typedRawData.TruckValues.CurrentValues.DashboardValues.RPM,
@@ -66,14 +68,14 @@ public sealed class GameDataReader : IGameDataReader
             HighBeamOn = typedRawData.TruckValues.CurrentValues.LightsValues.BeamHigh,
             ParkingBrakeOn = typedRawData.TruckValues.CurrentValues.MotorValues.BrakeValues.ParkingBrake,
             BatteryWarningOn = typedRawData.TruckValues.CurrentValues.DashboardValues.WarningValues.BatteryVoltage,
+            HazardLightsOn = typedRawData.TruckValues.CurrentValues.LightsValues.HazardWarningLights,
+            EngineWaterTempWarningOn = typedRawData.TruckValues.CurrentValues.DashboardValues.WarningValues.WaterTemperature,
+            OilPressureWarningOn = typedRawData.TruckValues.CurrentValues.DashboardValues.WarningValues.OilPressure,
             FuelDistance = (int)typedRawData.TruckValues.CurrentValues.DashboardValues.FuelValue.Range,
             TruckName = $"{typedRawData.TruckValues.ConstantsValues.Brand} {typedRawData.TruckValues.ConstantsValues.Name}",
+            BlinkerLeftOn = typedRawData.TruckValues.CurrentValues.LightsValues.BlinkerLeftOn,
+            BlinkerRightOn = typedRawData.TruckValues.CurrentValues.LightsValues .BlinkerRightOn,
+            FuelWarningOn = typedRawData.TruckValues.CurrentValues.DashboardValues.WarningValues.FuelW,
         };
-    }
-
-    private static float ConvertToIrlTimeSpan(float minutes)
-    {
-        //Assume 1 minute = 15 minutes
-        return minutes / 15;
     }
 }

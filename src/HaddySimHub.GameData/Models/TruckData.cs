@@ -36,7 +36,6 @@ public struct TruckData
     /// <summary>
     /// Percentage of fuel remaining
     /// </summary>
-    public int FuelPercentage { get; init; }
     /// <summary>
     /// Distance (km) that can be travelled with the current fuel level
     /// </summary>
@@ -114,6 +113,13 @@ public struct TruckData
     /// Battery warning active
     /// </summary>
     public bool BatteryWarningOn { get; init; }
+    public bool HazardLightsOn { get; init; }
+    public bool EngineWaterTempWarningOn { get; init; }
+    public bool OilPressureWarningOn { get; init; }
+    public bool FuelWarningOn { get; init; }
+    public bool BlinkerLeftOn { get; init; }
+    public bool BlinkerRightOn { get; init; }
+
     /// <summary>
     /// Description of the current truck
     /// </summary>
