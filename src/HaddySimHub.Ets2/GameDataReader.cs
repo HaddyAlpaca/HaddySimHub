@@ -51,8 +51,7 @@ public sealed class GameDataReader : IGameDataReader
             DamageTransmission = (int)Math.Round(typedRawData.TruckValues.CurrentValues.DamageValues.Transmission * 100),
             DamageEngine = (int)Math.Round(typedRawData.TruckValues.CurrentValues.DamageValues.Engine * 100),
             DamageChassis = (int)Math.Round(typedRawData.TruckValues.CurrentValues.DamageValues.Chassis * 100),
-            //TODO
-            DamageTrailer = 0,
+            DamageTrailer = (int)Math.Ceiling(typedRawData.TrailerValues.Average(t => (t.DamageValues.Chassis + t.DamageValues.Cargo + t.DamageValues.Wheels + t.DamageValues.Body)/4)),
             TrailerAttached = typedRawData.TrailerValues.Length != 0,
             //Dashboard
             Gear = (short)typedRawData.TruckValues.CurrentValues.DashboardValues.GearDashboards,

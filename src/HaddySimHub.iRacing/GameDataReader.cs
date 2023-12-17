@@ -73,16 +73,19 @@ namespace HaddySimHub.iRacing
             return new RaceData
             {
                 SessionType = session.SessionType,
-                DeltaTime = typedRawData.Telemetry.LapDeltaToSessionBestLap,
-                IsTimedSession = session.IsLimitedTime,
+                IsLimitedTime = session.IsLimitedTime,
+                IsLimitedSessionLaps = session.IsLimitedSessionLaps,
                 CurrentLap = typedRawData.Telemetry.Lap,
                 TotalLaps = session._SessionLaps,
                 Incidents = typedRawData.Telemetry.PlayerCarDriverIncidentCount,
                 MaxIncidents = incidentLimit,
                 SessionTimeRemaining = (float)typedRawData.Telemetry.SessionTimeRemain,
                 Position = typedRawData.Telemetry.PlayerCarPosition,
+                CurrentLapTime = typedRawData.Telemetry.LapCurrentLapTime,
                 LastLapTime = typedRawData.Telemetry.LapLastLapTime,
+                LastLapTimeDelta = typedRawData.Telemetry.LapDeltaToSessionLastlLap,
                 BestLapTime = typedRawData.Telemetry.LapBestLapTime,
+                BestLapTimeDelta = typedRawData.Telemetry.LapDeltaToSessionBestLap,
                 Gear = typedRawData.Telemetry.Gear,
                 Rpm = (int)typedRawData.Telemetry.RPM,
                 Speed = (int)Math.Round(typedRawData.Telemetry.Speed * 3.6),
@@ -95,8 +98,8 @@ namespace HaddySimHub.iRacing
                 BrakePct = (int)(typedRawData.Telemetry.Brake * 100),
                 Flag = flag,
                 PitLimiterOn = typedRawData.Telemetry.EngineWarnings.HasFlag(EngineWarnings.PitSpeedLimiter),
-                DriverAhead = carAhead?.Details.UserName ?? string.Empty,
-                DriverBehind = carBehind?.Details.UserName ?? string.Empty
+                DriverAheadName = carAhead?.Details.UserName ?? string.Empty,
+                DriverBehindName = carBehind?.Details.UserName ?? string.Empty
             };
         }
     }

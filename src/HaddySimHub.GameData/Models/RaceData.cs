@@ -6,10 +6,8 @@ public readonly struct RaceData
     /// Session type description
     /// </summary>
     public string SessionType { get; init; }
-    /// <summary>
-    /// Is this session timed instead of a fixed number of laps?
-    /// </summary>
-    public bool IsTimedSession { get; init; }
+    public bool IsLimitedTime { get; init; }
+    public bool IsLimitedSessionLaps { get; init; }
     /// <summary>
     /// Current lap this session
     /// </summary>
@@ -54,18 +52,17 @@ public readonly struct RaceData
     /// Brake bias
     /// </summary>
     public float BrakeBias { get; init; }
+    public float CurrentLapTime { get; init; }
     /// <summary>
     /// Last laptime in seconds
     /// </summary>
     public float LastLapTime { get; init; }
+    public float LastLapTimeDelta { get; init; }
     /// <summary>
     /// Best laptime in seconds
     /// </summary>
     public float BestLapTime { get; init; }
-    /// <summary>
-    /// Delta time in seconds
-    /// </summary>
-    public float DeltaTime { get; init; }
+    public float BestLapTimeDelta { get; init; }
     /// <summary>
     /// Gap behind in seconds
     /// </summary>
@@ -73,7 +70,7 @@ public readonly struct RaceData
     /// <summary>
     /// Driver behind
     /// </summary>
-    public string DriverBehind { get; init; }
+    public string DriverBehindName { get; init; }
     /// <summary>
     /// Gap ahead in seconds
     /// </summary>
@@ -81,7 +78,8 @@ public readonly struct RaceData
     /// <summary>
     /// Driver ahead
     /// </summary>
-    public string DriverAhead { get; init; }
+    public string DriverAheadName { get; init; }
+    public string DriverAheadLicenseColor { get; init; }
     /// <summary>
     /// Clutch percentage
     /// </summary>
