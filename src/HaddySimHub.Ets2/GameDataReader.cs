@@ -26,8 +26,6 @@ public sealed class GameDataReader : IGameDataReader
             return new TruckData();
         }
 
-        typedRawData.TruckValues.CurrentValues.LightsValues.
-
         return new TruckData()
         {
             //Navigation info
