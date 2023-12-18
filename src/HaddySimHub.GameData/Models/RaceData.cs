@@ -53,6 +53,7 @@ public readonly struct RaceData
     /// </summary>
     public float BrakeBias { get; init; }
     public float CurrentLapTime { get; init; }
+    public float LastSectorTime { get; init; }
     /// <summary>
     /// Last laptime in seconds
     /// </summary>
@@ -80,6 +81,9 @@ public readonly struct RaceData
     /// </summary>
     public string DriverAheadName { get; init; }
     public string DriverAheadLicenseColor { get; init; }
+    public string DriverAheadLicense { get; init; }
+    public string DriverAheadCarNumber { get; init; }
+    public long DriverAheadIRating { get; init; }
     /// <summary>
     /// Clutch percentage
     /// </summary>

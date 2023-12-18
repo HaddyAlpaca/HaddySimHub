@@ -24,7 +24,6 @@ namespace HaddySimHub.iRacing
             }
 
             var session = typedRawData.SessionData.SessionInfo.Sessions.First(s => s.SessionNum == typedRawData.Telemetry.SessionNum);
-            var x = typedRawData.SessionData.DriverInfo.CompetingDrivers.First();
             
             //Set flag
             string flag = string.Empty;
@@ -99,6 +98,10 @@ namespace HaddySimHub.iRacing
                 Flag = flag,
                 PitLimiterOn = typedRawData.Telemetry.EngineWarnings.HasFlag(EngineWarnings.PitSpeedLimiter),
                 DriverAheadName = carAhead?.Details.UserName ?? string.Empty,
+                DriverAheadLicenseColor = carAhead?.Details.Driver.LicColor ?? string.Empty,
+                DriverAheadCarNumber = carAhead?.Details.CarNumberDisplay ?? string.Empty,
+                DriverAheadIRating = carAhead?.Details.Driver.IRating ?? 0,
+                DriverAheadLicense = carAhead?.Details.Driver.LicString ?? string.Empty,
                 DriverBehindName = carBehind?.Details.UserName ?? string.Empty
             };
         }
