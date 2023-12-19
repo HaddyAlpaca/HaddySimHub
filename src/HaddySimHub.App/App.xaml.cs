@@ -91,8 +91,6 @@ namespace HaddySimHub
             //Start monitoring game data
             var options = new GameDataWatcherOptions
             {
-                EmitRawData = e.Args.Contains("--raw"),
-                EmitConvertedRawData = e.Args.Contains("--converted-raw"),
                 RunDemoMode = e.Args.Contains("--demo")
             };
             this.watcher = new GameDataWatcher(
@@ -101,7 +99,6 @@ namespace HaddySimHub
                 this._logger);
             this.watcher.Start(options, token);
             this.watcher.GameDataIdle += async (sender, e) => { await NotificationService.SendIdle(); };
-            this.watcher.RawDataUpdated += async (sender, data) => { await NotificationService.SendRawData(data); };
             this.watcher.TruckDataUpdated += async (sender, data) => { await NotificationService.SendTruckData(data); };
             this.watcher.RaceDataUpdated += async (sender, data) => { await NotificationService.SendRaceData(data); };
 

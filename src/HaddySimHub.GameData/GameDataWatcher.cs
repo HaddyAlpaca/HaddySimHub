@@ -6,7 +6,6 @@ namespace HaddySimHub.GameData;
 public interface IGameDataWatcher
 {
     event EventHandler? GameDataIdle;
-    event EventHandler<object>? RawDataUpdated;
     event EventHandler<TruckData>? TruckDataUpdated;
     event EventHandler<RaceData>? RaceDataUpdated;
     void Start(GameDataWatcherOptions options, CancellationToken cancellationToken);
@@ -14,14 +13,6 @@ public interface IGameDataWatcher
 
 public class GameDataWatcherOptions
 {
-    /// <summary>
-    /// Emit raw data received from game
-    /// </summary>
-    public bool EmitRawData { get; init; }
-    /// <summary>
-    /// Emit converted raw data (e.g. RaceData() or TruckData())
-    /// </summary>
-    public bool EmitConvertedRawData { get; set; }
     public bool RunDemoMode { get; init; }
 }
 
@@ -38,7 +29,6 @@ public class GameDataWatcher(
     private GameDataReaderBase? _gameDataReader;
 
     public event EventHandler? GameDataIdle;
-    public event EventHandler<object>? RawDataUpdated;
     public event EventHandler<TruckData>? TruckDataUpdated;
     public event EventHandler<RaceData>? RaceDataUpdated;
 
@@ -60,14 +50,7 @@ public class GameDataWatcher(
                     for (short i = 1; i <= 12; i++)
                     {
                         var data = new TruckData { Gear = i };
-                        if (options.EmitConvertedRawData)
-                        {
-                            this.RawDataUpdated?.Invoke(this, data);
-                        }
-                        else
-                        {
-                            this.TruckDataUpdated?.Invoke(this, data);
-                        }
+                        this.TruckDataUpdated?.Invoke(this, data);
 
                         Thread.Sleep(1000);
                     }
@@ -76,14 +59,7 @@ public class GameDataWatcher(
                     for (short i = 1; i <= 12; i++)
                     {
                         var data = new RaceData { Gear = i };
-                        if (options.EmitConvertedRawData)
-                        {
-                            this.RawDataUpdated?.Invoke(this, data);
-                        }
-                        else
-                        {
-                            this.RaceDataUpdated?.Invoke(this, data);
-                        }
+                        this.RaceDataUpdated?.Invoke(this, data);
 
                         Thread.Sleep(1000);
                     }
@@ -139,12 +115,6 @@ public class GameDataWatcher(
                     {
                         this._gameDataReader.RawDataUpdate += (object? sender, object rawData) =>
                         {
-                            if (options.EmitRawData)
-                            {
-                                this.RawDataUpdated?.Invoke(this, rawData);
-                                return;
-                            }
-
                             //Convert to general format
                             object? data = null;
                             try
@@ -159,12 +129,6 @@ public class GameDataWatcher(
                             if (data == null)
                             {
                                 //No data
-                                return;
-                            }
-
-                            if (options.EmitConvertedRawData)
-                            {
-                                this.RawDataUpdated?.Invoke(this, data);
                                 return;
                             }
 
