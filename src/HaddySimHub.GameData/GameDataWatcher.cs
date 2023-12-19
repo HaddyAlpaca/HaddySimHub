@@ -35,7 +35,7 @@ public class GameDataWatcher(
     private readonly ILogger _logger = logger;
     private string _currentGameProcess = string.Empty;
     private Timer? _processTimer;
-    private IGameDataReader? _gameDataReader;
+    private GameDataReaderBase? _gameDataReader;
 
     public event EventHandler? GameDataIdle;
     public event EventHandler<object>? RawDataUpdated;
@@ -125,7 +125,7 @@ public class GameDataWatcher(
 
                     try
                     {
-                        this._gameDataReader = Activator.CreateInstance(runningGame.Value) as IGameDataReader;
+                        this._gameDataReader = Activator.CreateInstance(runningGame.Value, new object[] { this._logger }) as GameDataReaderBase;
 
                         //Set new process
                         this._currentGameProcess = runningGame.Key;

@@ -1,25 +1,29 @@
 ﻿using HaddySimHub.GameData;
 using HaddySimHub.GameData.Models;
+using HaddySimHub.Logging;
 using SCSSdkClient;
+using System.Text.Json;
 
 namespace HaddySimHub.Ets2;
 
-public sealed class GameDataReader : IGameDataReader 
+public sealed class GameDataReader : GameDataReaderBase 
 {
     private readonly SCSSdkTelemetry _telemetry;
 
-    public event EventHandler<object>? RawDataUpdate;
+    public override event EventHandler<object>? RawDataUpdate;
 
-    public GameDataReader()
+    public GameDataReader(ILogger logger): base(logger)
     {
         this._telemetry = new SCSSdkTelemetry();
         this._telemetry.Data += (SCSSdkClient.Object.SCSTelemetry data, bool newTimestamp) =>
         {
+            this._logger.Debug("ETS2 data:\n" + JsonSerializer.Serialize(data));
+
             this.RawDataUpdate?.Invoke(this, data);
         };
     }
 
-    public object Convert(object rawData)
+    public override object Convert(object rawData)
     {
         if (rawData is not SCSSdkClient.Object.SCSTelemetry typedRawData)
         {

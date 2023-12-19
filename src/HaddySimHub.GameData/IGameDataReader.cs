@@ -1,8 +1,12 @@
-﻿namespace HaddySimHub.GameData;
+﻿using HaddySimHub.Logging;
 
-public interface IGameDataReader
+namespace HaddySimHub.GameData;
+
+public abstract class GameDataReaderBase(ILogger logger)
 {
-    event EventHandler<object> RawDataUpdate;
+    protected readonly ILogger _logger = logger;
 
-    object Convert(object rawData);
+    public abstract event EventHandler<object> RawDataUpdate;
+
+    public abstract object Convert(object rawData);
 }

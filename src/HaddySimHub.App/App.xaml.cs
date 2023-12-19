@@ -85,7 +85,8 @@ namespace HaddySimHub
             };
 
             //Create logger
-            var logger = new Logger();
+            bool debugEnabled = e.Args.Contains("--debug");
+            var logger = new Logger(debugEnabled);
 
             //Start monitoring game data
             var options = new GameDataWatcherOptions
