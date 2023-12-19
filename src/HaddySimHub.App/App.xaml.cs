@@ -24,7 +24,7 @@ namespace HaddySimHub
         private static IHost? AppHost { get; set; }
         private readonly CancellationTokenSource cancellationTokenSource = new();
         private GameDataWatcher? watcher;
-        private readonly ILogger _logger;
+        private ILogger? _logger;
 
         public App()
         {
@@ -39,12 +39,11 @@ namespace HaddySimHub
                 })
                 .Build();
 
-            this._logger = AppHost.Services.GetRequiredService<ILogger>();
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>
             {
                 if (e.ExceptionObject is Exception exception)
                 {
-                    this._logger.Fatal($"Unhandled Exception: {exception.Message}");
+                    this._logger?.Fatal($"Unhandled Exception: {exception.Message}");
                 }
             };
         }
@@ -59,6 +58,10 @@ namespace HaddySimHub
 
         protected override async void OnStartup(StartupEventArgs e)
         {
+            //Create logger
+            bool debugEnabled = e.Args.Contains("--debug");
+            this._logger = new Logger(debugEnabled);
+
             await UpdateWebContent();
          
             await AppHost!.StartAsync();
@@ -84,20 +87,12 @@ namespace HaddySimHub
                 { "iracingui", typeof(iRacing.GameDataReader) }
             };
 
-            //Create logger
-            bool debugEnabled = e.Args.Contains("--debug");
-            var logger = new Logger(debugEnabled);
-
             //Start monitoring game data
-            var options = new GameDataWatcherOptions
-            {
-                RunDemoMode = e.Args.Contains("--demo")
-            };
             this.watcher = new GameDataWatcher(
                 readers,
                 AppHost.Services.GetRequiredService<IProcessMonitor>(),
                 this._logger);
-            this.watcher.Start(options, token);
+            this.watcher.Start(token);
             this.watcher.GameDataIdle += async (sender, e) => { await NotificationService.SendIdle(); };
             this.watcher.TruckDataUpdated += async (sender, data) => { await NotificationService.SendTruckData(data); };
             this.watcher.RaceDataUpdated += async (sender, data) => { await NotificationService.SendRaceData(data); };

@@ -8,12 +8,7 @@ public interface IGameDataWatcher
     event EventHandler? GameDataIdle;
     event EventHandler<TruckData>? TruckDataUpdated;
     event EventHandler<RaceData>? RaceDataUpdated;
-    void Start(GameDataWatcherOptions options, CancellationToken cancellationToken);
-}
-
-public class GameDataWatcherOptions
-{
-    public bool RunDemoMode { get; init; }
+    void Start(CancellationToken cancellationToken);
 }
 
 public class GameDataWatcher(
@@ -32,121 +27,84 @@ public class GameDataWatcher(
     public event EventHandler<TruckData>? TruckDataUpdated;
     public event EventHandler<RaceData>? RaceDataUpdated;
 
-    public void Start(GameDataWatcherOptions options, CancellationToken cancellationToken)
+    public void Start(CancellationToken cancellationToken)
     {
         this._currentGameProcess = string.Empty;
 
         this._logger.Info("Start watching games");
 
-        if (options.RunDemoMode)
+        //Monitor processes every 10 seconds
+        this._processTimer = new Timer(_ =>
         {
-            this._logger.Info("Running demo mode");
+            //Get the process that is running
+            var runningGameProcesses = readers.Where(r => processMonitor.IsRunning(r.Key));
 
-            Task.Run(() =>
+            if (!runningGameProcesses.Any())
             {
-                while(!cancellationToken.IsCancellationRequested)
+                //No games running
+                this._gameDataReader = null;
+                this.GameDataIdle?.Invoke(this, new EventArgs());
+                return;
+            }
+
+            var runningGame = runningGameProcesses.First();
+            if (
+                string.IsNullOrEmpty(this._currentGameProcess) ||
+                this._currentGameProcess != runningGame.Key)
+            {
+                //Switch to new game
+                this._logger.Info($"Game activated: {runningGame.Key}");
+
+                //Stop the previous game data stream
+                this._gameDataReader = null;
+
+                try
                 {
-                    //Truck data
-                    for (short i = 1; i <= 12; i++)
-                    {
-                        var data = new TruckData { Gear = i };
-                        this.TruckDataUpdated?.Invoke(this, data);
+                    this._gameDataReader = Activator.CreateInstance(runningGame.Value, new object[] { this._logger }) as GameDataReaderBase;
 
-                        Thread.Sleep(1000);
-                    }
-
-                    //Race data
-                    for (short i = 1; i <= 12; i++)
-                    {
-                        var data = new RaceData { Gear = i };
-                        this.RaceDataUpdated?.Invoke(this, data);
-
-                        Thread.Sleep(1000);
-                    }
-
-                    //Idle
-                    this.GameDataIdle?.Invoke(this, new EventArgs());
-
-                    Thread.Sleep(3000);
+                    //Set new process
+                    this._currentGameProcess = runningGame.Key;
                 }
-            });
-
-        }
-        else
-        {
-            //Monitor processes every 10 seconds
-            this._processTimer = new Timer(_ =>
-            {
-                //Get the process that is running
-                var runningGameProcesses = readers.Where(r => processMonitor.IsRunning(r.Key));
-
-                if (!runningGameProcesses.Any())
+                catch (Exception ex)
                 {
-                    //No games running
-                    this._gameDataReader = null;
-                    this.GameDataIdle?.Invoke(this, new EventArgs());
-                    return;
+                    this._logger.Error($"Error creating game data reader '{runningGame.Value}': {ex.Message}");
                 }
 
-                var runningGame = runningGameProcesses.First();
-                if (
-                    string.IsNullOrEmpty(this._currentGameProcess) ||
-                    this._currentGameProcess != runningGame.Key)
+                if (this._gameDataReader != null)
                 {
-                    //Switch to new game
-                    this._logger.Info($"Game activated: {runningGame.Key}");
-
-                    //Stop the previous game data stream
-                    this._gameDataReader = null;
-
-                    try
+                    this._gameDataReader.RawDataUpdate += (object? sender, object rawData) =>
                     {
-                        this._gameDataReader = Activator.CreateInstance(runningGame.Value, new object[] { this._logger }) as GameDataReaderBase;
-
-                        //Set new process
-                        this._currentGameProcess = runningGame.Key;
-                    }
-                    catch (Exception ex)
-                    {
-                        this._logger.Error($"Error creating game data reader '{runningGame.Value}': {ex.Message}");
-                    }
-
-                    if (this._gameDataReader != null)
-                    {
-                        this._gameDataReader.RawDataUpdate += (object? sender, object rawData) =>
+                        //Convert to general format
+                        object? data = null;
+                        try
                         {
-                            //Convert to general format
-                            object? data = null;
-                            try
-                            {
-                                data = this._gameDataReader.Convert(rawData);
-                            }
-                            catch (Exception ex)
-                            {
-                                this._logger.Error($"Error converting game data: {ex.Message}\n\n{ex.StackTrace}");
-                            }
+                            data = this._gameDataReader.Convert(rawData);
+                        }
+                        catch (Exception ex)
+                        {
+                            this._logger.Error($"Error converting game data: {ex.Message}\n\n{ex.StackTrace}");
+                        }
 
-                            if (data == null)
-                            {
-                                //No data
-                                return;
-                            }
+                        if (data == null)
+                        {
+                            //No data
+                            return;
+                        }
 
-                            if (data is RaceData raceData)
-                            {
-                                this.RaceDataUpdated?.Invoke(this, raceData);
-                                return;
-                            }
+                        if (data is RaceData raceData)
+                        {
+                            this.RaceDataUpdated?.Invoke(this, raceData);
+                            return;
+                        }
 
-                            if (data is TruckData truckData)
-                            {
-                                this.TruckDataUpdated?.Invoke(this, truckData);
-                                return;
-                            }
-                        };
-                    }
+                        if (data is TruckData truckData)
+                        {
+                            this.TruckDataUpdated?.Invoke(this, truckData);
+                            return;
+                        }
+                    };
                 }
-            }, cancellationToken, TimeSpan.Zero, TimeSpan.FromSeconds(10));
-        }
+            }
+        }, cancellationToken, TimeSpan.Zero, TimeSpan.FromSeconds(10));
     }
 }
