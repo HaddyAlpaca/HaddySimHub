@@ -42,7 +42,7 @@ public class GameDataWatcher(
             if (!runningGameProcesses.Any())
             {
                 //No games running
-                this._gameDataReader = null;
+                this.handleGameStop();
                 this.GameDataIdle?.Invoke(this, new EventArgs());
                 return;
             }
@@ -56,7 +56,7 @@ public class GameDataWatcher(
                 this._logger.Info($"Game activated: {runningGame.Key}");
 
                 //Stop the previous game data stream
-                this._gameDataReader = null;
+                this.handleGameStop();
 
                 try
                 {
@@ -72,39 +72,51 @@ public class GameDataWatcher(
 
                 if (this._gameDataReader != null)
                 {
-                    this._gameDataReader.RawDataUpdate += (object? sender, object rawData) =>
-                    {
-                        //Convert to general format
-                        object? data = null;
-                        try
-                        {
-                            data = this._gameDataReader?.Convert(rawData);
-                        }
-                        catch (Exception ex)
-                        {
-                            this._logger.Error($"Error converting game data: {ex.Message}\n\n{ex.StackTrace}");
-                        }
-
-                        if (data == null)
-                        {
-                            //No data
-                            return;
-                        }
-
-                        if (data is RaceData raceData)
-                        {
-                            this.RaceDataUpdated?.Invoke(this, raceData);
-                            return;
-                        }
-
-                        if (data is TruckData truckData)
-                        {
-                            this.TruckDataUpdated?.Invoke(this, truckData);
-                            return;
-                        }
-                    };
+                    this._gameDataReader.RawDataUpdate += _gameDataReader_RawDataUpdate;
                 }
             }
         }, cancellationToken, TimeSpan.Zero, TimeSpan.FromSeconds(10));
+    }
+
+    private void _gameDataReader_RawDataUpdate(object? sender, object rawData)
+    {
+        //Convert to general format
+        object? data = null;
+        try
+        {
+            data = this._gameDataReader?.Convert(rawData);
+        }
+        catch (Exception ex)
+        {
+            this._logger.Error($"Error converting game data: {ex.Message}\n\n{ex.StackTrace}");
+        }
+
+        if (data == null)
+        {
+            //No data
+            return;
+        }
+
+        if (data is RaceData raceData)
+        {
+            this.RaceDataUpdated?.Invoke(this, raceData);
+            return;
+        }
+
+        if (data is TruckData truckData)
+        {
+            this.TruckDataUpdated?.Invoke(this, truckData);
+            return;
+        }
+    }
+
+    private void handleGameStop()
+    {
+        //Stop the previous game data stream
+        if (this._gameDataReader != null)
+        {
+            this._gameDataReader.RawDataUpdate -= _gameDataReader_RawDataUpdate;
+            this._gameDataReader = null;
+        }
     }
 }
