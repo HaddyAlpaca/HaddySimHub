@@ -60,13 +60,15 @@ public struct TruckData
     public int JobCargoDamage { get; init; }
 
     /* Damage */
-    public int DamageCabin { get; init; }
-    public int DamageTransmission { get; init; }
-    public int DamageWheels { get; init; }
-    public int DamageEngine { get; init; }
-    public int DamageChassis { get; init; }
-    public int DamageTrailer { get; init; }
-    public bool TrailerAttached { get; init; }
+    public int DamageTruckCabin { get; init; }
+    public int DamageTruckTransmission { get; init; }
+    public int DamageTruckWheels { get; init; }
+    public int DamageTruckEngine { get; init; }
+    public int DamageTruckChassis { get; init; }
+    public int DamageTrailerChassis { get; init; }
+    public int DamageTrailerCargo { get; init; }
+    public int DamageTrailerWheels { get; init; }
+    public int DamageTrailerBody { get; init; }
     /*  Dashboard data    */
 
     /// <summary>
@@ -124,4 +126,5 @@ public struct TruckData
     /// Description of the current truck
     /// </summary>
     public string TruckName { get; init; }
+    public int NumberOfTrailersAttached { get; init; }
 }
