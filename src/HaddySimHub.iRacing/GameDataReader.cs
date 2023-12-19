@@ -3,6 +3,7 @@ using HaddySimHub.GameData.Models;
 using HaddySimHub.Logging;
 using iRacingSDK;
 using System.Text.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HaddySimHub.iRacing
 {
@@ -14,7 +15,7 @@ namespace HaddySimHub.iRacing
         {
             iRacingSDK.iRacing.NewData += (DataSample obj) =>
             {
-                this._logger.Debug("IRacing data:\n" + JsonSerializer.Serialize(obj));
+                this._logger.Debug($"IRacing data:\n{JsonSerializer.Serialize(obj)}\n");
 
                 this.RawDataUpdate?.Invoke(this, obj);
             };
@@ -24,7 +25,7 @@ namespace HaddySimHub.iRacing
         {
             if (rawData is not DataSample typedRawData)
             {
-                return new RaceData();
+                throw new InvalidDataException("Received data is not of type DataSample");
             }
 
             var session = typedRawData.SessionData.SessionInfo.Sessions.First(s => s.SessionNum == typedRawData.Telemetry.SessionNum);

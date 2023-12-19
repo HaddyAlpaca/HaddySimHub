@@ -17,7 +17,7 @@ public sealed class GameDataReader : GameDataReaderBase
         this._telemetry = new SCSSdkTelemetry();
         this._telemetry.Data += (SCSSdkClient.Object.SCSTelemetry data, bool newTimestamp) =>
         {
-            this._logger.Debug("ETS2 data:\n" + JsonSerializer.Serialize(data));
+            this._logger.Debug($"ETS2 data:\n{JsonSerializer.Serialize(data)}\n");
 
             this.RawDataUpdate?.Invoke(this, data);
         };
@@ -27,7 +27,7 @@ public sealed class GameDataReader : GameDataReaderBase
     {
         if (rawData is not SCSSdkClient.Object.SCSTelemetry typedRawData)
         {
-            return new TruckData();
+            throw new InvalidDataException("Received data is not of type SCSTelemetry");
         }
 
         return new TruckData()

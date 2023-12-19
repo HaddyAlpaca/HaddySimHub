@@ -52,7 +52,7 @@ namespace HaddySimHub
         {
             if (e.ExceptionObject is Exception exception)
             {
-                this._logger.Fatal($"Unhandled Exception: {exception.Message}");
+                this._logger?.Fatal($"Unhandled Exception: {exception.Message}");
             }
         }
 

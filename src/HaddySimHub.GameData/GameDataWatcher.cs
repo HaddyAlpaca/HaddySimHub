@@ -78,7 +78,7 @@ public class GameDataWatcher(
                         object? data = null;
                         try
                         {
-                            data = this._gameDataReader.Convert(rawData);
+                            data = this._gameDataReader?.Convert(rawData);
                         }
                         catch (Exception ex)
                         {
