@@ -2,22 +2,16 @@
 using HaddySimHub.GameData.Models;
 using HaddySimHub.Logging;
 using iRacingSDK;
-using System.Text.Json;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HaddySimHub.iRacing
 {
     public class GameDataReader : GameDataReaderBase
     {
-        public override event EventHandler<object>? RawDataUpdate;
-
         public GameDataReader(ILogger logger): base(logger)
         {
             iRacingSDK.iRacing.NewData += (DataSample obj) =>
             {
-                this._logger.Debug($"IRacing data:\n{JsonSerializer.Serialize(obj)}\n");
-
-                this.RawDataUpdate?.Invoke(this, obj);
+                this.UpdateData(obj);
             };
             iRacingSDK.iRacing.StartListening();
         }
