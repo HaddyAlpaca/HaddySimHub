@@ -52,6 +52,15 @@ public sealed class GameDataReader : GameDataReaderBase
             }
         };
 
+        this._telemetry.JobDelivered += (s, e) =>
+        {
+            if (this._lastReceivedData is SCSTelemetry telemetry)
+            {
+                var eventData = telemetry.GamePlay.JobDelivered;
+                this.SendNotification($"Opdracht afgerond, opbrengst: {eventData.Revenue:C0}");
+            }
+        };
+
         this._telemetry.JobCancelled += (s, e) =>
         {
             if (this._lastReceivedData is SCSTelemetry telemetry)
