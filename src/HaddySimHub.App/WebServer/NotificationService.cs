@@ -12,7 +12,7 @@ namespace HaddySimHub.WebServer
         {
             _hubContext = hubContext;
         }
-        
+
         public static async Task SendTruckData(object data)
         {
             if (_hubContext != null)
@@ -29,14 +29,6 @@ namespace HaddySimHub.WebServer
             }
         }
 
-        public static async Task SendRawData(object data)
-        {
-            if (_hubContext != null)
-            {
-                await _hubContext.Clients.All.SendAsync("rawData", data);
-            }
-        }
-
         public static async Task SendIdle()
         {
             if (_hubContext != null)
@@ -45,5 +37,13 @@ namespace HaddySimHub.WebServer
             }
         }
 
+        public static async Task SendNotification(string message)
+        {
+            if (_hubContext != null)
+            {
+                await _hubContext.Clients.All.SendAsync("notification", message);
+            }
+
+        }
     }
 }

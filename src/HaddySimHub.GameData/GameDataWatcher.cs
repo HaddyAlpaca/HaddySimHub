@@ -6,6 +6,7 @@ namespace HaddySimHub.GameData;
 public interface IGameDataWatcher
 {
     event EventHandler? GameDataIdle;
+    event EventHandler<string>? Notification;
     event EventHandler<TruckData>? TruckDataUpdated;
     event EventHandler<RaceData>? RaceDataUpdated;
     void Start(CancellationToken cancellationToken);
@@ -24,6 +25,7 @@ public class GameDataWatcher(
     private GameDataReaderBase? _gameDataReader;
 
     public event EventHandler? GameDataIdle;
+    public event EventHandler<string>? Notification;
     public event EventHandler<TruckData>? TruckDataUpdated;
     public event EventHandler<RaceData>? RaceDataUpdated;
 
@@ -73,9 +75,15 @@ public class GameDataWatcher(
                 if (this._gameDataReader != null)
                 {
                     this._gameDataReader.RawDataUpdate += _gameDataReader_RawDataUpdate;
+                    this._gameDataReader.Notification += _gameDataReader_Notification;
                 }
             }
         }, cancellationToken, TimeSpan.Zero, TimeSpan.FromSeconds(10));
+    }
+
+    private void _gameDataReader_Notification(object? sender, string message)
+    {
+        this.Notification?.Invoke(this, message);
     }
 
     private void _gameDataReader_RawDataUpdate(object? sender, object rawData)
@@ -116,6 +124,7 @@ public class GameDataWatcher(
         if (this._gameDataReader != null)
         {
             this._gameDataReader.RawDataUpdate -= _gameDataReader_RawDataUpdate;
+            this._gameDataReader.Notification -= _gameDataReader_Notification;
             this._gameDataReader = null;
         }
     }

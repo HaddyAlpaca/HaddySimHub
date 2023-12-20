@@ -2,6 +2,7 @@
 using HaddySimHub.GameData.Models;
 using HaddySimHub.Logging;
 using SCSSdkClient;
+using SCSSdkClient.Object;
 
 namespace HaddySimHub.Ets2;
 
@@ -12,15 +13,111 @@ public sealed class GameDataReader : GameDataReaderBase
     public GameDataReader(ILogger logger): base(logger)
     {
         this._telemetry = new SCSSdkTelemetry();
-        this._telemetry.Data += (SCSSdkClient.Object.SCSTelemetry data, bool newTimestamp) =>
+        this._telemetry.Data += (SCSTelemetry data, bool newTimestamp) =>
         {
-            this.UpdateData(data);
+            this.UpdateRawData(data);
+        };
+
+        this._telemetry.Tollgate += (s, e) =>
+        {
+            if (_lastReceivedData is SCSTelemetry telemetry)
+            {
+                this.SendNotification($"Tol betaald: {telemetry.GamePlay.TollgateEvent.PayAmount:C0}");
+            }
+        };
+
+        this._telemetry.RefuelPayed += (s, e) =>
+        {
+            if (this._lastReceivedData is SCSTelemetry telemetry)
+            {   
+                this.SendNotification($"Brandstof betaald: {telemetry.GamePlay.RefuelEvent.Amount:C0}");
+            }
+        };
+
+        this._telemetry.Ferry += (s, e) =>
+        {
+            if (this._lastReceivedData is SCSTelemetry telemetry)
+            {
+                var eventData = telemetry.GamePlay.FerryEvent;
+                this.SendNotification($"Bootreis gestart: {eventData.SourceName} - {eventData.TargetName} ({eventData.PayAmount:C0})");
+            }
+        };
+
+        this._telemetry.Train += (s, e) =>
+        {
+            if (this._lastReceivedData is SCSTelemetry telemetry)
+            {
+                var eventData = telemetry.GamePlay.TrainEvent;
+                this.SendNotification($"Treinreis gestart: {eventData.SourceName} - {eventData.TargetName} ({eventData.PayAmount:C0})");
+            }
+        };
+
+        this._telemetry.JobCancelled += (s, e) =>
+        {
+            if (this._lastReceivedData is SCSTelemetry telemetry)
+            {
+                var eventData = telemetry.GamePlay.JobCancelled;
+                this.SendNotification($"Opdracht geannuleerd, boete: {eventData.Penalty:C0}");
+            }
+        };
+
+        this._telemetry.Fined += (s, e) =>
+        {
+            if (this._lastReceivedData is SCSTelemetry telemetry)
+            {
+                var eventData = telemetry.GamePlay.FinedEvent;
+                string offenceDesription = string.Empty;
+                switch (eventData.Offence)
+                {
+                    case Offence.Crash:
+                        offenceDesription = "Ongeluk";
+                        break;
+                    case Offence.Avoid_sleeping:
+                        offenceDesription = "Overtreding van rusttijden";
+                        break;
+                    case Offence.Wrong_way:
+                        offenceDesription = "Spookrijden";
+                        break;
+                    case Offence.Speeding:
+                    case Offence.Speeding_camera:
+                        offenceDesription = "Snelheidsovertreding";
+                        break;
+                    case Offence.No_lights:
+                        offenceDesription = "Verlichting";
+                        break;
+                    case Offence.Red_signal:
+                        offenceDesription = "Roodlicht overtreding";
+                        break;
+                    case Offence.Avoid_weighting:
+                        offenceDesription = "Weging vermeden";
+                        break;
+                    case Offence.Illegal_trailer:
+                        offenceDesription = "Illegale trailer";
+                        break;
+                    case Offence.Avoid_Inspection:
+                        offenceDesription = "Inspectie vermeden";
+                        break;
+                    case Offence.Illegal_Border_Crossing:
+                        break;
+                    case Offence.Hard_Shoulder_Violation:
+                        offenceDesription = "Rijden op de vluchtstrook";
+                        break;
+                    case Offence.Damaged_Vehicle_Usage:
+                        offenceDesription = "Rijden met beschadigd voertuig";
+                        break;
+                    default:
+                        offenceDesription = "Overtreding";
+                        break;
+                }
+
+                this.SendNotification($"{offenceDesription}: {eventData.Amount:C0}");
+            }
         };
     }
 
     public override object Convert(object rawData)
     {
-        if (rawData is not SCSSdkClient.Object.SCSTelemetry typedRawData)
+        if (rawData is not SCSTelemetry typedRawData)
         {
             throw new InvalidDataException("Received data is not of type SCSTelemetry");
         }

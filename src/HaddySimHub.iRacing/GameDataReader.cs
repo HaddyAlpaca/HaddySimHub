@@ -11,7 +11,7 @@ namespace HaddySimHub.iRacing
         {
             iRacingSDK.iRacing.NewData += (DataSample obj) =>
             {
-                this.UpdateData(obj);
+                this.UpdateRawData(obj);
             };
             iRacingSDK.iRacing.StartListening();
         }
