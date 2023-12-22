@@ -3,113 +3,147 @@
 public readonly struct RaceData
 {
     /// <summary>
-    /// Session type description
+    /// Gets session type description.
     /// </summary>
     public string SessionType { get; init; }
+
     public bool IsLimitedTime { get; init; }
+
     public bool IsLimitedSessionLaps { get; init; }
+
     /// <summary>
-    /// Current lap this session
+    /// Gets current lap this session.
     /// </summary>
     public int CurrentLap { get; init; }
+
     /// <summary>
-    /// Total laps in this session
+    /// Gets total laps in this session.
     /// </summary>
     public int TotalLaps { get; init; }
+
     /// <summary>
-    /// Session time remaining
+    /// Gets session time remaining.
     /// </summary>
     public float SessionTimeRemaining { get; init; }
+
     /// <summary>
-    /// Position
+    /// Gets position.
     /// </summary>
     public int Position { get; init; }
+
     /// <summary>
-    /// Speed in Km/h
+    /// Gets speed in Km/h.
     /// </summary>
     public int Speed { get; init; }
+
     /// <summary>
-    /// Gear (-2 = N/A, -1 = Reverse, 0 = Neutral, >= 1 Forward gears)
+    /// Gets gear (-2 = N/A, -1 = Reverse, 0 = Neutral, >= 1 Forward gears).
     /// </summary>
     public int Gear { get; init; }
+
     /// <summary>
-    /// Engine revs
+    /// Gets engine revs.
     /// </summary>
     public int Rpm { get; init; }
+
     /// <summary>
-    /// Track temperature
+    /// Gets track temperature.
     /// </summary>
     public float TrackTemp { get; init; }
+
     /// <summary>
-    /// Air temperature
+    /// Gets air temperature.
     /// </summary>
     public float AirTemp { get; init; }
+
     /// <summary>
-    /// Liters of remaining fuel
+    /// Gets liters of remaining fuel.
     /// </summary>
     public float FuelRemaining { get; init; }
+
     /// <summary>
-    /// Brake bias
+    /// Gets brake bias.
     /// </summary>
     public float BrakeBias { get; init; }
+
     public float CurrentLapTime { get; init; }
+
     public float LastSectorTime { get; init; }
+
     /// <summary>
-    /// Last laptime in seconds
+    /// Gets last laptime in seconds.
     /// </summary>
     public float LastLapTime { get; init; }
+
     public float LastLapTimeDelta { get; init; }
+
     /// <summary>
-    /// Best laptime in seconds
+    /// Gets best laptime in seconds.
     /// </summary>
     public float BestLapTime { get; init; }
+
     public float BestLapTimeDelta { get; init; }
+
     /// <summary>
-    /// Gap behind in seconds
+    /// Gets gap behind in seconds.
     /// </summary>
     public float GapBehind { get; init; }
+
     /// <summary>
-    /// Driver behind
+    /// Gets driver behind.
     /// </summary>
     public string DriverBehindName { get; init; }
+
     /// <summary>
-    /// Gap ahead in seconds
+    /// Gets gap ahead in seconds.
     /// </summary>
     public float GapAhead { get; init; }
+
     /// <summary>
-    /// Driver ahead
+    /// Gets driver ahead.
     /// </summary>
     public string DriverAheadName { get; init; }
+
     public string DriverAheadLicenseColor { get; init; }
+
     public string DriverAheadLicense { get; init; }
+
     public string DriverAheadCarNumber { get; init; }
+
     public long DriverAheadIRating { get; init; }
+
     /// <summary>
-    /// Clutch percentage
+    /// Gets clutch percentage.
     /// </summary>
     public int ClutchPct { get; init; }
+
     /// <summary>
-    /// Throttle percentage
+    /// Gets throttle percentage.
     /// </summary>
     public int ThrottlePct { get; init; }
+
     /// <summary>
-    /// Brake percentage
+    /// Gets brake percentage.
     /// </summary>
     public int BrakePct { get; init; }
+
     /// <summary>
-    /// Incidents occured
+    /// Gets incidents occured.
     /// </summary>
     public long Incidents { get; init; }
+
     /// <summary>
-    /// Maximum incidents allowed
+    /// Gets maximum incidents allowed.
     /// </summary>
     public long MaxIncidents { get; init; }
+
     /// <summary>
-    /// Pit limiter is on
+    /// Gets a value indicating whether pit limiter is on.
     /// </summary>
     public bool PitLimiterOn { get; init; }
+
     /// <summary>
-    /// Flag
+    /// Gets flag.
     /// </summary>
     public string Flag { get; init; }
 }

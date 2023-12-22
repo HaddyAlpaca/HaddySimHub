@@ -6,73 +6,74 @@ using SCSSdkClient.Object;
 
 namespace HaddySimHub.Ets2;
 
-public sealed class GameDataReader : GameDataReaderBase 
+public sealed class GameDataReader : GameDataReaderBase
 {
-    private readonly SCSSdkTelemetry _telemetry;
+    private readonly SCSSdkTelemetry telemetry;
 
-    public GameDataReader(ILogger logger): base(logger)
+    public GameDataReader(ILogger logger)
+        : base(logger)
     {
-        this._telemetry = new SCSSdkTelemetry();
-        this._telemetry.Data += (SCSTelemetry data, bool newTimestamp) =>
+        this.telemetry = new SCSSdkTelemetry();
+        this.telemetry.Data += (SCSTelemetry data, bool newTimestamp) =>
         {
             this.UpdateRawData(data);
         };
 
-        this._telemetry.Tollgate += (s, e) =>
+        this.telemetry.Tollgate += (s, e) =>
         {
-            if (_lastReceivedData is SCSTelemetry telemetry)
+            if (this.LastReceivedData is SCSTelemetry telemetry)
             {
                 this.SendNotification($"Tol betaald: {telemetry.GamePlay.TollgateEvent.PayAmount:C0}");
             }
         };
 
-        this._telemetry.RefuelPayed += (s, e) =>
+        this.telemetry.RefuelPayed += (s, e) =>
         {
-            if (this._lastReceivedData is SCSTelemetry telemetry)
-            {   
+            if (this.LastReceivedData is SCSTelemetry telemetry)
+            {
                 this.SendNotification($"Brandstof betaald: {telemetry.GamePlay.RefuelEvent.Amount:C0}");
             }
         };
 
-        this._telemetry.Ferry += (s, e) =>
+        this.telemetry.Ferry += (s, e) =>
         {
-            if (this._lastReceivedData is SCSTelemetry telemetry)
+            if (this.LastReceivedData is SCSTelemetry telemetry)
             {
                 var eventData = telemetry.GamePlay.FerryEvent;
                 this.SendNotification($"Bootreis gestart: {eventData.SourceName} - {eventData.TargetName} ({eventData.PayAmount:C0})");
             }
         };
 
-        this._telemetry.Train += (s, e) =>
+        this.telemetry.Train += (s, e) =>
         {
-            if (this._lastReceivedData is SCSTelemetry telemetry)
+            if (this.LastReceivedData is SCSTelemetry telemetry)
             {
                 var eventData = telemetry.GamePlay.TrainEvent;
                 this.SendNotification($"Treinreis gestart: {eventData.SourceName} - {eventData.TargetName} ({eventData.PayAmount:C0})");
             }
         };
 
-        this._telemetry.JobDelivered += (s, e) =>
+        this.telemetry.JobDelivered += (s, e) =>
         {
-            if (this._lastReceivedData is SCSTelemetry telemetry)
+            if (this.LastReceivedData is SCSTelemetry telemetry)
             {
                 var eventData = telemetry.GamePlay.JobDelivered;
                 this.SendNotification($"Opdracht afgerond, opbrengst: {eventData.Revenue:C0}");
             }
         };
 
-        this._telemetry.JobCancelled += (s, e) =>
+        this.telemetry.JobCancelled += (s, e) =>
         {
-            if (this._lastReceivedData is SCSTelemetry telemetry)
+            if (this.LastReceivedData is SCSTelemetry telemetry)
             {
                 var eventData = telemetry.GamePlay.JobCancelled;
                 this.SendNotification($"Opdracht geannuleerd, boete: {eventData.Penalty:C0}");
             }
         };
 
-        this._telemetry.Fined += (s, e) =>
+        this.telemetry.Fined += (s, e) =>
         {
-            if (this._lastReceivedData is SCSTelemetry telemetry)
+            if (this.LastReceivedData is SCSTelemetry telemetry)
             {
                 var eventData = telemetry.GamePlay.FinedEvent;
                 string offenceDesription = string.Empty;
@@ -133,7 +134,7 @@ public sealed class GameDataReader : GameDataReaderBase
 
         return new TruckData()
         {
-            //Navigation info
+            // Navigation info
             SourceCity = typedRawData.JobValues.CitySource,
             SourceCompany = typedRawData.JobValues.CompanySource,
             DestinationCity = typedRawData.JobValues.CityDestination,
@@ -143,14 +144,16 @@ public sealed class GameDataReader : GameDataReaderBase
             TimeRemainingIrl = (int)Math.Round((typedRawData.NavigationValues.NavigationTime / 60) / typedRawData.CommonValues.Scale),
             RestTimeRemaining = typedRawData.CommonValues.NextRestStop.Value,
             RestTimeRemainingIrl = (int)Math.Round(typedRawData.CommonValues.NextRestStop.Value / typedRawData.CommonValues.Scale),
-            //Job info
+
+            // Job info
             JobTimeRemaining = typedRawData.JobValues.RemainingDeliveryTime.Value,
             JobTimeRemainingIrl = (long)Math.Round(typedRawData.JobValues.RemainingDeliveryTime.Value / typedRawData.CommonValues.Scale),
             JobIncome = typedRawData.JobValues.Income,
             JobCargoName = typedRawData.JobValues.CargoValues.Name,
             JobCargoMass = (int)Math.Ceiling(typedRawData.JobValues.CargoValues.Mass),
             JobCargoDamage = (int)Math.Round(typedRawData.JobValues.CargoValues.CargoDamage * 100),
-            //Damage
+
+            // Damage
             DamageTruckCabin = (int)Math.Round(typedRawData.TruckValues.CurrentValues.DamageValues.Cabin * 100),
             DamageTruckWheels = (int)Math.Round(typedRawData.TruckValues.CurrentValues.DamageValues.WheelsAvg * 100),
             DamageTruckTransmission = (int)Math.Round(typedRawData.TruckValues.CurrentValues.DamageValues.Transmission * 100),
@@ -161,7 +164,8 @@ public sealed class GameDataReader : GameDataReaderBase
             DamageTrailerWheels = (int)Math.Round(typedRawData.TrailerValues.Average(t => t.DamageValues.Wheels) * 100),
             DamageTrailerBody = (int)Math.Round(typedRawData.TrailerValues.Average(t => t.DamageValues.Body) * 100),
             NumberOfTrailersAttached = typedRawData.TrailerValues.Length,
-            //Dashboard
+
+            // Dashboard
             Gear = (short)typedRawData.TruckValues.CurrentValues.DashboardValues.GearDashboards,
             Rpm = (int)typedRawData.TruckValues.CurrentValues.DashboardValues.RPM,
             RpmMax = (int)typedRawData.TruckValues.ConstantsValues.MotorValues.EngineRpmMax,
@@ -179,7 +183,7 @@ public sealed class GameDataReader : GameDataReaderBase
             FuelDistance = (int)typedRawData.TruckValues.CurrentValues.DashboardValues.FuelValue.Range,
             TruckName = $"{typedRawData.TruckValues.ConstantsValues.Brand} {typedRawData.TruckValues.ConstantsValues.Name}",
             BlinkerLeftOn = typedRawData.TruckValues.CurrentValues.LightsValues.BlinkerLeftOn,
-            BlinkerRightOn = typedRawData.TruckValues.CurrentValues.LightsValues .BlinkerRightOn,
+            BlinkerRightOn = typedRawData.TruckValues.CurrentValues.LightsValues.BlinkerRightOn,
             FuelWarningOn = typedRawData.TruckValues.CurrentValues.DashboardValues.WarningValues.FuelW,
         };
     }

@@ -1,26 +1,31 @@
-﻿using HaddySimHub.Logging;
-using System.Text.Json;
+﻿using System.Text.Json;
+using HaddySimHub.Logging;
 
 namespace HaddySimHub.GameData;
 
 public abstract class GameDataReaderBase(ILogger logger)
 {
-    protected readonly ILogger _logger = logger;
+    private readonly ILogger logger = logger;
 
-    protected object? _lastReceivedData;
+    private object? lastReceivedData;
 
     public event EventHandler<object>? RawDataUpdate;
+
     public event EventHandler<string>? Notification;
+
+    protected ILogger Logger => this.logger;
+
+    protected object? LastReceivedData { get => this.lastReceivedData; set => this.lastReceivedData = value; }
 
     public abstract object Convert(object rawData);
 
     protected void UpdateRawData(object data)
     {
-        this._lastReceivedData = data;
+        this.LastReceivedData = data;
 
         if (data != null)
         {
-            this._logger.Debug($"{JsonSerializer.Serialize(data)}\n");
+            this.logger.Debug($"{JsonSerializer.Serialize(data)}\n");
 
             this.RawDataUpdate?.Invoke(this, data);
         }

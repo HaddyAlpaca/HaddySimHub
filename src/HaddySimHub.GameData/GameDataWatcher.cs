@@ -3,105 +3,137 @@ using HaddySimHub.Logging;
 
 namespace HaddySimHub.GameData;
 
+/// <summary>
+/// Interface for game polling objects.
+/// </summary>
 public interface IGameDataWatcher
 {
+    /// <summary>
+    /// No game is longer active.
+    /// </summary>
     event EventHandler? GameDataIdle;
+
+    /// <summary>
+    /// Notification occured.
+    /// </summary>
     event EventHandler<string>? Notification;
+
+    /// <summary>
+    /// Truck data updated.
+    /// </summary>
     event EventHandler<TruckData>? TruckDataUpdated;
+
+    /// <summary>
+    /// Race data updated.
+    /// </summary>
     event EventHandler<RaceData>? RaceDataUpdated;
+
+    /// <summary>
+    /// Start monitoring game data.
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token.</param>
     void Start(CancellationToken cancellationToken);
 }
 
 public class GameDataWatcher(
     Dictionary<string, Type> readers,
     IProcessMonitor processMonitor,
+#pragma warning disable SA1009 // Closing parenthesis should be spaced correctly
     ILogger logger) : IGameDataWatcher
+#pragma warning restore SA1009 // Closing parenthesis should be spaced correctly
 {
     private readonly Dictionary<string, Type> readers = readers;
     private readonly IProcessMonitor processMonitor = processMonitor;
-    private readonly ILogger _logger = logger;
-    private string _currentGameProcess = string.Empty;
-    private Timer? _processTimer;
-    private GameDataReaderBase? _gameDataReader;
+    private readonly ILogger logger = logger;
+    private string currentGameProcess = string.Empty;
+    private Timer? processTimer;
+    private GameDataReaderBase? gameDataReader;
 
     public event EventHandler? GameDataIdle;
+
     public event EventHandler<string>? Notification;
+
     public event EventHandler<TruckData>? TruckDataUpdated;
+
     public event EventHandler<RaceData>? RaceDataUpdated;
 
     public void Start(CancellationToken cancellationToken)
     {
-        this._currentGameProcess = string.Empty;
+        this.currentGameProcess = string.Empty;
 
-        this._logger.Info("Start watching games");
+        this.logger.Info("Start watching games");
 
-        //Monitor processes every 10 seconds
-        this._processTimer = new Timer(_ =>
+        // Monitor processes every 10 seconds
+        this.processTimer = new Timer(
+            _ =>
         {
-            //Get the process that is running
-            var runningGameProcesses = readers.Where(r => processMonitor.IsRunning(r.Key));
+            // Get the process that is running
+            var runningGameProcesses = this.readers.Where(r => this.processMonitor.IsRunning(r.Key));
 
             if (!runningGameProcesses.Any())
             {
-                //No games running
-                this.handleGameStop();
+                // No games running
+                this.HandleGameStop();
                 this.GameDataIdle?.Invoke(this, new EventArgs());
                 return;
             }
 
             var runningGame = runningGameProcesses.First();
             if (
-                string.IsNullOrEmpty(this._currentGameProcess) ||
-                this._currentGameProcess != runningGame.Key)
+                string.IsNullOrEmpty(this.currentGameProcess) ||
+                this.currentGameProcess != runningGame.Key)
             {
-                //Switch to new game
-                this._logger.Info($"Game activated: {runningGame.Key}");
+                // Switch to new game
+                this.logger.Info($"Game activated: {runningGame.Key}");
 
-                //Stop the previous game data stream
-                this.handleGameStop();
+                // Stop the previous game data stream
+                this.HandleGameStop();
 
                 try
                 {
-                    this._gameDataReader = Activator.CreateInstance(runningGame.Value, new object[] { this._logger }) as GameDataReaderBase;
+                    this.gameDataReader = Activator.CreateInstance(runningGame.Value, new object[] { this.logger }) as GameDataReaderBase;
 
-                    //Set new process
-                    this._currentGameProcess = runningGame.Key;
+                    // Set new process
+                    this.currentGameProcess = runningGame.Key;
                 }
                 catch (Exception ex)
                 {
-                    this._logger.Error($"Error creating game data reader '{runningGame.Value}': {ex.Message}");
+                    this.logger.Error($"Error creating game data reader '{runningGame.Value}': {ex.Message}");
                 }
 
-                if (this._gameDataReader != null)
+                if (this.gameDataReader != null)
                 {
-                    this._gameDataReader.RawDataUpdate += _gameDataReader_RawDataUpdate;
-                    this._gameDataReader.Notification += _gameDataReader_Notification;
+                    this.gameDataReader.RawDataUpdate += this.GameDataReader_RawDataUpdate;
+                    this.gameDataReader.Notification += this.GameDataReader_Notification;
                 }
             }
-        }, cancellationToken, TimeSpan.Zero, TimeSpan.FromSeconds(10));
+        },
+            cancellationToken,
+            TimeSpan.Zero,
+            TimeSpan.FromSeconds(10));
     }
 
-    private void _gameDataReader_Notification(object? sender, string message)
+    private void GameDataReader_Notification(object? sender, string message)
     {
         this.Notification?.Invoke(this, message);
     }
 
-    private void _gameDataReader_RawDataUpdate(object? sender, object rawData)
+    private void GameDataReader_RawDataUpdate(object? sender, object rawData)
     {
-        //Convert to general format
+        // Convert to general format
         object? data = null;
         try
         {
-            data = this._gameDataReader?.Convert(rawData);
+            data = this.gameDataReader?.Convert(rawData);
         }
         catch (Exception ex)
         {
-            this._logger.Error($"Error converting game data: {ex.Message}\n\n{ex.StackTrace}");
+            this.logger.Error($"Error converting game data: {ex.Message}\n\n{ex.StackTrace}");
         }
 
         if (data == null)
         {
-            //No data
+            // No data
             return;
         }
 
@@ -118,14 +150,14 @@ public class GameDataWatcher(
         }
     }
 
-    private void handleGameStop()
+    private void HandleGameStop()
     {
-        //Stop the previous game data stream
-        if (this._gameDataReader != null)
+        // Stop the previous game data stream
+        if (this.gameDataReader != null)
         {
-            this._gameDataReader.RawDataUpdate -= _gameDataReader_RawDataUpdate;
-            this._gameDataReader.Notification -= _gameDataReader_Notification;
-            this._gameDataReader = null;
+            this.gameDataReader.RawDataUpdate -= this.GameDataReader_RawDataUpdate;
+            this.gameDataReader.Notification -= this.GameDataReader_Notification;
+            this.gameDataReader = null;
         }
     }
 }
