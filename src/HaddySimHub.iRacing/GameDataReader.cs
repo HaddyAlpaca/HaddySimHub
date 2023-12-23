@@ -24,11 +24,12 @@ namespace HaddySimHub.IRacing
                 throw new InvalidDataException("Received data is not of type DataSample");
             }
 
-            var session = typedRawData.SessionData.SessionInfo.Sessions.First(s => s.SessionNum == typedRawData.Telemetry.SessionNum);
+            var telemetry = typedRawData.Telemetry;
+            var session = typedRawData.SessionData.SessionInfo.Sessions.First(s => s.SessionNum == telemetry.SessionNum);
 
             // Set flag
             string flag = string.Empty;
-            switch (typedRawData.Telemetry.SessionFlags)
+            switch (telemetry.SessionFlags)
             {
                 case SessionFlags.checkered:
                     break;
@@ -61,8 +62,8 @@ namespace HaddySimHub.IRacing
                     break;
             }
 
-            Car? carBehind = typedRawData.Telemetry.RaceCars.FirstOrDefault(c => c.Position == typedRawData.Telemetry.PlayerCarClassPosition + 1);
-            Car? carAhead = typedRawData.Telemetry.RaceCars.FirstOrDefault(c => c.Position == typedRawData.Telemetry.PlayerCarClassPosition - 1);
+            Car? carBehind = telemetry.RaceCars.FirstOrDefault(c => c.Position == telemetry.PlayerCarClassPosition + 1);
+            Car? carAhead = telemetry.RaceCars.FirstOrDefault(c => c.Position == telemetry.PlayerCarClassPosition - 1);
 
             long incidentLimit = typedRawData.SessionData.WeekendInfo.WeekendOptions._IncidentLimit;
             if (incidentLimit == long.MaxValue)
@@ -75,29 +76,29 @@ namespace HaddySimHub.IRacing
                 SessionType = session.SessionType,
                 IsLimitedTime = session.IsLimitedTime,
                 IsLimitedSessionLaps = session.IsLimitedSessionLaps,
-                CurrentLap = typedRawData.Telemetry.Lap,
+                CurrentLap = telemetry.Lap,
                 TotalLaps = session._SessionLaps,
-                Incidents = typedRawData.Telemetry.PlayerCarDriverIncidentCount,
+                Incidents = telemetry.PlayerCarDriverIncidentCount,
                 MaxIncidents = incidentLimit,
-                SessionTimeRemaining = (float)typedRawData.Telemetry.SessionTimeRemain,
-                Position = typedRawData.Telemetry.PlayerCarPosition,
-                CurrentLapTime = typedRawData.Telemetry.LapCurrentLapTime,
-                LastLapTime = typedRawData.Telemetry.LapLastLapTime,
-                LastLapTimeDelta = typedRawData.Telemetry.LapDeltaToSessionLastlLap,
-                BestLapTime = typedRawData.Telemetry.LapBestLapTime,
-                BestLapTimeDelta = typedRawData.Telemetry.LapDeltaToSessionBestLap,
-                Gear = typedRawData.Telemetry.Gear,
-                Rpm = (int)typedRawData.Telemetry.RPM,
-                Speed = (int)Math.Round(typedRawData.Telemetry.Speed * 3.6),
-                BrakeBias = typedRawData.Telemetry.dcBrakeBias,
-                FuelRemaining = typedRawData.Telemetry.FuelLevel,
-                AirTemp = typedRawData.Telemetry.AirTemp,
-                TrackTemp = typedRawData.Telemetry.TrackTemp,
-                ClutchPct = (int)(typedRawData.Telemetry.Clutch * 100),
-                ThrottlePct = (int)(typedRawData.Telemetry.Throttle * 100),
-                BrakePct = (int)(typedRawData.Telemetry.Brake * 100),
+                SessionTimeRemaining = (float)telemetry.SessionTimeRemain,
+                Position = telemetry.PlayerCarPosition,
+                CurrentLapTime = telemetry.LapCurrentLapTime,
+                LastLapTime = telemetry.LapLastLapTime,
+                LastLapTimeDelta = telemetry.LapLastLapTime == 0 ? 0 : telemetry.LapDeltaToSessionLastlLap,
+                BestLapTime = telemetry.LapBestLapTime,
+                BestLapTimeDelta = telemetry.LapBestLapTime == 0 ? 0 : telemetry.LapDeltaToSessionBestLap,
+                Gear = telemetry.Gear,
+                Rpm = (int)telemetry.RPM,
+                Speed = (int)Math.Round(telemetry.Speed * 3.6),
+                BrakeBias = telemetry.dcBrakeBias,
+                FuelRemaining = telemetry.FuelLevel,
+                AirTemp = telemetry.AirTemp,
+                TrackTemp = telemetry.TrackTemp,
+                ClutchPct = (int)(telemetry.Clutch * 100),
+                ThrottlePct = (int)(telemetry.Throttle * 100),
+                BrakePct = (int)(telemetry.Brake * 100),
                 Flag = flag,
-                PitLimiterOn = typedRawData.Telemetry.EngineWarnings.HasFlag(EngineWarnings.PitSpeedLimiter),
+                PitLimiterOn = telemetry.EngineWarnings.HasFlag(EngineWarnings.PitSpeedLimiter),
                 DriverAheadName = carAhead?.Details.UserName ?? string.Empty,
                 DriverAheadLicenseColor = carAhead?.Details.Driver.LicColor ?? string.Empty,
                 DriverAheadCarNumber = carAhead?.Details.CarNumberDisplay ?? string.Empty,
