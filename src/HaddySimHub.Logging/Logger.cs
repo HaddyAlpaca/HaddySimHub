@@ -19,7 +19,7 @@ namespace HaddySimHub.Logging
                 var debugTarget = new FileTarget
                 {
                     FileName = "HaddySimHub.debug.log",
-                    Layout = @"${message}",
+                    Layout = @"--START--\n${message}\n--END--\n",
                     ArchiveAboveSize = 1_000_000_000,
                     ArchiveNumbering = ArchiveNumberingMode.DateAndSequence,
                     MaxArchiveDays = 1,
