@@ -1,4 +1,6 @@
 ﻿using NLog;
+using NLog.Config;
+using NLog.Targets;
 
 namespace HaddySimHub.Logging
 {
@@ -9,11 +11,46 @@ namespace HaddySimHub.Logging
         public Logger(bool isDebugEnabled)
         {
             // Setup logging
-            LogManager.Setup().LoadConfiguration(builder =>
+            var logConfig = new LoggingConfiguration();
+
+            if (isDebugEnabled)
             {
-                builder.ForLogger().FilterMinLevel(isDebugEnabled ? LogLevel.Debug : LogLevel.Info)
-                    .WriteToFile(fileName: "log.txt", layout: "${longdate} ${uppercase:${level}}: ${message}");
-            });
+                // Debug
+                var debugTarget = new FileTarget
+                {
+                    FileName = "HaddySimHub.debug.log",
+                    Layout = @"${message}",
+                    ArchiveAboveSize = 1_000_000_000,
+                    ArchiveNumbering = ArchiveNumberingMode.DateAndSequence,
+                    MaxArchiveDays = 1,
+                };
+
+                logConfig.LoggingRules.Add(new LoggingRule(
+                    "*",
+                    LogLevel.Debug,
+                    LogLevel.Debug,
+                    debugTarget));
+                logConfig.AddTarget("debug-logfile", debugTarget);
+            }
+
+            // General
+            var fileTarget = new FileTarget
+            {
+                FileName = "HaddySimHub.log",
+                Layout = @"${longdate} ${uppercase:${level}}: ${message}",
+                ArchiveAboveSize = 1_000_000_000,
+                ArchiveNumbering = ArchiveNumberingMode.DateAndSequence,
+                MaxArchiveDays = 1,
+            };
+
+            logConfig.LoggingRules.Add(new LoggingRule(
+                "*",
+                LogLevel.Info,
+                LogLevel.Fatal,
+                fileTarget));
+            logConfig.AddTarget("general-logfile", fileTarget);
+
+            LogManager.Configuration = logConfig;
         }
 
         /// <inheritdoc/>

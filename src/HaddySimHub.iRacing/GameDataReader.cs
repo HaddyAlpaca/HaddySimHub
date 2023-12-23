@@ -3,11 +3,12 @@ using HaddySimHub.GameData.Models;
 using HaddySimHub.Logging;
 using iRacingSDK;
 
-namespace HaddySimHub.iRacing
+namespace HaddySimHub.IRacing
 {
     public class GameDataReader : GameDataReaderBase
     {
-        public GameDataReader(ILogger logger): base(logger)
+        public GameDataReader(ILogger logger)
+            : base(logger)
         {
             iRacingSDK.iRacing.NewData += (DataSample obj) =>
             {
@@ -15,6 +16,7 @@ namespace HaddySimHub.iRacing
             };
             iRacingSDK.iRacing.StartListening();
         }
+
         public override object Convert(object rawData)
         {
             if (rawData is not DataSample typedRawData)
@@ -23,8 +25,8 @@ namespace HaddySimHub.iRacing
             }
 
             var session = typedRawData.SessionData.SessionInfo.Sessions.First(s => s.SessionNum == typedRawData.Telemetry.SessionNum);
-            
-            //Set flag
+
+            // Set flag
             string flag = string.Empty;
             switch (typedRawData.Telemetry.SessionFlags)
             {
@@ -34,7 +36,7 @@ namespace HaddySimHub.iRacing
                     flag = "white";
                     break;
                 case SessionFlags.green:
-                    flag = "green"; 
+                    flag = "green";
                     break;
                 case SessionFlags.yellow:
                     flag = "yellow";
@@ -101,7 +103,7 @@ namespace HaddySimHub.iRacing
                 DriverAheadCarNumber = carAhead?.Details.CarNumberDisplay ?? string.Empty,
                 DriverAheadIRating = carAhead?.Details.Driver.IRating ?? 0,
                 DriverAheadLicense = carAhead?.Details.Driver.LicString ?? string.Empty,
-                DriverBehindName = carBehind?.Details.UserName ?? string.Empty
+                DriverBehindName = carBehind?.Details.UserName ?? string.Empty,
             };
         }
     }
