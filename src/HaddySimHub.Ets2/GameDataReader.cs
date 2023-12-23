@@ -169,7 +169,7 @@ public sealed class GameDataReader : GameDataReaderBase
             Gear = (short)typedRawData.TruckValues.CurrentValues.DashboardValues.GearDashboards,
             Rpm = (int)typedRawData.TruckValues.CurrentValues.DashboardValues.RPM,
             RpmMax = (int)typedRawData.TruckValues.ConstantsValues.MotorValues.EngineRpmMax,
-            Speed = (short)typedRawData.TruckValues.CurrentValues.DashboardValues.Speed.Kph,
+            Speed = (short)Math.Max(typedRawData.TruckValues.CurrentValues.DashboardValues.Speed.Kph, 0),
             SpeedLimit = (short)Math.Max(typedRawData.NavigationValues.SpeedLimit.Kph, 0),
             CruiseControlOn = typedRawData.TruckValues.CurrentValues.DashboardValues.CruiseControl,
             CruiseControlSpeed = (short)typedRawData.TruckValues.CurrentValues.DashboardValues.CruiseControlSpeed.Kph,
