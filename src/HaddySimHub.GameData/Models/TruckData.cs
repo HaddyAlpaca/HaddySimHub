@@ -28,7 +28,7 @@ public struct TruckData
     public int TimeRemainingIrl { get; set; }
 
     /*    Current time                      */
-    public DateTime Time { get; init; }
+    public ulong GameTime { get; init; }
 
     /*    Critical stopping information     */
 

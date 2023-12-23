@@ -186,6 +186,7 @@ public sealed class GameDataReader : GameDataReaderBase
             BlinkerRightOn = typedRawData.TruckValues.CurrentValues.LightsValues.BlinkerRightOn,
             FuelWarningOn = typedRawData.TruckValues.CurrentValues.DashboardValues.WarningValues.FuelW,
             WipersOn = typedRawData.TruckValues.CurrentValues.DashboardValues.Wipers,
+            GameTime = (ulong)Math.Round(typedRawData.Timestamp / 6000m),
         };
     }
 }
