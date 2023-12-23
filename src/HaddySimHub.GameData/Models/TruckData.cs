@@ -166,4 +166,6 @@ public struct TruckData
     public string TruckName { get; init; }
 
     public int NumberOfTrailersAttached { get; init; }
+
+    public bool WipersOn { get; init; }
 }

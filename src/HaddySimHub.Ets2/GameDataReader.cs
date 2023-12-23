@@ -185,6 +185,7 @@ public sealed class GameDataReader : GameDataReaderBase
             BlinkerLeftOn = typedRawData.TruckValues.CurrentValues.LightsValues.BlinkerLeftOn,
             BlinkerRightOn = typedRawData.TruckValues.CurrentValues.LightsValues.BlinkerRightOn,
             FuelWarningOn = typedRawData.TruckValues.CurrentValues.DashboardValues.WarningValues.FuelW,
+            WipersOn = typedRawData.TruckValues.CurrentValues.DashboardValues.Wipers,
         };
     }
 }
