@@ -33,6 +33,7 @@ public abstract class GameDataReaderBase(ILogger logger)
 
     protected void SendNotification(string message)
     {
+        this.logger.Info($"Send notification: {message}");
         this.Notification?.Invoke(this, message);
     }
 }

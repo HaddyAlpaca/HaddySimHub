@@ -103,6 +103,7 @@ public class GameDataWatcher(
 
                 if (this.gameDataReader != null)
                 {
+                    this.logger.Info($"Subscribe to game events ({this.gameDataReader.GetType().Name})");
                     this.gameDataReader.RawDataUpdate += this.GameDataReader_RawDataUpdate;
                     this.gameDataReader.Notification += this.GameDataReader_Notification;
                 }
@@ -155,6 +156,8 @@ public class GameDataWatcher(
         // Stop the previous game data stream
         if (this.gameDataReader != null)
         {
+            this.logger.Info($"Unsubscribe from game events ({this.gameDataReader.GetType().Name})");
+
             this.gameDataReader.RawDataUpdate -= this.GameDataReader_RawDataUpdate;
             this.gameDataReader.Notification -= this.GameDataReader_Notification;
             this.gameDataReader = null;
