@@ -162,13 +162,5 @@ namespace HaddySimHub
                 }
             }
         }
-
-        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
-            if (e.ExceptionObject is Exception exception)
-            {
-                this.logger?.Fatal($"Unhandled Exception: {exception.Message}");
-            }
-        }
     }
 }
