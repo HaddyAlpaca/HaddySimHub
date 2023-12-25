@@ -62,8 +62,8 @@ namespace HaddySimHub.IRacing
                     break;
             }
 
-            Car? carBehind = telemetry.RaceCars.FirstOrDefault(c => c.Position == telemetry.PlayerCarClassPosition + 1);
-            Car? carAhead = telemetry.RaceCars.FirstOrDefault(c => c.Position == telemetry.PlayerCarClassPosition - 1);
+            Car? carBehind = telemetry.RaceCars.FirstOrDefault(c => c.Position == telemetry.PlayerCarPosition + 1);
+            Car? carAhead = telemetry.RaceCars.FirstOrDefault(c => c.Position == telemetry.PlayerCarPosition - 1);
 
             long incidentLimit = typedRawData.SessionData.WeekendInfo.WeekendOptions._IncidentLimit;
             if (incidentLimit == long.MaxValue)
