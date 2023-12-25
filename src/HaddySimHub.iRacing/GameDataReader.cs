@@ -82,6 +82,7 @@ namespace HaddySimHub.IRacing
                 MaxIncidents = incidentLimit,
                 SessionTimeRemaining = (float)telemetry.SessionTimeRemain,
                 Position = telemetry.PlayerCarPosition,
+                StrengthOfField = telemetry.RaceCars.Count() > 1 ? (int)Math.Round(telemetry.RaceCars.Average(r => r.Details.Driver.IRating)) : 0,
                 CurrentLapTime = telemetry.LapCurrentLapTime,
                 LastLapTime = telemetry.LapLastLapTime,
                 LastLapTimeDelta = telemetry.LapLastLapTime == 0 ? 0 : telemetry.LapDeltaToSessionLastlLap,
@@ -100,11 +101,15 @@ namespace HaddySimHub.IRacing
                 Flag = flag,
                 PitLimiterOn = telemetry.EngineWarnings.HasFlag(EngineWarnings.PitSpeedLimiter),
                 DriverAheadName = carAhead?.Details.UserName ?? string.Empty,
-                DriverAheadLicenseColor = carAhead?.Details.Driver.LicColor ?? string.Empty,
+                DriverAheadLicenseColor = carAhead?.Details.Driver.LicColor.Replace("0x", "#") ?? string.Empty,
                 DriverAheadCarNumber = carAhead?.Details.CarNumberDisplay ?? string.Empty,
                 DriverAheadIRating = carAhead?.Details.Driver.IRating ?? 0,
                 DriverAheadLicense = carAhead?.Details.Driver.LicString ?? string.Empty,
                 DriverBehindName = carBehind?.Details.UserName ?? string.Empty,
+                DriverBehindLicenseColor = carBehind?.Details.Driver.LicColor.Replace("0x", "#") ?? string.Empty,
+                DriverBehindCarNumber = carBehind?.Details.CarNumberDisplay ?? string.Empty,
+                DriverBehindIRating = carBehind?.Details.Driver.IRating ?? 0,
+                DriverBehindLicense = carBehind?.Details.Driver.LicString ?? string.Empty,
             };
         }
     }

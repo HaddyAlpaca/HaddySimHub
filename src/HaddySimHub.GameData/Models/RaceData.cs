@@ -68,7 +68,10 @@ public readonly struct RaceData
 
     public float CurrentLapTime { get; init; }
 
-    public float LastSectorTime { get; init; }
+    /// <summary>
+    /// Gets strength of field.
+    /// </summary>
+    public int StrengthOfField { get; init; }
 
     /// <summary>
     /// Gets last laptime in seconds.
@@ -94,6 +97,14 @@ public readonly struct RaceData
     /// </summary>
     public string DriverBehindName { get; init; }
 
+    public string DriverBehindLicense { get; init; }
+
+    public string DriverBehindLicenseColor { get; init; }
+
+    public string DriverBehindCarNumber { get; init; }
+
+    public long DriverBehindIRating { get; init; }
+
     /// <summary>
     /// Gets gap ahead in seconds.
     /// </summary>
@@ -104,9 +115,9 @@ public readonly struct RaceData
     /// </summary>
     public string DriverAheadName { get; init; }
 
-    public string DriverAheadLicenseColor { get; init; }
-
     public string DriverAheadLicense { get; init; }
+
+    public string DriverAheadLicenseColor { get; init; }
 
     public string DriverAheadCarNumber { get; init; }
 
