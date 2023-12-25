@@ -1,4 +1,5 @@
-﻿using HaddySimHub.GameData.Models;
+﻿using System.Text.Json;
+using HaddySimHub.GameData.Models;
 using HaddySimHub.Logging;
 
 namespace HaddySimHub.GameData;
@@ -103,7 +104,7 @@ public class GameDataWatcher(
 
                 if (this.gameDataReader != null)
                 {
-                    this.logger.Info($"Subscribe to game events ({this.gameDataReader.GetType().Name})");
+                    this.logger.Info($"Subscribe to game events ({this.gameDataReader.GetType().FullName})");
                     this.gameDataReader.RawDataUpdate += this.GameDataReader_RawDataUpdate;
                     this.gameDataReader.Notification += this.GameDataReader_Notification;
                 }
@@ -116,6 +117,7 @@ public class GameDataWatcher(
 
     private void GameDataReader_Notification(object? sender, string message)
     {
+        this.logger.Debug($"Send notification: {message}");
         this.Notification?.Invoke(this, message);
     }
 
@@ -140,12 +142,14 @@ public class GameDataWatcher(
 
         if (data is RaceData raceData)
         {
+            this.logger.Debug($"Send race data update: {JsonSerializer.Serialize(raceData)}");
             this.RaceDataUpdated?.Invoke(this, raceData);
             return;
         }
 
         if (data is TruckData truckData)
         {
+            this.logger.Debug("Send truck data update: {JsonSerializer.Serialize(truckData)}");
             this.TruckDataUpdated?.Invoke(this, truckData);
             return;
         }
@@ -156,7 +160,7 @@ public class GameDataWatcher(
         // Stop the previous game data stream
         if (this.gameDataReader != null)
         {
-            this.logger.Info($"Unsubscribe from game events ({this.gameDataReader.GetType().Name})");
+            this.logger.Info($"Unsubscribe from game events ({this.gameDataReader.GetType().FullName})");
 
             this.gameDataReader.RawDataUpdate -= this.GameDataReader_RawDataUpdate;
             this.gameDataReader.Notification -= this.GameDataReader_Notification;
