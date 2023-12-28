@@ -2,11 +2,15 @@
 using HaddySimHub.GameData.Models;
 using HaddySimHub.Logging;
 using iRacingSDK;
+using static iRacingSDK.SessionData._SessionInfo;
 
 namespace HaddySimHub.IRacing
 {
     public class GameDataReader : GameDataReaderBase
     {
+        private _Sessions? session;
+        private SessionData? sessionData;
+
         public GameDataReader(ILogger logger)
             : base(logger)
         {
@@ -25,10 +29,22 @@ namespace HaddySimHub.IRacing
             }
 
             var telemetry = typedRawData.Telemetry;
-            var session = typedRawData.SessionData.SessionInfo.Sessions.First(s => s.SessionNum == telemetry.SessionNum);
+
+            if (this.session == null || this.session.SessionNum != telemetry.SessionNum)
+            {
+                // An new session has started, get session related information
+                this.sessionData = typedRawData.SessionData;
+                this.session = this.sessionData.SessionInfo.Sessions.First(s => s.SessionNum == telemetry.SessionNum);
+            }
+
+            if (this.session == null || this.sessionData == null)
+            {
+                throw new NullReferenceException("No session data available");
+            }
 
             // Set flag
             string flag = string.Empty;
+
             switch (telemetry.SessionFlags)
             {
                 case SessionFlags.checkered:
@@ -65,21 +81,15 @@ namespace HaddySimHub.IRacing
             Car? carBehind = telemetry.RaceCars.FirstOrDefault(c => c.Position == telemetry.PlayerCarPosition + 1);
             Car? carAhead = telemetry.RaceCars.FirstOrDefault(c => c.Position == telemetry.PlayerCarPosition - 1);
 
-            long incidentLimit = typedRawData.SessionData.WeekendInfo.WeekendOptions._IncidentLimit;
-            if (incidentLimit == long.MaxValue)
-            {
-                incidentLimit = 0;
-            }
-
             return new RaceData
             {
-                SessionType = session.SessionType,
-                IsLimitedTime = session.IsLimitedTime,
-                IsLimitedSessionLaps = session.IsLimitedSessionLaps,
+                SessionType = this.session.SessionType,
+                IsLimitedTime = this.session.IsLimitedTime,
+                IsLimitedSessionLaps = this.session.IsLimitedSessionLaps,
                 CurrentLap = telemetry.Lap,
-                TotalLaps = session._SessionLaps,
+                TotalLaps = this.session._SessionLaps,
                 Incidents = telemetry.PlayerCarDriverIncidentCount,
-                MaxIncidents = incidentLimit,
+                MaxIncidents = this.sessionData.WeekendInfo.WeekendOptions._IncidentLimit == long.MaxValue ? 0 : this.sessionData.WeekendInfo.WeekendOptions._IncidentLimit,
                 SessionTimeRemaining = (float)telemetry.SessionTimeRemain,
                 Position = telemetry.PlayerCarPosition,
                 StrengthOfField = telemetry.RaceCars.Count() > 1 ? (int)Math.Round(telemetry.RaceCars.Average(r => r.Details.Driver.IRating)) : 0,
