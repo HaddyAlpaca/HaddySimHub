@@ -10,6 +10,8 @@ public class GameDataReader : GameDataReaderBase
 {
     private _Sessions? session;
     private SessionData? sessionData;
+    private Sector? lastCompletedSector;
+    private Sector? currentSector;
 
     public GameDataReader(ILogger logger)
         : base(logger)
@@ -45,6 +47,8 @@ public class GameDataReader : GameDataReaderBase
         Car? carBehind = telemetry.RaceCars.FirstOrDefault(c => c.Position == telemetry.PlayerCarPosition + 1);
         Car? carAhead = telemetry.RaceCars.FirstOrDefault(c => c.Position == telemetry.PlayerCarPosition - 1);
 
+        this.UpdateLastSectorTime(telemetry);
+
         return new RaceData
         {
             SessionType = this.session.SessionType,
@@ -58,6 +62,8 @@ public class GameDataReader : GameDataReaderBase
             Position = telemetry.PlayerCarPosition,
             StrengthOfField = telemetry.RaceCars.Count() > 1 ? (int)Math.Round(telemetry.RaceCars.Average(r => r.Details.Driver.IRating)) : 0,
             CurrentLapTime = telemetry.LapCurrentLapTime,
+            LastSectorNum = this.lastCompletedSector?.SectorNum ?? 0,
+            LastSectorTime = this.lastCompletedSector?.SectorTime ?? 0,
             LastLapTime = telemetry.LapLastLapTime,
             LastLapTimeDelta = telemetry.LapLastLapTime == 0 ? 0 : telemetry.LapDeltaToSessionLastlLap,
             BestLapTime = telemetry.LapBestLapTime,
@@ -102,5 +108,59 @@ public class GameDataReader : GameDataReaderBase
             SessionFlags.repair => "black-orange",
             _ => string.Empty,
         };
+    }
+
+    private void UpdateLastSectorTime(Telemetry telemetry)
+    {
+        // Get the sector the car is in
+        var currentSector = this.sessionData!.SplitTimeInfo.Sectors
+            .OrderBy(s => s.SectorStartPct)
+            .FirstOrDefault(s => s.SectorStartPct >= telemetry.LapDistPct);
+
+        if (currentSector != null)
+        {
+            if (this.currentSector == null)
+            {
+                // First sector of the session
+                this.currentSector = new Sector
+                {
+                    LapNum = telemetry.Lap,
+                    SectorNum = (int)currentSector.SectorNum,
+                    SectorStartTime = telemetry.LapCurrentLapTime,
+                };
+            }
+            else
+            {
+                if (this.currentSector.LapNum != telemetry.Lap ||
+                    this.currentSector.SectorNum != currentSector.SectorNum)
+                {
+                    // The car has entered a new sector:
+                    // - Set the end time of the previous sector
+                    // - Set the start time of the new sector
+                    if (currentSector.SectorNum == this.currentSector.SectorNum + 1 ||
+                        (currentSector.SectorNum == 1 && telemetry.Lap == this.currentSector.LapNum + 1))
+                    {
+                        this.lastCompletedSector = new Sector
+                        {
+                            LapNum = this.currentSector.LapNum,
+                            SectorNum = this.currentSector.SectorNum,
+                            SectorStartTime = this.currentSector.SectorStartTime,
+                            SectorEndTime = telemetry.LapCurrentLapTime,
+                        };
+                    }
+                    else
+                    {
+                        this.lastCompletedSector = null;
+                    }
+
+                    this.currentSector = new Sector
+                    {
+                        LapNum = telemetry.Lap,
+                        SectorNum = (int)currentSector.SectorNum,
+                        SectorStartTime = telemetry.LapCurrentLapTime,
+                    };
+                }
+            }
+        }
     }
 }

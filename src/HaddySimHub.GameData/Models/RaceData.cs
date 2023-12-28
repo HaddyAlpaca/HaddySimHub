@@ -73,6 +73,10 @@ public readonly struct RaceData
     /// </summary>
     public int StrengthOfField { get; init; }
 
+    public int LastSectorNum { get; init; }
+
+    public float LastSectorTime { get; init; }
+
     /// <summary>
     /// Gets last laptime in seconds.
     /// </summary>
