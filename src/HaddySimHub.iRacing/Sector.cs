@@ -29,4 +29,13 @@ internal class Sector
     /// Gets sector time in seconds.
     /// </summary>
     public float SectorTime => this.SectorEndTime - this.SectorStartTime;
+
+    /// <summary>
+    /// Get string formatted data.
+    /// </summary>
+    /// <returns>Formatted data.</returns>
+    public override string ToString()
+    {
+        return $"LapNum: {this.LapNum}\nSectorNum: {this.SectorNum}\n{this.SectorStartTime}";
+    }
 }

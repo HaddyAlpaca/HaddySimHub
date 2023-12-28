@@ -5,7 +5,7 @@ namespace HaddySimHub.GameData;
 
 public abstract class GameDataReaderBase(ILogger logger)
 {
-    private readonly ILogger logger = logger;
+    protected readonly ILogger logger = logger;
 
     private object? lastReceivedData;
 

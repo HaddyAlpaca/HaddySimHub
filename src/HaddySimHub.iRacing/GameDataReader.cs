@@ -119,9 +119,13 @@ public class GameDataReader : GameDataReaderBase
 
         if (currentSector != null)
         {
+            this.logger.Debug($"Current sector: {currentSector}");
+
             if (this.currentSector == null)
             {
                 // First sector of the session
+                this.logger.Debug("First sector of the session");
+
                 this.currentSector = new Sector
                 {
                     LapNum = telemetry.Lap,
@@ -131,6 +135,8 @@ public class GameDataReader : GameDataReaderBase
             }
             else
             {
+                this.logger.Debug($"this.currentSector: LapNum {this.currentSector.LapNum}, SectorNum: {this.currentSector.SectorNum}");
+                this.logger.Debug($"telemetry.Lap: {telemetry.Lap}, currentSector.SectorNum: {currentSector.SectorNum}");
                 if (this.currentSector.LapNum != telemetry.Lap ||
                     this.currentSector.SectorNum != currentSector.SectorNum)
                 {
