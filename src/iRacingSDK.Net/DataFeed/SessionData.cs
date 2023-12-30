@@ -16,9 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Linq;
-
 namespace iRacingSDK
 {
     public partial class SessionData
@@ -30,13 +27,7 @@ namespace iRacingSDK
         {
             public partial class _Sessions
             {
-                public bool IsRace
-                {
-                    get
-                    {
-                        return this.SessionType.ToLower().Contains("race");
-                    }
-                }
+                public bool IsRace => this.SessionType.ToLower().Contains("race");
             }
         }
 
@@ -44,7 +35,7 @@ namespace iRacingSDK
         {
             public partial class _Drivers
             {
-                public bool IsPaceCar { get { return this.CarIsPaceCar == 1; } }
+                public bool IsPaceCar => this.CarIsPaceCar == 1;
             }
 
             _Drivers[] competingDrivers = null;
@@ -94,19 +85,13 @@ namespace iRacingSDK
 
     public static class _SessionExtensions
     {
-        public static SessionData._SessionInfo._Sessions Qualifying(this SessionData._SessionInfo._Sessions[] sessions)
-        {
-            return sessions.FirstOrDefault(s => s.SessionType.ToLower().Contains("qualif"));
-        }
+        public static SessionData._SessionInfo._Sessions Qualifying(this SessionData._SessionInfo._Sessions[] sessions) =>
+            sessions.FirstOrDefault(s => s.SessionType.ToLower().Contains("qualif"));
 
-        public static SessionData._SessionInfo._Sessions Race(this SessionData._SessionInfo._Sessions[] sessions)
-        {
-            return sessions.FirstOrDefault(s => s.SessionType.ToLower().Contains("race"));
-        }
+        public static SessionData._SessionInfo._Sessions Race(this SessionData._SessionInfo._Sessions[] sessions) =>
+            sessions.FirstOrDefault(s => s.SessionType.ToLower().Contains("race"));
 
-        public static int MaxLength(this SessionData._DriverInfo._Drivers[] self)
-        {
-            return (int)self.Where(d => d.CarNumberRaw > 0).Max(d => d.CarIdx) + 1;
-        }
+        public static int MaxLength(this SessionData._DriverInfo._Drivers[] self) =>
+            (int)self.Where(d => d.CarNumberRaw > 0).Max(d => d.CarIdx) + 1;
     }
 }

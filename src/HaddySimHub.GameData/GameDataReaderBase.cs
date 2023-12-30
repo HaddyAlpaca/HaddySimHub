@@ -5,7 +5,9 @@ namespace HaddySimHub.GameData;
 
 public abstract class GameDataReaderBase(ILogger logger)
 {
+#pragma warning disable SA1401 // Fields should be private
     protected readonly ILogger logger = logger;
+#pragma warning restore SA1401 // Fields should be private
 
     private object? lastReceivedData;
 
@@ -16,6 +18,8 @@ public abstract class GameDataReaderBase(ILogger logger)
     protected ILogger Logger => this.logger;
 
     protected object? LastReceivedData { get => this.lastReceivedData; set => this.lastReceivedData = value; }
+
+    public abstract void Initialize();
 
     public abstract object Convert(object rawData);
 

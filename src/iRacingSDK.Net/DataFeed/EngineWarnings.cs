@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace iRacingSDK
+﻿namespace iRacingSDK
 {
     [Flags]
     public enum EngineWarnings : uint

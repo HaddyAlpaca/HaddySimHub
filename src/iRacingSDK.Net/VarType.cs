@@ -16,25 +16,15 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.IO.MemoryMappedFiles;
-using System.Runtime.InteropServices;
-using System.Collections.Generic;
-using System.Threading;
-using System.Linq;
-
 namespace iRacingSDK
 {
-
-	public enum VarType
+    public enum VarType
 	{
 		irChar,
 		irBool,
 		irInt,
 		irBitField,
 		irFloat,
-		irDouble}
-
-	;
-	
+		irDouble
+	};
 }

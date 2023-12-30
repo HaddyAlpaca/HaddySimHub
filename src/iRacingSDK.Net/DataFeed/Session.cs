@@ -49,21 +49,9 @@ namespace iRacingSDK
                     }
                 }
 
-                public bool IsLimitedSessionLaps
-                {
-                    get
-                    {
-                        return SessionLaps.ToLower() != "unlimited";
-                    }
-                }
+                public bool IsLimitedSessionLaps => SessionLaps.ToLower() != "unlimited";
 
-                public bool IsLimitedTime
-                {
-                    get
-                    {
-                        return SessionTime.ToLower() != "unlimited";
-                    }
-                }
+                public bool IsLimitedTime => SessionTime.ToLower() != "unlimited";
             }
         }
 	}

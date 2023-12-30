@@ -16,12 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-
 namespace iRacingSDK
 {
-	[Serializable]
+    [Serializable]
     public class DataSample
     {
         private Telemetry telemetry;
@@ -30,7 +27,7 @@ namespace iRacingSDK
         public static readonly DataSample YetToConnected = new DataSample { IsConnected = false };
         public DataSample LastSample { get; set; }
 
-        public bool IsConnected { get; internal set; }
+        public bool IsConnected { get; set; }
         public SessionData SessionData
         {
             get

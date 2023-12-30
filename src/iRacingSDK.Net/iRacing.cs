@@ -16,14 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using Win32.Synchronization;
-using System.Runtime.InteropServices;
-using System.IO.MemoryMappedFiles;
-using System.Diagnostics;
-
 namespace iRacingSDK
 {
     public static class iRacing
@@ -37,15 +29,12 @@ namespace iRacingSDK
             eventInstance = new iRacingEvents();
         }
 
-        public static Replay Replay { get { return instance.Replay; } }
-        public static PitCommand PitCommand { get { return instance.PitCommand; } }
+        public static Replay Replay => instance.Replay;
+        public static PitCommand PitCommand => instance.PitCommand;
 
-        public static bool IsConnected { get { return instance.IsConnected; } }
+        public static bool IsConnected => instance.IsConnected;
 
-        public static IEnumerable<DataSample> GetDataFeed()
-        {
-            return instance.GetDataFeed();
-        }
+        public static IEnumerable<DataSample> GetDataFeed() => instance.GetDataFeed();
 
         public static void StartListening()
         {

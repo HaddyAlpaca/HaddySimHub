@@ -6,12 +6,11 @@ using SCSSdkClient.Object;
 
 namespace HaddySimHub.Ets2;
 
-public sealed class GameDataReader : GameDataReaderBase
+public sealed class GameDataReader(ILogger logger) : GameDataReaderBase(logger)
 {
-    private readonly SCSSdkTelemetry telemetry;
+    private SCSSdkTelemetry? telemetry;
 
-    public GameDataReader(ILogger logger)
-        : base(logger)
+    public override void Initialize()
     {
         this.telemetry = new SCSSdkTelemetry();
         this.telemetry.Data += (SCSTelemetry data, bool newTimestamp) =>

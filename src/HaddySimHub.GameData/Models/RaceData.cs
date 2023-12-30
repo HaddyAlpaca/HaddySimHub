@@ -75,7 +75,7 @@ public readonly struct RaceData
 
     public int LastSectorNum { get; init; }
 
-    public float LastSectorTime { get; init; }
+    public double LastSectorTime { get; init; }
 
     /// <summary>
     /// Gets last laptime in seconds.

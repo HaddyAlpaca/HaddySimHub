@@ -1,4 +1,4 @@
-namespace HaddySimHub.IRacing;
+namespace HaddySimHub.iRacing;
 
 /// <summary>
 /// Completed sector information.
@@ -18,17 +18,17 @@ internal class Sector
     /// <summary>
     /// Gets lap time when entering the sector.
     /// </summary>
-    public float SectorStartTime { get; init; }
+    public double SectorStartTime { get; init; }
 
     /// <summary>
     /// Gets lap time when exiting the sector.
     /// </summary>
-    public float SectorEndTime { get; init; }
+    public double SectorEndTime { get; init; }
 
     /// <summary>
     /// Gets sector time in seconds.
     /// </summary>
-    public float SectorTime => this.SectorEndTime - this.SectorStartTime;
+    public double SectorTime => this.SectorEndTime - this.SectorStartTime;
 
     /// <summary>
     /// Get string formatted data.

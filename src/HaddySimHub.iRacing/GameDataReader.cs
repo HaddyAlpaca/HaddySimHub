@@ -4,22 +4,18 @@ using HaddySimHub.Logging;
 using iRacingSDK;
 using static iRacingSDK.SessionData._SessionInfo;
 
-namespace HaddySimHub.IRacing;
+namespace HaddySimHub.iRacing;
 
-public class GameDataReader : GameDataReaderBase
+public class GameDataReader(ILogger logger) : GameDataReaderBase(logger)
 {
     private _Sessions? session;
     private SessionData? sessionData;
     private Sector? lastCompletedSector;
     private Sector? currentSector;
 
-    public GameDataReader(ILogger logger)
-        : base(logger)
+    public override void Initialize()
     {
-        iRacingSDK.iRacing.NewData += (DataSample obj) =>
-        {
-            this.UpdateRawData(obj);
-        };
+        iRacingSDK.iRacing.NewData += this.UpdateRawData;
         iRacingSDK.iRacing.StartListening();
     }
 
@@ -44,8 +40,13 @@ public class GameDataReader : GameDataReaderBase
             throw new NullReferenceException("No session data available");
         }
 
-        Car? carBehind = telemetry.RaceCars.FirstOrDefault(c => c.Position == telemetry.PlayerCarPosition + 1);
-        Car? carAhead = telemetry.RaceCars.FirstOrDefault(c => c.Position == telemetry.PlayerCarPosition - 1);
+        Car? carBehind = null;
+        Car? carAhead = null;
+        if (this.session.IsRace)
+        {
+            carBehind = telemetry.RaceCars.FirstOrDefault(c => c.Position == telemetry.PlayerCarPosition + 1);
+            carAhead = telemetry.RaceCars.FirstOrDefault(c => c.Position == telemetry.PlayerCarPosition - 1);
+        }
 
         this.UpdateLastSectorTime(telemetry);
 
@@ -56,13 +57,13 @@ public class GameDataReader : GameDataReaderBase
             IsLimitedSessionLaps = this.session.IsLimitedSessionLaps,
             CurrentLap = telemetry.Lap,
             TotalLaps = this.session._SessionLaps,
-            Incidents = telemetry.PlayerCarDriverIncidentCount,
-            MaxIncidents = Math.Max(this.sessionData.WeekendInfo.WeekendOptions._IncidentLimit, 999),
+            Incidents = Math.Max(telemetry.PlayerCarDriverIncidentCount, 0),
+            MaxIncidents = Math.Max(Math.Min(this.sessionData.WeekendInfo.WeekendOptions._IncidentLimit, 999), 0),
             SessionTimeRemaining = (float)telemetry.SessionTimeRemain,
             Position = telemetry.PlayerCarPosition,
             StrengthOfField = telemetry.RaceCars.Count() > 1 ? (int)Math.Round(telemetry.RaceCars.Average(r => r.Details.Driver.IRating)) : 0,
             CurrentLapTime = telemetry.LapCurrentLapTime,
-            LastSectorNum = this.lastCompletedSector?.SectorNum ?? 0,
+            LastSectorNum = this.lastCompletedSector?.SectorNum + 1 ?? 0,
             LastSectorTime = this.lastCompletedSector?.SectorTime ?? 0,
             LastLapTime = telemetry.LapLastLapTime,
             LastLapTimeDelta = telemetry.LapLastLapTime == 0 ? 0 : telemetry.LapDeltaToSessionLastlLap,
@@ -75,9 +76,6 @@ public class GameDataReader : GameDataReaderBase
             FuelRemaining = telemetry.FuelLevel,
             AirTemp = telemetry.AirTemp,
             TrackTemp = telemetry.TrackTemp,
-            ClutchPct = (int)(telemetry.Clutch * 100),
-            ThrottlePct = (int)(telemetry.Throttle * 100),
-            BrakePct = (int)(telemetry.Brake * 100),
             Flag = GetFlag(telemetry.SessionFlags),
             PitLimiterOn = telemetry.EngineWarnings.HasFlag(EngineWarnings.PitSpeedLimiter),
             DriverAheadName = carAhead?.Details.UserName ?? string.Empty,
@@ -130,7 +128,7 @@ public class GameDataReader : GameDataReaderBase
                 {
                     LapNum = telemetry.Lap,
                     SectorNum = (int)currentSector.SectorNum,
-                    SectorStartTime = telemetry.LapCurrentLapTime,
+                    SectorStartTime = telemetry.SessionTime,
                 };
             }
             else
@@ -151,7 +149,7 @@ public class GameDataReader : GameDataReaderBase
                             LapNum = this.currentSector.LapNum,
                             SectorNum = this.currentSector.SectorNum,
                             SectorStartTime = this.currentSector.SectorStartTime,
-                            SectorEndTime = telemetry.LapCurrentLapTime,
+                            SectorEndTime = telemetry.SessionTime,
                         };
                     }
                     else
@@ -163,7 +161,7 @@ public class GameDataReader : GameDataReaderBase
                     {
                         LapNum = telemetry.Lap,
                         SectorNum = (int)currentSector.SectorNum,
-                        SectorStartTime = telemetry.LapCurrentLapTime,
+                        SectorStartTime = telemetry.SessionTime,
                     };
                 }
             }

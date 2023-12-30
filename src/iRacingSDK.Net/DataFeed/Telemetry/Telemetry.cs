@@ -16,9 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using iRacingSDK.Support;
 
@@ -26,7 +23,7 @@ namespace iRacingSDK
 {
     public class CarArray : IEnumerable<Car>
     {
-        Car[] cars;
+        private readonly Car[] cars;
         
         public CarArray(Telemetry telemetry)
         {
@@ -52,15 +49,9 @@ namespace iRacingSDK
             }
         }
 
-        public IEnumerator<Car> GetEnumerator()
-        {
-            return (cars as IEnumerable<Car>).GetEnumerator();
-        }
+        public IEnumerator<Car> GetEnumerator() => (cars as IEnumerable<Car>).GetEnumerator();
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return cars.GetEnumerator();
-        }
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => cars.GetEnumerator();
     }
 
     public partial class Telemetry : Dictionary<string, object>
@@ -76,7 +67,7 @@ namespace iRacingSDK
             }
         }
 
-        public Car CamCar { get { return Cars[CamCarIdx]; } }
+        public Car CamCar => Cars[CamCarIdx];
 
         CarArray cars;
         public CarArray Cars
@@ -92,21 +83,9 @@ namespace iRacingSDK
 
         public CarDetails[] CarDetails { get { return Cars.Select(c => c.Details).ToArray(); } }
 
-        public IEnumerable<Car> RaceCars
-        {
-            get
-            {
-                return Cars.Where(c => !c.Details.IsPaceCar);
-            }
-        }
+        public IEnumerable<Car> RaceCars => Cars.Where(c => !c.Details.IsPaceCar);
 
-        public bool UnderPaceCar
-        {
-            get
-            {
-                return this.CarIdxTrackSurface[0] == TrackLocation.OnTrack;
-            }
-        }
+        public bool UnderPaceCar => this.CarIdxTrackSurface[0] == TrackLocation.OnTrack;
 
         public Dictionary<string, string> Descriptions { get; internal set; }
 
@@ -128,33 +107,19 @@ namespace iRacingSDK
             return result.ToString();
         }
 
-        object ConvertToSpecificType(string key, object value)
+        private object ConvertToSpecificType(string key, object value)
         {
-            switch (key)
+            return key switch
             {
-                case "SessionState":
-                    return (SessionState)(int)value;
-
-                case "SessionFlags":
-                    return (SessionFlags)(int)value;
-
-                case "EngineWarnings":
-                    return (EngineWarnings)(int)value;
-
-                case "CarIdxTrackSurface":
-                    return ((int[])value).Select(v => (TrackLocation)v).ToArray();
-
-                case "DisplayUnits":
-                    return (DisplayUnits)(int)value;
-
-                case "WeatherType":
-                    return (WeatherType)(int)value;
-
-                case "Skies":
-                    return (Skies)(int)value;
-            }
-
-            return value;
+                "SessionState" => (SessionState)(int)value,
+                "SessionFlags" => (SessionFlags)(int)value,
+                "EngineWarnings" => (EngineWarnings)(int)value,
+                "CarIdxTrackSurface" => ((int[])value).Select(v => (TrackLocation)v).ToArray(),
+                "DisplayUnits" => (DisplayUnits)(int)value,
+                "WeatherType" => (WeatherType)(int)value,
+                "Skies" => (Skies)(int)value,
+                _ => value,
+            };
         }
     }
 }

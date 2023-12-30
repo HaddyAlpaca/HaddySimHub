@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HaddySimHub.iRacing", "Hadd
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HaddySimHub.Logging", "HaddySimHub.Logging\HaddySimHub.Logging.csproj", "{7656E767-84D6-4EA5-91A3-5B55B3FB1AB2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HaddySimHub.iRacing.Test", "HaddySimHub.iRacing.Test\HaddySimHub.iRacing.Test.csproj", "{968D00BE-6F03-4FA1-A177-4C09433E5119}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{7656E767-84D6-4EA5-91A3-5B55B3FB1AB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7656E767-84D6-4EA5-91A3-5B55B3FB1AB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7656E767-84D6-4EA5-91A3-5B55B3FB1AB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{968D00BE-6F03-4FA1-A177-4C09433E5119}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{968D00BE-6F03-4FA1-A177-4C09433E5119}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{968D00BE-6F03-4FA1-A177-4C09433E5119}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{968D00BE-6F03-4FA1-A177-4C09433E5119}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

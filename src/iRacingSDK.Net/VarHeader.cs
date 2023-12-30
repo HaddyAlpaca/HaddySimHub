@@ -16,17 +16,12 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.IO.MemoryMappedFiles;
 using System.Runtime.InteropServices;
-using System.Collections.Generic;
-using System.Threading;
-using System.Linq;
 
 namespace iRacingSDK
 {
 
-	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
 	internal struct VarHeader
 	{
 		//16 bytes: offset = 0
