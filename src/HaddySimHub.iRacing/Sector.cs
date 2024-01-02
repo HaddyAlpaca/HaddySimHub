@@ -1,7 +1,7 @@
 namespace HaddySimHub.iRacing;
 
 /// <summary>
-/// Completed sector information.
+/// Sector timing information.
 /// </summary>
 internal class Sector
 {
@@ -28,14 +28,21 @@ internal class Sector
     /// <summary>
     /// Gets sector time in seconds.
     /// </summary>
-    public double SectorTime => this.SectorEndTime - this.SectorStartTime;
+    public double SectorTime
+    {
+        get
+        {
+            if (this.SectorStartTime == 0 || this.SectorEndTime == 0)
+            {
+                return 0;
+            }
+
+            return this.SectorEndTime - this.SectorStartTime;
+        }
+    }
 
     /// <summary>
-    /// Get string formatted data.
+    /// Gets the sessions best sector time.
     /// </summary>
-    /// <returns>Formatted data.</returns>
-    public override string ToString()
-    {
-        return $"LapNum: {this.LapNum}\nSectorNum: {this.SectorNum}\n{this.SectorStartTime}";
-    }
+    public double SessionBestTime { get; init; }
 }

@@ -92,11 +92,6 @@ public readonly struct RaceData
     public float BestLapTimeDelta { get; init; }
 
     /// <summary>
-    /// Gets gap behind in seconds.
-    /// </summary>
-    public float GapBehind { get; init; }
-
-    /// <summary>
     /// Gets driver behind.
     /// </summary>
     public string DriverBehindName { get; init; }
@@ -109,10 +104,7 @@ public readonly struct RaceData
 
     public long DriverBehindIRating { get; init; }
 
-    /// <summary>
-    /// Gets gap ahead in seconds.
-    /// </summary>
-    public float GapAhead { get; init; }
+    public float DriverBehindDelta { get; init; }
 
     /// <summary>
     /// Gets driver ahead.
@@ -126,6 +118,8 @@ public readonly struct RaceData
     public string DriverAheadCarNumber { get; init; }
 
     public long DriverAheadIRating { get; init; }
+
+    public float DriverAheadDelta { get; init; }
 
     /// <summary>
     /// Gets clutch percentage.
@@ -161,4 +155,9 @@ public readonly struct RaceData
     /// Gets flag.
     /// </summary>
     public string Flag { get; init; }
+
+    /// <summary>
+    /// Gets track postitions for all cars.
+    /// </summary>
+    public TrackPosition[] TrackPositions { get; init; }
 }

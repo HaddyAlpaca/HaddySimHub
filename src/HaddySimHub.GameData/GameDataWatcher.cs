@@ -125,35 +125,37 @@ public class GameDataWatcher(
     private void GameDataReader_RawDataUpdate(object? sender, object rawData)
     {
         // Convert to general format
-        object? data = null;
+        object? data;
         try
         {
-            data = this.gameDataReader?.Convert(rawData);
+            data = this.gameDataReader!.Convert(rawData);
+
+            if (data == null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
         }
         catch (Exception ex)
         {
             this.logger.Error($"Error converting game data: {ex.Message}\n\n{ex.StackTrace}");
-        }
-
-        if (data == null)
-        {
-            // No data
             return;
         }
 
         if (data is RaceData raceData)
         {
-            this.logger.Debug($"Send race data update: {JsonSerializer.Serialize(raceData)}");
+            this.logger.Debug("Send race data update.");
             this.RaceDataUpdated?.Invoke(this, raceData);
             return;
         }
 
         if (data is TruckData truckData)
         {
-            this.logger.Debug("Send truck data update: {JsonSerializer.Serialize(truckData)}");
+            this.logger.Debug("Send truck data update");
             this.TruckDataUpdated?.Invoke(this, truckData);
             return;
         }
+
+        this.logger.Error($"Data of type '{data.GetType().FullName}' is unhandled.");
     }
 
     private void HandleGameStop()

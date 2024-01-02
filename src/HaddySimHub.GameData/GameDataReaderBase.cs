@@ -15,8 +15,6 @@ public abstract class GameDataReaderBase(ILogger logger)
 
     public event EventHandler<string>? Notification;
 
-    protected ILogger Logger => this.logger;
-
     protected object? LastReceivedData { get => this.lastReceivedData; set => this.lastReceivedData = value; }
 
     public abstract void Initialize();
@@ -30,7 +28,6 @@ public abstract class GameDataReaderBase(ILogger logger)
         if (data != null)
         {
             this.logger.Debug($"{JsonSerializer.Serialize(data)}\n");
-
             this.RawDataUpdate?.Invoke(this, data);
         }
     }

@@ -29,6 +29,7 @@ public class GameDataReaderTest
         this.sample.Telemetry.Add("SessionNum", 1);
         this.sample.Telemetry.Add("Lap", 1);
         this.sample.Telemetry.Add("PlayerCarDriverIncidentCount", 0);
+        this.sample.Telemetry.Add("PlayerCarIdx", 4);
         this.sample.Telemetry.Add("SessionTimeRemain", (double)0);
         this.sample.Telemetry.Add("PlayerCarPosition", 0);
         this.sample.Telemetry.Add("LapCurrentLapTime", (float)0);
@@ -78,9 +79,11 @@ public class GameDataReaderTest
             DriverInfo = new()
             {
                 Drivers = [
-                    new _DriverInfo._Drivers { CarIdx = 1, UserName = "Driver_A", CarNumberRaw = 1 },
-                    new _DriverInfo._Drivers { CarIdx = 2, UserName = "Driver_B", CarNumberRaw = 2 },
-                    new _DriverInfo._Drivers { CarIdx = 3, UserName = "Driver_C", CarNumberRaw = 3 },
+                    new _DriverInfo._Drivers { CarIdx = 1, UserName = "Opponent A", CarNumberRaw = 1 },
+                    new _DriverInfo._Drivers { CarIdx = 2, UserName = "Opponent B", CarNumberRaw = 2 },
+                    new _DriverInfo._Drivers { CarIdx = 3, UserName = "Opponent C", CarNumberRaw = 3 },
+                    new _DriverInfo._Drivers { CarIdx = 4, UserName = "Player", CarNumberRaw = 33 },
+                    new _DriverInfo._Drivers { CarIdx = 9, CarIsPaceCar = 1 },
                 ]
             }
         };
@@ -127,6 +130,15 @@ public class GameDataReaderTest
 
         var raceData = (RaceData)this.sut.Convert(this.sample);
         Assert.AreEqual(0, raceData.Incidents);
+    }
+#endregion
+
+#region TrackPositions tests
+    [TestMethod]
+    public void Pace_car_is_not_included_when_in_pitlane()
+    {
+        var raceData = (RaceData)this.sut.Convert(this.sample);
+        Assert.AreEqual(4, raceData.TrackPositions.Length);
     }
 #endregion
 }
