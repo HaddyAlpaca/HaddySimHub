@@ -54,6 +54,7 @@ namespace HaddySimHub
             // Create logger
             bool debugEnabled = e.Args.Contains("--debug");
             this.logger = new Logger(debugEnabled);
+            this.logger.Debug("Debugging started...");
 
             await UpdateWebContent();
 

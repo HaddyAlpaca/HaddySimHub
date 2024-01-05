@@ -18,7 +18,7 @@ namespace HaddySimHub.Logging
                 // Debug
                 var debugTarget = new FileTarget
                 {
-                    FileName = "HaddySimHub.debug.log",
+                    FileName = "log\\${date:format=yyyy-MM-dd}-debug.log",
                     Layout = @"${message}",
                     ArchiveAboveSize = 1_000_000_000,
                     ArchiveNumbering = ArchiveNumberingMode.DateAndSequence,
@@ -36,7 +36,7 @@ namespace HaddySimHub.Logging
             // General
             var fileTarget = new FileTarget
             {
-                FileName = "HaddySimHub.log",
+                FileName = "log\\${date:format=yyyy-MM-dd}.log",
                 Layout = @"${longdate} ${uppercase:${level}}: ${message}",
                 ArchiveAboveSize = 1_000_000_000,
                 ArchiveNumbering = ArchiveNumberingMode.DateAndSequence,
