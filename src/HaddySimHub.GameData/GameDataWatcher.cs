@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using HaddySimHub.GameData.Models;
+﻿using HaddySimHub.GameData.Models;
 using HaddySimHub.Logging;
 
 namespace HaddySimHub.GameData;
@@ -85,7 +84,7 @@ public class GameDataWatcher(
                 this.currentGameProcess != runningGame.Key)
             {
                 // Switch to new game
-                this.logger.Info($"Game activated: {runningGame.Key}");
+                this.Notify($"Game activated: {runningGame.Key}");
 
                 // Stop the previous game data stream
                 this.HandleGameStop();
@@ -118,8 +117,7 @@ public class GameDataWatcher(
 
     private void GameDataReader_Notification(object? sender, string message)
     {
-        this.logger.Debug($"Send notification: {message}");
-        this.Notification?.Invoke(this, message);
+        this.Notify(message);
     }
 
     private void GameDataReader_RawDataUpdate(object? sender, object rawData)
@@ -169,5 +167,11 @@ public class GameDataWatcher(
             this.gameDataReader.Notification -= this.GameDataReader_Notification;
             this.gameDataReader = null;
         }
+    }
+
+    private void Notify(string message)
+    {
+        this.logger.Debug($"Send notification: {message}");
+        this.Notification?.Invoke(this, message);
     }
 }
