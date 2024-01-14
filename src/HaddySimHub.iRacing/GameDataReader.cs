@@ -85,6 +85,8 @@ public class GameDataReader(ILogger logger) : GameDataReaderBase(logger)
 
             // Reset car sector information
             this.carSectors.Clear();
+
+            this.SendNotification($"New session started: {this.session.SessionNum} - {this.session.SessionType}");
         }
 
         if (this.session == null || this.sessionData == null)
@@ -134,10 +136,10 @@ public class GameDataReader(ILogger logger) : GameDataReaderBase(logger)
             CurrentLapTime = telemetry.LapCurrentLapTime,
             // LastSectorNum = this.carSectors[telemetry.PlayerCarIdx].LastCompletedSector?.SectorNum + 1 ?? 0,
             // LastSectorTime = this.carSectors[telemetry.PlayerCarIdx].LastCompletedSector?.SectorTime ?? 0,
-            LastLapTime = telemetry.LapLastLapTime,
-            LastLapTimeDelta = telemetry.LapLastLapTime == 0 ? 0 : telemetry.LapDeltaToSessionLastlLap,
-            BestLapTime = telemetry.LapBestLapTime,
-            BestLapTimeDelta = telemetry.LapBestLapTime == 0 ? 0 : telemetry.LapDeltaToSessionBestLap,
+            LastLapTime = Math.Max(telemetry.LapLastLapTime, 0),
+            LastLapTimeDelta = telemetry.LapLastLapTime <= 0 ? 0 : telemetry.LapDeltaToSessionLastlLap,
+            BestLapTime = Math.Max(telemetry.LapBestLapTime, 0),
+            BestLapTimeDelta = telemetry.LapBestLapTime <= 0 ? 0 : telemetry.LapDeltaToSessionBestLap,
             Gear = telemetry.Gear,
             Rpm = (int)telemetry.RPM,
             Speed = (int)Math.Round(telemetry.Speed * 3.6),
