@@ -27,7 +27,7 @@ public abstract class GameDataReaderBase(ILogger logger)
 
         if (data != null)
         {
-            this.logger.Debug($"{JsonSerializer.Serialize(data)}\n");
+            this.logger.LogData(data);
             this.RawDataUpdate?.Invoke(this, data);
         }
     }

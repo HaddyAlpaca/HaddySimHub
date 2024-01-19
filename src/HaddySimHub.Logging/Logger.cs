@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using System.Text.Json;
+using NLog;
 using NLog.Config;
 using NLog.Targets;
 
@@ -15,10 +16,10 @@ namespace HaddySimHub.Logging
 
             if (isDebugEnabled)
             {
-                // Debug
+                // Setup data logging
                 var debugTarget = new FileTarget
                 {
-                    FileName = "log\\${date:format=yyyy-MM-dd}-debug.log",
+                    FileName = "log\\${date:format=yyyy-MM-dd}-data.log",
                     Layout = @"${message}",
                     ArchiveAboveSize = 1_000_000_000,
                     ArchiveNumbering = ArchiveNumberingMode.DateAndSequence,
@@ -27,10 +28,10 @@ namespace HaddySimHub.Logging
 
                 logConfig.LoggingRules.Add(new LoggingRule(
                     "*",
-                    LogLevel.Debug,
-                    LogLevel.Debug,
+                    LogLevel.Trace,
+                    LogLevel.Trace,
                     debugTarget));
-                logConfig.AddTarget("debug-logfile", debugTarget);
+                logConfig.AddTarget("data-logfile", debugTarget);
             }
 
             // General
@@ -45,7 +46,7 @@ namespace HaddySimHub.Logging
 
             logConfig.LoggingRules.Add(new LoggingRule(
                 "*",
-                LogLevel.Info,
+                isDebugEnabled ? LogLevel.Debug : LogLevel.Info,
                 LogLevel.Fatal,
                 fileTarget));
             logConfig.AddTarget("general-logfile", fileTarget);
@@ -64,5 +65,7 @@ namespace HaddySimHub.Logging
 
         /// <inheritdoc/>
         public void Info(string message) => this.logger.Info(message);
+
+        public void LogData(object data) => this.logger.Trace($"{JsonSerializer.Serialize(data)}\n");
     }
 }

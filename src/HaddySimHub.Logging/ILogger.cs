@@ -28,5 +28,11 @@
         /// </summary>
         /// <param name="message">Message to log.</param>
         void Fatal(string message);
+
+        /// <summary>
+        /// Log data
+        /// </summary>
+        /// <param name="data">Data to log.</param>
+        void LogData(object data);
     }
 }
