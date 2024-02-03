@@ -15,6 +15,8 @@ public abstract class GameDataReaderBase(ILogger logger)
 
     public event EventHandler<string>? Notification;
 
+    public abstract DisplayType CurrentDisplayType { get; }
+
     protected object? LastReceivedData { get => this.lastReceivedData; set => this.lastReceivedData = value; }
 
     public abstract void Initialize();

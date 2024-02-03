@@ -62,6 +62,8 @@ public class GameDataReader(ILogger logger) : GameDataReaderBase(logger)
     private _Sessions? session;
     private SessionData? sessionData;
 
+    public override DisplayType CurrentDisplayType => DisplayType.RaceDashboard;
+
     public override void Initialize()
     {
         iRacingSDK.iRacing.NewData += this.UpdateRawData;

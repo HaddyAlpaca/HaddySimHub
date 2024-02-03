@@ -1,7 +1,13 @@
-﻿using HaddySimHub.GameData.Models;
-using HaddySimHub.Logging;
+﻿using HaddySimHub.Logging;
 
 namespace HaddySimHub.GameData;
+
+public enum DisplayType
+{
+    None,
+    TruckDashboard,
+    RaceDashboard,
+}
 
 /// <summary>
 /// Interface for game polling objects.
@@ -9,9 +15,9 @@ namespace HaddySimHub.GameData;
 public interface IGameDataWatcher
 {
     /// <summary>
-    /// No game is longer active.
+    /// Display type updated.
     /// </summary>
-    event EventHandler? GameDataIdle;
+    event EventHandler<DisplayType>? DisplayTypeUpdated;
 
     /// <summary>
     /// Notification occured.
@@ -19,14 +25,9 @@ public interface IGameDataWatcher
     event EventHandler<string>? Notification;
 
     /// <summary>
-    /// Truck data updated.
+    /// Display data updated.
     /// </summary>
-    event EventHandler<TruckData>? TruckDataUpdated;
-
-    /// <summary>
-    /// Race data updated.
-    /// </summary>
-    event EventHandler<RaceData>? RaceDataUpdated;
+    event EventHandler<object>? DisplayDataUpdated;
 
     /// <summary>
     /// Start monitoring game data.
@@ -49,13 +50,11 @@ public class GameDataWatcher(
     private Timer? processTimer;
     private GameDataReaderBase? gameDataReader;
 
-    public event EventHandler? GameDataIdle;
+    public event EventHandler<DisplayType>? DisplayTypeUpdated;
+
+    public event EventHandler<object>? DisplayDataUpdated;
 
     public event EventHandler<string>? Notification;
-
-    public event EventHandler<TruckData>? TruckDataUpdated;
-
-    public event EventHandler<RaceData>? RaceDataUpdated;
 
     public void Start(CancellationToken cancellationToken)
     {
@@ -74,7 +73,7 @@ public class GameDataWatcher(
             {
                 // No games running
                 this.HandleGameStop();
-                this.GameDataIdle?.Invoke(this, new EventArgs());
+                this.DisplayTypeUpdated?.Invoke(this, DisplayType.None);
                 return;
             }
 
@@ -93,6 +92,7 @@ public class GameDataWatcher(
                 {
                     this.gameDataReader = Activator.CreateInstance(runningGame.Value, new object[] { this.logger }) as GameDataReaderBase;
                     this.gameDataReader!.Initialize();
+                    this.DisplayTypeUpdated?.Invoke(this, this.gameDataReader!.CurrentDisplayType);
 
                     // Set new process
                     this.currentGameProcess = runningGame.Key;
@@ -139,21 +139,8 @@ public class GameDataWatcher(
             return;
         }
 
-        if (data is RaceData raceData)
-        {
-            this.logger.Debug("Send race data update.");
-            this.RaceDataUpdated?.Invoke(this, raceData);
-            return;
-        }
-
-        if (data is TruckData truckData)
-        {
-            this.logger.Debug("Send truck data update");
-            this.TruckDataUpdated?.Invoke(this, truckData);
-            return;
-        }
-
-        this.logger.Error($"Data of type '{data.GetType().FullName}' is unhandled.");
+        this.logger.Debug("Send display data update.");
+        this.DisplayDataUpdated?.Invoke(this, data);
     }
 
     private void HandleGameStop()
@@ -166,6 +153,7 @@ public class GameDataWatcher(
             this.gameDataReader.RawDataUpdate -= this.GameDataReader_RawDataUpdate;
             this.gameDataReader.Notification -= this.GameDataReader_Notification;
             this.gameDataReader = null;
+            this.DisplayTypeUpdated?.Invoke(this, DisplayType.None);
         }
     }
 

@@ -10,6 +10,8 @@ public sealed class GameDataReader(ILogger logger) : GameDataReaderBase(logger)
 {
     private SCSSdkTelemetry? telemetry;
 
+    public override DisplayType CurrentDisplayType => DisplayType.TruckDashboard;
+
     public override void Initialize()
     {
         this.telemetry = new SCSSdkTelemetry();

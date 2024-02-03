@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using HaddySimHub.GameData.Models;
+using HaddySimHub.GameData;
 using Microsoft.AspNetCore.SignalR;
 
 namespace HaddySimHub.WebServer
@@ -13,27 +13,19 @@ namespace HaddySimHub.WebServer
             NotificationService.hubContext = hubContext;
         }
 
-        public static async Task SendTruckData(object data)
+        public static async Task SendDisplayType(DisplayType displayType)
         {
             if (hubContext != null)
             {
-                await hubContext.Clients.All.SendAsync("truckData", data);
+                await hubContext.Clients.All.SendAsync("displayType", displayType);
             }
         }
 
-        public static async Task SendRaceData(RaceData data)
+        public static async Task SendDisplayData(object data)
         {
             if (hubContext != null)
             {
-                await hubContext.Clients.All.SendAsync("raceData", data);
-            }
-        }
-
-        public static async Task SendIdle()
-        {
-            if (hubContext != null)
-            {
-                await hubContext.Clients.All.SendAsync("gameDataIdle");
+                await hubContext.Clients.All.SendAsync("displayData", data);
             }
         }
 
