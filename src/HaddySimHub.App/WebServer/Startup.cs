@@ -43,7 +43,7 @@ public class Startup(IConfiguration configuration)
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
-            endpoints.MapHub<GameDataHub>("/game-data");
+            endpoints.MapHub<GameDataHub>("/display-data");
         });
         app.UseCors();
     }

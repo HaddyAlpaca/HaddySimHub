@@ -13,19 +13,11 @@ namespace HaddySimHub.WebServer
             NotificationService.hubContext = hubContext;
         }
 
-        public static async Task SendDisplayType(DisplayType displayType)
+        public static async Task SendDisplayUpdate(DisplayUpdate displayUpdate)
         {
             if (hubContext != null)
             {
-                await hubContext.Clients.All.SendAsync("displayType", displayType);
-            }
-        }
-
-        public static async Task SendDisplayData(object data)
-        {
-            if (hubContext != null)
-            {
-                await hubContext.Clients.All.SendAsync("displayData", data);
+                await hubContext.Clients.All.SendAsync("displayUpdate", displayUpdate);
             }
         }
 

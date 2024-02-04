@@ -9,25 +9,27 @@ public enum DisplayType
     RaceDashboard,
 }
 
+public sealed record DisplayUpdate
+{
+    public DisplayType Type { get; init; }
+
+    public object? Data { get; init; }
+}
+
 /// <summary>
 /// Interface for game polling objects.
 /// </summary>
 public interface IGameDataWatcher
 {
     /// <summary>
-    /// Display type updated.
+    /// Display update.
     /// </summary>
-    event EventHandler<DisplayType>? DisplayTypeUpdated;
+    event EventHandler<DisplayUpdate>? DisplayDataUpdated;
 
     /// <summary>
     /// Notification occured.
     /// </summary>
     event EventHandler<string>? Notification;
-
-    /// <summary>
-    /// Display data updated.
-    /// </summary>
-    event EventHandler<object>? DisplayDataUpdated;
 
     /// <summary>
     /// Start monitoring game data.
@@ -50,9 +52,7 @@ public class GameDataWatcher(
     private Timer? processTimer;
     private GameDataReaderBase? gameDataReader;
 
-    public event EventHandler<DisplayType>? DisplayTypeUpdated;
-
-    public event EventHandler<object>? DisplayDataUpdated;
+    public event EventHandler<DisplayUpdate>? DisplayDataUpdated;
 
     public event EventHandler<string>? Notification;
 
@@ -73,7 +73,7 @@ public class GameDataWatcher(
             {
                 // No games running
                 this.HandleGameStop();
-                this.DisplayTypeUpdated?.Invoke(this, DisplayType.None);
+                this.DisplayDataUpdated?.Invoke(this, new DisplayUpdate { Type = DisplayType.None });
                 return;
             }
 
@@ -92,7 +92,6 @@ public class GameDataWatcher(
                 {
                     this.gameDataReader = Activator.CreateInstance(runningGame.Value, new object[] { this.logger }) as GameDataReaderBase;
                     this.gameDataReader!.Initialize();
-                    this.DisplayTypeUpdated?.Invoke(this, this.gameDataReader!.CurrentDisplayType);
 
                     // Set new process
                     this.currentGameProcess = runningGame.Key;
@@ -140,7 +139,12 @@ public class GameDataWatcher(
         }
 
         this.logger.Debug("Send display data update.");
-        this.DisplayDataUpdated?.Invoke(this, data);
+        var update = new DisplayUpdate
+        {
+            Type = this.gameDataReader.CurrentDisplayType,
+            Data = data,
+        };
+        this.DisplayDataUpdated?.Invoke(this, update);
     }
 
     private void HandleGameStop()
@@ -153,7 +157,6 @@ public class GameDataWatcher(
             this.gameDataReader.RawDataUpdate -= this.GameDataReader_RawDataUpdate;
             this.gameDataReader.Notification -= this.GameDataReader_Notification;
             this.gameDataReader = null;
-            this.DisplayTypeUpdated?.Invoke(this, DisplayType.None);
         }
     }
 
