@@ -136,6 +136,7 @@ public class GameDataWatcher(
         }
         catch (Exception ex)
         {
+            this.Notification?.Invoke(this, $"Error converting game data: {ex.Message}\n\n{ex.StackTrace}");
             this.logger.Error($"Error converting game data: {ex.Message}\n\n{ex.StackTrace}");
             return;
         }
