@@ -79,7 +79,7 @@ public class GameDataReader(ILogger logger) : GameDataReaderBase(logger)
 
         var telemetry = typedRawData.Telemetry;
 
-        if (this.session == null || this.session.SessionNum != telemetry.SessionNum)
+        if (this.session?.SessionNum != telemetry.SessionNum)
         {
             // An new session has started, get session related information
             this.sessionData = typedRawData.SessionData;
@@ -91,7 +91,7 @@ public class GameDataReader(ILogger logger) : GameDataReaderBase(logger)
             this.SendNotification($"New session started: {this.session.SessionNum} - {this.session.SessionType}");
         }
 
-        if (this.session == null || this.sessionData == null)
+        if (this.session == null)
         {
             throw new NullReferenceException("No session data available");
         }
@@ -119,7 +119,7 @@ public class GameDataReader(ILogger logger) : GameDataReaderBase(logger)
                     c.Details.IsPaceCar ? TrackPositionStatus.IsPaceCar :
                     c.Details.IsOnPitRoad ? TrackPositionStatus.InPits :
                     telemetry.Session.IsRace && playerCar.TotalDistance - c.TotalDistance > .8 ? TrackPositionStatus.LapBehind :
-                    telemetry.Session.IsRace && c.TotalDistance - playerCar.TotalDistance > .8 ? TrackPositionStatus.LapAhead : 
+                    telemetry.Session.IsRace && c.TotalDistance - playerCar.TotalDistance > .8 ? TrackPositionStatus.LapAhead :
                     TrackPositionStatus.SameLap,
             }).ToArray();
 
