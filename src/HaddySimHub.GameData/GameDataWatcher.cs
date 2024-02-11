@@ -118,11 +118,14 @@ public class GameDataWatcher(
 
     private void GameDataReader_Notification(object? sender, string message)
     {
+        this.logger.Info($"Send notification: {message}");
         this.Notify(message);
     }
 
     private void GameDataReader_RawDataUpdate(object? sender, object rawData)
     {
+        this.logger.LogData(rawData);
+
         // Convert to general format
         object? data;
         try

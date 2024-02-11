@@ -1,11 +1,11 @@
 ﻿namespace HaddySimHub.GameData.Models;
 
-public readonly struct RaceData
+public sealed record RaceData
 {
     /// <summary>
     /// Gets session type description.
     /// </summary>
-    public string SessionType { get; init; }
+    public string SessionType { get; init; } = string.Empty;
 
     public bool IsLimitedTime { get; init; }
 
@@ -94,13 +94,13 @@ public readonly struct RaceData
     /// <summary>
     /// Gets driver behind.
     /// </summary>
-    public string DriverBehindName { get; init; }
+    public string DriverBehindName { get; init; } = string.Empty;
 
-    public string DriverBehindLicense { get; init; }
+    public string DriverBehindLicense { get; init; } = string.Empty;
 
-    public string DriverBehindLicenseColor { get; init; }
+    public string DriverBehindLicenseColor { get; init; } = string.Empty;
 
-    public string DriverBehindCarNumber { get; init; }
+    public string DriverBehindCarNumber { get; init; } = string.Empty;
 
     public long DriverBehindIRating { get; init; }
 
@@ -109,13 +109,13 @@ public readonly struct RaceData
     /// <summary>
     /// Gets driver ahead.
     /// </summary>
-    public string DriverAheadName { get; init; }
+    public string DriverAheadName { get; init; } = string.Empty;
 
-    public string DriverAheadLicense { get; init; }
+    public string DriverAheadLicense { get; init; } = string.Empty;
 
-    public string DriverAheadLicenseColor { get; init; }
+    public string DriverAheadLicenseColor { get; init; } = string.Empty;
 
-    public string DriverAheadCarNumber { get; init; }
+    public string DriverAheadCarNumber { get; init; } = string.Empty;
 
     public long DriverAheadIRating { get; init; }
 
@@ -154,10 +154,10 @@ public readonly struct RaceData
     /// <summary>
     /// Gets flag.
     /// </summary>
-    public string Flag { get; init; }
+    public string Flag { get; init; } = string.Empty;
 
     /// <summary>
     /// Gets track postitions for all cars.
     /// </summary>
-    public TrackPosition[] TrackPositions { get; init; }
+    public TrackPosition[] TrackPositions { get; init; } = Array.Empty<TrackPosition>();
 }

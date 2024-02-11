@@ -1,14 +1,14 @@
 ﻿using HaddySimHub.GameData;
 using HaddySimHub.GameData.Models;
-using HaddySimHub.Logging;
 using SCSSdkClient;
 using SCSSdkClient.Object;
 
 namespace HaddySimHub.Ets2;
 
-public sealed class GameDataReader(ILogger logger) : GameDataReaderBase(logger)
+public sealed class GameDataReader : GameDataReaderBase
 {
     private SCSSdkTelemetry? telemetry;
+    private SCSTelemetry? lastReceivedData;
 
     public override DisplayType CurrentDisplayType => DisplayType.TruckDashboard;
 
@@ -17,112 +17,78 @@ public sealed class GameDataReader(ILogger logger) : GameDataReaderBase(logger)
         this.telemetry = new SCSSdkTelemetry();
         this.telemetry.Data += (SCSTelemetry data, bool newTimestamp) =>
         {
+            this.lastReceivedData = data;
             this.UpdateRawData(data);
         };
 
         this.telemetry.Tollgate += (s, e) =>
-        {
-            if (this.LastReceivedData is SCSTelemetry telemetry)
-            {
-                this.SendNotification($"Tol betaald: {telemetry.GamePlay.TollgateEvent.PayAmount:C0}");
-            }
-        };
+            this.SendNotification($"Tol betaald: {this.lastReceivedData?.GamePlay.TollgateEvent.PayAmount:C0}");
 
         this.telemetry.RefuelPayed += (s, e) =>
-        {
-            if (this.LastReceivedData is SCSTelemetry telemetry)
-            {
-                this.SendNotification($"Brandstof betaald: {telemetry.GamePlay.RefuelEvent.Amount:C0}");
-            }
-        };
+            this.SendNotification($"Brandstof betaald: {this.lastReceivedData?.GamePlay.RefuelEvent.Amount:C0}");
 
         this.telemetry.Ferry += (s, e) =>
-        {
-            if (this.LastReceivedData is SCSTelemetry telemetry)
-            {
-                var eventData = telemetry.GamePlay.FerryEvent;
-                this.SendNotification($"Bootreis gestart: {eventData.SourceName} - {eventData.TargetName} ({eventData.PayAmount:C0})");
-            }
-        };
+            this.SendNotification(
+                $"Bootreis gestart: {this.lastReceivedData?.GamePlay.FerryEvent.SourceName}" +
+                $" - {this.lastReceivedData?.GamePlay.FerryEvent.TargetName} " +
+                $"({this.lastReceivedData?.GamePlay.FerryEvent.PayAmount:C0})");
 
         this.telemetry.Train += (s, e) =>
-        {
-            if (this.LastReceivedData is SCSTelemetry telemetry)
-            {
-                var eventData = telemetry.GamePlay.TrainEvent;
-                this.SendNotification($"Treinreis gestart: {eventData.SourceName} - {eventData.TargetName} ({eventData.PayAmount:C0})");
-            }
-        };
+            this.SendNotification($"Treinreis gestart: {this.lastReceivedData?.GamePlay.TrainEvent.SourceName} - {this.lastReceivedData?.GamePlay.TrainEvent.TargetName} ({this.lastReceivedData?.GamePlay.TrainEvent.PayAmount:C0})");
 
         this.telemetry.JobDelivered += (s, e) =>
-        {
-            if (this.LastReceivedData is SCSTelemetry telemetry)
-            {
-                var eventData = telemetry.GamePlay.JobDelivered;
-                this.SendNotification($"Opdracht afgerond, opbrengst: {eventData.Revenue:C0}");
-            }
-        };
+            this.SendNotification($"Opdracht afgerond, opbrengst: {this.lastReceivedData?.GamePlay.JobDelivered.Revenue:C0}");
 
         this.telemetry.JobCancelled += (s, e) =>
-        {
-            if (this.LastReceivedData is SCSTelemetry telemetry)
-            {
-                var eventData = telemetry.GamePlay.JobCancelled;
-                this.SendNotification($"Opdracht geannuleerd, boete: {eventData.Penalty:C0}");
-            }
-        };
+            this.SendNotification($"Opdracht geannuleerd, boete: {this.lastReceivedData?.GamePlay.JobCancelled.Penalty:C0}");
 
         this.telemetry.Fined += (s, e) =>
         {
-            if (this.LastReceivedData is SCSTelemetry telemetry)
+            string offenceDesription = string.Empty;
+            switch (this.lastReceivedData?.GamePlay.FinedEvent?.Offence)
             {
-                var eventData = telemetry.GamePlay.FinedEvent;
-                string offenceDesription = string.Empty;
-                switch (eventData.Offence)
-                {
-                    case Offence.Crash:
-                        offenceDesription = "Ongeluk";
-                        break;
-                    case Offence.Avoid_sleeping:
-                        offenceDesription = "Overtreding van rusttijden";
-                        break;
-                    case Offence.Wrong_way:
-                        offenceDesription = "Spookrijden";
-                        break;
-                    case Offence.Speeding:
-                    case Offence.Speeding_camera:
-                        offenceDesription = "Snelheidsovertreding";
-                        break;
-                    case Offence.No_lights:
-                        offenceDesription = "Verlichting";
-                        break;
-                    case Offence.Red_signal:
-                        offenceDesription = "Roodlicht overtreding";
-                        break;
-                    case Offence.Avoid_weighting:
-                        offenceDesription = "Weging vermeden";
-                        break;
-                    case Offence.Illegal_trailer:
-                        offenceDesription = "Illegale trailer";
-                        break;
-                    case Offence.Avoid_Inspection:
-                        offenceDesription = "Inspectie vermeden";
-                        break;
-                    case Offence.Illegal_Border_Crossing:
-                        break;
-                    case Offence.Hard_Shoulder_Violation:
-                        offenceDesription = "Rijden op de vluchtstrook";
-                        break;
-                    case Offence.Damaged_Vehicle_Usage:
-                        offenceDesription = "Rijden met beschadigd voertuig";
-                        break;
-                    default:
-                        offenceDesription = "Overtreding";
-                        break;
-                }
-
-                this.SendNotification($"{offenceDesription}: {eventData.Amount:C0}");
+                case Offence.Crash:
+                    offenceDesription = "Ongeluk";
+                    break;
+                case Offence.Avoid_sleeping:
+                    offenceDesription = "Overtreding van rusttijden";
+                    break;
+                case Offence.Wrong_way:
+                    offenceDesription = "Spookrijden";
+                    break;
+                case Offence.Speeding:
+                case Offence.Speeding_camera:
+                    offenceDesription = "Snelheidsovertreding";
+                    break;
+                case Offence.No_lights:
+                    offenceDesription = "Verlichting";
+                    break;
+                case Offence.Red_signal:
+                    offenceDesription = "Roodlicht overtreding";
+                    break;
+                case Offence.Avoid_weighting:
+                    offenceDesription = "Weging vermeden";
+                    break;
+                case Offence.Illegal_trailer:
+                    offenceDesription = "Illegale trailer";
+                    break;
+                case Offence.Avoid_Inspection:
+                    offenceDesription = "Inspectie vermeden";
+                    break;
+                case Offence.Illegal_Border_Crossing:
+                    break;
+                case Offence.Hard_Shoulder_Violation:
+                    offenceDesription = "Rijden op de vluchtstrook";
+                    break;
+                case Offence.Damaged_Vehicle_Usage:
+                    offenceDesription = "Rijden met beschadigd voertuig";
+                    break;
+                default:
+                    offenceDesription = "Overtreding";
+                    break;
             }
+
+            this.SendNotification($"{offenceDesription}: {this.lastReceivedData?.GamePlay.FinedEvent.Amount:C0}");
         };
     }
 
@@ -130,7 +96,7 @@ public sealed class GameDataReader(ILogger logger) : GameDataReaderBase(logger)
     {
         if (rawData is not SCSTelemetry typedRawData)
         {
-            throw new InvalidDataException("Received data is not of type SCSTelemetry");
+            return new TruckData();
         }
 
         return new TruckData()
@@ -142,7 +108,7 @@ public sealed class GameDataReader(ILogger logger) : GameDataReaderBase(logger)
             DestinationCompany = typedRawData.JobValues.CompanyDestination,
             DistanceRemaining = (int)Math.Round(Math.Max(typedRawData.NavigationValues.NavigationDistance, 0) / 1000),
             TimeRemaining = (int)Math.Round(Math.Max(typedRawData.NavigationValues.NavigationTime, 0) / 60),
-            TimeRemainingIrl = (int)Math.Round((Math.Max(typedRawData.NavigationValues.NavigationTime, 0) / 60) / typedRawData.CommonValues.Scale),
+            TimeRemainingIrl = (int)Math.Round(Math.Max(typedRawData.NavigationValues.NavigationTime, 0) / 60 / typedRawData.CommonValues.Scale),
             RestTimeRemaining = Math.Max(typedRawData.CommonValues.NextRestStop.Value, 0),
             RestTimeRemainingIrl = (int)Math.Round(Math.Max(typedRawData.CommonValues.NextRestStop.Value, 0) / typedRawData.CommonValues.Scale),
 

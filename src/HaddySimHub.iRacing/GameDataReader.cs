@@ -1,6 +1,5 @@
 ﻿using HaddySimHub.GameData;
 using HaddySimHub.GameData.Models;
-using HaddySimHub.Logging;
 using iRacingSDK;
 using static iRacingSDK.SessionData._SessionInfo;
 
@@ -56,7 +55,7 @@ internal class CarSectorInfo
     // public Sector? LastCompletedSector { get; set; }
 }
 
-public class GameDataReader(ILogger logger) : GameDataReaderBase(logger)
+public class GameDataReader : GameDataReaderBase
 {
     private readonly Dictionary<int, CarSectorInfo> carSectors = new ();
     private _Sessions? session;
@@ -74,7 +73,7 @@ public class GameDataReader(ILogger logger) : GameDataReaderBase(logger)
     {
         if (rawData is not DataSample typedRawData)
         {
-            throw new InvalidDataException("Received data is not of type DataSample");
+            return new RaceData();
         }
 
         var telemetry = typedRawData.Telemetry;
@@ -93,7 +92,7 @@ public class GameDataReader(ILogger logger) : GameDataReaderBase(logger)
 
         if (this.session == null)
         {
-            throw new NullReferenceException("No session data available");
+            return new RaceData();
         }
 
         Car? carBehind = null;
@@ -131,7 +130,7 @@ public class GameDataReader(ILogger logger) : GameDataReaderBase(logger)
             CurrentLap = telemetry.Lap,
             TotalLaps = this.session._SessionLaps,
             Incidents = Math.Max(telemetry.PlayerCarDriverIncidentCount, 0),
-            MaxIncidents = Math.Max(Math.Min(this.sessionData.WeekendInfo.WeekendOptions._IncidentLimit, 999), 0),
+            MaxIncidents = Math.Max(Math.Min(this.sessionData!.WeekendInfo.WeekendOptions._IncidentLimit, 999), 0),
             SessionTimeRemaining = (float)telemetry.SessionTimeRemain,
             Position = telemetry.PlayerCarPosition,
             StrengthOfField = telemetry.RaceCars.Count() > 1 ? (int)Math.Round(telemetry.RaceCars.Average(r => r.Details.Driver.IRating)) : 0,
