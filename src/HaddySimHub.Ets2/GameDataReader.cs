@@ -10,11 +10,9 @@ public sealed class GameDataReader : GameDataReaderBase
     private SCSSdkTelemetry? telemetry;
     private SCSTelemetry? lastReceivedData;
 
-    public override DisplayType CurrentDisplayType => DisplayType.TruckDashboard;
-
-    public override void Initialize()
+    public GameDataReader()
     {
-        this.telemetry = new SCSSdkTelemetry();
+        this.telemetry = new ();
         this.telemetry.Data += (SCSTelemetry data, bool newTimestamp) =>
         {
             this.lastReceivedData = data;
@@ -91,6 +89,8 @@ public sealed class GameDataReader : GameDataReaderBase
             this.SendNotification($"{offenceDesription}: {this.lastReceivedData?.GamePlay.FinedEvent.Amount:C0}");
         };
     }
+
+    public override DisplayType CurrentDisplayType => DisplayType.TruckDashboard;
 
     public override object Convert(object rawData)
     {

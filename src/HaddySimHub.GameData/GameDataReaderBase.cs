@@ -8,8 +8,6 @@ public abstract class GameDataReaderBase
 
     public abstract DisplayType CurrentDisplayType { get; }
 
-    public abstract void Initialize();
-
     public abstract object Convert(object rawData);
 
     protected void UpdateRawData(object data) => this.RawDataUpdate?.Invoke(this, data);

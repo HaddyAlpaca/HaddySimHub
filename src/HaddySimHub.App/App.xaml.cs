@@ -74,16 +74,26 @@ namespace HaddySimHub
             var webServer = new WebServer.Server();
             webServer.Start(token);
 
-            // Create the game data readers for the supported games
-            var readers = new Dictionary<string, Type>
+            // Create the list of supported games
+            var games = new List<Game>
             {
-                { "eurotrucks2", typeof(Ets2.GameDataReader) },
-                { "iracingui", typeof(iRacing.GameDataReader) },
+                new Game
+                {
+                    ProcessName = "eurotrucks2",
+                    Description = "Euro Truck Simulator 2",
+                    Type = typeof(Ets2.GameDataReader),
+                },
+                new Game
+                {
+                    ProcessName = "iracingui",
+                    Description = "IRacing",
+                    Type = typeof(iRacing.GameDataReader),
+                },
             };
 
             // Start monitoring game data
             this.watcher = new GameDataWatcher(
-                readers,
+                games,
                 AppHost.Services.GetRequiredService<IProcessMonitor>(),
                 this.logger);
             this.watcher.Start(token);
