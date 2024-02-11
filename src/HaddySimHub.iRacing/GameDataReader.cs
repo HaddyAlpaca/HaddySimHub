@@ -61,13 +61,13 @@ public class GameDataReader : GameDataReaderBase
     private _Sessions? session;
     private SessionData? sessionData;
 
-    public override DisplayType CurrentDisplayType => DisplayType.RaceDashboard;
-
-    public override void Initialize()
+    public GameDataReader()
     {
         iRacingSDK.iRacing.NewData += this.UpdateRawData;
         iRacingSDK.iRacing.StartListening();
     }
+
+    public override DisplayType CurrentDisplayType => DisplayType.RaceDashboard;
 
     public override object Convert(object rawData)
     {
