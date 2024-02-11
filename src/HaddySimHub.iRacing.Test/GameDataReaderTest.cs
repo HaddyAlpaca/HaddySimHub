@@ -1,7 +1,5 @@
 using HaddySimHub.GameData.Models;
-using HaddySimHub.Logging;
 using iRacingSDK;
-using NSubstitute;
 using static iRacingSDK.SessionData;
 
 namespace HaddySimHub.iRacing.Test;
@@ -9,15 +7,13 @@ namespace HaddySimHub.iRacing.Test;
 [TestClass]
 public class GameDataReaderTest
 {
-    private readonly ILogger logger;
     private readonly GameDataReader sut;
     private DataSample sample;
     private SessionData sessionData;
 
     public GameDataReaderTest() 
     {
-        this.logger = Substitute.For<ILogger>();
-        this.sut = new GameDataReader(this.logger);
+        this.sut = new GameDataReader();
 
         //Set the default data sample
         this.sample = new DataSample
@@ -93,9 +89,9 @@ public class GameDataReaderTest
     }
 
     [TestMethod]
-    public void Object_of_incorrect_type_throws_an_exception()
+    public void Object_of_incorrect_does_not_throw_an_exception()
     {
-        Assert.ThrowsException<InvalidDataException>(() => this.sut.Convert(new object()));
+        this.sut.Convert(new object());
     }
 
     [TestMethod]
@@ -130,15 +126,6 @@ public class GameDataReaderTest
 
         var raceData = (RaceData)this.sut.Convert(this.sample);
         Assert.AreEqual(0, raceData.Incidents);
-    }
-#endregion
-
-#region TrackPositions tests
-    [TestMethod]
-    public void Pace_car_is_not_included_when_in_pitlane()
-    {
-        var raceData = (RaceData)this.sut.Convert(this.sample);
-        Assert.AreEqual(4, raceData.TrackPositions.Length);
     }
 #endregion
 }

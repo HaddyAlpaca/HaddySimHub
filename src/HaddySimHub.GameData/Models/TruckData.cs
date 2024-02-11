@@ -1,16 +1,14 @@
-﻿using System;
+﻿namespace HaddySimHub.GameData.Models;
 
-namespace HaddySimHub.GameData.Models;
-
-public struct TruckData
+public sealed record TruckData
 {
-    public string DestinationCity { get; init; }
+    public string DestinationCity { get; init; } = string.Empty;
 
-    public string DestinationCompany { get; init; }
+    public string DestinationCompany { get; init; } = string.Empty;
 
-    public string SourceCity { get; init; }
+    public string SourceCity { get; init; } = string.Empty;
 
-    public string SourceCompany { get; set; }
+    public string SourceCompany { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets distance remaining (meters).
@@ -67,7 +65,7 @@ public struct TruckData
     /// </summary>
     public ulong JobIncome { get; init; }
 
-    public string JobCargoName { get; init; }
+    public string JobCargoName { get; init; } = string.Empty;
 
     public int JobCargoMass { get; init; }
 
@@ -163,7 +161,7 @@ public struct TruckData
     /// <summary>
     /// Gets description of the current truck.
     /// </summary>
-    public string TruckName { get; init; }
+    public string TruckName { get; init; } = string.Empty;
 
     public int NumberOfTrailersAttached { get; init; }
 
