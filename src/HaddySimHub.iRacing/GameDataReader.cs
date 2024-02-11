@@ -57,14 +57,19 @@ internal class CarSectorInfo
 
 public class GameDataReader : GameDataReaderBase
 {
+    private static bool iRacingListenerStarted = false;
     private readonly Dictionary<int, CarSectorInfo> carSectors = new ();
     private _Sessions? session;
     private SessionData? sessionData;
 
     public GameDataReader()
     {
-        iRacingSDK.iRacing.NewData += this.UpdateRawData;
-        iRacingSDK.iRacing.StartListening();
+        if (!iRacingListenerStarted)
+        {
+            iRacingSDK.iRacing.NewData += this.UpdateRawData;
+            iRacingSDK.iRacing.StartListening();
+            iRacingListenerStarted = true;
+        }
     }
 
     public override DisplayType CurrentDisplayType => DisplayType.RaceDashboard;
