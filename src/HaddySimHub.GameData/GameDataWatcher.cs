@@ -64,8 +64,6 @@ public class GameDataWatcher(
         this.processTimer = new Timer(
             _ =>
         {
-            this.Notification?.Invoke(this, $"Alive {DateTime.Now}");
-
             // Get the process that is running
             var currentGame = this.games.FirstOrDefault(g => this.processMonitor.IsRunning(g.ProcessName));
 

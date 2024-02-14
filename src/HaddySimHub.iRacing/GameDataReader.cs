@@ -66,6 +66,8 @@ public class GameDataReader : GameDataReaderBase
     {
         if (!iRacingListenerStarted)
         {
+            this.SendNotification("Start listening");
+
             iRacingSDK.iRacing.NewData += this.UpdateRawData;
             iRacingSDK.iRacing.StartListening();
             iRacingListenerStarted = true;
@@ -78,8 +80,12 @@ public class GameDataReader : GameDataReaderBase
     {
         if (rawData is not DataSample typedRawData)
         {
+            this.SendNotification("Data is of invalid type");
+
             return new RaceData();
         }
+
+        this.SendNotification("Converting data");
 
         var telemetry = typedRawData.Telemetry;
 
