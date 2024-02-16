@@ -113,6 +113,7 @@ public class GameDataWatcher(
 
     private void GameDataReader_RawDataUpdate(object? sender, object rawData)
     {
+        this.Notification?.Invoke(this, $"{DateTime.Now} RawDataUpdate");
         this.logger.LogData(rawData);
 
         // Convert to general format
