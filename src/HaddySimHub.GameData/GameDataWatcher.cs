@@ -67,7 +67,7 @@ public class GameDataWatcher(
             // Get the process that is running
             var currentGame = this.games.FirstOrDefault(g => this.processMonitor.IsRunning(g.ProcessName));
 
-            if (currentGame == null || currentGame.ProcessName != this.currentGame?.ProcessName)
+            if (currentGame is null || currentGame.ProcessName != this.currentGame?.ProcessName)
             {
                 // No games running or another game is running
 
@@ -77,7 +77,7 @@ public class GameDataWatcher(
                 // Stop the previous game reader
                 this.gameDataReader = null;
 
-                if (currentGame == null)
+                if (currentGame is null)
                 {
                     // No games active
                     this.DisplayDataUpdated?.Invoke(this, new DisplayUpdate { Type = DisplayType.None });
@@ -120,7 +120,7 @@ public class GameDataWatcher(
         try
         {
             var data = this.gameDataReader!.Convert(rawData);
-            if (data != null)
+            if (data is not null)
             {
                 this.DisplayDataUpdated?.Invoke(this, new DisplayUpdate
                 {

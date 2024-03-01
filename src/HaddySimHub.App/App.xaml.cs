@@ -97,8 +97,14 @@ namespace HaddySimHub
                 AppHost.Services.GetRequiredService<IProcessMonitor>(),
                 this.logger);
             this.watcher.Start(token);
-            this.watcher.DisplayDataUpdated += async (sender, update) => { await NotificationService.SendDisplayUpdate(update); };
-            this.watcher.Notification += async (sender, message) => { await NotificationService.SendNotification(message); };
+            this.watcher.DisplayDataUpdated += async (sender, update) => {
+                await NotificationService.SendDisplayUpdate(update);
+                this.logger.LogData(update);
+            };
+            this.watcher.Notification += async (sender, message) => {
+                await NotificationService.SendNotification(message);
+                this.logger.Debug($"Notification: {message}");
+            };
 
             // Close the splash screen and create the main window
             var mainWindow = AppHost.Services.GetRequiredService<MainWindow>();
