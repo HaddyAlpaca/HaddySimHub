@@ -34,7 +34,6 @@ namespace HaddySimHub
                     services.AddSingleton<MainWindow>();
                     services.AddSingleton<IProcessMonitor, ProcessMonitor>();
                     services.AddSingleton<ILogger, Logger>();
-                    services.AddSingleton<Ets2.GameDataReader>();
                 })
                 .Build();
 
@@ -79,8 +78,8 @@ namespace HaddySimHub
             // Create the list of supported games
             var games = new List<Game>
             {
-                new Game("Euro Truck Simulator 2", "eurotrucks2", processMonitor, token),
-                new Game("IRacing", "iracingui", processMonitor, token),
+                new Ets2Game(processMonitor, token),
+                new IRacingGame(processMonitor, token),
             };
 
             // Start monitoring game data

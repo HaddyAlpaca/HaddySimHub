@@ -1,105 +1,14 @@
-﻿using HaddySimHub.GameData;
+using HaddySimHub.GameData;
 using HaddySimHub.GameData.Models;
-using SCSSdkClient;
 using SCSSdkClient.Object;
 
-namespace HaddySimHub.Ets2;
-
-public sealed class GameDataReader : GameDataReaderBase
+public sealed class DashboardDisplay : IDisplay
 {
-    private SCSSdkTelemetry? telemetry;
-    private SCSTelemetry? lastReceivedData;
-
-    public GameDataReader()
+    public DisplayUpdate GetDisplayUpdate(object inputData)
     {
-        this.telemetry = new ();
-        this.telemetry.Data += (SCSTelemetry data, bool newTimestamp) =>
-        {
-            this.lastReceivedData = data;
-            this.UpdateRawData(data);
-        };
+        var typedRawData = (SCSTelemetry)inputData;
 
-        this.telemetry.Tollgate += (s, e) =>
-            this.SendNotification($"Tol betaald: {this.lastReceivedData?.GamePlay.TollgateEvent.PayAmount:C0}");
-
-        this.telemetry.RefuelPayed += (s, e) =>
-            this.SendNotification($"Brandstof betaald: {this.lastReceivedData?.GamePlay.RefuelEvent.Amount:C0}");
-
-        this.telemetry.Ferry += (s, e) =>
-            this.SendNotification(
-                $"Bootreis gestart: {this.lastReceivedData?.GamePlay.FerryEvent.SourceName}" +
-                $" - {this.lastReceivedData?.GamePlay.FerryEvent.TargetName} " +
-                $"({this.lastReceivedData?.GamePlay.FerryEvent.PayAmount:C0})");
-
-        this.telemetry.Train += (s, e) =>
-            this.SendNotification($"Treinreis gestart: {this.lastReceivedData?.GamePlay.TrainEvent.SourceName} - {this.lastReceivedData?.GamePlay.TrainEvent.TargetName} ({this.lastReceivedData?.GamePlay.TrainEvent.PayAmount:C0})");
-
-        this.telemetry.JobDelivered += (s, e) =>
-            this.SendNotification($"Opdracht afgerond, opbrengst: {this.lastReceivedData?.GamePlay.JobDelivered.Revenue:C0}");
-
-        this.telemetry.JobCancelled += (s, e) =>
-            this.SendNotification($"Opdracht geannuleerd, boete: {this.lastReceivedData?.GamePlay.JobCancelled.Penalty:C0}");
-
-        this.telemetry.Fined += (s, e) =>
-        {
-            string offenceDesription = string.Empty;
-            switch (this.lastReceivedData?.GamePlay.FinedEvent?.Offence)
-            {
-                case Offence.Crash:
-                    offenceDesription = "Ongeluk";
-                    break;
-                case Offence.Avoid_sleeping:
-                    offenceDesription = "Overtreding van rusttijden";
-                    break;
-                case Offence.Wrong_way:
-                    offenceDesription = "Spookrijden";
-                    break;
-                case Offence.Speeding:
-                case Offence.Speeding_camera:
-                    offenceDesription = "Snelheidsovertreding";
-                    break;
-                case Offence.No_lights:
-                    offenceDesription = "Verlichting";
-                    break;
-                case Offence.Red_signal:
-                    offenceDesription = "Roodlicht overtreding";
-                    break;
-                case Offence.Avoid_weighting:
-                    offenceDesription = "Weging vermeden";
-                    break;
-                case Offence.Illegal_trailer:
-                    offenceDesription = "Illegale trailer";
-                    break;
-                case Offence.Avoid_Inspection:
-                    offenceDesription = "Inspectie vermeden";
-                    break;
-                case Offence.Illegal_Border_Crossing:
-                    break;
-                case Offence.Hard_Shoulder_Violation:
-                    offenceDesription = "Rijden op de vluchtstrook";
-                    break;
-                case Offence.Damaged_Vehicle_Usage:
-                    offenceDesription = "Rijden met beschadigd voertuig";
-                    break;
-                default:
-                    offenceDesription = "Overtreding";
-                    break;
-            }
-
-            this.SendNotification($"{offenceDesription}: {this.lastReceivedData?.GamePlay.FinedEvent.Amount:C0}");
-        };
-    }
-
-    public override DisplayType CurrentDisplayType => DisplayType.TruckDashboard;
-
-    public override object Convert(object rawData)
-    {
-        if (rawData is not SCSTelemetry typedRawData)
-        {
-            return new TruckData();
-        }
-
-        return new TruckData()
+        var data = new TruckData()
         {
             // Navigation info
             SourceCity = typedRawData.JobValues.CitySource,
@@ -155,5 +64,7 @@ public sealed class GameDataReader : GameDataReaderBase
             WipersOn = typedRawData.TruckValues.CurrentValues.DashboardValues.Wipers,
             GameTime = typedRawData.CommonValues.GameTime.Value,
         };
+
+        return new DisplayUpdate { Type = DisplayType.TruckDashboard, Data = data };
     }
 }

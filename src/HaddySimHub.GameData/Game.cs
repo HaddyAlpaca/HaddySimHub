@@ -1,20 +1,15 @@
 using HaddySimHub.GameData;
 
-public sealed class Game
+public abstract class Game
 {
-    private readonly string description;
-    private readonly string processName;
     private bool isRunning = false;
 
-    public Game(string description, string processName, IProcessMonitor processMonitor, CancellationToken cancellationToken)
+    public Game(IProcessMonitor processMonitor, CancellationToken cancellationToken)
     {
-        this.description = description;
-        this.processName = processName;
-
         var processTimer = new Timer(
             _ =>
         {
-            this.IsRunning = processMonitor.IsRunning(this.processName);
+            this.IsRunning = processMonitor.IsRunning(this.ProcessName);
         },
             cancellationToken,
             TimeSpan.Zero,
@@ -24,6 +19,12 @@ public sealed class Game
     public event EventHandler? Started;
 
     public event EventHandler? Stopped;
+
+    public event EventHandler<string>? Notification;
+
+    public event EventHandler<DisplayUpdate>? DisplayUpdate;
+
+    public abstract string Description { get; }
 
     public bool IsRunning
     {
@@ -50,5 +51,18 @@ public sealed class Game
         }
     }
 
-    public string Description => this.description;
+    protected abstract string ProcessName { get; }
+
+    protected abstract IDisplay CurrentDisplay { get; }
+
+    protected void ProcessData(object data)
+    {
+        var update = this.CurrentDisplay.GetDisplayUpdate(data);
+        this.DisplayUpdate?.Invoke(this, update);
+    }
+
+    protected void SendNotification(string message)
+    {
+        this.Notification?.Invoke(this, message);
+    }
 }
