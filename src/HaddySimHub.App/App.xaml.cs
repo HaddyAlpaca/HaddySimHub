@@ -22,7 +22,7 @@ namespace HaddySimHub
     public partial class App : Application
     {
         private readonly CancellationTokenSource cancellationTokenSource = new ();
-        private GameDataWatcher? watcher;
+        private GameWatcher? watcher;
         private ILogger? logger;
 
         public App()
@@ -74,36 +74,27 @@ namespace HaddySimHub
             var webServer = new WebServer.Server();
             webServer.Start(token);
 
+            var processMonitor = AppHost.Services.GetRequiredService<IProcessMonitor>();
+
             // Create the list of supported games
             var games = new List<Game>
             {
-                new Game
-                {
-                    ProcessName = "eurotrucks2",
-                    Description = "Euro Truck Simulator 2",
-                    Type = typeof(Ets2.GameDataReader),
-                },
-                new Game
-                {
-                    ProcessName = "iracingui",
-                    Description = "IRacing",
-                    Type = typeof(iRacing.GameDataReader),
-                },
+                new Game("Euro Truck Simulator 2", "eurotrucks2", processMonitor, token),
+                new Game("IRacing", "iracingui", processMonitor, token),
             };
 
             // Start monitoring game data
-            this.watcher = new GameDataWatcher(
-                games,
-                AppHost.Services.GetRequiredService<IProcessMonitor>(),
-                this.logger);
-            this.watcher.Start(token);
-            this.watcher.DisplayDataUpdated += async (sender, update) => {
-                await NotificationService.SendDisplayUpdate(update);
-                this.logger.LogData(update);
-            };
-            this.watcher.Notification += async (sender, message) => {
+            this.watcher = new GameWatcher(games);
+            this.watcher.Notification += async (sender, message) =>
+            {
                 await NotificationService.SendNotification(message);
                 this.logger.Debug($"Notification: {message}");
+            };
+
+            this.watcher.DisplayUpdate += async (sender, update) =>
+            {
+                await NotificationService.SendDisplayUpdate(update);
+                this.logger!.LogData(update);
             };
 
             // Close the splash screen and create the main window
