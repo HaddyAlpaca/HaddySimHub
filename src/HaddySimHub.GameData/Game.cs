@@ -57,8 +57,11 @@ public abstract class Game
 
     protected void ProcessData(object data)
     {
-        var update = this.CurrentDisplay.GetDisplayUpdate(data);
-        this.DisplayUpdate?.Invoke(this, update);
+        if (this.isRunning)
+        {
+            var update = this.CurrentDisplay.GetDisplayUpdate(data);
+            this.DisplayUpdate?.Invoke(this, update);
+        }
     }
 
     protected void SendNotification(string message)
