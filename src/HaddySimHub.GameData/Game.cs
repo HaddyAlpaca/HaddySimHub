@@ -1,10 +1,13 @@
+using System.Text.Json;
 using HaddySimHub.GameData;
+using HaddySimHub.Logging;
 
 public abstract class Game
 {
+    private readonly ILogger logger;
     private bool isRunning = false;
 
-    public Game(IProcessMonitor processMonitor, CancellationToken cancellationToken)
+    public Game(IProcessMonitor processMonitor, ILogger logger, CancellationToken cancellationToken)
     {
         var processTimer = new Timer(
             _ =>
@@ -14,6 +17,7 @@ public abstract class Game
             cancellationToken,
             TimeSpan.Zero,
             TimeSpan.FromSeconds(10));
+        this.logger = logger;
     }
 
     public event EventHandler? Started;
@@ -57,6 +61,9 @@ public abstract class Game
 
     protected void ProcessData(object data)
     {
+        this.logger.Debug($"ProcessData (isRunning = {this.isRunning})");
+        this.logger.LogData(JsonSerializer.Serialize(data));
+
         if (this.isRunning)
         {
             var update = this.CurrentDisplay.GetDisplayUpdate(data);
