@@ -1,4 +1,5 @@
 using HaddySimHub.GameData;
+using HaddySimHub.Logging;
 using SCSSdkClient;
 using SCSSdkClient.Object;
 
@@ -7,8 +8,8 @@ public sealed class Ets2Game : Game
     private SCSSdkTelemetry? telemetry;
     private SCSTelemetry? lastReceivedData;
 
-    public Ets2Game(IProcessMonitor processMonitor, CancellationToken cancellationToken)
-        : base(processMonitor, cancellationToken)
+    public Ets2Game(IProcessMonitor processMonitor, ILogger logger, CancellationToken cancellationToken)
+        : base(processMonitor, logger, cancellationToken)
     {
         this.telemetry = new ();
         this.telemetry.Data += (SCSTelemetry data, bool newTimestamp) =>
