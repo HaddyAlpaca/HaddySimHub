@@ -9,15 +9,18 @@ public abstract class Game
 
     public Game(IProcessMonitor processMonitor, ILogger logger, CancellationToken cancellationToken)
     {
+        this.logger = logger;
+
         var processTimer = new Timer(
             _ =>
         {
             this.IsRunning = processMonitor.IsRunning(this.ProcessName);
+
+            this.logger.Debug($"Process '{this.ProcessName}' running = {this.isRunning}");
         },
             cancellationToken,
             TimeSpan.Zero,
             TimeSpan.FromSeconds(10));
-        this.logger = logger;
     }
 
     public event EventHandler? Started;
@@ -61,11 +64,12 @@ public abstract class Game
 
     protected void ProcessData(object data)
     {
-        this.logger.Debug($"ProcessData (isRunning = {this.isRunning})");
-        this.logger.LogData(JsonSerializer.Serialize(data));
+        this.logger.Debug($"ProcessData ({this.ProcessName} isRunning = {this.isRunning})");
 
         if (this.isRunning)
         {
+            this.logger.LogData(JsonSerializer.Serialize(data));
+
             var update = this.CurrentDisplay.GetDisplayUpdate(data);
             this.DisplayUpdate?.Invoke(this, update);
         }
