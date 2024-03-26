@@ -15,8 +15,6 @@ public abstract class Game
             _ =>
         {
             this.IsRunning = processMonitor.IsRunning(this.ProcessName);
-
-            this.logger.Debug($"Process '{this.ProcessName}' running = {this.isRunning}");
         },
             cancellationToken,
             TimeSpan.Zero,
@@ -45,6 +43,7 @@ public abstract class Game
             if (this.isRunning != value)
             {
                 this.isRunning = value;
+                this.logger.Debug($"Process '{this.ProcessName}' running = {this.isRunning}");
 
                 if (value)
                 {
