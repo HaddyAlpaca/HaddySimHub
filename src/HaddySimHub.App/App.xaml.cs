@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -54,6 +55,19 @@ namespace HaddySimHub
             bool debugEnabled = e.Args.Contains("--debug");
             this.logger = new Logger(debugEnabled);
             this.logger.Debug("Debugging started...");
+
+            // //Start UDP client for Codemaster games
+            // Task.Run(async () =>
+            // {
+            //     using (var udpClient = new UdpClient(20777))
+            //     {
+            //         while (true)
+            //         {
+            //             var receivedResults = await udpClient.ReceiveAsync();
+            //             loggingEvent += Encoding.ASCII.GetString(receivedResults.Buffer);
+            //         }
+            //     }
+            // });
 
             await UpdateWebContent();
 
