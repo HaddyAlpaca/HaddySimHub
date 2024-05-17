@@ -22,6 +22,7 @@
     <ProjectReference Include="..\HaddySimHub.GameData\HaddySimHub.GameData.csproj" />
     <ProjectReference Include="..\HaddySimHub.iRacing\HaddySimHub.iRacing.csproj" />
     <ProjectReference Include="..\HaddySimHub.Logging\HaddySimHub.Logging.csproj" />
+    <ProjectReference Include="..\HaddySimHub.DirtRally2\HaddySimHub.DirtRally2.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\helmet.ico" />
