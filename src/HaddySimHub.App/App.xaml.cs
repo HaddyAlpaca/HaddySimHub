@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using HaddySimHub.DirtRally2;
 using HaddySimHub.GameData;
 using HaddySimHub.Logging;
 using HaddySimHub.WebServer;
@@ -56,19 +57,6 @@ namespace HaddySimHub
             this.logger = new Logger(debugEnabled);
             this.logger.Debug("Debugging started...");
 
-            // //Start UDP client for Codemaster games
-            // Task.Run(async () =>
-            // {
-            //     using (var udpClient = new UdpClient(20777))
-            //     {
-            //         while (true)
-            //         {
-            //             var receivedResults = await udpClient.ReceiveAsync();
-            //             loggingEvent += Encoding.ASCII.GetString(receivedResults.Buffer);
-            //         }
-            //     }
-            // });
-
             await UpdateWebContent();
 
             await AppHost!.StartAsync();
@@ -94,6 +82,7 @@ namespace HaddySimHub
             {
                 new Ets2Game(processMonitor, this.logger, token),
                 new IRacingGame(processMonitor, this.logger, token),
+                new Dirt2Game(processMonitor, this.logger, token),
             };
 
             // Start monitoring game data

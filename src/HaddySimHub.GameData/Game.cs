@@ -63,8 +63,6 @@ public abstract class Game
 
     protected void ProcessData(object data)
     {
-        this.logger.Debug($"ProcessData ({this.ProcessName} isRunning = {this.isRunning})");
-
         if (this.isRunning)
         {
             this.logger.LogData(JsonSerializer.Serialize(data));
