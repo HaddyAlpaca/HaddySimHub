@@ -9,7 +9,6 @@
    <ItemGroup>
     <ProjectReference Include="..\HaddySimHub.GameData\HaddySimHub.GameData.csproj" />
     <ProjectReference Include="..\HaddySimHub.Logging\HaddySimHub.Logging.csproj" />
-    <ProjectReference Include="..\F12020-Telemetry\F12020-Telemetry.csproj" />
   </ItemGroup> 
 
 </Project>

@@ -1,18 +1,25 @@
 ﻿using HaddySimHub.GameData;
 using HaddySimHub.Logging;
-using F12020Telemetry;
+using System.Net.Sockets;
+using System.Net;
+using System.Runtime.InteropServices;
 
 namespace HaddySimHub.DirtRally2;
 
 public sealed class Dirt2Game : Game
 {
-    private readonly F12020TelemetryClient _client;
+    private readonly int _port = 20777;
+    private readonly UdpClient _client;
+    private IPEndPoint _endPoint;
 
     public Dirt2Game(IProcessMonitor processMonitor, ILogger logger, CancellationToken cancellationToken)
     : base(processMonitor, logger, cancellationToken)
     {
-        this._client = new F12020TelemetryClient(20777);
-        this._client.OnCarTelemetryDataReceive += TelemetryUpdate;
+        _client = new UdpClient(this._port);
+        _endPoint = new IPEndPoint(IPAddress.Any, this._port);
+
+        // Start receiving updates.
+        _client.BeginReceive(new AsyncCallback(ReceiveCallback), null);
     }
 
     public override string Description => "Dirt Rally 2";
@@ -21,28 +28,31 @@ public sealed class Dirt2Game : Game
 
     protected override IDisplay CurrentDisplay => new DashboardDisplay();
 
-    private void TelemetryUpdate(PacketCarTelemetryData packet)
+    private void ReceiveCallback(IAsyncResult result)
     {
-        // The player index.
-        int playerIndex = packet.Header.playerCarIndex;
+        // Get data we received.
+        byte[] data = _client.EndReceive(result, ref this._endPoint!);
 
-        // Player car telemetry.
-        CarTelemetryData playerData = packet.carTelemetryData[playerIndex];
+        // Start receiving again.
+        _client.BeginReceive(new AsyncCallback(ReceiveCallback), null);
 
-        this.ProcessData(playerData);
+        GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
 
-        // WriteLine($"Throttle: {playerData.throttle}");
-        // WriteLine($"Brake: {playerData.brake}");
-        // WriteLine($"Wheel: {playerData.steer}");
-        // WriteLine($"Speed: {playerData.speed}");
-        // WriteLine($"RPM: {playerData.engineRPM}");
-        // WriteLine($"REV %: {playerData.revLightsPercent}");
-        // WriteLine($"Gear: {playerData.gear} (suggested: {packet.suggestedGear})");
-        // WriteLine($"DRS: {(playerData.drs == 1 ? "open" : "closed")}");
-        // WriteLine($"Engine Temp: {playerData.engineTemperature}");
-        // WriteLine($"Session Time: {TimeSpan.FromSeconds(packet.Header.sessionTime)}");
-        // WriteLine($"Packet version: {packet.Header.packetVersion}");
-        // WriteLine($"Game major version: {packet.Header.gameMajorVersion}");
-        // WriteLine($"Game minor version: {packet.Header.gameMinorVersion}");
+        try
+        {
+            // Get the header to retrieve the packet ID.
+#pragma warning disable CS8605 // Unboxing a possibly null value.
+            var packet = (Packet)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(Packet));
+#pragma warning restore CS8605 // Unboxing a possibly null value.
+            this.ProcessData(packet);
+        }
+        catch
+        {
+            Console.WriteLine("Failed to receive Dirt Rally 2 packet.");
+        }
+        finally
+        {
+            handle.Free();
+        }
     }
 }
