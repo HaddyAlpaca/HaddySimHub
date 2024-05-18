@@ -80,7 +80,7 @@ namespace HaddySimHub
             // Create the list of supported games
             var games = new List<Game>
             {
-                new Ets2Game(processMonitor, this.logger, token),
+                // new Ets2Game(processMonitor, this.logger, token),
                 new IRacingGame(processMonitor, this.logger, token),
                 new Dirt2Game(processMonitor, this.logger, token),
             };

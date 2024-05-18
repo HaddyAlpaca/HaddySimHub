@@ -6,6 +6,14 @@ public class GameWatcher
     {
         foreach (var game in games)
         {
+            game.DisplayUpdate += (s, e) => {
+                this.DisplayUpdate?.Invoke(this, e);
+            }; 
+
+            game.Notification += (s, e) => {
+                this.Notification?.Invoke(this, e);
+            };
+
             game.Started += (sender, e) =>
             {
                 if (sender is Game game)

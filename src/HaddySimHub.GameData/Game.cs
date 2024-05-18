@@ -63,13 +63,10 @@ public abstract class Game
 
     protected void ProcessData(object data)
     {
-        if (this.isRunning)
-        {
-            this.logger.LogData(JsonSerializer.Serialize(data));
+        this.logger.LogData(JsonSerializer.Serialize(data, new JsonSerializerOptions() { IncludeFields = true }));
 
-            var update = this.CurrentDisplay.GetDisplayUpdate(data);
-            this.DisplayUpdate?.Invoke(this, update);
-        }
+        var update = this.CurrentDisplay.GetDisplayUpdate(data);
+        this.DisplayUpdate?.Invoke(this, update);
     }
 
     protected void SendNotification(string message)

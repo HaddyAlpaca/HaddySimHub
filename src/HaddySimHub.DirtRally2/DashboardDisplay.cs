@@ -9,13 +9,13 @@ public sealed class DashboardDisplay : IDisplay
     {
         var typedData = (Packet)inputData;
 
-        var data = new RaceData
+        var data = new RallyData
         {
             Speed = Convert.ToInt32(typedData.speed_ms * 3.6),
             Rpm = Convert.ToInt32(typedData.rpm * 10),
             Gear = Convert.ToInt32(typedData.gear),
         };
 
-        return new DisplayUpdate { Type = DisplayType.RaceDashboard, Data = data };
+        return new DisplayUpdate { Type = DisplayType.RallyDashboard, Data = data };
     }
 }
