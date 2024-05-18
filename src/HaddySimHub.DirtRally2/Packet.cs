@@ -1,6 +1,6 @@
 namespace HaddySimHub.DirtRally2;
 
-internal struct Packet
+public struct Packet
 {
     public float run_time;
     public float lap_time;
