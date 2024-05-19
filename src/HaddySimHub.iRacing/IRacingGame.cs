@@ -7,7 +7,14 @@ public sealed class IRacingGame : Game
         : base(processMonitor, logger, cancellationToken)
     {
         iRacingSDK.iRacing.NewData += this.ProcessData;
-        iRacingSDK.iRacing.StartListening();
+
+        this.Started += (s, e) => {
+            iRacingSDK.iRacing.StartListening();
+        };
+
+        this.Stopped += (s, e) => {
+            iRacingSDK.iRacing.StopListening();
+        };
     }
 
     public override string Description => "IRacing";
