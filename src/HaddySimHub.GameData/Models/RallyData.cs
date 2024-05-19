@@ -18,11 +18,6 @@ public sealed record RallyData
     public int CompletedPct { get; init; }
 
     /// <summary>
-    /// Time elapsed in seconds
-    /// </summary>
-    public float TimeElapsed { get; init; }
-
-    /// <summary>
     /// Sector 1 time in seconds
     /// </summary>
     public float Sector1Time { get; init; }
@@ -38,22 +33,4 @@ public sealed record RallyData
     public float LapTime { get; init; }
 
     public int Position { get; init; }
-
-    public int Sector { get; init; }
-
-    public float TyrePressFl { get; init;}
-    
-    public float TyrePressFr { get; init;}
-    
-    public float TyrePressRl { get; init;}
-    
-    public float TyrePressRr { get; init;}
-
-    public float BrakeTempFl { get; init;}
-    
-    public float BrakeTempFr { get; init;}
-    
-    public float BrakeTempRl { get; init;}
-    
-    public float BrakeTempRr { get; init;}
 }
