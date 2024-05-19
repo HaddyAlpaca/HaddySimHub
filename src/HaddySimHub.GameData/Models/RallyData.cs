@@ -40,4 +40,20 @@ public sealed record RallyData
     public int Position { get; init; }
 
     public int Sector { get; init; }
+
+    public float TyrePressFl { get; init;}
+    
+    public float TyrePressFr { get; init;}
+    
+    public float TyrePressRl { get; init;}
+    
+    public float TyrePressRr { get; init;}
+
+    public float BrakeTempFl { get; init;}
+    
+    public float BrakeTempFr { get; init;}
+    
+    public float BrakeTempRl { get; init;}
+    
+    public float BrakeTempRr { get; init;}
 }

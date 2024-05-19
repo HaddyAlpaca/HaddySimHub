@@ -23,6 +23,14 @@ public sealed class DashboardDisplay : IDisplay
             LapTime = typedData.lap_time,
             Position = Convert.ToInt32(typedData.car_pos),
             TimeElapsed = typedData.run_time,
+            TyrePressFl = typedData.tyre_pressure_fl,
+            TyrePressFr = typedData.tyre_pressure_fr,
+            TyrePressRl = typedData.tyre_pressure_rl,
+            TyrePressRr = typedData.tyre_pressure_rr,
+            BrakeTempFl = typedData.brakes_temp_fl,
+            BrakeTempFr = typedData.brakes_temp_fr,
+            BrakeTempRl = typedData.brakes_temp_rl,
+            BrakeTempRr = typedData.brakes_temp_rr,
         };
 
         return new DisplayUpdate { Type = DisplayType.RallyDashboard, Data = data };
