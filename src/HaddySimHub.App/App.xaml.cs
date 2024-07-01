@@ -43,7 +43,7 @@ namespace HaddySimHub
             {
                 if (e.ExceptionObject is Exception exception)
                 {
-                    this.logger?.Fatal($"Unhandled Exception: {exception.Message}");
+                    this.logger?.Fatal($"Unhandled Exception: {exception.Message}\n\n{exception.StackTrace}");
                 }
             };
         }
