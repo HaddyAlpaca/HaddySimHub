@@ -57,6 +57,8 @@ public sealed class DashboardDisplay : IDisplay
             EngineWaterTempWarningOn = typedRawData.TruckValues.CurrentValues.DashboardValues.WarningValues.WaterTemperature,
             OilPressureWarningOn = typedRawData.TruckValues.CurrentValues.DashboardValues.WarningValues.OilPressure,
             FuelDistance = (int)typedRawData.TruckValues.CurrentValues.DashboardValues.FuelValue.Range,
+            FuelAmount = (int)typedRawData.TruckValues.CurrentValues.DashboardValues.FuelValue.Amount,
+            AdBlueAmount = (int)typedRawData.TruckValues.CurrentValues.DashboardValues.AdBlue,
             TruckName = $"{typedRawData.TruckValues.ConstantsValues.Brand} {typedRawData.TruckValues.ConstantsValues.Name}",
             BlinkerLeftOn = typedRawData.TruckValues.CurrentValues.LightsValues.BlinkerLeftOn,
             BlinkerRightOn = typedRawData.TruckValues.CurrentValues.LightsValues.BlinkerRightOn,
