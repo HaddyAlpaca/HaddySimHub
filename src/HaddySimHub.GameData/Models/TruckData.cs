@@ -48,6 +48,16 @@ public sealed record TruckData
     /// </summary>
     public int FuelDistance { get; init; }
 
+    /// <summary>
+    /// Amount of fuel in liters
+    /// </summary>
+    public int FuelAmount { get; init; }
+
+    /// <summary>
+    /// Amount of AdBlue in liters
+    /// </summary>
+    public int AdBlueAmount { get; init; }
+
     /*  Job data    */
 
     /// <summary>

@@ -6,13 +6,12 @@ public sealed class DashboardDisplay : IDisplay
 {
     public DisplayUpdate GetDisplayUpdate(object inputData)
     {
-        var dataSample = (DataSample)inputData;
-
-        if (!dataSample.IsConnected)
+        if (!iRacingSDK.iRacing.IsConnected)
         {
             return new DisplayUpdate { Type = DisplayType.None };
         }
 
+        var dataSample = (DataSample)inputData;
         var telemetry = dataSample.Telemetry;
 
         var sessionData = dataSample.SessionData;
