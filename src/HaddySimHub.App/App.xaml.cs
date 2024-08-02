@@ -153,6 +153,10 @@ namespace HaddySimHub
                         using FileStream outputFileStream = File.Create(zipFile);
                         await fileStream.CopyToAsync(outputFileStream);
                         outputFileStream.Close();
+                        
+                        //Delete current files in directory
+                        var dir = new DirectoryInfo(rootfolder);
+                        dir.Delete(true);
 
                         // Extract the downloaded ZIP file to the specified folder
                         ZipFile.ExtractToDirectory(zipFile, rootfolder, true);
