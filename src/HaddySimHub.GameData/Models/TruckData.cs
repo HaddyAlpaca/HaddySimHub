@@ -13,7 +13,7 @@ public sealed record TruckData
     /// <summary>
     /// Gets distance remaining (meters).
     /// </summary>
-    public int DistanceRemaining { get; init; }
+    public float DistanceRemaining { get; init; }
 
     /// <summary>
     /// Gets time remaining (minutes) to complete the distance.
@@ -46,17 +46,19 @@ public sealed record TruckData
     /// <summary>
     /// Distance (km) that can be travelled with the current fuel level.
     /// </summary>
-    public int FuelDistance { get; init; }
+    public float FuelDistance { get; init; }
 
     /// <summary>
     /// Amount of fuel in liters
     /// </summary>
-    public int FuelAmount { get; init; }
+    public float FuelAmount { get; init; }
 
     /// <summary>
     /// Amount of AdBlue in liters
     /// </summary>
-    public int AdBlueAmount { get; init; }
+    public float AdBlueAmount { get; init; }
+
+    public bool AdBlueWarningOn { get; init; }
 
     /*  Job data    */
 
