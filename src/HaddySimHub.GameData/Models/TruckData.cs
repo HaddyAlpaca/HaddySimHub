@@ -178,4 +178,36 @@ public sealed record TruckData
     public int NumberOfTrailersAttached { get; init; }
 
     public bool WipersOn { get; init; }
+
+    /// <summary>
+    /// Average consumption of the fuel in liters/km
+    /// </summary>
+    public float FuelAverageConsumption { get; init; }
+
+    /// <summary>
+    /// Throttle percentage
+    /// </summary>
+    public int Throttle { get; init; }
+
+
+    /// <summary>
+    /// Differential lock enabled?
+    /// </summary>
+    public bool DifferentialLock { get; init; }
+
+
+    /// <summary>
+    /// Oil pressure in PSI
+    /// </summary>
+    public float OilPressure { get; init; }
+
+    /// <summary>
+    /// Oil temp in degrees Celcius
+    /// </summary>
+    public float OilTemp { get; init; }
+
+    /// <summary>
+    /// Water temp in degrees Celcius
+    /// </summary>
+    public float WaterTemp { get; init; }
 }

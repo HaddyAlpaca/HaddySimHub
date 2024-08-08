@@ -66,6 +66,12 @@ public sealed class DashboardDisplay : IDisplay
             BlinkerRightOn = typedRawData.TruckValues.CurrentValues.LightsValues.BlinkerRightOn,
             WipersOn = typedRawData.TruckValues.CurrentValues.DashboardValues.Wipers,
             GameTime = typedRawData.CommonValues.GameTime.Value,
+            FuelAverageConsumption = typedRawData.TruckValues.CurrentValues.DashboardValues.FuelValue.AverageConsumption,
+            Throttle = Convert.ToInt32(Math.Round(typedRawData.ControlValues.GameValues.Throttle * 100)),
+            DifferentialLock = typedRawData.TruckValues.CurrentValues.DifferentialLock,
+            OilPressure = typedRawData.TruckValues.CurrentValues.DashboardValues.OilPressure,
+            OilTemp = typedRawData.TruckValues.CurrentValues.DashboardValues.OilTemperature,
+            WaterTemp = typedRawData.TruckValues.CurrentValues.DashboardValues.WaterTemperature,
         };
 
         return new DisplayUpdate { Type = DisplayType.TruckDashboard, Data = data };
