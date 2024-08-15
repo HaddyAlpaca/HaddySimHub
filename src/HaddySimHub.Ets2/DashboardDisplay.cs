@@ -70,8 +70,10 @@ public sealed class DashboardDisplay : IDisplay
             Throttle = Convert.ToInt32(Math.Round(typedRawData.ControlValues.GameValues.Throttle * 100)),
             DifferentialLock = typedRawData.TruckValues.CurrentValues.DifferentialLock,
             OilPressure = typedRawData.TruckValues.CurrentValues.DashboardValues.OilPressure,
+            OilPressureWarning = typedRawData.TruckValues.CurrentValues.DashboardValues.WarningValues.OilPressure,
             OilTemp = typedRawData.TruckValues.CurrentValues.DashboardValues.OilTemperature,
             WaterTemp = typedRawData.TruckValues.CurrentValues.DashboardValues.WaterTemperature,
+            WaterTempWarning = typedRawData.TruckValues.CurrentValues.DashboardValues.WarningValues.WaterTemperature,
         };
 
         return new DisplayUpdate { Type = DisplayType.TruckDashboard, Data = data };

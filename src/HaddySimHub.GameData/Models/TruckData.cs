@@ -201,6 +201,8 @@ public sealed record TruckData
     /// </summary>
     public float OilPressure { get; init; }
 
+    public bool OilPressureWarning { get; init; }
+
     /// <summary>
     /// Oil temp in degrees Celcius
     /// </summary>
@@ -210,4 +212,6 @@ public sealed record TruckData
     /// Water temp in degrees Celcius
     /// </summary>
     public float WaterTemp { get; init; }
+
+    public bool WaterTempWarning { get; init; }
 }
