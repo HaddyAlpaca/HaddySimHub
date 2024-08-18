@@ -52,10 +52,7 @@ public sealed class DashboardDisplay : IDisplay
             LowBeamOn = typedRawData.TruckValues.CurrentValues.LightsValues.BeamLow,
             HighBeamOn = typedRawData.TruckValues.CurrentValues.LightsValues.BeamHigh,
             ParkingBrakeOn = typedRawData.TruckValues.CurrentValues.MotorValues.BrakeValues.ParkingBrake,
-            BatteryWarningOn = typedRawData.TruckValues.CurrentValues.DashboardValues.WarningValues.BatteryVoltage,
             HazardLightsOn = typedRawData.TruckValues.CurrentValues.LightsValues.HazardWarningLights,
-            EngineWaterTempWarningOn = typedRawData.TruckValues.CurrentValues.DashboardValues.WarningValues.WaterTemperature,
-            OilPressureWarningOn = typedRawData.TruckValues.CurrentValues.DashboardValues.WarningValues.OilPressure,
             FuelDistance = typedRawData.TruckValues.CurrentValues.DashboardValues.FuelValue.Range,
             FuelAmount = typedRawData.TruckValues.CurrentValues.DashboardValues.FuelValue.Amount,
             FuelWarningOn = typedRawData.TruckValues.CurrentValues.DashboardValues.WarningValues.FuelW,
@@ -70,10 +67,12 @@ public sealed class DashboardDisplay : IDisplay
             Throttle = Convert.ToInt32(Math.Round(typedRawData.ControlValues.GameValues.Throttle * 100)),
             DifferentialLock = typedRawData.TruckValues.CurrentValues.DifferentialLock,
             OilPressure = typedRawData.TruckValues.CurrentValues.DashboardValues.OilPressure,
-            OilPressureWarning = typedRawData.TruckValues.CurrentValues.DashboardValues.WarningValues.OilPressure,
+            OilPressureWarningOn = typedRawData.TruckValues.CurrentValues.DashboardValues.WarningValues.OilPressure,
             OilTemp = typedRawData.TruckValues.CurrentValues.DashboardValues.OilTemperature,
             WaterTemp = typedRawData.TruckValues.CurrentValues.DashboardValues.WaterTemperature,
-            WaterTempWarning = typedRawData.TruckValues.CurrentValues.DashboardValues.WarningValues.WaterTemperature,
+            WaterTempWarningOn = typedRawData.TruckValues.CurrentValues.DashboardValues.WarningValues.WaterTemperature,
+            BatteryVoltageWarningOn = typedRawData.TruckValues.CurrentValues.DashboardValues.WarningValues.BatteryVoltage,
+            BatteryVoltage = typedRawData.TruckValues.CurrentValues.DashboardValues.BatteryVoltage,
         };
 
         return new DisplayUpdate { Type = DisplayType.TruckDashboard, Data = data };

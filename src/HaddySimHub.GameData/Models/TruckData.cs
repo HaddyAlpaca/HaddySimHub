@@ -156,11 +156,11 @@ public sealed record TruckData
     /// <summary>
     /// Gets a value indicating whether battery warning active.
     /// </summary>
-    public bool BatteryWarningOn { get; init; }
+    public bool BatteryVoltageWarningOn { get; init; }
+
+    public float BatteryVoltage { get; init; }
 
     public bool HazardLightsOn { get; init; }
-
-    public bool EngineWaterTempWarningOn { get; init; }
 
     public bool OilPressureWarningOn { get; init; }
 
@@ -201,8 +201,6 @@ public sealed record TruckData
     /// </summary>
     public float OilPressure { get; init; }
 
-    public bool OilPressureWarning { get; init; }
-
     /// <summary>
     /// Oil temp in degrees Celcius
     /// </summary>
@@ -213,5 +211,5 @@ public sealed record TruckData
     /// </summary>
     public float WaterTemp { get; init; }
 
-    public bool WaterTempWarning { get; init; }
+    public bool WaterTempWarningOn { get; init; }
 }
