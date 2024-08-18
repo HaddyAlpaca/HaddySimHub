@@ -180,7 +180,7 @@ public sealed record TruckData
     public bool WipersOn { get; init; }
 
     /// <summary>
-    /// Average consumption of the fuel in liters/km
+    /// Average consumption of the fuel in liters/ 100 km
     /// </summary>
     public float FuelAverageConsumption { get; init; }
 
