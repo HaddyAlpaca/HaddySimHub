@@ -143,14 +143,14 @@ namespace SCSSdkClient.Object {
                 /// Might have non-linear relation to lift ratio.
                 /// Set to zero or not provided for non-liftable axles.
 
-                public float[] Lift { get; internal set; } = Array.Empty<float>();
+                public float[] Lift { get; internal set; } = [];
 
-                public float[] LiftOffset { get; internal set; } = Array.Empty<float>();
+                public float[] LiftOffset { get; internal set; } = [];
 
                 /// <summary>
                 ///     Is true if the wheel contacts the ground
                 /// </summary>
-                public bool[] OnGround { get; internal set; } = Array.Empty<bool>();
+                public bool[] OnGround { get; internal set; } = [];
 
                 /// <summary>
                 ///     Rolling rotation of the wheel in rotations
@@ -162,7 +162,7 @@ namespace SCSSdkClient.Object {
                 /// <!---->
                 /// **INFORMATION**
                 /// <!---->
-                public float[] Rotation { get; internal set; } = Array.Empty<float>();
+                public float[] Rotation { get; internal set; } = [];
 
                 /// <summary>
                 ///     Steering rotation of the wheel in rotations
@@ -176,17 +176,17 @@ namespace SCSSdkClient.Object {
                 /// <!---->
                 /// **INFORMATION**
                 /// <!---->
-                public float[] Steering { get; internal set; } = Array.Empty<float>();
+                public float[] Steering { get; internal set; } = [];
 
                 /// <summary>
                 ///     Substance below the wheel
                 /// </summary>
-                public uint[] Substance { get; internal set; } = Array.Empty<uint>();
+                public uint[] Substance { get; internal set; } = [];
 
                 /// <summary>
                 ///     Vertical displacement of the wheel from its axis in meters
                 /// </summary>
-                public float[] SuspDeflection { get; internal set; } = Array.Empty<float>();
+                public float[] SuspDeflection { get; internal set; } = [];
 
                 /// <summary>
                 ///     Angular velocity of the wheel in rotations per second
@@ -198,7 +198,7 @@ namespace SCSSdkClient.Object {
                 /// <!---->
                 /// **INFORMATION**
                 /// <!---->
-                public float[] Velocity { get; internal set; } = Array.Empty<float>();
+                public float[] Velocity { get; internal set; } = [];
             }
         }
     }

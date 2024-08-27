@@ -154,7 +154,7 @@ namespace SCSSdkClient.Object
         /// <summary>
         ///     Contains values of the Trailers
         /// </summary>
-        public Trailer[] TrailerValues { get; internal set; } = Array.Empty<Trailer>();
+        public Trailer[] TrailerValues { get; internal set; } = [];
 
         /// <summary>
         ///     Contains values of the truck

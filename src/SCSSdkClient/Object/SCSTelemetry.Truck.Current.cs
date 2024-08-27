@@ -130,7 +130,7 @@ namespace SCSSdkClient.Object {
                         /// <summary>
                         ///     Enabled state of range/splitter selector toggles
                         /// </summary>
-                        public bool[] HShifterSelector { get; internal set; } = Array.Empty<bool>();
+                        public bool[] HShifterSelector { get; internal set; } = [];
                     }
 
                     /// <summary>
@@ -465,12 +465,12 @@ namespace SCSSdkClient.Object {
                     /// <summary>
                     ///     Substance below the wheel
                     /// </summary>
-                    public uint[] Substance { get; internal set; } = Array.Empty<uint>();
+                    public uint[] Substance { get; internal set; } = [];
 
                     /// <summary>
                     ///     Vertical displacement of the wheel from its axis in meters
                     /// </summary>
-                    public float[] SuspDeflection { get; internal set; } = Array.Empty<float>();
+                    public float[] SuspDeflection { get; internal set; } = [];
 
                     /// <summary>
                     ///     Angular velocity of the wheel in rotations per second
@@ -478,7 +478,7 @@ namespace SCSSdkClient.Object {
                     /// <!----> **INFORMATION** <!---->
                     /// Positive velocity corresponds to forward movement
                     /// <!----> **INFORMATION** <!---->
-                    public float[] Velocity { get; internal set; } = Array.Empty<float>();
+                    public float[] Velocity { get; internal set; } = [];
 
                     /// <summary>
                     ///     Steering rotation of the wheel in rotations
@@ -488,7 +488,7 @@ namespace SCSSdkClient.Object {
                     /// 
                     /// Set to zero for non-steered wheels
                     /// <!----> **INFORMATION** <!---->
-                    public float[] Steering { get; internal set; } = Array.Empty<float>();
+                    public float[] Steering { get; internal set; } = [];
 
                     /// <summary>
                     ///     Rolling rotation of the wheel in rotations
@@ -496,7 +496,7 @@ namespace SCSSdkClient.Object {
                     /// <!----> **INFORMATION** <!---->
                     /// Value is from &lt;0.0,1.0) range in which value increase corresponds to forward movement
                     /// <!----> **INFORMATION** <!---->
-                    public float[] Rotation { get; internal set; } = Array.Empty<float>();
+                    public float[] Rotation { get; internal set; } = [];
 
                     /// <summary>
                     ///     Lift state of the wheel &lt;0;1&gt;
@@ -509,7 +509,7 @@ namespace SCSSdkClient.Object {
                     /// 
                     /// Set to zero or not provided for non-liftable axles.
                     /// <!----> **INFORMATION** <!---->
-                    public float[] Lift { get; internal set; } = Array.Empty<float>();
+                    public float[] Lift { get; internal set; } = [];
 
                     /// <summary>
                     ///     Vertical displacement of the wheel axle from its normal position in meters as result of lifting.
@@ -519,12 +519,12 @@ namespace SCSSdkClient.Object {
                     /// 
                     /// Set to zero or not provided for non-liftable axles.
                     /// <!----> **INFORMATION** <!---->
-                    public float[] LiftOffset { get; internal set; } = Array.Empty<float>();
+                    public float[] LiftOffset { get; internal set; } = [];
 
                     /// <summary>
                     ///     Is the wheel in contact with ground?
                     /// </summary>
-                    public bool[] OnGround { get; internal set; } = Array.Empty<bool>();
+                    public bool[] OnGround { get; internal set; } = [];
                 }
 
                 /// <summary>
