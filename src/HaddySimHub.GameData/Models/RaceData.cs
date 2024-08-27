@@ -159,5 +159,5 @@ public sealed record RaceData
     /// <summary>
     /// Gets track postitions for all cars.
     /// </summary>
-    public TrackPosition[] TrackPositions { get; init; } = Array.Empty<TrackPosition>();
+    public TrackPosition[] TrackPositions { get; init; } = [];
 }

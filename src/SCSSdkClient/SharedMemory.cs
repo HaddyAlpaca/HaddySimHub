@@ -42,7 +42,7 @@ namespace SCSSdkClient {
         /// <summary>
         ///     raw byte data of the memory map
         /// </summary>
-        public byte[] RawData { get; private set; } = Array.Empty<byte>();
+        public byte[] RawData { get; private set; } = [];
 
         /// <summary>
         ///     create/connect to a shared memory file

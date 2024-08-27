@@ -15,7 +15,7 @@ namespace SCSSdkClient
         private readonly int[] _offsetAreas =
             {0, 40, 500, 700, 1500, 1640, 2000, 2200, 2300, 4000, 4200, 4300, 4400, 6000};
 
-        private byte[] _data = Array.Empty<byte>();
+        private byte[] _data = [];
         private int _offset;
 
         private int _offsetArea;

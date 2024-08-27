@@ -92,7 +92,7 @@
                     /// <summary>
                     ///     Gear selected when requirements for this h-shifter slot are meet.
                     /// </summary>
-                    public int[] SlotGear { get; internal set; } = Array.Empty<int>();
+                    public int[] SlotGear { get; internal set; } = [];
 
                     /// <summary>
                     ///     Position of h-shifter handle.
@@ -100,13 +100,13 @@
                     ///     the handle depends on input setup.
                     /// </summary>
 
-                    public uint[] SlotHandlePosition { get; internal set; } = Array.Empty<uint>();
+                    public uint[] SlotHandlePosition { get; internal set; } = [];
 
                     /// <summary>
                     ///     Bitmask of required on/off state of selectors.
                     ///     Only first selector_count bits are relevant.
                     /// </summary>
-                    public uint[] SlotSelectors { get; internal set; } = Array.Empty<uint>();
+                    public uint[] SlotSelectors { get; internal set; } = [];
 
                     /// <summary>
                     ///     Maximal rpm value.
@@ -121,12 +121,12 @@
                     /// <summary>
                     ///     Forward transmission ratios
                     /// </summary>
-                    public float[] GearRatiosForward { get; internal set; } = Array.Empty<float>();
+                    public float[] GearRatiosForward { get; internal set; } = [];
 
                     /// <summary>
                     ///     Reverse transmission ratios
                     /// </summary>
-                    public float[] GearRatiosReverse { get; internal set; } = Array.Empty<float>();
+                    public float[] GearRatiosReverse { get; internal set; } = [];
 
                     /// <summary>
                     ///     Type of the shifter.
