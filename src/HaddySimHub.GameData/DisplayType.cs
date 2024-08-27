@@ -5,6 +5,5 @@ public enum DisplayType
     None,
     TruckDashboard,
     RaceDashboard,
-    RaceLeaderboard,
     RallyDashboard,
 }
