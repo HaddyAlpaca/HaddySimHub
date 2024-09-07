@@ -15,6 +15,7 @@ using HaddySimHub.Logging;
 using HaddySimHub.WebServer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NLog;
 
 namespace HaddySimHub
 {
@@ -145,7 +146,7 @@ namespace HaddySimHub
 
             logConfig.LoggingRules.Add(new LoggingRule(
                 "*",
-                isDebugEnabled ? LogLevel.Debug : LogLevel.Info,
+                debug ? LogLevel.Debug : LogLevel.Info,
                 LogLevel.Fatal,
                 fileTarget));
             logConfig.AddTarget("general-logfile", fileTarget);
