@@ -26,7 +26,7 @@ namespace HaddySimHub
     {
         private readonly CancellationTokenSource cancellationTokenSource = new ();
         private GameWatcher? watcher;
-        private ILogger? logger;
+        private HaddySimHub.Logging.ILogger? logger;
 
         public App()
         {
