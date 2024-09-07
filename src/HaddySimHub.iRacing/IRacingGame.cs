@@ -1,10 +1,9 @@
 using HaddySimHub.GameData;
-using HaddySimHub.Logging;
 
 public sealed class IRacingGame : Game
 {
-    public IRacingGame(IProcessMonitor processMonitor, ILogger logger, CancellationToken cancellationToken)
-        : base(processMonitor, logger, cancellationToken)
+    public IRacingGame(IProcessMonitor processMonitor, CancellationToken cancellationToken)
+        : base(processMonitor, cancellationToken)
     {
         iRacingSDK.iRacing.NewData += this.ProcessData;
 

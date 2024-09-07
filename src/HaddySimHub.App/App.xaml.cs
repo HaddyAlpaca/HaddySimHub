@@ -54,8 +54,9 @@ namespace HaddySimHub
         {
             // Create logger
             bool debugEnabled = e.Args.Contains("--debug");
+
+            this.SetupLogging(debugEnabled);
             this.logger = new Logger(debugEnabled);
-            this.logger.Debug("Debugging started...");
 
             await UpdateWebContent();
 
@@ -112,6 +113,44 @@ namespace HaddySimHub
             await AppHost!.StopAsync();
 
             base.OnExit(e);
+        }
+
+        private void SetupLogging(bool debug)
+        {
+            var logConfig = new LoggingConfiguration();
+
+            if (debug)
+            {
+                // Setup data logging
+                var debugTarget = new FileTarget
+                {
+                    FileName = "log\\${date:format=yyyy-MM-dd}-data.log",
+                    Layout = @"${message}",
+                };
+
+                logConfig.LoggingRules.Add(new LoggingRule(
+                    "*",
+                    LogLevel.Trace,
+                    LogLevel.Trace,
+                    debugTarget));
+                logConfig.AddTarget("data-logfile", debugTarget);
+            }
+
+            // General
+            var fileTarget = new FileTarget
+            {
+                FileName = "log\\${date:format=yyyy-MM-dd}.log",
+                Layout = @"${longdate} ${uppercase:${level}}: ${message}",
+            };
+
+            logConfig.LoggingRules.Add(new LoggingRule(
+                "*",
+                isDebugEnabled ? LogLevel.Debug : LogLevel.Info,
+                LogLevel.Fatal,
+                fileTarget));
+            logConfig.AddTarget("general-logfile", fileTarget);
+
+            LogManager.Configuration = logConfig; 
         }
 
         private static async Task UpdateWebContent()

@@ -1,5 +1,4 @@
 using HaddySimHub.GameData;
-using HaddySimHub.Logging;
 using SCSSdkClient;
 using SCSSdkClient.Object;
 
@@ -8,8 +7,8 @@ public sealed class Ets2Game : Game
     private SCSSdkTelemetry? telemetry;
     private SCSTelemetry? lastReceivedData;
 
-    public Ets2Game(IProcessMonitor processMonitor, ILogger logger, CancellationToken cancellationToken)
-        : base(processMonitor, logger, cancellationToken)
+    public Ets2Game(IProcessMonitor processMonitor, CancellationToken cancellationToken)
+        : base(processMonitor, cancellationToken)
     {
         this.Started += (s, e) => {
             this.telemetry = new ();
@@ -42,7 +41,10 @@ public sealed class Ets2Game : Game
         };
 
         this.Stopped += (s, e) => {
-            this.telemetry.Dispose();
+            if (this.telemetry is not null)
+            {
+                this.telemetry.Dispose();
+            }
             this.telemetry = null;
         };
     }

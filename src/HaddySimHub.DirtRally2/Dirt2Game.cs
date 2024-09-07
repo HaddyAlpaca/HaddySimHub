@@ -1,5 +1,4 @@
 ﻿using HaddySimHub.GameData;
-using HaddySimHub.Logging;
 using System.Net.Sockets;
 using System.Net;
 using System.Runtime.InteropServices;
@@ -12,8 +11,8 @@ public sealed class Dirt2Game : Game
     private readonly UdpClient _client;
     private IPEndPoint _endPoint;
 
-    public Dirt2Game(IProcessMonitor processMonitor, ILogger logger, CancellationToken cancellationToken)
-    : base(processMonitor, logger, cancellationToken)
+    public Dirt2Game(IProcessMonitor processMonitor, CancellationToken cancellationToken)
+    : base(processMonitor, cancellationToken)
     {
         _client = new UdpClient(this._port);
         _endPoint = new IPEndPoint(IPAddress.Any, this._port);

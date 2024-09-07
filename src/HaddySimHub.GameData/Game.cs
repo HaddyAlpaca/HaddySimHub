@@ -4,12 +4,14 @@ using HaddySimHub.Logging;
 
 public abstract class Game
 {
-    private readonly ILogger logger;
+    private static readonly JsonSerializerOptions serializeOptions = new() { IncludeFields = true };
+
+    private readonly ILogger _logger;
     private bool isRunning = false;
 
-    public Game(IProcessMonitor processMonitor, ILogger logger, CancellationToken cancellationToken)
+    public Game(IProcessMonitor processMonitor, CancellationToken cancellationToken)
     {
-        this.logger = logger;
+        this._logger = new Logger(this.GetType().Name);
 
         var processTimer = new Timer(
             _ =>
@@ -43,7 +45,6 @@ public abstract class Game
             if (this.isRunning != value)
             {
                 this.isRunning = value;
-                this.logger.Debug($"Process '{this.ProcessName}' running = {this.isRunning}");
 
                 if (value)
                 {
@@ -63,7 +64,7 @@ public abstract class Game
 
     protected void ProcessData(object data)
     {
-        this.logger.LogData(JsonSerializer.Serialize(data, new JsonSerializerOptions() { IncludeFields = true }));
+        this._logger.LogData(JsonSerializer.Serialize(data, serializeOptions));
 
         var update = this.CurrentDisplay.GetDisplayUpdate(data);
         this.DisplayUpdate?.Invoke(this, update);
