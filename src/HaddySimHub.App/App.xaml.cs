@@ -126,7 +126,7 @@ namespace HaddySimHub
                 // Setup data logging
                 var debugTarget = new FileTarget
                 {
-                    FileName = "log\\${date:format=yyyy-MM-dd}-data.log",
+                    FileName = "log\\${date:format=yyyy-MM-dd}-${logger}-data.log",
                     Layout = @"${message}",
                 };
 
