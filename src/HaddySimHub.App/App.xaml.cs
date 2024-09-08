@@ -16,6 +16,8 @@ using HaddySimHub.WebServer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NLog;
+using NLog.Config;
+using NLog.Targets;
 
 namespace HaddySimHub
 {
@@ -36,7 +38,6 @@ namespace HaddySimHub
                     services.AddSingleton<SplashScreenWindow>();
                     services.AddSingleton<MainWindow>();
                     services.AddSingleton<IProcessMonitor, ProcessMonitor>();
-                    services.AddSingleton<ILogger, Logger>();
                 })
                 .Build();
 
@@ -57,7 +58,7 @@ namespace HaddySimHub
             bool debugEnabled = e.Args.Contains("--debug");
 
             this.SetupLogging(debugEnabled);
-            this.logger = new Logger(debugEnabled);
+            this.logger = new Logging.Logger("App");
 
             await UpdateWebContent();
 
@@ -82,9 +83,9 @@ namespace HaddySimHub
             // Create the list of supported games
             var games = new List<Game>
             {
-                new Ets2Game(processMonitor, this.logger, token),
-                new IRacingGame(processMonitor, this.logger, token),
-                new Dirt2Game(processMonitor, this.logger, token),
+                new Ets2Game(processMonitor, token),
+                new IRacingGame(processMonitor, token),
+                new Dirt2Game(processMonitor, token),
             };
 
             // Start monitoring game data
