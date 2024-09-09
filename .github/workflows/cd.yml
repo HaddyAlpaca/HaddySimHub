@@ -37,7 +37,7 @@ jobs:
       run:  dotnet build ${{ env.solution_file }} --no-restore
 
     - name: Zip build result
-      run: Compress-Archive -Path src/HaddySimHub.App/bin/Debug/net8.0/* -Destination haddy-simhub.zip
+      run: Compress-Archive -Path src/HaddySimHub.Console/bin/Debug/net8.0/* -Destination haddy-simhub.zip
 
     - name: Create release
       id: create_release
