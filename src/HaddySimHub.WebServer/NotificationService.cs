@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace HaddySimHub.WebServer
 {
-    internal static class NotificationService
+    public static class NotificationService
     {
         private static IHubContext<GameDataHub>? hubContext;
 
