@@ -48,10 +48,12 @@ public abstract class Game
 
                 if (value)
                 {
+                    this._logger.Info($"Process '{this.ProcessName}' started.");
                     this.Started?.Invoke(this, EventArgs.Empty);
                 }
                 else
                 {
+                    this._logger.Info($"Process '{this.ProcessName}' stopped.");
                     this.Stopped?.Invoke(this, EventArgs.Empty);
                 }
             }
