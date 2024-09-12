@@ -20,7 +20,7 @@ public abstract class Game
         },
             cancellationToken,
             TimeSpan.Zero,
-            TimeSpan.FromSeconds(10));
+            TimeSpan.FromSeconds(2));
     }
 
     public event EventHandler? Started;
