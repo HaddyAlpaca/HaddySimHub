@@ -41,10 +41,7 @@ public sealed class Ets2Game : Game
         };
 
         this.Stopped += (s, e) => {
-            if (this.telemetry is not null)
-            {
-                this.telemetry.Dispose();
-            }
+            this.telemetry?.Dispose();
             this.telemetry = null;
         };
     }

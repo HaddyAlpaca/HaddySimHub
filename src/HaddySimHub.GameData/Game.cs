@@ -68,8 +68,15 @@ public abstract class Game
     {
         this._logger.LogData(JsonSerializer.Serialize(data, serializeOptions));
 
+        try
+        {
         var update = this.CurrentDisplay.GetDisplayUpdate(data);
         this.DisplayUpdate?.Invoke(this, update);
+        }
+        catch (Exception ex)
+        {
+            this._logger.Error($"Error processing data: {ex.Message}\n\n{ex.StackTrace}");
+        }
     }
 
     protected void SendNotification(string message)
