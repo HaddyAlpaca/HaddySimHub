@@ -12,12 +12,7 @@ HaddySimHub.Logging.ILogger logger = new HaddySimHub.Logging.Logger("main");
 CancellationTokenSource cancellationTokenSource = new();
 CancellationToken token = cancellationTokenSource.Token;
 ProcessMonitor processMonitor = new ();
-IEnumerable<Game> games =
-[
-    new Ets2Game(processMonitor, token),
-    new IRacingGame(processMonitor, token),
-    new Dirt2Game(processMonitor, token),
-];
+IEnumerable<Game> games = [];
 Server webServer = new();
 
 SetupLogging(args.Contains("--debug"));
@@ -35,6 +30,13 @@ try
 
         // Start the webserver
         webServer.Start(token);
+
+        games =
+        [
+            new Ets2Game(processMonitor, token),
+            new IRacingGame(processMonitor, token),
+            new Dirt2Game(processMonitor, token),
+        ];
 
         foreach (var game in games)
         {
