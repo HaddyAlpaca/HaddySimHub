@@ -5,9 +5,8 @@ using HaddySimHub.Logging;
 public abstract class Game
 {
     private static readonly JsonSerializerOptions serializeOptions = new() { IncludeFields = true };
-
     private readonly ILogger _logger;
-    private bool isRunning = false;
+    private bool _isRunning = false;
 
     public Game(IProcessMonitor processMonitor, CancellationToken cancellationToken)
     {
@@ -16,7 +15,21 @@ public abstract class Game
         var processTimer = new Timer(
             _ =>
         {
-            this.IsRunning = processMonitor.IsRunning(this.ProcessName);
+            var currentStatus = processMonitor.IsRunning(this.ProcessName);
+            if (this._isRunning != currentStatus) {
+                if (currentStatus)
+                {
+                    this._logger.Info($"Process '{this.ProcessName}' started.");
+                    this.Started?.Invoke(this, EventArgs.Empty);
+                }
+                else
+                {
+                    this._logger.Info($"Process '{this.ProcessName}' stopped.");
+                    this.Stopped?.Invoke(this, EventArgs.Empty);
+                }
+                
+                this._isRunning = currentStatus;
+            }
         },
             cancellationToken,
             TimeSpan.Zero,
@@ -33,33 +46,6 @@ public abstract class Game
 
     public abstract string Description { get; }
 
-    public bool IsRunning
-    {
-        get
-        {
-            return this.isRunning;
-        }
-
-        set
-        {
-            if (this.isRunning != value)
-            {
-                this.isRunning = value;
-
-                if (value)
-                {
-                    this._logger.Info($"Process '{this.ProcessName}' started.");
-                    this.Started?.Invoke(this, EventArgs.Empty);
-                }
-                else
-                {
-                    this._logger.Info($"Process '{this.ProcessName}' stopped.");
-                    this.Stopped?.Invoke(this, EventArgs.Empty);
-                }
-            }
-        }
-    }
-
     protected abstract string ProcessName { get; }
 
     protected abstract IDisplay CurrentDisplay { get; }
@@ -70,8 +56,8 @@ public abstract class Game
 
         try
         {
-        var update = this.CurrentDisplay.GetDisplayUpdate(data);
-        this.DisplayUpdate?.Invoke(this, update);
+            var update = this.CurrentDisplay.GetDisplayUpdate(data);
+            this.DisplayUpdate?.Invoke(this, update);
         }
         catch (Exception ex)
         {
