@@ -46,6 +46,8 @@ public abstract class Game
 
     public abstract string Description { get; }
 
+    public bool IsRunning => this._isRunning;
+
     protected abstract string ProcessName { get; }
 
     protected abstract IDisplay CurrentDisplay { get; }
