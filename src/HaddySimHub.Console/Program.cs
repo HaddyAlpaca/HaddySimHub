@@ -11,6 +11,14 @@ using NLog.Targets;
 HaddySimHub.Logging.ILogger logger = new HaddySimHub.Logging.Logger("main");
 CancellationTokenSource cancellationTokenSource = new();
 CancellationToken token = cancellationTokenSource.Token;
+ProcessMonitor processMonitor = new ();
+IEnumerable<Game> games =
+[
+    new Ets2Game(processMonitor, token),
+    new IRacingGame(processMonitor, token),
+    new Dirt2Game(processMonitor, token),
+];
+Server webServer = new();
 
 SetupLogging(args.Contains("--debug"));
 
@@ -26,32 +34,14 @@ try
         await appHost!.StartAsync();
 
         // Start the webserver
-        var webServer = new Server();
         webServer.Start(token);
 
-        var processMonitor = new ProcessMonitor();
-
-        // Create the list of supported games
-        var games = new List<Game>
+        foreach (var game in games)
         {
-            new Ets2Game(processMonitor, token),
-            new IRacingGame(processMonitor, token),
-            new Dirt2Game(processMonitor, token),
-        };
-
-        // Start monitoring game data
-        var watcher = new GameWatcher(games);
-        watcher.Notification += async (sender, message) =>
-        {
-            await NotificationService.SendNotification(message);
-            logger.Debug($"Notification: {message}");
-        };
-
-        watcher.DisplayUpdate += async (sender, update) =>
-        {
-            await NotificationService.SendDisplayUpdate(update);
-            logger.LogData(update);
-        };
+            game.DisplayUpdate += OnGameDisplayUpdate;
+            game.Notification += OnGameNotification;
+            game.Stopped += OnGameStopped;
+        }
     });
 }
 catch(Exception ex)
@@ -183,5 +173,28 @@ async Task UpdateWebContent(CancellationToken token)
                 }
             }
         }
+    }
+}
+
+async void OnGameDisplayUpdate(object? sender, DisplayUpdate update)
+{
+    logger.LogData(update);
+    await NotificationService.SendDisplayUpdate(update);
+}
+
+async void OnGameNotification(object? sender, string message)
+{
+    logger.Debug($"Notification: {message}");
+    await NotificationService.SendNotification(message);
+}
+
+async void OnGameStopped(object? sender, EventArgs e)
+{
+    if (!games.Any(g => g.IsRunning))
+    {
+        // No games running
+        var update = new DisplayUpdate { Type = DisplayType.None };
+        logger.LogData(update);
+        await NotificationService.SendDisplayUpdate(update);
     }
 }
