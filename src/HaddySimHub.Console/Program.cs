@@ -1,4 +1,5 @@
-﻿using System.IO.Compression;
+﻿using System.Diagnostics;
+using System.IO.Compression;
 using System.Text.RegularExpressions;
 using HaddySimHub.DirtRally2;
 using HaddySimHub.GameData;
@@ -11,7 +12,6 @@ using NLog.Targets;
 HaddySimHub.Logging.ILogger logger = new HaddySimHub.Logging.Logger("main");
 CancellationTokenSource cancellationTokenSource = new();
 CancellationToken token = cancellationTokenSource.Token;
-ProcessMonitor processMonitor = new ();
 IEnumerable<Game> games = [];
 Server webServer = new();
 
@@ -22,29 +22,69 @@ await UpdateWebContent(token);
 
 var appHost = Host.CreateDefaultBuilder().Build();
 
+var webServerTask = new Task(async () =>
+{
+    await appHost!.StartAsync();
+
+    // Start the webserver
+    webServer.Start(token);
+}, token);
+        
+var processTask = new Task(async () => {
+    // Setup games
+    games =
+    [
+        new Ets2Game(),
+        new IRacingGame(),
+        new Dirt2Game(),
+    ];
+
+    games.ForEach((game) => {
+        game.DisplayUpdate += OnGameDisplayUpdate;
+        game.Notification += OnGameNotification;
+    });
+
+    // Monitor processes
+    IEnumerable<Game> currentGames = [];
+    while (!token.IsCancellationRequested)
+    {
+        var runningGames = games.Where(g => IsProcessRunning(g.ProcessName)).ToList();
+        if (runningGames.Count == 0)
+        {
+            var update = new DisplayUpdate { Type = DisplayType.None };
+            logger.LogData(update);
+            await NotificationService.SendDisplayUpdate(update);
+        }
+
+        currentGames.Where(g => !runningGames.Any(r => r.Description == g.Description)).ForEach(g => {
+            try
+            {
+                g.Start();
+            }
+            catch (Exception ex)
+            {
+                logger.Error($"Error start datafeed of game {g.Description}: {ex.Message}\n\n{ex.StackTrace}");
+            }
+        });
+        runningGames.Where(g => !currentGames.Any(c => c.Description == g.Description)).ForEach(g => {
+            try
+            {
+                g.Stop();
+            }
+            catch (Exception ex)
+            {
+                logger.Error($"Error start datafeed of game {g.Description}: {ex.Message}\n\n{ex.StackTrace}");
+            }
+        });
+        currentGames = runningGames;
+        await Task.Delay(TimeSpan.FromSeconds(2));
+    }
+}, token);
+
 try
 {
-    _ = Task.Run(async () =>
-    {
-        await appHost!.StartAsync();
-
-        // Start the webserver
-        webServer.Start(token);
-
-        games =
-        [
-            new Ets2Game(processMonitor, token),
-            new IRacingGame(processMonitor, token),
-            new Dirt2Game(processMonitor, token),
-        ];
-
-        foreach (var game in games)
-        {
-            game.DisplayUpdate += OnGameDisplayUpdate;
-            game.Notification += OnGameNotification;
-            game.Stopped += OnGameStopped;
-        }
-    });
+    webServerTask.Start();
+    processTask.Start();
 }
 catch(Exception ex)
 {
@@ -52,6 +92,8 @@ catch(Exception ex)
 }
 
 appHost.WaitForShutdown();
+cancellationTokenSource.Cancel();
+Task.WaitAll([webServerTask, processTask]);
 
 void SetupLogging(bool debug)
 {
@@ -190,13 +232,7 @@ async void OnGameNotification(object? sender, string message)
     await NotificationService.SendNotification(message);
 }
 
-async void OnGameStopped(object? sender, EventArgs e)
+bool IsProcessRunning(string processName)
 {
-    if (!games.Any(g => g.IsRunning))
-    {
-        // No games running
-        var update = new DisplayUpdate { Type = DisplayType.None };
-        logger.LogData(update);
-        await NotificationService.SendDisplayUpdate(update);
-    }
+    return Process.GetProcessesByName(processName).Length != 0;
 }

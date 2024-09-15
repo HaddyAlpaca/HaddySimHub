@@ -6,39 +6,11 @@ public abstract class Game
 {
     private static readonly JsonSerializerOptions serializeOptions = new() { IncludeFields = true };
     private readonly ILogger _logger;
-    private bool _isRunning = false;
 
-    public Game(IProcessMonitor processMonitor, CancellationToken cancellationToken)
+    public Game()
     {
         this._logger = new Logger(this.GetType().Name);
-
-        var processTimer = new Timer(
-            _ =>
-        {
-            var currentStatus = processMonitor.IsRunning(this.ProcessName);
-            if (this._isRunning != currentStatus) {
-                if (currentStatus)
-                {
-                    this._logger.Info($"Process '{this.ProcessName}' started.");
-                    this.Started?.Invoke(this, EventArgs.Empty);
-                }
-                else
-                {
-                    this._logger.Info($"Process '{this.ProcessName}' stopped.");
-                    this.Stopped?.Invoke(this, EventArgs.Empty);
-                }
-                
-                this._isRunning = currentStatus;
-            }
-        },
-            cancellationToken,
-            TimeSpan.Zero,
-            TimeSpan.FromSeconds(2));
     }
-
-    public event EventHandler? Started;
-
-    public event EventHandler? Stopped;
 
     public event EventHandler<string>? Notification;
 
@@ -46,9 +18,7 @@ public abstract class Game
 
     public abstract string Description { get; }
 
-    public bool IsRunning => this._isRunning;
-
-    protected abstract string ProcessName { get; }
+    public abstract string ProcessName { get; }
 
     protected abstract IDisplay CurrentDisplay { get; }
 
@@ -70,5 +40,15 @@ public abstract class Game
     protected void SendNotification(string message)
     {
         this.Notification?.Invoke(this, message);
+    }
+
+    public virtual void Start()
+    {
+        this._logger.Info($"Start receiving data from {this.Description}");
+    }
+
+    public virtual void Stop()
+    {
+        this._logger.Info($"Stop receiving data from {this.Description}");
     }
 }

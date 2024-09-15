@@ -1,24 +1,24 @@
-using HaddySimHub.GameData;
-
 public sealed class IRacingGame : Game
 {
-    public IRacingGame(IProcessMonitor processMonitor, CancellationToken cancellationToken)
-        : base(processMonitor, cancellationToken)
+    public override void Start()
     {
+        base.Start();
+
         iRacingSDK.iRacing.NewData += this.ProcessData;
+        iRacingSDK.iRacing.StartListening();
+    }
 
-        this.Started += (s, e) => {
-            iRacingSDK.iRacing.StartListening();
-        };
+    public override void Stop()
+    {
+        base.Stop();
 
-        this.Stopped += (s, e) => {
-            iRacingSDK.iRacing.StopListening();
-        };
+        iRacingSDK.iRacing.NewData -= this.ProcessData;
+        iRacingSDK.iRacing.StopListening();
     }
 
     public override string Description => "IRacing";
 
-    protected override string ProcessName => "iracingui";
+    public override string ProcessName => "iracingui";
 
     protected override IDisplay CurrentDisplay => new DashboardDisplay();
 }

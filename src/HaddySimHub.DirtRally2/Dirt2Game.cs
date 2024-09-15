@@ -1,5 +1,4 @@
-﻿using HaddySimHub.GameData;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 using System.Net;
 using System.Runtime.InteropServices;
 
@@ -7,23 +6,28 @@ namespace HaddySimHub.DirtRally2;
 
 public sealed class Dirt2Game : Game
 {
-    private readonly int _port = 20777;
-    private readonly UdpClient _client;
-    private IPEndPoint _endPoint;
+    private const int PORT = 20777;
+    private readonly UdpClient _client = new UdpClient(PORT);
+    private IPEndPoint _endPoint = new IPEndPoint(IPAddress.Any, PORT);
 
-    public Dirt2Game(IProcessMonitor processMonitor, CancellationToken cancellationToken)
-    : base(processMonitor, cancellationToken)
+    public override void Start()
     {
-        _client = new UdpClient(this._port);
-        _endPoint = new IPEndPoint(IPAddress.Any, this._port);
+        base.Start();
 
         // Start receiving updates.
         _client.BeginReceive(new AsyncCallback(ReceiveCallback), null);
     }
 
+    public override void Stop()
+    {
+        base.Stop();
+
+        _client.Close();
+    }
+
     public override string Description => "Dirt Rally 2";
 
-    protected override string ProcessName => "dirtrally2";
+    public override string ProcessName => "dirtrally2";
 
     protected override IDisplay CurrentDisplay => new DashboardDisplay();
 
