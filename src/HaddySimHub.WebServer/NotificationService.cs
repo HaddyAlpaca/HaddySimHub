@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using HaddySimHub.GameData;
+﻿using HaddySimHub.GameData;
 using Microsoft.AspNetCore.SignalR;
 
 namespace HaddySimHub.WebServer
@@ -18,14 +17,6 @@ namespace HaddySimHub.WebServer
             if (hubContext != null)
             {
                 await hubContext.Clients.All.SendAsync("displayUpdate", displayUpdate);
-            }
-        }
-
-        public static async Task SendNotification(string message)
-        {
-            if (hubContext != null)
-            {
-                await hubContext.Clients.All.SendAsync("notification", message);
             }
         }
     }

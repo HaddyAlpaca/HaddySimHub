@@ -3,9 +3,9 @@ using HaddySimHub.GameData.Models;
 
 namespace HaddySimHub.DirtRally2;
 
-public sealed class DashboardDisplay : IDisplay
+internal static class Dashboard
 {
-    public DisplayUpdate GetDisplayUpdate(object inputData)
+    public static DisplayUpdate GetDisplayUpdate(object inputData)
     {
         var typedData = (Packet)inputData;
 

@@ -2,9 +2,9 @@ using HaddySimHub.GameData;
 using HaddySimHub.GameData.Models;
 using SCSSdkClient.Object;
 
-public sealed class DashboardDisplay : IDisplay
+internal static class Dashboard
 {
-    public DisplayUpdate GetDisplayUpdate(object inputData)
+    public static DisplayUpdate GetDisplayUpdate(object inputData)
     {
         var typedRawData = (SCSTelemetry)inputData;
 

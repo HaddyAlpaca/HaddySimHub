@@ -41,7 +41,6 @@ var processTask = new Task(async () => {
 
     games.ForEach((game) => {
         game.DisplayUpdate += OnGameDisplayUpdate;
-        game.Notification += OnGameNotification;
     });
 
     // Monitor processes
@@ -224,12 +223,6 @@ async void OnGameDisplayUpdate(object? sender, DisplayUpdate update)
 {
     logger.LogData(update);
     await NotificationService.SendDisplayUpdate(update);
-}
-
-async void OnGameNotification(object? sender, string message)
-{
-    logger.Debug($"Notification: {message}");
-    await NotificationService.SendNotification(message);
 }
 
 bool IsProcessRunning(string processName)

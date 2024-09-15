@@ -1,6 +1,7 @@
 ﻿using System.Net.Sockets;
 using System.Net;
 using System.Runtime.InteropServices;
+using HaddySimHub.GameData;
 
 namespace HaddySimHub.DirtRally2;
 
@@ -29,7 +30,7 @@ public sealed class Dirt2Game : Game
 
     public override string ProcessName => "dirtrally2";
 
-    protected override IDisplay CurrentDisplay => new DashboardDisplay();
+    protected override Func<object, DisplayUpdate> GetDisplayUpdate => Dashboard.GetDisplayUpdate;
 
     private void ReceiveCallback(IAsyncResult result)
     {

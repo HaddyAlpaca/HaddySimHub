@@ -1,3 +1,5 @@
+using HaddySimHub.GameData;
+
 public sealed class IRacingGame : Game
 {
     public override void Start()
@@ -20,5 +22,5 @@ public sealed class IRacingGame : Game
 
     public override string ProcessName => "iracingui";
 
-    protected override IDisplay CurrentDisplay => new DashboardDisplay();
+    protected override Func<object, DisplayUpdate> GetDisplayUpdate => Dashboard.GetDisplayUpdate;
 }

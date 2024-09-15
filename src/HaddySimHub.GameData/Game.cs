@@ -12,15 +12,13 @@ public abstract class Game
         this._logger = new Logger(this.GetType().Name);
     }
 
-    public event EventHandler<string>? Notification;
-
     public event EventHandler<DisplayUpdate>? DisplayUpdate;
 
     public abstract string Description { get; }
 
     public abstract string ProcessName { get; }
 
-    protected abstract IDisplay CurrentDisplay { get; }
+    protected abstract Func<object, DisplayUpdate> GetDisplayUpdate { get; }
 
     protected void ProcessData(object data)
     {
@@ -28,18 +26,13 @@ public abstract class Game
 
         try
         {
-            var update = this.CurrentDisplay.GetDisplayUpdate(data);
+            var update = this.GetDisplayUpdate(data);
             this.DisplayUpdate?.Invoke(this, update);
         }
         catch (Exception ex)
         {
             this._logger.Error($"Error processing data: {ex.Message}\n\n{ex.StackTrace}");
         }
-    }
-
-    protected void SendNotification(string message)
-    {
-        this.Notification?.Invoke(this, message);
     }
 
     public virtual void Start()
