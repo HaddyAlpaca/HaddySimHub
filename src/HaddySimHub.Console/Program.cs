@@ -55,24 +55,24 @@ var processTask = new Task(async () => {
             await NotificationService.SendDisplayUpdate(update);
         }
 
-        currentGames.Where(g => !runningGames.Any(r => r.Description == g.Description)).ForEach(g => {
+        runningGames.Where(g => !currentGames.Any(r => r.Description == g.Description)).ForEach(g => {
             try
             {
                 g.Start();
             }
             catch (Exception ex)
             {
-                logger.Error($"Error start datafeed of game {g.Description}: {ex.Message}\n\n{ex.StackTrace}");
+                logger.Error($"Error starting datafeed of game {g.Description}: {ex.Message}\n\n{ex.StackTrace}");
             }
         });
-        runningGames.Where(g => !currentGames.Any(c => c.Description == g.Description)).ForEach(g => {
+        currentGames.Where(g => !runningGames.Any(c => c.Description == g.Description)).ForEach(g => {
             try
             {
                 g.Stop();
             }
             catch (Exception ex)
             {
-                logger.Error($"Error start datafeed of game {g.Description}: {ex.Message}\n\n{ex.StackTrace}");
+                logger.Error($"Error stoping datafeed of game {g.Description}: {ex.Message}\n\n{ex.StackTrace}");
             }
         });
         currentGames = runningGames;
