@@ -6,12 +6,13 @@ internal static class Dashboard
 {
     public static DisplayUpdate GetDisplayUpdate(object inputData)
     {
-        if (!iRacingSDK.iRacing.IsConnected)
+        var dataSample = (DataSample)inputData;
+     
+        if (!dataSample.IsConnected)
         {
             return new DisplayUpdate { Type = DisplayType.None };
         }
-
-        var dataSample = (DataSample)inputData;
+     
         var telemetry = dataSample.Telemetry;
 
         var sessionData = dataSample.SessionData;
