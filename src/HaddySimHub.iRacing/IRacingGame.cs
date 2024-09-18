@@ -15,7 +15,9 @@ public sealed class IRacingGame : Game
         base.Stop();
 
         iRacingSDK.iRacing.NewData -= this.ProcessData;
-        iRacingSDK.iRacing.StopListening();
+        if (iRacingSDK.iRacing.IsConnected) {
+            iRacingSDK.iRacing.StopListening();
+        }
     }
 
     public override string Description => "IRacing";
