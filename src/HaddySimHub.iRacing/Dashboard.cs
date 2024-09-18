@@ -1,11 +1,15 @@
 using HaddySimHub.GameData;
 using HaddySimHub.GameData.Models;
+using HaddySimHub.Logging;
 using iRacingSDK;
 
 internal static class Dashboard
 {
-    public static DisplayUpdate GetDisplayUpdate(object inputData)
+    public static DisplayUpdate GetDisplayUpdate(object inputData) 
     {
+        var logger = new Logger("IRacing.Dashboard");
+        logger.LogData(inputData);
+
         var dataSample = (DataSample)inputData;
      
         if (!dataSample.IsConnected)

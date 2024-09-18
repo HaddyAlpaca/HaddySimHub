@@ -5,7 +5,7 @@ using HaddySimHub.Logging;
 public abstract class Game
 {
     private static readonly JsonSerializerOptions serializeOptions = new() { IncludeFields = true };
-    private readonly ILogger _logger;
+    protected readonly ILogger _logger;
 
     public Game()
     {
