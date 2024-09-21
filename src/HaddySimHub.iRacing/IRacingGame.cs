@@ -8,6 +8,13 @@ public sealed class IRacingGame : Game
 
         iRacingSDK.iRacing.NewData += this.ProcessData;
         iRacingSDK.iRacing.StartListening();
+
+        Task.Run(() => {
+            foreach (var d in iRacingSDK.iRacing.GetDataFeed())
+            {
+                this._logger.Info($"Connected: {d.IsConnected}");
+            }
+        });
     }
 
     public override void Stop()
