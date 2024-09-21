@@ -7,17 +7,7 @@ internal static class Dashboard
 {
     public static DisplayUpdate GetDisplayUpdate(object inputData) 
     {
-        var logger = new Logger("IRacing.Dashboard");
-        logger.Info("X");
-        logger.LogData(inputData);
-
         var dataSample = (DataSample)inputData;
-     
-        // if (!dataSample.IsConnected)
-        // {
-        //     return new DisplayUpdate { Type = DisplayType.None };
-        // }
-     
         var telemetry = dataSample.Telemetry;
 
         var sessionData = dataSample.SessionData;
