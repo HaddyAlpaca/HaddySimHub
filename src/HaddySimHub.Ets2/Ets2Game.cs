@@ -50,7 +50,7 @@ public sealed class Ets2Game : Game
 
     public override string Description => "Euro Truck Simulator 2";
 
-    public override string ProcessName => "eurotrucks2";
+    protected override string _processName => "eurotrucks2";
 
     protected override Func<object, DisplayUpdate> GetDisplayUpdate => Dashboard.GetDisplayUpdate;
 
