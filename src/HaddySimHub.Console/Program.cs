@@ -17,8 +17,11 @@ Server webServer = new();
 
 SetupLogging(args.Contains("--debug"));
 
-//Check for website update
-await UpdateWebContent(token);
+if (!args.Contains("--no-update"))
+{
+    //Check for website update
+    await UpdateWebContent(token);
+}
 
 var appHost = Host.CreateDefaultBuilder().Build();
 
