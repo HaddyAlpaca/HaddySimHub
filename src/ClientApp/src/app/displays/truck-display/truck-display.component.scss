@@ -1,0 +1,126 @@
+app-truck-display {
+  height: 100vh;
+  font-family: Poppins, sans-serif;
+  color: white;
+
+  .gauge {
+    align-content: center;
+  }
+
+  .gear {
+    text-align: center;
+    font-size: 8vw;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .unit {
+    font-size: 2vw;
+  }
+
+  .rpm-value {
+    font-size: 3.5vw;
+  }
+
+  .dashboard-lights {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: center;
+    justify-content: space-evenly;
+  }
+
+  .dashboard-light {
+    width: 3vw;
+    height: auto;
+  }
+
+  .speed-limit {
+    display: inline-block;
+    border:.5rem solid red;
+    border-radius: 50%;
+    background-color: white;
+    color:black;
+    font-size: 1.6vw;
+    font-weight: 600;
+    width: 5vw;
+    height: 5vw;
+    text-align: center;
+    padding-top: .9vw;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .over-speed-limit {
+    color: rgb(187, 35, 35);
+  }
+
+  .icon-text-control {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    align-items: center;
+    font-size: 1.8vw;
+  }
+
+  .row {
+    margin-top: .75rem;
+
+    > *:not(:last-child) {
+      padding-right: 0;
+    }
+  }
+
+  .card {
+    background-color: #27293d;
+    border-radius: 20px;
+    height: 100%;
+    padding: 5px;
+  }
+
+  .data-label {
+    color: gray;
+    font-size: 1vw;
+  }
+
+  .data-item {
+    font-size: 1.2vw;
+  }
+
+  .card-header {
+    border: none;
+    padding-bottom: 0;
+  }
+
+  .card-title {
+    font-size: 1.4vw;
+  }
+
+  .filter-white{
+    filter: invert(100%) sepia(24%) saturate(2%) hue-rotate(284deg) brightness(103%) contrast(101%);
+  }
+
+  .filter-green{
+    filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%);
+  }
+
+  .filter-blue{
+    filter: invert(8%) sepia(99%) saturate(7448%) hue-rotate(247deg) brightness(92%) contrast(145%);
+  }
+
+  .filter-red{
+    filter: invert(16%) sepia(97%) saturate(6444%) hue-rotate(358deg) brightness(100%) contrast(110%);
+  }
+
+  .filter-orange{
+    filter: brightness(0) saturate(100%) invert(56%) sepia(31%) saturate(3171%) hue-rotate(1deg) brightness(104%) contrast(104%);
+  }
+
+  .hidden {
+    visibility: hidden;
+  }
+}

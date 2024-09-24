@@ -1,0 +1,26 @@
+.connection-state {
+  color: white;
+  font-size: 36pt;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 50px;
+}
+
+.message {
+  color: gray;
+  font-size: 12pt;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 200px;
+}
+
+.refresh-countdown {
+  color: gray;
+  font-size: 12pt;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 50px;
+}

@@ -1,0 +1,255 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-3">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Route</h2>
+        </div>
+        <div class="card-body">
+          <div class="data-row">
+            <div class="data-label">Vertrekpunt</div>
+            <app-waypoint [city]="data().sourceCity" [company]="data().sourceCompany" />
+          </div>
+          <div class="data-row">
+            <div class="data-label">Bestemming</div>
+            <app-waypoint [city]="data().destinationCity" [company]="data().destinationCompany" />
+          </div>
+          <div class="data-row">
+            <div class="data-label">Resterend</div>
+            @if (data().timeRemaining) {
+              <div class="data-item">
+                <span>{{data().timeRemaining | timespan}}</span> / <span>{{data().distanceRemaining | numberFlexDigit}} km </span>
+                @if (data().timeRemainingIrl > 0) {
+                  <span>({{data().timeRemainingIrl | timespan}})</span>
+                }
+              </div>
+            }
+            @else {
+              <div class="data-item">-</div>
+            }
+          </div>
+          <div class="data-row">
+            <div class="data-label">Volgend rustmoment</div>
+            @if (data().restTimeRemaining) {
+              <div class="data-item">
+                <span>{{data().restTimeRemaining | timespan}}&nbsp;</span>
+                @if (data().restTimeRemainingIrl > 0) {
+                  <span>({{data().restTimeRemainingIrl | timespan}})</span>
+                }
+              </div>
+            }
+            @else {
+              <div class="data-item">-</div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-3">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Opdracht</h2>
+        </div>
+        <div class="card-body">
+          <div class="data-row">
+            <div class="data-label">Truck</div>
+            @if(data().truckName) {
+              <div id="truckName" class="data-item">{{data().truckName}}</div>
+            }
+            @else {
+              <div id="truckName" class="data-item">-</div>
+            }
+          </div>
+          <div class="data-row">
+            <div class="data-label">Deadline</div>
+            @if (data().jobTimeRemaining) {
+              <div class="data-item">
+                <span>{{data().jobTimeRemaining | timespan}}&nbsp;</span>
+                @if (data().jobTimeRemainingIrl > 0) {
+                  <span>({{data().jobTimeRemainingIrl | timespan}})</span>
+                }
+              </div>
+            }
+            @else {
+              <div class="data-item">-</div>
+            }
+          </div>
+          <div class="data-row">
+            <div class="data-label">Inkomen</div>
+            @if (data().jobIncome) {
+              <div class="data-item" id="jobIncome">&euro; {{data().jobIncome | numbernl}}</div>
+            }
+            @else {
+              <div class="data-item" id="jobIncome">-</div>
+            }
+          </div>
+          <div class="data-row">
+            <div class="data-label">Lading</div>
+            @if (data().jobCargoName) {
+              <div class="data-item" id="jobCargoName">{{data().jobCargoName}} ({{data().jobCargoMass | numbernl}} kg)</div>
+            }
+            @else {
+              <div class="data-item" id="jobCargoName">-</div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-3">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Truck schade</h2>
+        </div>
+        <div class="card-body">
+          <div class="container">
+            <div class="row">
+              <div class="col-6">
+                <div class="data-label">Motor</div>
+                <div class="data-item">{{data().damageTruckEngine}} %</div>
+              </div>
+              <div class="col-6">
+                <div class="data-label">Transmissie</div>
+                <div class="data-item">{{data().damageTruckTransmission}} %</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <div class="data-label">Cabine</div>
+                <div class="data-item">{{data().damageTruckCabin}} %</div>
+              </div>
+              <div class="col-6">
+                <div class="data-label">Chassis</div>
+                <div class="data-item">{{data().damageTruckChassis}} %</div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-6">
+                <div class="data-label">Wielen</div>
+                <div class="data-item">{{data().damageTruckWheels}} %</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Trailer schade</h2>
+        </div>
+        <div class="card-body">
+          @if (data().numberOfTrailersAttached <= 0) {
+            <div>Geen trailer gekoppeld</div>
+          }
+          <div class="container" [class.hidden]="data().numberOfTrailersAttached <= 0">
+            <div class="row">
+              <div class="col-6">
+                <div class="data-label">Chassis</div>
+                <div class="data-item">{{data().damageTrailerChassis}} %</div>
+              </div>
+              <div class="col-6">
+                <div class="data-label">Opbouw</div>
+                <div class="data-item">{{data().damageTrailerBody}} %</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <div class="data-label">Wielen</div>
+                <div class="data-item">{{data().damageTrailerWheels}} %</div>
+              </div>
+              <div class="col-6">
+                <div class="data-label">Lading</div>
+                <div class="data-item">{{data().damageTrailerCargo}} %</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-6">
+      <div class="card gauge">
+        <label class="unit text-center">Gear</label>
+        <div class="gear text-center">{{data().gear | gear: true}}</div>
+        <label class="unit text-center">RPM</label>
+        <div class="rpm-value text-center">{{data().rpm}}</div>
+      </div>
+    </div>
+    <div class="col-6" style="padding-right: 10px;">
+      <div class="card gauge">
+        <label class="unit text-center">Km/h</label>
+        <div class="gear text-center" [ngClass]="{'over-speed-limit': data().speedLimit && data().speed > data().speedLimit}">{{data().speed}}</div>
+        <div class="speed-limit" [ngClass]="{'hidden': !data().speedLimit}">{{data().speedLimit}}</div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+        <div class="card dashboard-lights">
+          <img class="dashboard-light" id="low-beam" src="/assets/images/low-beam.svg" [ngClass]="{'filter-green': data().lowBeamOn}">
+          <img class="dashboard-light" id="high-beam" src="/assets/images/high-beam.svg"  [ngClass]="{'filter-blue': data().highBeamOn}">
+          <img class="dashboard-light" id="indicator-left" src="/assets/images/arrow-left.svg" [ngClass]="{'filter-green': data().blinkerLeftOn}">
+          <img class="dashboard-light" id="hazard-lights" src="/assets/images/hazard.svg" [ngClass]="{'filter-orange': data().hazardLightsOn}">
+          <img class="dashboard-light" id="indicator-right" src="/assets/images/arrow-right.svg" [ngClass]="{'filter-green': data().blinkerRightOn}">
+          <img class="dashboard-light" id="brake-warning" src="/assets/images/brake-warning.svg" [ngClass]="{'filter-red': data().parkingBrakeOn}">
+          <img class="dashboard-light" id="wipers" src="/assets/images/wipers.svg" [ngClass]="{'filter-blue': data().wipersOn}">
+          <img class="dashboard-light" id="differentialLock" src="/assets/images/diff-lock.svg" [ngClass]="{'filter-orange': data().differentialLock}">
+        </div>
+    </div>
+    <div class="col-6">
+      <div class="card dashboard-lights">
+        <div class="icon-text-control" id="fuel">
+          <img class="dashboard-light" src="/assets/images/fuel.svg" [ngClass]="{'filter-orange': data().fuelWarningOn}">
+          <div>{{data().fuelDistance | numberFlexDigit}} km ({{data().fuelAmount | numberFlexDigit}} l)</div>
+        </div>
+        <div class="icon-text-control" [ngClass]="{'hidden': !data().cruiseControlOn}">
+          <img class="dashboard-light" src="/assets/images/cruise-control.png">
+          <div>{{data().cruiseControlSpeed}} km/h</div>
+        </div>
+        <div class="icon-text-control"  id="adBlue">
+          <img class="dashboard-light" src="/assets/images/adblue.svg" [ngClass]="{'filter-orange': data().adBlueWarningOn}">
+          <div>{{data().adBlueAmount  | numberFlexDigit}} l</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+        <div class="card dashboard-lights">
+          <div class="icon-text-control" id="batteryVoltage">
+            <img class="dashboard-light" src="/assets/images/battery.svg" [ngClass]="{'filter-red': data().batteryVoltageWarningOn}">
+            <div>{{data().batteryVoltage | number: '1.1-1'}} V</div>
+          </div>
+          <div class="icon-text-control" id="waterTemp">
+            <img class="dashboard-light" src="/assets/images/engine-coolant.svg" [ngClass]="{'filter-red': data().waterTempWarningOn }">
+            <div>{{data().waterTemp | number: '1.1-1'}} &deg;C</div>
+          </div>
+          <div class="icon-text-control" id="oilPressure">
+            <img class="dashboard-light" src="/assets/images/oil-can.svg" [ngClass]="{'filter-red': data().oilPressureWarningOn}">
+            <div>{{data().oilPressure | number: '1.1-1'}} PSI</div>
+          </div>
+          <div class="icon-text-control" id="oilTemp">
+            <img class="dashboard-light" src="/assets/images/oil-temp.svg">
+            <div>{{data().oilTemp | number: '1.1-1'}} &deg;C</div>
+          </div>
+        </div>
+    </div>
+    <div class="col-6">
+      <div class="card dashboard-lights">
+        <div class="icon-text-control" id="acceleration">
+          <img class="dashboard-light" src="/assets/images/throttle.svg">
+          <div>{{data().throttle}} %</div>
+        </div>
+        <div class="icon-text-control" id="fuelAverageConsumption">
+          <img class="dashboard-light" src="/assets/images/fuel.svg">
+          <div>{{data().fuelAverageConsumption | number: '1.1-1'}} l/100 km</div>
+        </div>
+    </div>
+    </div>
+  </div>
+</div>

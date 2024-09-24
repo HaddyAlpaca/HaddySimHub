@@ -1,0 +1,22 @@
+<div class="container">
+  <div class="row" style="margin-top: 40px;">
+    <div class="col-4">
+      <app-data-group borderColor="blue">
+        <app-data-element description="Completed" [value]="data().completedPct" unit="%" />
+        <app-data-element description="Travelled" [value]="data().distanceTravelled" unit="m" />
+      </app-data-group>
+    </div>
+    <div class="col-4">
+      <app-data-group borderColor="yellow">
+        <app-speedometer [rpm]="data().rpm" [gear]="data().gear" [speed]="data().speed" />
+      </app-data-group>
+    </div>
+    <div class="col-4">
+      <app-data-group borderColor="blue">
+        <app-data-element description="Sector 1" [value]="data().sector1Time" [dataType]="DataType.LapTime" />
+        <app-data-element description="Sector 2" [value]="data().sector2Time" [dataType]="DataType.LapTime" />
+        <app-data-element description="Stage running" [value]="data().lapTime" [dataType]="DataType.LapTime" />
+      </app-data-group>
+    </div>
+  </div>
+</div>

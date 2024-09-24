@@ -17,9 +17,10 @@ jobs:
     runs-on: windows-latest
 
     env:
-        solution_file: ./src/HaddySimHub.sln
-        dotnet_version: '8.0.100'
-        RELEASE_VERSION: v0.1.${{github.run_number}}
+      solution_file: ./src/HaddySimHub.sln
+      dotnet_version: '8.0.100'
+      node-version: '20.x'
+      RELEASE_VERSION: v0.1.${{github.run_number}}
 
     steps:
     - name: Checkout
@@ -33,8 +34,25 @@ jobs:
     - name: Restore dependencies
       run:  dotnet restore ${{ env.solution_file }}
     
-    - name: Build
+    - name: Build console
       run:  dotnet build ${{ env.solution_file }} --no-restore
+
+    - name: Use Node.js ${{ env.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.node-version }}
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run tests
+      run: npm run test_ci
+
+    - name: Run lint
+      run: npm run lint
+
+    - name: Build app
+      run: npm run build --prod
 
     - name: Zip build result
       run: Compress-Archive -Path src/HaddySimHub.Console/bin/Debug/net8.0/* -Destination haddy-simhub.zip

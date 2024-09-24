@@ -1,0 +1,92 @@
+<div class="container">
+  <div class="row" style="margin-top: 40px;">
+    <div class="col-4">
+      <div class="group-border border-blue">
+        <div class="row">
+          <div class="col-6">
+            <app-data-element description="Position" id="position" [value]="data().position" />
+          </div>
+          <div class="col-6">
+            <app-data-element description="Lap" id="laps" [value]="data().currentLap" [total]="data().totalLaps" />
+          </div>
+        </div>
+        <!-- <app-data-element description="Time remaining" [value]="data().sessionTimeRemaining" [class.hidden]="!data().IsLimitedTime" /> -->
+        <div class="label">Last sector</div>
+        <div id="lastSector">{{data().lastSectorNum <= 0 ? '-' : data().lastSectorNum}}: {{data().lastSectorTime | laptime}}</div>
+        <div class="row">
+          <div class="col-6">
+            <app-data-element description="Last laptime" id="lastLapTime" [value]="data().lastLapTime" [dataType]="DataType.LapTime" />
+          </div>
+          <div class="col-6">
+            <div class="label">Delta</div>
+            <div id="lastLapTimeDelta" [ngClass]="{'text-green': data().lastLapTimeDelta < 0, 'text-red': data().lastLapTimeDelta > 0}">{{data().lastLapTimeDelta | deltatime}}</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <div class="label">Best laptime</div>
+            <div class="best-laptime" id="bestLapTime">{{data().bestLapTime | laptime}}</div>
+          </div>
+          <div class="col-6">
+            <div class="label">Delta</div>
+            <div id="bestLapTimeDelta" [ngClass]="{'text-green': data().bestLapTimeDelta < 0, 'text-red': data().bestLapTimeDelta > 0}">{{data().bestLapTimeDelta | deltatime}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-4 group-border border-yellow">
+      <app-speedometer [rpm]="data().rpm" [gear]="data().gear" [speed]="data().speed" />
+    </div>
+    <div class="col-4" style="height: 100%;">
+      <div class="group-border border-blue">
+        <app-data-element description="Brake bias" id="brakeBias" [value]="data().brakeBias" [dataType]="DataType.NumberOneDecimal" />
+        <app-data-element description="Fuel remaining" id="fuelRemaining" [value]="data().fuelRemaining" unit="L" [dataType]="DataType.NumberOneDecimal" />
+        <div class="row">
+          <div class="col-6">
+            <app-data-element description="Air" id="air-temp" [value]="data().airTemp" [dataType]="DataType.NumberOneDecimal" unit="&deg;C" />
+          </div>
+          <div class="col-6">
+            <app-data-element description="Track" id="track-temp" [value]="data().trackTemp" [dataType]="DataType.NumberOneDecimal" unit="&deg;C" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            @if (data().strengthOfField) {
+              <app-data-element description="SOF" [value]="data().strengthOfField" />
+            }
+          </div>
+          <div class="col-6">
+            <app-data-element description="Incidents" id="incidents" [value]="data().incidents" [total]="data().maxIncidents === 999 ? undefined : data().maxIncidents" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" style="padding-right: 0; margin-top: 40px;">
+    <div class="col-6">
+      <app-opponent-delta
+        id="driverBehindInfo"
+        caption="Driver behind"
+        [driverInfo]="driverBehindInfo()" />
+    </div>
+    <div class="col-6" style="padding-right: 0;">
+      <app-opponent-delta
+        id="driverAheadInfo"
+        caption="Driver ahead"
+        [driverInfo]="driverAheadInfo()" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <app-track-positions [positions]="data().trackPositions" />
+    </div>
+  </div>
+</div>
+
+@if (data().pitLimiterOn) {
+  <div class="pit-limiter blink-text">Pit Limiter</div>
+}
+@else if (data().flag) {
+  <div class="flag blink" [ngClass]="data().flag"></div>
+}
+

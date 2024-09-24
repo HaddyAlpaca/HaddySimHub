@@ -1,0 +1,63 @@
+{
+  "name": "haddy-sim-hub-client",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "jest --watch",
+    "test_ci": "jest",
+    "lint": "ng lint",
+    "build:prod": "ng build --prod"
+  },
+  "jest": {
+    "preset": "jest-preset-angular",
+    "moduleNameMapper": {
+      "@components/(.*)": "<rootDir>/src/app/components/$1",
+      "@services/(.*)": "<rootDir>/src/app/services/$1",
+      "@testing/(.*)": "<rootDir>/src/app/testing/$1",
+      "@displays/(.*)": "<rootDir>/src/app/displays/$1"
+    },
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest/setup.ts"
+    ]
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^18.2.5",
+    "@angular/cdk": "^18.2.5",
+    "@angular/common": "^18.2.5",
+    "@angular/compiler": "^18.2.5",
+    "@angular/core": "^18.2.5",
+    "@angular/forms": "^18.2.5",
+    "@angular/material": "^18.2.5",
+    "@angular/platform-browser": "^18.2.5",
+    "@angular/platform-browser-dynamic": "^18.2.5",
+    "@angular/router": "^18.2.5",
+    "@microsoft/signalr": "^8.0.7",
+    "@ngneat/until-destroy": "^10.0.0",
+    "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
+    "ngx-signalr-websocket": "^1.0.0",
+    "rxjs": "~7.8.1",
+    "tslib": "^2.7.0"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^18.2.5",
+    "@angular-eslint/builder": "18.3.1",
+    "@angular-eslint/eslint-plugin": "18.3.1",
+    "@angular-eslint/eslint-plugin-template": "18.3.1",
+    "@angular-eslint/schematics": "18.3.1",
+    "@angular-eslint/template-parser": "18.3.1",
+    "@angular/cli": "~18.2.5",
+    "@angular/compiler-cli": "^18.2.5",
+    "@types/jest": "^29.5.13",
+    "@typescript-eslint/eslint-plugin": "^8.6.0",
+    "@typescript-eslint/parser": "^8.6.0",
+    "eslint": "^9.11.0",
+    "jest": "^29.7.0",
+    "jest-preset-angular": "^14.2.4",
+    "typescript": "~5.5.4"
+  }
+}

@@ -1,0 +1,13 @@
+<div class="opponent-delta group-border border-blue"  [class.hidden]="!driverInfo().name">
+  <div class="label caption">{{caption()}}</div>
+  <div>
+    <div class="delta-time">{{driverInfo().delta| deltatime: false}}</div>
+    <div class="label driver-name">{{driverInfo().name}}</div>
+    @if (driverInfo().license) {
+      <div class="driver-class" [style.background-color]="driverInfo().licenseColor">{{driverInfo().license}}</div>
+    }
+    @if (driverInfo().rating) {
+      <div class="driver-irating">{{driverInfo().rating | irating}}</div>
+    }
+  </div>
+</div>
