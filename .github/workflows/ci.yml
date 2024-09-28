@@ -7,46 +7,51 @@ on:
 
 jobs:
  server-tests:
-    runs-on: windows-latest
+  name: Server tests
+  runs-on: windows-latest
 
-    env:
-      solution_file: ./src/HaddySimHub.sln
-      dotnet_version: '8.0.100'
+  env:
+    solution_file: ./src/HaddySimHub.sln
+    dotnet_version: '8.0.100'
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+  steps:
+  - name: Checkout
+    uses: actions/checkout@v4
 
-    - name: Install .NET Core
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: ${{ env.dotnet_version }}
+  - name: Install .NET Core
+    uses: actions/setup-dotnet@v4
+    with:
+      dotnet-version: ${{ env.dotnet_version }}
 
-    - name: Restore dependencies
-      run:  dotnet restore ${{ env.solution_file }}
-    
-    - name: Build
-      run:  dotnet build ${{ env.solution_file }} --no-restore
-    
-    - name: Test
-      run:  dotnet test ${{ env.solution_file }} --no-build
+  - name: Restore dependencies
+    run:  dotnet restore ${{ env.solution_file }}
+  
+  - name: Build
+    run:  dotnet build ${{ env.solution_file }} --no-restore
+  
+  - name: Test
+    run:  dotnet test ${{ env.solution_file }} --no-build
+
  clientapp-tests:
-    runs-on: ubuntu-latest
+  name: Frontend tests
+  runs-on: ubuntu-latest
 
-    env:
-      node-version: '20.x'
+  env:
+    node-version: 20
 
-    steps:
-      - uses: actions/checkout@v3
+  steps:
+    - uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.node-version }}
+    - name: Install Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.node-version }}
 
-      - name: Install dependencies
-        run: npm install
+    - name: Install dependencies
+      run: npm install
+    
+    - name: Run tests
+      run: npm run test_ci
 
-      - run: npm run test_ci
-
-      - run: npm run lint
+    - name: Lint
+      run: npm run lint
