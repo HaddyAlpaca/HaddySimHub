@@ -19,15 +19,15 @@ jobs:
     env:
       solution_file: ./src/HaddySimHub.sln
       dotnet_version: '8.0.100'
-      node-version: '20.x'
+      node-version: 20
       RELEASE_VERSION: v0.1.${{github.run_number}}
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Install .NET Core
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ env.dotnet_version }}
 
@@ -38,7 +38,7 @@ jobs:
       run:  dotnet build ${{ env.solution_file }} --no-restore
 
     - name: Use Node.js ${{ env.node-version }}
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ env.node-version }}
 
