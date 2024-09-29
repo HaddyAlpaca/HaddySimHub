@@ -1,4 +1,4 @@
-# Haddy SimHub Client
+# Haddy SimHub
 
 [![CI](https://github.com/HaddyAlpaca/HaddySimHub/actions/workflows/ci.yml/badge.svg)](https://github.com/HaddyAlpaca/HaddySimHub/actions/workflows/ci.yml)
 
