@@ -17,12 +17,6 @@ Server webServer = new();
 
 SetupLogging(args.Contains("--debug"));
 
-if (!args.Contains("--no-update"))
-{
-    //Check for website update
-    await UpdateWebContent(token);
-}
-
 var appHost = Host.CreateDefaultBuilder().Build();
 
 var webServerTask = new Task(async () =>
@@ -144,82 +138,6 @@ void SetupLogging(bool debug)
     logConfig.AddTarget("general-logfile", fileTarget);
 
     LogManager.Configuration = logConfig;
-}
-
-async Task UpdateWebContent(CancellationToken token)
-{
-    string rootfolder = Path.GetFullPath("wwwroot");
-    logger.Debug($"Check if folder '{rootfolder}' exists.");
-    if (!Directory.Exists(rootfolder))
-    {
-        try
-        {
-            logger.Debug($"Create folder '{rootfolder}'.");
-            Directory.CreateDirectory(rootfolder);
-        }
-        catch (Exception ex)
-        {
-            logger.Error($"Client content folder cannot be created: {ex.Message}");
-        }
-    }
-
-    if (Directory.Exists(rootfolder))
-    {
-        // Check if new content needs to be downloaded
-        string zipFile = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}.zip");
-
-        try
-        {
-            const string baseUri = "https://github.com/HaddyAlpaca/HaddySimHubClient";
-
-            logger.Info($"Checking latest webcontent on '{baseUri}'.");
-            string versionUrl = $"{baseUri}/releases/latest";
-            using HttpClient client = new();
-            string content = await client.GetStringAsync(versionUrl, token);
-
-            Match match = Regex.Match(content, @"Release v(\S+)");
-
-            if (match.Success)
-            {
-                string version = match.Groups[1].Value; // Extract text captured by the first group
-                string downloadUrl = $"{baseUri}/releases/download/v{version}/haddy-simhub-client.zip";
-                logger.Info($"Downloading latest web content version from '{downloadUrl}'");
-                HttpResponseMessage response = await client.GetAsync(downloadUrl, token);
-
-                using Stream fileStream = await response.Content.ReadAsStreamAsync(token);
-                using FileStream outputFileStream = File.Create(zipFile);
-                await fileStream.CopyToAsync(outputFileStream, token);
-                outputFileStream.Close();
-
-                //Delete current files in directory
-                var dir = new DirectoryInfo(rootfolder);
-                dir.Delete(true);
-
-                // Extract the downloaded ZIP file to the specified folder
-                logger.Info($"Extract file '{zipFile}' to '{rootfolder}'");
-                ZipFile.ExtractToDirectory(zipFile, rootfolder, true);
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.Error($"Error checking for client update:\n\n{ex.Message}");
-        }
-        finally
-        {
-            if (File.Exists(zipFile))
-            {
-                try
-                {
-                    logger.Info($"Deleting file '{zipFile}'.");
-                    File.Delete(zipFile); // Delete the temporary ZIP file
-                }
-                catch (Exception ex)
-                {
-                    logger.Error($"Error deleting file:\n\n{ex.Message}");
-                }
-            }
-        }
-    }
 }
 
 async void OnGameDisplayUpdate(object? sender, DisplayUpdate update)
