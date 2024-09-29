@@ -8,7 +8,7 @@ describe('TrackPositionsComponent tests', () => {
   let fixture: ComponentFixture<TrackPositionsTestHostComponent>;
   let component: TrackPositionsTestHostComponent;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     fixture = TestBed.createComponent(TrackPositionsTestHostComponent);
     component = fixture.componentInstance;
   });
@@ -23,7 +23,7 @@ describe('TrackPositionsComponent tests', () => {
         lapDistPct: 10,
         status: TrackPositionStatus.IsPlayer,
       },
-    ]
+    ];
 
     const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, TrackPositionsComponentHarness);
     const items = await harness.getTrackItems();

@@ -4,4 +4,4 @@ export const createSpyObj = <T>(methodNames: (keyof T)[]): jest.Mocked<T> => {
     obj[methodName] = jest.fn();
   });
   return obj as jest.Mocked<T>;
-}
+};

@@ -85,14 +85,14 @@ describe('TruckDisplayComponent', () => {
     });
   });
 
-  const patchData = (value: { [key: string]: unknown; }) => {
+  const patchData = (value: Record<string, unknown>): void => {
     const newData = {
       ...data,
       ...value,
     };
 
     component.dataSource = newData;
-  }
+  };
 });
 
 @Component({

@@ -1,7 +1,7 @@
 import { ComponentHarness } from '@angular/cdk/testing';
 
 export class TrackPositionsComponentHarness extends ComponentHarness {
-  static hostSelector = 'app-track-positions';
+  public static hostSelector = 'app-track-positions';
 
   public async getTrackItems(): Promise<{ style: string | null }[]> {
     const elements = await this.locatorForAll('div.track-item')();

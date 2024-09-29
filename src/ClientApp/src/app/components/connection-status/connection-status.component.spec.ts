@@ -9,7 +9,7 @@ describe('ConnectionStatusComponent tests', () => {
   let fixture: ComponentFixture<ConnectionStatusTestComponent>;
   let component: ConnectionStatusTestComponent;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     fixture = TestBed.createComponent(ConnectionStatusTestComponent);
     component = fixture.componentInstance;
   });

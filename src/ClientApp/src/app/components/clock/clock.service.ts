@@ -10,7 +10,7 @@ export class ClockService {
   private readonly _currentTime = signal(new Date());
   public readonly currentTime = this._currentTime.asReadonly();
 
-  constructor() {
+  public constructor() {
     timer(0, 1000).pipe(
       tap(() => this._currentTime.set(new Date())),
       untilDestroyed(this),

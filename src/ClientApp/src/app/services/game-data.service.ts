@@ -38,7 +38,7 @@ export class GameDataService {
   private _displayUpdate = signal<DisplayUpdate>({ type: DisplayType.None });
   public displayUpdate = this._displayUpdate.asReadonly();
 
-  constructor() {
+  public constructor() {
     const connectionOptions: IHttpConnectionOptions = {
       transport: HttpTransportType.WebSockets,
       skipNegotiation: false,
@@ -55,14 +55,14 @@ export class GameDataService {
     this._hubConnection.start().then(() => {
       this.connectionStatus.set({ status: ConnectionStatus.Connected });
     }).catch((error) => {
-      this.connectionStatus.set({ status: ConnectionStatus.ConnectionError, message: error });
+      this.connectionStatus.set({ status: ConnectionStatus.ConnectionError, message: error as string });
       this.startReloadSequence();
     });
 
     this._hubConnection.onreconnecting((error) => this.connectionStatus.set({ status: ConnectionStatus.Connecting, message: error?.message }));
     this._hubConnection.onreconnected(() => this.connectionStatus.set({ status: ConnectionStatus.Connected }));
     this._hubConnection.onclose((error) => {
-      this.connectionStatus.set({ status: ConnectionStatus.Disconnected, message: error?.message })
+      this.connectionStatus.set({ status: ConnectionStatus.Disconnected, message: error?.message });
       this.startReloadSequence();
     });
 
@@ -74,7 +74,7 @@ export class GameDataService {
 
   private startReloadSequence(): void {
     let countDownSeconds = 10;
-    this.connectionStatus.update((value) => ({ ...value, reloadSeconds: countDownSeconds}))
+    this.connectionStatus.update((value) => ({ ...value, reloadSeconds: countDownSeconds}));
     interval(1000).pipe(
       take(countDownSeconds + 1),
       tap(() => {

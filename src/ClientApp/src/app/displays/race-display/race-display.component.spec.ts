@@ -15,7 +15,7 @@ describe('Race display component tests', () => {
     fixture = TestBed.createComponent(RaceDisplayTestComponent);
     component = fixture.componentInstance;
     harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, RaceDisplayComponentHarness);
-  })
+  });
 
   describe('Laps remaining tests', () => {
     it('When session is a timed session, display only laps completed', async () => {
@@ -65,21 +65,21 @@ describe('Race display component tests', () => {
     it('brake bias is displayed', async () => {
       patchData({ brakeBias: 56.2 });
 
-    const elementHarness = await harness.getDataElementHarness('brakeBias');
+      const elementHarness = await harness.getDataElementHarness('brakeBias');
       expect(await elementHarness.getValue()).toEqual('56.2');
     });
 
     it('brake bias without decimal places is displayed with one decimal place', async () => {
       patchData({ brakeBias: 56 });
 
-    const elementHarness = await harness.getDataElementHarness('brakeBias');
+      const elementHarness = await harness.getDataElementHarness('brakeBias');
       expect(await elementHarness.getValue()).toEqual('56.0');
     });
 
     it('brake bias with 2 decimal places is displayed with one decimal place', async () => {
       patchData({ brakeBias: 56.28 });
 
-    const elementHarness = await harness.getDataElementHarness('brakeBias');
+      const elementHarness = await harness.getDataElementHarness('brakeBias');
       expect(await elementHarness.getValue()).toEqual('56.3');
     });
   });
@@ -201,13 +201,13 @@ describe('Race display component tests', () => {
       patchData({ pitLimiterOn: false });
 
       expect(await harness.hasElement('.pit-limiter')).toBe(false);
-    })
+    });
 
     it('Pit limter is not shown when on', async () => {
       patchData({ pitLimiterOn: true });
 
       expect(await harness.hasElement('.pit-limiter')).toBe(true);
-    })
+    });
   });
 
   describe('Incidents', () => {
@@ -240,14 +240,14 @@ describe('Race display component tests', () => {
     });
   });
 
-  const patchData = (value: { [key: string]: unknown; }) => {
+  const patchData = (value: Record<string, unknown>): void => {
     const data = {
       ...raceData,
       ...value,
     };
 
     component.dataSource = data;
-  }
+  };
 });
 
 @Component({
@@ -256,5 +256,5 @@ describe('Race display component tests', () => {
   imports: [RaceDisplayComponent],
 })
 export class RaceDisplayTestComponent {
-    public dataSource =  new RaceData();
+  public dataSource =  new RaceData();
 }

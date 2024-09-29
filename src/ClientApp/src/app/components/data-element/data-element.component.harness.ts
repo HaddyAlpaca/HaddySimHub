@@ -6,19 +6,19 @@ interface DataElementComponentHarnessFilters extends BaseHarnessFilters {
 }
 
 export class DataElementComponentHarness extends ComponentHarness {
-  static hostSelector = 'app-data-element';
+  public static hostSelector = 'app-data-element';
 
-  static with(options: DataElementComponentHarnessFilters): HarnessPredicate<DataElementComponentHarness> {
+  public static with(options: DataElementComponentHarnessFilters): HarnessPredicate<DataElementComponentHarness> {
     return new HarnessPredicate(DataElementComponentHarness, options)
-        .addOption('id', options.id,
-            (harness, id) => HarnessPredicate.stringMatches(harness.getId(), id));
+      .addOption('id', options.id,
+        (harness, id) => HarnessPredicate.stringMatches(harness.getId(), id));
   }
 
   public async getId(): Promise<string> {
     const elm = await this.host();
     const id = elm.getProperty('id');
 
-    return id;
+    return id as string;
   }
 
   public async getLabel(): Promise<string> {

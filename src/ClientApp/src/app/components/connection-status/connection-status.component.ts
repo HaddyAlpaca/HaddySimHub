@@ -21,7 +21,7 @@ export class ConnectionStatusComponent {
     return statusDescriptions[this.status().status] || 'Unknown';
   });
 
-  public connectionMessage = computed(() => this.status().message)
+  public connectionMessage = computed(() => this.status().message);
 
   public reloadSeconds = computed(() => this.status().reloadSeconds);
 }

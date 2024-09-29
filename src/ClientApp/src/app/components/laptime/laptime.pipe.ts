@@ -1,11 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-    name: 'laptime',
-    standalone: true,
+  name: 'laptime',
+  standalone: true,
 })
 export class LapTimePipe implements PipeTransform {
-  transform(seconds: number): string {
+  public transform(seconds: number): string {
     if (seconds === 0) {
       return '--:--.---';
     }

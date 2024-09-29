@@ -1,11 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-    name: 'timespan',
-    standalone: true,
+  name: 'timespan',
+  standalone: true,
 })
 export class TimespanPipe implements PipeTransform {
-  transform(value: number): string {
+  public transform(value: number): string {
     const totalMinutes = Math.abs(value);
     const hours = Math.floor(totalMinutes / 60);
     const minutes = Math.abs(totalMinutes % 60);

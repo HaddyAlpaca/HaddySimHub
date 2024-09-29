@@ -1,13 +1,13 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-    name: 'deltatime',
-    standalone: true,
+  name: 'deltatime',
+  standalone: true,
 })
 export class DeltaTimePipe implements PipeTransform {
   private readonly _numberFormat = new Intl.NumberFormat('en-US', { minimumFractionDigits: 3 });
 
-  transform(value: number | undefined, showSign = true): string {
+  public transform(value: number | undefined, showSign = true): string {
     if (!value) {
       return '';
     }

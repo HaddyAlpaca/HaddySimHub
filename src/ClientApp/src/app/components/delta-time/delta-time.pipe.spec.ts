@@ -38,5 +38,5 @@ describe('DeltaTimePipe', () => {
   it('Sign can be supressed', () => {
     expect(pipe.transform(-5.492, false)).toBe('5.492');
     expect(pipe.transform(5.492, false)).toBe('5.492');
-  })
+  });
 });

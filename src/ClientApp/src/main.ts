@@ -10,11 +10,11 @@ if (environment.production) {
 }
 
 bootstrapApplication(AppComponent, {
-    providers: [
-        importProvidersFrom(BrowserModule),
-        provideHttpClient(withInterceptorsFromDi()),
-        provideAnimationsAsync(),
-        provideExperimentalZonelessChangeDetection(),
-    ],
+  providers: [
+    importProvidersFrom(BrowserModule),
+    provideHttpClient(withInterceptorsFromDi()),
+    provideAnimationsAsync(),
+    provideExperimentalZonelessChangeDetection(),
+  ],
 })
   .catch(err => console.error(err));
