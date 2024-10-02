@@ -8,7 +8,7 @@ on:
 jobs:
  server-tests:
   name: Server tests
-  runs-on: windows-latest
+  runs-on: ubuntu-latest
 
   env:
     solution_file: ./src/HaddySimHub.sln
