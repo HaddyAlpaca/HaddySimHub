@@ -60,7 +60,6 @@ jobs:
       working-directory: ${{ env.clientapp_folder }}
       run: |
         Remove-Item package-lock.json
-        Remove-Item node_modules -Recurse
         npm run install
 
     - name: Build client app
