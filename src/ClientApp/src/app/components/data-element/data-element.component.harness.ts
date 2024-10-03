@@ -18,7 +18,7 @@ export class DataElementComponentHarness extends ComponentHarness {
     const elm = await this.host();
     const id = elm.getProperty('id');
 
-    return id as string;
+    return id as unknown as string;
   }
 
   public async getLabel(): Promise<string> {
