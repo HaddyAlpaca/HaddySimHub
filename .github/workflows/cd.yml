@@ -57,6 +57,7 @@ jobs:
         node-version: ${{ env.node-version }}
     
     - name: Install client app dependencies
+      working-directory: ${{ env.clientapp_folder }}
       run: npm install
 
     - name: Build client app
