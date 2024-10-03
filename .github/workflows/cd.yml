@@ -58,7 +58,6 @@ jobs:
     
     - name: Install client app dependencies
       working-directory: ${{ env.clientapp_folder }}
-      run: npm install
       run: |
         Remove-Item package-lock.json
         Remove-Item './node_modules/' -Recurse
