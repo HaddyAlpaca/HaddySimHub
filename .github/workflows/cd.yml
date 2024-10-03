@@ -64,6 +64,7 @@ jobs:
       working-directory: ${{ env.clientapp_folder }}
       run: |
         Remove-Item package-lock.json
+        Remove-Item ./src/node_modules
         npm run build --omit=dev
 
     - name: Copy client app  to distribution folder
