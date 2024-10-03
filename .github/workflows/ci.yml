@@ -1,31 +1,61 @@
 name: CI
 
 on:
+  workflow_dispatch:
+  workflow_call:
   pull_request:
     branches: [main]
 
 jobs:
- build:
-    runs-on: windows-latest
+ server-tests:
+  name: Server tests
+  runs-on: windows-latest
 
-    env:
-      solution_file: ./src/HaddySimHub.sln
-      dotnet_version: '8.0.100'
+  env:
+    solution_file: ./src/HaddySimHub.sln
+    dotnet_version: '8.0.100'
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+  steps:
+  - name: Checkout
+    uses: actions/checkout@v4
 
-    - name: Install .NET Core
-      uses: actions/setup-dotnet@v3
+  - name: Install .NET Core
+    uses: actions/setup-dotnet@v4
+    with:
+      dotnet-version: ${{ env.dotnet_version }}
+
+  - name: Restore dependencies
+    run:  dotnet restore ${{ env.solution_file }}
+  
+  - name: Build
+    run:  dotnet build ${{ env.solution_file }} --no-restore
+  
+  - name: Test
+    run:  dotnet test ${{ env.solution_file }} --no-build
+
+ clientapp-tests:
+  name: Frontend tests
+  runs-on: ubuntu-latest
+  defaults:
+    run:
+      working-directory: ./src/ClientApp/src
+  env:
+    node-version: 20
+
+  steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Node.js
+      uses: actions/setup-node@v4
       with:
-        dotnet-version: ${{ env.dotnet_version }}
+        node-version: ${{ env.node-version }}
 
-    - name: Restore dependencies
-      run:  dotnet restore ${{ env.solution_file }}
+    - name: Install dependencies
+      run: npm install
     
-    - name: Build
-      run:  dotnet build ${{ env.solution_file }} --no-restore
-    
-    - name: Test
-      run:  dotnet test ${{ env.solution_file }} --no-build
+    - name: Lint
+      run: npm run lint
+
+    - name: Run tests
+      run: npm run test_ci
+

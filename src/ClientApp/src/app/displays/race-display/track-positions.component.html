@@ -1,0 +1,7 @@
+<div class="tracker">
+  <div class="center-line"></div>
+
+  @for(position of positions(); track $index) {
+    <div class="track-item" [style.left.%]="position.lapDistPct"></div>
+  }
+</div>

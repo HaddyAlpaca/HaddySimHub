@@ -29,7 +29,7 @@ public sealed class IRacingGame : Game
 
     public override string Description => "IRacing";
 
-    public override string ProcessName => "iracingui";
+    protected override string _processName => "iracingui";
 
     protected override Func<object, DisplayUpdate> GetDisplayUpdate => Dashboard.GetDisplayUpdate;
 }

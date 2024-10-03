@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text.Json;
 using HaddySimHub.GameData;
 using HaddySimHub.Logging;
@@ -16,9 +17,16 @@ public abstract class Game
 
     public abstract string Description { get; }
 
-    public abstract string ProcessName { get; }
+    public bool IsRunning => this.IsGameRunning();
+
+    protected abstract string _processName { get; }
 
     protected abstract Func<object, DisplayUpdate> GetDisplayUpdate { get; }
+
+    protected virtual bool IsGameRunning()
+    {
+        return Process.GetProcessesByName(this._processName).Length != 0;
+    }
 
     protected void ProcessData(object data)
     {

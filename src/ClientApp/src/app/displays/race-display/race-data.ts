@@ -1,0 +1,40 @@
+import { TrackPosition } from './track-positions.component';
+
+export class RaceData {
+  public sessionType = '';
+  public IsLimitedTime = false;
+  public isLimitedSessionLaps = false;
+  public currentLap = 0;
+  public totalLaps = 0;
+  public sessionTimeRemaining = 0;
+  public position = 0;
+  public speed = 0;
+  public gear = 0;
+  public rpm = 0;
+  public trackTemp = 0;
+  public airTemp = 0;
+  public fuelRemaining = 0;
+  public brakeBias = 0;
+  public strengthOfField = 0;
+  public lastSectorNum = 0;
+  public lastSectorTime = 0;
+  public lastLapTime = 0;
+  public lastLapTimeDelta = 0;
+  public bestLapTime = 0;
+  public bestLapTimeDelta = 0;
+  public driverBehindName = '';
+  public driverBehindLicense = '';
+  public driverBehindLicenseColor = '';
+  public driverBehindIRating = 0;
+  public driverBehindDelta = 0;
+  public driverAheadName = '';
+  public driverAheadLicense = '';
+  public driverAheadLicenseColor = '';
+  public driverAheadIRating = 0;
+  public driverAheadDelta = 0;
+  public pitLimiterOn = false;
+  public incidents = 0;
+  public maxIncidents = 0;
+  public flag: '' | 'yellow' | 'green' | 'blue' | 'white' | 'finish' | 'black' | 'black-orange' | 'red' = '';
+  public trackPositions: TrackPosition[] = [];
+}

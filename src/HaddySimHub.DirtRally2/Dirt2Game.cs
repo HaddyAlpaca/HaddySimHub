@@ -28,7 +28,7 @@ public sealed class Dirt2Game : Game
 
     public override string Description => "Dirt Rally 2";
 
-    public override string ProcessName => "dirtrally2";
+    protected override string _processName => "dirtrally2";
 
     protected override Func<object, DisplayUpdate> GetDisplayUpdate => Dashboard.GetDisplayUpdate;
 

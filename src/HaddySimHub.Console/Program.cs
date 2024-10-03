@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using System.IO.Compression;
-using System.Text.RegularExpressions;
-using HaddySimHub.DirtRally2;
+﻿using HaddySimHub.DirtRally2;
 using HaddySimHub.GameData;
 using HaddySimHub.WebServer;
 using Microsoft.Extensions.Hosting;
@@ -26,8 +23,14 @@ var webServerTask = new Task(async () =>
     // Start the webserver
     webServer.Start(token);
 }, token);
-        
-var processTask = new Task(async () => {
+
+if (args.Contains("--simulate"))
+{
+    logger.Info("Start game simulation...");
+    games = [new SimulateGame()];
+}
+else
+{
     // Setup games
     games =
     [
@@ -35,7 +38,9 @@ var processTask = new Task(async () => {
         new IRacingGame(),
         new Dirt2Game(),
     ];
+}
 
+var processTask = new Task(async () => {
     games.ForEach((game) => {
         game.DisplayUpdate += OnGameDisplayUpdate;
     });
@@ -44,7 +49,7 @@ var processTask = new Task(async () => {
     IEnumerable<Game> currentGames = [];
     while (!token.IsCancellationRequested)
     {
-        var runningGames = games.Where(g => IsProcessRunning(g.ProcessName)).ToList();
+        var runningGames = games.Where(g => g.IsRunning).ToList();
         if (runningGames.Count == 0)
         {
             var update = new DisplayUpdate { Type = DisplayType.None };
@@ -111,7 +116,7 @@ void SetupLogging(bool debug)
         // Setup data logging
         var debugTarget = new FileTarget
         {
-            FileName = "log\\${date:format=yyyy-MM-dd}-${logger}-data.log",
+            FileName = "log/${date:format=yyyy-MM-dd}-${logger}-data.log",
             Layout = @"${message}",
         };
 
@@ -126,7 +131,7 @@ void SetupLogging(bool debug)
     // General
     var fileTarget = new FileTarget
     {
-        FileName = "log\\${date:format=yyyy-MM-dd}.log",
+        FileName = "log/${date:format=yyyy-MM-dd}.log",
         Layout = @"${longdate} ${uppercase:${level}}: ${message}",
     };
 
@@ -144,9 +149,4 @@ async void OnGameDisplayUpdate(object? sender, DisplayUpdate update)
 {
     logger.LogData(update);
     await NotificationService.SendDisplayUpdate(update);
-}
-
-bool IsProcessRunning(string processName)
-{
-    return Process.GetProcessesByName(processName).Length != 0;
 }

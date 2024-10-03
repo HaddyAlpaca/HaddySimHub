@@ -1,0 +1,19 @@
+<div class="header">
+  <app-clock />
+</div>
+<div class="display">
+  @switch (displayUpdate().type) {
+    @case (DisplayType.TruckDashboard) {
+      <app-truck-display [dataSource]="displayUpdate().data" />
+    }
+    @case (DisplayType.RaceDashboard) {
+      <app-race-display [dataSource]="displayUpdate().data" />
+    }
+    @case (DisplayType.RallyDashboard) {
+      <app-rally-display [dataSource]="displayUpdate().data" />
+    }
+    @default {
+      <app-connection-status [status]="connectionStatus()" />
+    }
+  }
+</div>

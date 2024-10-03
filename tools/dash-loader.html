@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dash</title>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <script>
+        $(function() {
+            //Define website to load
+            loadPage("http://sim-rig.local:3333", 2000);
+
+            function loadPage(url, timeout) {
+                $.ajax({
+                    url: url,
+                    dataType: "jsonp",
+                    timeout: timeout,
+                    success: function () {
+                        setSource(url);
+                    },
+                    error: function (parsedjson) {
+                        if(parsedjson.status == "200") {
+                            setSource(url);
+                        } else {
+                            // Error, wait and retry
+                            setTimeout(loadPage(url, timeout), timeout);
+                        }
+                    }
+                });
+            }
+
+            function setSource(url) {
+                $("#content").attr("src", url);
+            }
+        });        
+    </script>
+    <style>
+        html, body {
+            height: 100vh;
+            overflow: hidden;
+            background-color: black;
+            margin: 0;
+        }
+
+        #content {
+            width: 100%;
+            height: 100%;
+            border: none;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <iframe id="content" scrolling="no"></iframe>
+</body>
+</html>

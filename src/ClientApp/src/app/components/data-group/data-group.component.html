@@ -1,0 +1,6 @@
+<div class="group-border" [style.border-color]="borderColor()">
+  @if (title()) {
+    <h1>{{title()}}</h1>
+  }
+  <ng-content />
+</div>

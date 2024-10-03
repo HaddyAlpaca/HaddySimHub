@@ -1,0 +1,9 @@
+<div class="connection-state">{{ connectionStatusDescription() }}</div>
+
+@if (connectionMessage()) {
+  <code class="message">{{ connectionMessage() }}</code>
+}
+
+@if (reloadSeconds()) {
+  <div class="refresh-countdown">Refresing page in {{reloadSeconds()}}...</div>
+}

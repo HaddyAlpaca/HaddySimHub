@@ -1,0 +1,44 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@components/*": ["./src/app/components/*"],
+      "@services/*": ["./src/app/services/*"],
+      "@testing/*": ["./src/app/testing/*"],
+      "@displays/*": ["./src/app/displays/*"]
+    },
+    "module": "ES2022",
+    "outDir": "./dist/out-tsc",
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "target": "ES2022",
+    "typeRoots": [
+      "node_modules/@types",
+      "./src/@types"
+    ],
+    "lib": [
+      "ES2022",
+      "dom"
+    ],
+    "useDefineForClassFields": true
+  },
+  "exclude": [
+    "load/**"
+  ],
+  "angularCompilerOptions": {
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  }
+}

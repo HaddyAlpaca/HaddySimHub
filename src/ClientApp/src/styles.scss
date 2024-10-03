@@ -1,0 +1,16 @@
+/* You can add global styles to this file, and also import other style files */
+html, body {
+  /* min-height: 100vh; */
+  height: auto;
+  margin: 0;
+  background-color: #1e1e2f;
+  overflow: hidden;
+}
+
+app-root {
+  display: block;
+  height: 100%;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
