@@ -62,7 +62,7 @@ jobs:
 
     - name: Build client app
       working-directory: ${{ env.clientapp_folder }}
-      run: npm run build --prod
+      run: npm run build --omit=dev
 
     - name: Copy client app  to distribution folder
       run: |
