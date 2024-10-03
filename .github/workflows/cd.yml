@@ -60,7 +60,7 @@ jobs:
       working-directory: ${{ env.clientapp_folder }}
       run: |
         Remove-Item package-lock.json
-        npm run install
+        npm install
 
     - name: Build client app
       working-directory: ${{ env.clientapp_folder }}
