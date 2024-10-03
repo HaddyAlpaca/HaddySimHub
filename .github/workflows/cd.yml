@@ -23,16 +23,41 @@ jobs:
         shell: pwsh
 
     env:
+      solution_file: ./src/HaddySimHub.sln
+      dotnet_version: '8.0.100'
       dotnet_build_folder: './src/HaddySimHub.Console/bin/Debug/net8.0/'
+      node-version: 20
       clientapp_folder: './src/ClientApp/src'
       dist_folder: './dist'
       RELEASE_VERSION: v0.1.${{github.run_number}}
 
     steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.dotnet_version }}
+
+    - name: Restore server app dependencies
+      run:  dotnet restore ${{ env.solution_file }}
+    
+    - name: Build server app
+      run: dotnet build ${{ env.solution_file }} --no-restore
+
     - name: Copy .Net build result to distribution folder
       run: |
           mkdir ${{ env.dist_folder }}
           Copy-Item ${{ env.dotnet_build_folder }}\* -Destination ${{ env.dist_folder }} -Recurse -Force -Verbose
+
+    - name: Install Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.node-version }}
+    
+    - name: Install client app dependencies
+      run: npm install
 
     - name: Build client app
       working-directory: ${{ env.clientapp_folder }}
