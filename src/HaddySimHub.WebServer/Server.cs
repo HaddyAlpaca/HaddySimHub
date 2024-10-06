@@ -1,6 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
 namespace HaddySimHub.WebServer;
@@ -16,7 +14,6 @@ public class Server(int portNumber = 3333)
             .UseKestrel(options =>
             {
                 options.ListenAnyIP(this.portNumber);
-                options.ListenLocalhost(this.portNumber);
             })
             .UseStartup<Startup>()
             .UseDefaultServiceProvider((builder, options) => { })

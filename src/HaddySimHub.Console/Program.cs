@@ -11,6 +11,7 @@ CancellationTokenSource cancellationTokenSource = new();
 CancellationToken token = cancellationTokenSource.Token;
 IEnumerable<Game> games = [];
 Server webServer = new();
+DisplayUpdate idleDisplayUpdate = new DisplayUpdate { Type = DisplayType.None };
 
 SetupLogging(args.Contains("--debug"));
 
@@ -42,7 +43,7 @@ else
 
 var processTask = new Task(async () => {
     games.ForEach((game) => {
-        game.DisplayUpdate += OnGameDisplayUpdate;
+        game.DisplayUpdate += async (sender, update) => await SendDisplayUpdate(update);
     });
 
     // Monitor processes
@@ -52,9 +53,7 @@ var processTask = new Task(async () => {
         var runningGames = games.Where(g => g.IsRunning).ToList();
         if (runningGames.Count == 0)
         {
-            var update = new DisplayUpdate { Type = DisplayType.None };
-            logger.LogData(update);
-            await NotificationService.SendDisplayUpdate(update);
+            await SendDisplayUpdate(idleDisplayUpdate);
         }
 
         runningGames.Where(g => !currentGames.Any(r => r.Description == g.Description)).ForEach(g => {
@@ -145,8 +144,8 @@ void SetupLogging(bool debug)
     LogManager.Configuration = logConfig;
 }
 
-async void OnGameDisplayUpdate(object? sender, DisplayUpdate update)
+async Task SendDisplayUpdate(DisplayUpdate update)
 {
     logger.LogData(update);
-    await NotificationService.SendDisplayUpdate(update);
+    await GameDataHub.SendDisplayUpdate(update);
 }
