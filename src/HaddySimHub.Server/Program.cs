@@ -5,24 +5,65 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 using HaddySimHub.Server;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Builder;
+using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 
 HaddySimHub.Server.Logging.ILogger logger = new HaddySimHub.Server.Logging.Logger("main");
 CancellationTokenSource cancellationTokenSource = new();
 CancellationToken token = cancellationTokenSource.Token;
 IEnumerable<Game> games = [];
-Server webServer = new();
-DisplayUpdate idleDisplayUpdate = new DisplayUpdate { Type = DisplayType.None };
+DisplayUpdate idleDisplayUpdate = new() { Type = DisplayType.None };
 
 SetupLogging(args.Contains("--debug"));
+WebApplicationOptions options = new()
+{
+    ContentRootPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
+};
 
-var appHost = Host.CreateDefaultBuilder().Build();
+if (options.ContentRootPath is not null)
+{
+    string wwwRoot = Path.Combine(options.ContentRootPath, "wwwroot");
+    if (!Directory.Exists(wwwRoot))
+    {
+        Directory.CreateDirectory(wwwRoot);
+    }
+}
+
+var builder = WebApplication.CreateBuilder(options);
+builder.WebHost.UseKestrel(options =>
+{
+    options.ListenAnyIP(3333);
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .SetIsOriginAllowed(origin => true);
+    });
+});
+builder.Services.AddControllers();
+builder.Services.AddSignalR(o =>
+{
+    o.EnableDetailedErrors = true;
+});
+
+var webServer = builder.Build();
+webServer.UseRouting();
+webServer.UseDefaultFiles();
+webServer.UseStaticFiles();
+webServer.UseCors();
+webServer.MapHub<GameDataHub>("/display-data");
 
 var webServerTask = new Task(async () =>
 {
-    await appHost!.StartAsync();
-
-    // Start the webserver
-    webServer.Start(token);
+    await webServer!.StartAsync(token);
 }, token);
 
 if (args.Contains("--simulate"))
@@ -91,7 +132,7 @@ catch(Exception ex)
     logger.Fatal($"Unhandled Exception: {ex.Message}\n\n{ex.StackTrace}");
 }
 
-appHost.WaitForShutdown();
+webServer.WaitForShutdown();
 cancellationTokenSource.Cancel();
 Task.WaitAll([webServerTask, processTask]);
 
