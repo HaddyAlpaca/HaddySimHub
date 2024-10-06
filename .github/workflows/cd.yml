@@ -25,7 +25,7 @@ jobs:
     env:
       solution_file: ./src/HaddySimHub.sln
       dotnet_version: '8.0.100'
-      dotnet_build_folder: './src/HaddySimHub.Console/bin/Debug/net8.0/'
+      dotnet_build_folder: './src/HaddySimHub.Server/bin/Debug/net8.0/'
       node-version: 20
       clientapp_folder: './src/ClientApp/'
       dist_folder: './dist'
