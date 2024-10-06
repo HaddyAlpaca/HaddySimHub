@@ -1,4 +1,4 @@
-namespace HaddySimHub.DirtRally2;
+namespace HaddySimHub.Server.Games.DirtRally2;
 
 public struct Packet
 {

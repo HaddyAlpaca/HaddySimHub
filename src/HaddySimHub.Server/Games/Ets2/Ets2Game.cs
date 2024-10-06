@@ -1,6 +1,8 @@
-using HaddySimHub.GameData;
+using HaddySimHub.Server.Models;
 using SCSSdkClient;
 using SCSSdkClient.Object;
+
+namespace HaddySimHub.Server.Games.Ets2;
 
 public sealed class Ets2Game : Game
 {

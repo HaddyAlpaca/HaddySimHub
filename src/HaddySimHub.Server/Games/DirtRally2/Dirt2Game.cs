@@ -1,9 +1,9 @@
 ﻿using System.Net.Sockets;
 using System.Net;
 using System.Runtime.InteropServices;
-using HaddySimHub.GameData;
+using HaddySimHub.Server.Models;
 
-namespace HaddySimHub.DirtRally2;
+namespace HaddySimHub.Server.Games.DirtRally2;
 
 public sealed class Dirt2Game : Game
 {
@@ -52,7 +52,7 @@ public sealed class Dirt2Game : Game
         }
         catch
         {
-            Console.WriteLine("Failed to receive Dirt Rally 2 packet.");
+            this._logger.Error("Failed to receive Dirt Rally 2 packet.");
         }
         finally
         {

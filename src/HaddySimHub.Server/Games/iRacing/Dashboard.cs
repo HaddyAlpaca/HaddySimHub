@@ -1,7 +1,7 @@
-using HaddySimHub.GameData;
-using HaddySimHub.GameData.Models;
-using HaddySimHub.Logging;
+using HaddySimHub.Server.Models;
 using iRacingSDK;
+
+namespace HaddySimHub.Server.Games.iRacing;
 
 internal static class Dashboard
 {

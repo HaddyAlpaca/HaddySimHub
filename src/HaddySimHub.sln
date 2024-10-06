@@ -3,23 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HaddySimHub.Console", "HaddySimHub.Console\HaddySimHub.Console.csproj", "{4D5C7470-E2DB-4233-89E5-09E145DA5378}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HaddySimHub.Ets2", "HaddySimHub.Ets2\HaddySimHub.Ets2.csproj", "{8BDD4779-A7E3-49E6-BD1E-31999650F6A1}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HaddySimHub.GameData", "HaddySimHub.GameData\HaddySimHub.GameData.csproj", "{0744FBC0-EF69-49CE-A246-2851928A7C7D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HaddySimHub.Server", "HaddySimHub.Server\HaddySimHub.Server.csproj", "{4D5C7470-E2DB-4233-89E5-09E145DA5378}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCSSdkClient", "SCSSdkClient\SCSSdkClient.csproj", "{84A64D07-8BC6-41AF-A337-019268C073CF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iRacingSDK.Net", "iRacingSDK.Net\iRacingSDK.Net.csproj", "{9BA3407D-0295-4196-851E-8DB3E522178A}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HaddySimHub.iRacing", "HaddySimHub.iRacing\HaddySimHub.iRacing.csproj", "{B9CAB647-1497-4474-9C2F-E7B6FBCD1DFD}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HaddySimHub.Logging", "HaddySimHub.Logging\HaddySimHub.Logging.csproj", "{7656E767-84D6-4EA5-91A3-5B55B3FB1AB2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HaddySimHub.DirtRally2", "HaddySimHub.DirtRally2\HaddySimHub.DirtRally2.csproj", "{D1C07013-A48F-4BC6-AB95-36F13794F031}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HaddySimHub.WebServer", "HaddySimHub.WebServer\HaddySimHub.WebServer.csproj", "{0863B993-F588-442B-950A-6E5934A47625}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,14 +19,6 @@ Global
 		{4D5C7470-E2DB-4233-89E5-09E145DA5378}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D5C7470-E2DB-4233-89E5-09E145DA5378}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D5C7470-E2DB-4233-89E5-09E145DA5378}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8BDD4779-A7E3-49E6-BD1E-31999650F6A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8BDD4779-A7E3-49E6-BD1E-31999650F6A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8BDD4779-A7E3-49E6-BD1E-31999650F6A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8BDD4779-A7E3-49E6-BD1E-31999650F6A1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0744FBC0-EF69-49CE-A246-2851928A7C7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0744FBC0-EF69-49CE-A246-2851928A7C7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0744FBC0-EF69-49CE-A246-2851928A7C7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0744FBC0-EF69-49CE-A246-2851928A7C7D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{84A64D07-8BC6-41AF-A337-019268C073CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{84A64D07-8BC6-41AF-A337-019268C073CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84A64D07-8BC6-41AF-A337-019268C073CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -47,26 +27,6 @@ Global
 		{9BA3407D-0295-4196-851E-8DB3E522178A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BA3407D-0295-4196-851E-8DB3E522178A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BA3407D-0295-4196-851E-8DB3E522178A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B9CAB647-1497-4474-9C2F-E7B6FBCD1DFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B9CAB647-1497-4474-9C2F-E7B6FBCD1DFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B9CAB647-1497-4474-9C2F-E7B6FBCD1DFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B9CAB647-1497-4474-9C2F-E7B6FBCD1DFD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7656E767-84D6-4EA5-91A3-5B55B3FB1AB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7656E767-84D6-4EA5-91A3-5B55B3FB1AB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7656E767-84D6-4EA5-91A3-5B55B3FB1AB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7656E767-84D6-4EA5-91A3-5B55B3FB1AB2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D1C07013-A48F-4BC6-AB95-36F13794F031}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D1C07013-A48F-4BC6-AB95-36F13794F031}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D1C07013-A48F-4BC6-AB95-36F13794F031}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D1C07013-A48F-4BC6-AB95-36F13794F031}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C9A53DC7-802E-48F3-82F3-45F8923F4B88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C9A53DC7-802E-48F3-82F3-45F8923F4B88}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C9A53DC7-802E-48F3-82F3-45F8923F4B88}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C9A53DC7-802E-48F3-82F3-45F8923F4B88}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0863B993-F588-442B-950A-6E5934A47625}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0863B993-F588-442B-950A-6E5934A47625}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0863B993-F588-442B-950A-6E5934A47625}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0863B993-F588-442B-950A-6E5934A47625}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

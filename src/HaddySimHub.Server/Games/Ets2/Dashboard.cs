@@ -1,6 +1,7 @@
-using HaddySimHub.GameData;
-using HaddySimHub.GameData.Models;
+using HaddySimHub.Server.Models;
 using SCSSdkClient.Object;
+
+namespace HaddySimHub.Server.Games.Ets2;
 
 internal static class Dashboard
 {

@@ -1,4 +1,6 @@
-using HaddySimHub.GameData;
+using HaddySimHub.Server.Models;
+
+namespace HaddySimHub.Server.Games.iRacing;
 
 public sealed class IRacingGame : Game
 {

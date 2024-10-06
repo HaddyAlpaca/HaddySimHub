@@ -1,7 +1,9 @@
 using System.Diagnostics;
 using System.Text.Json;
-using HaddySimHub.GameData;
-using HaddySimHub.Logging;
+using HaddySimHub.Server.Logging;
+using HaddySimHub.Server.Models;
+
+namespace HaddySimHub.Server.Games;
 
 public abstract class Game
 {

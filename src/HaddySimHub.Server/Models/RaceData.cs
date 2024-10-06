@@ -1,4 +1,4 @@
-﻿namespace HaddySimHub.GameData.Models;
+﻿namespace HaddySimHub.Server.Models;
 
 public sealed record RaceData
 {

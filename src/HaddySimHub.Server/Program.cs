@@ -1,4 +1,4 @@
-﻿using HaddySimHub.DirtRally2;
+﻿using HaddySimHub.Server.GameData;
 using HaddySimHub.GameData;
 using HaddySimHub.WebServer;
 using Microsoft.Extensions.Hosting;
@@ -6,7 +6,7 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 
-HaddySimHub.Logging.ILogger logger = new HaddySimHub.Logging.Logger("main");
+HaddySimHub.Server.Logging.ILogger logger = new HaddySimHub.Server.Logging.Logger("main");
 CancellationTokenSource cancellationTokenSource = new();
 CancellationToken token = cancellationTokenSource.Token;
 IEnumerable<Game> games = [];

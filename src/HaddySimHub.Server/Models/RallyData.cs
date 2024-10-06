@@ -1,4 +1,4 @@
-namespace HaddySimHub.GameData.Models;
+namespace HaddySimHub.Server.Models;
 
 public sealed record RallyData
 {
@@ -17,7 +17,7 @@ public sealed record RallyData
 
     public int Brake { get; init; }
 
-    public int Throttle { get; init;}
+    public int Throttle { get; init; }
 
     public int DistanceTravelled { get; init; }
 

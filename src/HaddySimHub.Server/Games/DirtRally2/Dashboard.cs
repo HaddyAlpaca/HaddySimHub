@@ -1,7 +1,6 @@
-using HaddySimHub.GameData;
-using HaddySimHub.GameData.Models;
+using HaddySimHub.Server.Models;
 
-namespace HaddySimHub.DirtRally2;
+namespace HaddySimHub.Server.Games.DirtRally2;
 
 internal static class Dashboard
 {

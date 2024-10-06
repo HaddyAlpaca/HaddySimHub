@@ -1,4 +1,4 @@
-namespace HaddySimHub.GameData;
+namespace HaddySimHub.Server.Models;
 
 public sealed record DisplayUpdate
 {
