@@ -1,5 +1,6 @@
 using System.Diagnostics;
-using HaddySimHub.GameData;
+using HaddySimHub.Server.Models;
+using HaddySimHub.Server.Games;
 
 internal class SimulateGame : Game
 {

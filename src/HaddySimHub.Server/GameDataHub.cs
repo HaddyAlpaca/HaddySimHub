@@ -1,7 +1,7 @@
-﻿using HaddySimHub.GameData;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
+using HaddySimHub.Server.Models;
 
-namespace HaddySimHub.WebServer;
+namespace HaddySimHub.Server;
 
 public class GameDataHub : Hub
 {

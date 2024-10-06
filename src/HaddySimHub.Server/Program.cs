@@ -1,10 +1,10 @@
-﻿using HaddySimHub.Server.GameData;
-using HaddySimHub.GameData;
-using HaddySimHub.WebServer;
+﻿using HaddySimHub.Server.Models;
+using HaddySimHub.Server.Games;
 using Microsoft.Extensions.Hosting;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
+using HaddySimHub.Server;
 
 HaddySimHub.Server.Logging.ILogger logger = new HaddySimHub.Server.Logging.Logger("main");
 CancellationTokenSource cancellationTokenSource = new();
@@ -35,9 +35,9 @@ else
     // Setup games
     games =
     [
-        new Ets2Game(),
-        new IRacingGame(),
-        new Dirt2Game(),
+        new HaddySimHub.Server.Games.Ets2.Ets2Game(),
+        new HaddySimHub.Server.Games.iRacing.IRacingGame(),
+        new HaddySimHub.Server.Games.DirtRally2.Dirt2Game(),
     ];
 }
 

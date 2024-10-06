@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-namespace HaddySimHub.WebServer;
+namespace HaddySimHub.Server;
 
 public class Server(int portNumber = 3333)
 {
