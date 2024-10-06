@@ -69,7 +69,7 @@ jobs:
     - name: Copy client app  to distribution folder
       run: |
         mkdir ${{ env.dist_folder }}\wwwroot
-        Copy-Item ${{ env.clientapp_folder }}\dist\* -Destination ${{ env.dist_folder }}\wwwroot -Recurse -Force -Verbose
+        Copy-Item ${{ env.clientapp_folder }}dist/haddy-sim-hub-client/browser/* -Destination ${{ env.dist_folder }}\wwwroot -Recurse -Force -Verbose
 
     - name: Zip build result
       run: Compress-Archive -Path ${{ env.dist_folder }}/* -Destination haddy-simhub.zip
