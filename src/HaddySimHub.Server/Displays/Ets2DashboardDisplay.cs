@@ -1,11 +1,36 @@
 using HaddySimHub.Server.Models;
+using SCSSdkClient;
 using SCSSdkClient.Object;
 
-namespace HaddySimHub.Server.Games.Ets2;
+namespace HaddySimHub.Server.Displays;
 
-internal static class Dashboard
+internal sealed class Ets2DashboardDisplay : DisplayBase
 {
-    public static DisplayUpdate GetDisplayUpdate(object inputData)
+    private SCSSdkTelemetry? telemetry;
+
+    public Ets2DashboardDisplay(Func<object, Func<object, DisplayUpdate>, Task> receivedDataCallBack) : base(receivedDataCallBack)
+    {
+    }
+
+    public override void Start() {
+        this.telemetry = new ();
+        this.telemetry.Data += (SCSTelemetry data, bool newTimestamp) =>
+        {
+            this._receivedDataCallBack(data, GetDisplayUpdate);
+        };
+    }
+
+    public override void Stop()
+    {
+        this.telemetry?.Dispose();
+        this.telemetry = null;
+    }
+
+    public override string Description => "Euro Truck Simulator 2";
+
+    public override bool IsActive => Functions.IsProcessRunning("eurotrucks2");
+
+    private static DisplayUpdate GetDisplayUpdate(object inputData)
     {
         var typedRawData = (SCSTelemetry)inputData;
 

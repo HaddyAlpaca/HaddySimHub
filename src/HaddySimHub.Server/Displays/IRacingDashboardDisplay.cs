@@ -1,11 +1,31 @@
 using HaddySimHub.Server.Models;
 using iRacingSDK;
 
-namespace HaddySimHub.Server.Games.iRacing;
+namespace HaddySimHub.Server.Displays;
 
-internal static class Dashboard
+internal sealed class IRacingDashboardDisplay : DisplayBase
 {
-    public static DisplayUpdate GetDisplayUpdate(object inputData) 
+    public IRacingDashboardDisplay(Func<object, Func<object, DisplayUpdate>, Task> receivedDataCallBack) : base(receivedDataCallBack)
+    {
+    }
+
+    public override void Start()
+    {
+        iRacingSDK.iRacing.NewData += (data) => this._receivedDataCallBack(data, GetDisplayUpdate);
+        iRacingSDK.iRacing.StartListening();
+    }
+
+    public override void Stop()
+    {
+        if (iRacingSDK.iRacing.IsConnected) {
+            iRacingSDK.iRacing.StopListening();
+        }
+    }
+
+    public override string Description => "IRacing";
+    public override bool IsActive => Functions.IsProcessRunning("iracingui") && iRacingSDK.iRacing.IsConnected;
+
+    private static DisplayUpdate GetDisplayUpdate(object inputData) 
     {
         var dataSample = (DataSample)inputData;
         var telemetry = dataSample.Telemetry;
