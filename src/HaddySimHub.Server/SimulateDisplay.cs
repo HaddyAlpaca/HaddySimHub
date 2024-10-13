@@ -1,7 +1,7 @@
-using HaddySimHub.Server.Models;
 using HaddySimHub.Server.Displays;
+using HaddySimHub.Server.Models;
 
-internal class SimulateDisplay : DisplayBase
+internal class SimulateDisplay : DisplayBase<DisplayUpdate>
 {
     private readonly FileSystemWatcher _watcher;
 
@@ -9,7 +9,7 @@ internal class SimulateDisplay : DisplayBase
 
     public override bool IsActive { get; }
 
-    public SimulateDisplay(Func<object, Func<object, DisplayUpdate>, Task> receivedDataCallBack) : base(receivedDataCallBack)
+    public SimulateDisplay(Func<DisplayUpdate, Task> updateDisplay) : base(updateDisplay)
     {
         string processFolder = Path.GetDirectoryName(Environment.ProcessPath) ?? throw new DirectoryNotFoundException("Process folder cannot be determined");
 
@@ -23,4 +23,6 @@ internal class SimulateDisplay : DisplayBase
 
     public override void Start() => this._watcher.EnableRaisingEvents = true;
     public override void Stop() => this._watcher.EnableRaisingEvents = false;
+
+    protected override DisplayUpdate ConvertToDisplayUpdate(DisplayUpdate data) => data;
 }

@@ -3,34 +3,33 @@ using iRacingSDK;
 
 namespace HaddySimHub.Server.Displays;
 
-internal sealed class IRacingDashboardDisplay : DisplayBase
+internal sealed class IRacingDashboardDisplay : DisplayBase<DataSample>
 {
-    public IRacingDashboardDisplay(Func<object, Func<object, DisplayUpdate>, Task> receivedDataCallBack) : base(receivedDataCallBack)
+    public IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDisplay) : base(updateDisplay)
     {
     }
 
     public override void Start()
     {
-        iRacingSDK.iRacing.NewData += (data) => this._receivedDataCallBack(data, GetDisplayUpdate);
-        iRacingSDK.iRacing.StartListening();
+        iRacing.NewData += (data) => this._updateDisplay(this.ConvertToDisplayUpdate(data));
+        iRacing.StartListening();
     }
 
     public override void Stop()
     {
-        if (iRacingSDK.iRacing.IsConnected) {
-            iRacingSDK.iRacing.StopListening();
+        if (iRacing.IsConnected) {
+            iRacing.StopListening();
         }
     }
 
     public override string Description => "IRacing";
     public override bool IsActive => Functions.IsProcessRunning("iracingui") && iRacingSDK.iRacing.IsConnected;
 
-    private static DisplayUpdate GetDisplayUpdate(object inputData) 
+    protected override DisplayUpdate ConvertToDisplayUpdate(DataSample data)
     {
-        var dataSample = (DataSample)inputData;
-        var telemetry = dataSample.Telemetry;
+        var telemetry = data.Telemetry;
 
-        var sessionData = dataSample.SessionData;
+        var sessionData = data.SessionData;
         var session = sessionData.SessionInfo.Sessions.First(s => s.SessionNum == telemetry.SessionNum);
 
         Car? carBehind = null;
@@ -57,7 +56,7 @@ internal sealed class IRacingDashboardDisplay : DisplayBase
                     TrackPositionStatus.SameLap,
             }).ToArray();
 
-        var data = new RaceData
+        var displayUpdate = new RaceData
         {
             SessionType = session.SessionType,
             IsLimitedTime = session.IsLimitedTime,
@@ -96,7 +95,7 @@ internal sealed class IRacingDashboardDisplay : DisplayBase
             TrackPositions = trackPositions,
         };
 
-        return new DisplayUpdate{ Type = DisplayType.RaceDashboard, Data = data };
+        return new DisplayUpdate{ Type = DisplayType.RaceDashboard, Data = displayUpdate };
     }
 
     private static string GetFlag(SessionFlags sessionFlags)
