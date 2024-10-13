@@ -1,5 +1,4 @@
 ﻿using HaddySimHub.Server.Models;
-using HaddySimHub.Server.Games;
 using Microsoft.Extensions.Hosting;
 using NLog;
 using NLog.Config;
@@ -9,12 +8,15 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json;
+using HaddySimHub.Server.Displays;
 
 HaddySimHub.Server.Logging.ILogger logger = new HaddySimHub.Server.Logging.Logger("main");
 CancellationTokenSource cancellationTokenSource = new();
 CancellationToken token = cancellationTokenSource.Token;
-IEnumerable<Game> games = [];
+IEnumerable<DisplayBase> displays = [];
 DisplayUpdate idleDisplayUpdate = new() { Type = DisplayType.None };
+JsonSerializerOptions serializeOptions = new() { IncludeFields = true };
 
 SetupLogging(args.Contains("--debug"));
 WebApplicationOptions options = new()
@@ -68,56 +70,54 @@ var webServerTask = new Task(async () =>
 
 if (args.Contains("--simulate"))
 {
-    logger.Info("Start game simulation...");
-    games = [new SimulateGame()];
+    logger.Info("Start display simulation...");
+    displays = [new SimulateDisplay(ProcessReceivedData)];
 }
 else
 {
-    // Setup games
-    games =
+    // Setup display
+    displays =
     [
-        new HaddySimHub.Server.Games.Ets2.Ets2Game(),
-        new HaddySimHub.Server.Games.iRacing.IRacingGame(),
-        new HaddySimHub.Server.Games.DirtRally2.Dirt2Game(),
+        new HaddySimHub.Server.Displays.Dirt2DashboardDisplay(ProcessReceivedData),
+        new HaddySimHub.Server.Displays.IRacingDashboardDisplay(ProcessReceivedData),
+        new HaddySimHub.Server.Displays.Ets2DashboardDisplay(ProcessReceivedData),
     ];
 }
 
 var processTask = new Task(async () => {
-    games.ForEach((game) => {
-        game.DisplayUpdate += async (sender, update) => await SendDisplayUpdate(update);
-    });
-
     // Monitor processes
-    IEnumerable<Game> currentGames = [];
+    IEnumerable<DisplayBase> prevActiveDisplays = [];
     while (!token.IsCancellationRequested)
     {
-        var runningGames = games.Where(g => g.IsRunning).ToList();
-        if (runningGames.Count == 0)
+        var activeDisplays = displays.Where(d => d.IsActive).ToList();
+        if (activeDisplays.Count == 0)
         {
             await SendDisplayUpdate(idleDisplayUpdate);
         }
 
-        runningGames.Where(g => !currentGames.Any(r => r.Description == g.Description)).ForEach(g => {
+        activeDisplays.Where(g => !activeDisplays.Any(x => x.Description == g.Description)).ForEach(d => {
             try
             {
-                g.Start();
+                logger.Info($"Start receiving data from {d.Description}");
+                d.Start();
             }
             catch (Exception ex)
             {
-                logger.Error($"Error starting datafeed of game {g.Description}: {ex.Message}\n\n{ex.StackTrace}");
+                logger.Error($"Error starting datafeed of game {d.Description}: {ex.Message}\n\n{ex.StackTrace}");
             }
         });
-        currentGames.Where(g => !runningGames.Any(c => c.Description == g.Description)).ForEach(g => {
+        activeDisplays.Where(g => !activeDisplays.Any(x => x.Description == g.Description)).ForEach(d => {
             try
             {
-                g.Stop();
+                logger.Info($"Stop receiving data from {d.Description}");
+                d.Stop();
             }
             catch (Exception ex)
             {
-                logger.Error($"Error stoping datafeed of game {g.Description}: {ex.Message}\n\n{ex.StackTrace}");
+                logger.Error($"Error stoping datafeed of game {d.Description}: {ex.Message}\n\n{ex.StackTrace}");
             }
         });
-        currentGames = runningGames;
+        prevActiveDisplays = activeDisplays;
         await Task.Delay(TimeSpan.FromSeconds(2));
     }
 }, token);
@@ -189,4 +189,20 @@ async Task SendDisplayUpdate(DisplayUpdate update)
 {
     logger.LogData(update);
     await GameDataHub.SendDisplayUpdate(update);
+}
+
+async Task ProcessReceivedData(object data, Func<object, DisplayUpdate> transformer)
+{
+    logger.LogData(JsonSerializer.Serialize(data, serializeOptions));
+
+    try
+    {
+        var update = transformer(data);
+        logger.LogData(update);
+        await GameDataHub.SendDisplayUpdate(update);
+    }
+    catch (Exception ex)
+    {
+        logger.Error($"Error processing data: {ex.Message}\n\n{ex.StackTrace}");
+    }
 }
