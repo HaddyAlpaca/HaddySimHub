@@ -5,6 +5,6 @@
     "types": ["jest"]
   },
   "include": [
-    "src/app/**/*.spec.ts"
+    "src/**/*.spec.ts"
   ]
 }

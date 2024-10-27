@@ -60,7 +60,6 @@
     "@angular/compiler-cli": "^18.2.7",
     "@eslint/compat": "^1.2.0",
     "@ngrx/eslint-plugin": "18.0.2",
-    "@playwright/test": "^1.47.2",
     "@stylistic/eslint-plugin-ts": "2.9.0",
     "@types/jest": "^29.5.13",
     "@types/node": "^22.7.4",
