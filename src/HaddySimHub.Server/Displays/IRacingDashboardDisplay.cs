@@ -1,16 +1,35 @@
 using HaddySimHub.Server.Models;
 using iRacingSDK;
 
-namespace HaddySimHub.Server.Games.iRacing;
+namespace HaddySimHub.Server.Displays;
 
-internal static class Dashboard
+internal sealed class IRacingDashboardDisplay : DisplayBase<DataSample>
 {
-    public static DisplayUpdate GetDisplayUpdate(object inputData) 
+    public IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDisplay) : base(updateDisplay)
     {
-        var dataSample = (DataSample)inputData;
-        var telemetry = dataSample.Telemetry;
+    }
 
-        var sessionData = dataSample.SessionData;
+    public override void Start()
+    {
+        iRacing.NewData += (data) => this._updateDisplay(this.ConvertToDisplayUpdate(data));
+        iRacing.StartListening();
+    }
+
+    public override void Stop()
+    {
+        if (iRacing.IsConnected) {
+            iRacing.StopListening();
+        }
+    }
+
+    public override string Description => "IRacing";
+    public override bool IsActive => Functions.IsProcessRunning("iracingui") && iRacingSDK.iRacing.IsConnected;
+
+    protected override DisplayUpdate ConvertToDisplayUpdate(DataSample data)
+    {
+        var telemetry = data.Telemetry;
+
+        var sessionData = data.SessionData;
         var session = sessionData.SessionInfo.Sessions.First(s => s.SessionNum == telemetry.SessionNum);
 
         Car? carBehind = null;
@@ -37,7 +56,7 @@ internal static class Dashboard
                     TrackPositionStatus.SameLap,
             }).ToArray();
 
-        var data = new RaceData
+        var displayUpdate = new RaceData
         {
             SessionType = session.SessionType,
             IsLimitedTime = session.IsLimitedTime,
@@ -76,7 +95,7 @@ internal static class Dashboard
             TrackPositions = trackPositions,
         };
 
-        return new DisplayUpdate{ Type = DisplayType.RaceDashboard, Data = data };
+        return new DisplayUpdate{ Type = DisplayType.RaceDashboard, Data = displayUpdate };
     }
 
     private static string GetFlag(SessionFlags sessionFlags)

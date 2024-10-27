@@ -23,9 +23,8 @@ jobs:
         shell: pwsh
 
     env:
-      solution_file: ./src/HaddySimHub.sln
+      server_app_path: ./src/HaddySimHub.Server
       dotnet_version: '8.0.100'
-      dotnet_build_folder: './src/HaddySimHub.Server/bin/Debug/net8.0/'
       node-version: 20
       clientapp_folder: './src/ClientApp/'
       dist_folder: './dist'
@@ -40,16 +39,8 @@ jobs:
       with:
         dotnet-version: ${{ env.dotnet_version }}
 
-    - name: Restore server app dependencies
-      run:  dotnet restore ${{ env.solution_file }}
-    
-    - name: Build server app
-      run: dotnet build ${{ env.solution_file }} --no-restore
-
-    - name: Copy .Net build result to distribution folder
-      run: |
-          mkdir ${{ env.dist_folder }}
-          Copy-Item ${{ env.dotnet_build_folder }}\* -Destination ${{ env.dist_folder }} -Recurse -Force -Verbose
+    - name: Publish server app
+      run: dotnet publish ${{ env.server_app_path }} -r win-x64 --self-contained true -p:PublishDir=${{env.dist_folder}}
 
     - name: Install Node.js
       uses: actions/setup-node@v4
