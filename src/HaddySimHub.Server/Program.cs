@@ -68,7 +68,6 @@ var webServerTask = new Task(async () =>
 
 if (args.Contains("--simulate"))
 {
-    logger.Info("Start game simulation...");
     games = [new SimulateGame()];
 }
 else

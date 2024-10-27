@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using HaddySimHub.Server.Models;
 using HaddySimHub.Server.Games;
 
@@ -22,11 +21,13 @@ internal class SimulateGame : Game
     public SimulateGame() : base()
     {
         string processFolder = Path.GetDirectoryName(Environment.ProcessPath) ?? throw new DirectoryNotFoundException("Process folder cannot be determined");
+        string updatesFile = "display_update.json";
+        this._logger.Info($"Start monitoring '{Path.Combine(processFolder, updatesFile)}' for display updates.");
 
         this._watcher = new FileSystemWatcher
         {
             Path = processFolder,
-            Filter = "display-update.json",
+            Filter = updatesFile,
             NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite | NotifyFilters.CreationTime
         };
     }
