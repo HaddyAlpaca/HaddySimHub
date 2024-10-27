@@ -4,19 +4,15 @@ using SCSSdkClient.Object;
 
 namespace HaddySimHub.Server.Displays;
 
-internal sealed class Ets2DashboardDisplay : DisplayBase
+internal sealed class Ets2DashboardDisplay : DisplayBase<SCSTelemetry>
 {
     private SCSSdkTelemetry? telemetry;
-
-    public Ets2DashboardDisplay(Func<object, Func<object, DisplayUpdate>, Task> receivedDataCallBack) : base(receivedDataCallBack)
-    {
-    }
 
     public override void Start() {
         this.telemetry = new ();
         this.telemetry.Data += (SCSTelemetry data, bool newTimestamp) =>
         {
-            this._receivedDataCallBack(data, GetDisplayUpdate);
+            this._updateDisplay(this.ConvertToDisplayUpdate(data));
         };
     }
 
@@ -30,77 +26,79 @@ internal sealed class Ets2DashboardDisplay : DisplayBase
 
     public override bool IsActive => Functions.IsProcessRunning("eurotrucks2");
 
-    private static DisplayUpdate GetDisplayUpdate(object inputData)
+    public Ets2DashboardDisplay(Func<DisplayUpdate, Task> updateDisplay) : base(updateDisplay)
     {
-        var typedRawData = (SCSTelemetry)inputData;
+    }
 
-        var data = new TruckData()
+    protected override DisplayUpdate ConvertToDisplayUpdate(SCSTelemetry data)
+    {
+        var displayData = new TruckData()
         {
             // Navigation info
-            SourceCity = typedRawData.JobValues.CitySource,
-            SourceCompany = typedRawData.JobValues.CompanySource,
-            DestinationCity = typedRawData.JobValues.CityDestination,
-            DestinationCompany = typedRawData.JobValues.CompanyDestination,
-            DistanceRemaining = (int)Math.Round(Math.Max(typedRawData.NavigationValues.NavigationDistance, 0) / 1000),
-            TimeRemaining = (int)Math.Round(Math.Max(typedRawData.NavigationValues.NavigationTime, 0) / 60),
-            TimeRemainingIrl = (int)Math.Round(Math.Max(typedRawData.NavigationValues.NavigationTime, 0) / 60 / typedRawData.CommonValues.Scale),
-            RestTimeRemaining = Math.Max(typedRawData.CommonValues.NextRestStop.Value, 0),
-            RestTimeRemainingIrl = (int)Math.Round(Math.Max(typedRawData.CommonValues.NextRestStop.Value, 0) / typedRawData.CommonValues.Scale),
+            SourceCity = data.JobValues.CitySource,
+            SourceCompany = data.JobValues.CompanySource,
+            DestinationCity = data.JobValues.CityDestination,
+            DestinationCompany = data.JobValues.CompanyDestination,
+            DistanceRemaining = (int)Math.Round(Math.Max(data.NavigationValues.NavigationDistance, 0) / 1000),
+            TimeRemaining = (int)Math.Round(Math.Max(data.NavigationValues.NavigationTime, 0) / 60),
+            TimeRemainingIrl = (int)Math.Round(Math.Max(data.NavigationValues.NavigationTime, 0) / 60 / data.CommonValues.Scale),
+            RestTimeRemaining = Math.Max(data.CommonValues.NextRestStop.Value, 0),
+            RestTimeRemainingIrl = (int)Math.Round(Math.Max(data.CommonValues.NextRestStop.Value, 0) / data.CommonValues.Scale),
 
             // Job info
-            JobTimeRemaining = Math.Max(typedRawData.JobValues.RemainingDeliveryTime.Value, 0),
-            JobTimeRemainingIrl = (long)Math.Round(Math.Max(typedRawData.JobValues.RemainingDeliveryTime.Value, 0) / typedRawData.CommonValues.Scale),
-            JobIncome = typedRawData.JobValues.Income,
-            JobCargoName = typedRawData.JobValues.CargoValues.Name,
-            JobCargoMass = (int)Math.Ceiling(typedRawData.JobValues.CargoValues.Mass),
-            JobCargoDamage = (int)Math.Round(typedRawData.JobValues.CargoValues.CargoDamage * 100),
+            JobTimeRemaining = Math.Max(data.JobValues.RemainingDeliveryTime.Value, 0),
+            JobTimeRemainingIrl = (long)Math.Round(Math.Max(data.JobValues.RemainingDeliveryTime.Value, 0) / data.CommonValues.Scale),
+            JobIncome = data.JobValues.Income,
+            JobCargoName = data.JobValues.CargoValues.Name,
+            JobCargoMass = (int)Math.Ceiling(data.JobValues.CargoValues.Mass),
+            JobCargoDamage = (int)Math.Round(data.JobValues.CargoValues.CargoDamage * 100),
 
             // Damage
-            DamageTruckCabin = (int)Math.Round(typedRawData.TruckValues.CurrentValues.DamageValues.Cabin * 100),
-            DamageTruckWheels = (int)Math.Round(typedRawData.TruckValues.CurrentValues.DamageValues.WheelsAvg * 100),
-            DamageTruckTransmission = (int)Math.Round(typedRawData.TruckValues.CurrentValues.DamageValues.Transmission * 100),
-            DamageTruckEngine = (int)Math.Round(typedRawData.TruckValues.CurrentValues.DamageValues.Engine * 100),
-            DamageTruckChassis = (int)Math.Round(typedRawData.TruckValues.CurrentValues.DamageValues.Chassis * 100),
-            DamageTrailerChassis = (int)Math.Round(typedRawData.TrailerValues.Average(t => t.DamageValues.Chassis) * 100),
-            DamageTrailerCargo = (int)Math.Round(typedRawData.TrailerValues.Average(t => t.DamageValues.Cargo) * 100),
-            DamageTrailerWheels = (int)Math.Round(typedRawData.TrailerValues.Average(t => t.DamageValues.Wheels) * 100),
-            DamageTrailerBody = (int)Math.Round(typedRawData.TrailerValues.Average(t => t.DamageValues.Body) * 100),
-            NumberOfTrailersAttached = typedRawData.TrailerValues.Length,
+            DamageTruckCabin = (int)Math.Round(data.TruckValues.CurrentValues.DamageValues.Cabin * 100),
+            DamageTruckWheels = (int)Math.Round(data.TruckValues.CurrentValues.DamageValues.WheelsAvg * 100),
+            DamageTruckTransmission = (int)Math.Round(data.TruckValues.CurrentValues.DamageValues.Transmission * 100),
+            DamageTruckEngine = (int)Math.Round(data.TruckValues.CurrentValues.DamageValues.Engine * 100),
+            DamageTruckChassis = (int)Math.Round(data.TruckValues.CurrentValues.DamageValues.Chassis * 100),
+            DamageTrailerChassis = (int)Math.Round(data.TrailerValues.Average(t => t.DamageValues.Chassis) * 100),
+            DamageTrailerCargo = (int)Math.Round(data.TrailerValues.Average(t => t.DamageValues.Cargo) * 100),
+            DamageTrailerWheels = (int)Math.Round(data.TrailerValues.Average(t => t.DamageValues.Wheels) * 100),
+            DamageTrailerBody = (int)Math.Round(data.TrailerValues.Average(t => t.DamageValues.Body) * 100),
+            NumberOfTrailersAttached = data.TrailerValues.Length,
 
             // Dashboard
-            Gear = (short)typedRawData.TruckValues.CurrentValues.DashboardValues.GearDashboards,
-            Rpm = (int)typedRawData.TruckValues.CurrentValues.DashboardValues.RPM,
-            RpmMax = (int)typedRawData.TruckValues.ConstantsValues.MotorValues.EngineRpmMax,
-            Speed = (short)Math.Max(typedRawData.TruckValues.CurrentValues.DashboardValues.Speed.Kph, 0),
-            SpeedLimit = (short)Math.Max(typedRawData.NavigationValues.SpeedLimit.Kph, 0),
-            CruiseControlOn = typedRawData.TruckValues.CurrentValues.DashboardValues.CruiseControl,
-            CruiseControlSpeed = (short)typedRawData.TruckValues.CurrentValues.DashboardValues.CruiseControlSpeed.Kph,
-            LowBeamOn = typedRawData.TruckValues.CurrentValues.LightsValues.BeamLow,
-            HighBeamOn = typedRawData.TruckValues.CurrentValues.LightsValues.BeamHigh,
-            ParkingBrakeOn = typedRawData.TruckValues.CurrentValues.MotorValues.BrakeValues.ParkingBrake,
-            HazardLightsOn = typedRawData.TruckValues.CurrentValues.LightsValues.HazardWarningLights,
-            FuelDistance = typedRawData.TruckValues.CurrentValues.DashboardValues.FuelValue.Range,
-            FuelAmount = typedRawData.TruckValues.CurrentValues.DashboardValues.FuelValue.Amount,
-            FuelWarningOn = typedRawData.TruckValues.CurrentValues.DashboardValues.WarningValues.FuelW,
-            AdBlueAmount = typedRawData.TruckValues.CurrentValues.DashboardValues.AdBlue,
-            AdBlueWarningOn = typedRawData.TruckValues.CurrentValues.DashboardValues.WarningValues.AdBlue,
-            TruckName = $"{typedRawData.TruckValues.ConstantsValues.Brand} {typedRawData.TruckValues.ConstantsValues.Name}",
-            BlinkerLeftOn = typedRawData.TruckValues.CurrentValues.LightsValues.BlinkerLeftOn,
-            BlinkerRightOn = typedRawData.TruckValues.CurrentValues.LightsValues.BlinkerRightOn,
-            WipersOn = typedRawData.TruckValues.CurrentValues.DashboardValues.Wipers,
-            GameTime = typedRawData.CommonValues.GameTime.Value,
-            FuelAverageConsumption = typedRawData.TruckValues.CurrentValues.DashboardValues.FuelValue.AverageConsumption * 100,
-            Throttle = Convert.ToInt32(Math.Round(typedRawData.ControlValues.GameValues.Throttle * 100)),
-            DifferentialLock = typedRawData.TruckValues.CurrentValues.DifferentialLock,
-            OilPressure = typedRawData.TruckValues.CurrentValues.DashboardValues.OilPressure,
-            OilPressureWarningOn = typedRawData.TruckValues.CurrentValues.DashboardValues.WarningValues.OilPressure,
-            OilTemp = typedRawData.TruckValues.CurrentValues.DashboardValues.OilTemperature,
-            WaterTemp = typedRawData.TruckValues.CurrentValues.DashboardValues.WaterTemperature,
-            WaterTempWarningOn = typedRawData.TruckValues.CurrentValues.DashboardValues.WarningValues.WaterTemperature,
-            BatteryVoltageWarningOn = typedRawData.TruckValues.CurrentValues.DashboardValues.WarningValues.BatteryVoltage,
-            BatteryVoltage = typedRawData.TruckValues.CurrentValues.DashboardValues.BatteryVoltage,
+            Gear = (short)data.TruckValues.CurrentValues.DashboardValues.GearDashboards,
+            Rpm = (int)data.TruckValues.CurrentValues.DashboardValues.RPM,
+            RpmMax = (int)data.TruckValues.ConstantsValues.MotorValues.EngineRpmMax,
+            Speed = (short)Math.Max(data.TruckValues.CurrentValues.DashboardValues.Speed.Kph, 0),
+            SpeedLimit = (short)Math.Max(data.NavigationValues.SpeedLimit.Kph, 0),
+            CruiseControlOn = data.TruckValues.CurrentValues.DashboardValues.CruiseControl,
+            CruiseControlSpeed = (short)data.TruckValues.CurrentValues.DashboardValues.CruiseControlSpeed.Kph,
+            LowBeamOn = data.TruckValues.CurrentValues.LightsValues.BeamLow,
+            HighBeamOn = data.TruckValues.CurrentValues.LightsValues.BeamHigh,
+            ParkingBrakeOn = data.TruckValues.CurrentValues.MotorValues.BrakeValues.ParkingBrake,
+            HazardLightsOn = data.TruckValues.CurrentValues.LightsValues.HazardWarningLights,
+            FuelDistance = data.TruckValues.CurrentValues.DashboardValues.FuelValue.Range,
+            FuelAmount = data.TruckValues.CurrentValues.DashboardValues.FuelValue.Amount,
+            FuelWarningOn = data.TruckValues.CurrentValues.DashboardValues.WarningValues.FuelW,
+            AdBlueAmount = data.TruckValues.CurrentValues.DashboardValues.AdBlue,
+            AdBlueWarningOn = data.TruckValues.CurrentValues.DashboardValues.WarningValues.AdBlue,
+            TruckName = $"{data.TruckValues.ConstantsValues.Brand} {data.TruckValues.ConstantsValues.Name}",
+            BlinkerLeftOn = data.TruckValues.CurrentValues.LightsValues.BlinkerLeftOn,
+            BlinkerRightOn = data.TruckValues.CurrentValues.LightsValues.BlinkerRightOn,
+            WipersOn = data.TruckValues.CurrentValues.DashboardValues.Wipers,
+            GameTime = data.CommonValues.GameTime.Value,
+            FuelAverageConsumption = data.TruckValues.CurrentValues.DashboardValues.FuelValue.AverageConsumption * 100,
+            Throttle = Convert.ToInt32(Math.Round(data.ControlValues.GameValues.Throttle * 100)),
+            DifferentialLock = data.TruckValues.CurrentValues.DifferentialLock,
+            OilPressure = data.TruckValues.CurrentValues.DashboardValues.OilPressure,
+            OilPressureWarningOn = data.TruckValues.CurrentValues.DashboardValues.WarningValues.OilPressure,
+            OilTemp = data.TruckValues.CurrentValues.DashboardValues.OilTemperature,
+            WaterTemp = data.TruckValues.CurrentValues.DashboardValues.WaterTemperature,
+            WaterTempWarningOn = data.TruckValues.CurrentValues.DashboardValues.WarningValues.WaterTemperature,
+            BatteryVoltageWarningOn = data.TruckValues.CurrentValues.DashboardValues.WarningValues.BatteryVoltage,
+            BatteryVoltage = data.TruckValues.CurrentValues.DashboardValues.BatteryVoltage,
         };
 
-        return new DisplayUpdate { Type = DisplayType.TruckDashboard, Data = data };
+        return new DisplayUpdate { Type = DisplayType.TruckDashboard, Data = displayData };
     }
 }

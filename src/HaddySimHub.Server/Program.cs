@@ -14,7 +14,7 @@ using HaddySimHub.Server.Displays;
 HaddySimHub.Server.Logging.ILogger logger = new HaddySimHub.Server.Logging.Logger("main");
 CancellationTokenSource cancellationTokenSource = new();
 CancellationToken token = cancellationTokenSource.Token;
-IEnumerable<DisplayBase> displays = [];
+IEnumerable<IDisplay> displays = [];
 DisplayUpdate idleDisplayUpdate = new() { Type = DisplayType.None };
 JsonSerializerOptions serializeOptions = new() { IncludeFields = true };
 
@@ -71,22 +71,22 @@ var webServerTask = new Task(async () =>
 if (args.Contains("--simulate"))
 {
     logger.Info("Start display simulation...");
-    displays = [new SimulateDisplay(ProcessReceivedData)];
+    displays = [new SimulateDisplay(SendDisplayUpdate)];
 }
 else
 {
     // Setup display
     displays =
     [
-        new HaddySimHub.Server.Displays.Dirt2DashboardDisplay(ProcessReceivedData),
-        new HaddySimHub.Server.Displays.IRacingDashboardDisplay(ProcessReceivedData),
-        new HaddySimHub.Server.Displays.Ets2DashboardDisplay(ProcessReceivedData),
+        new Dirt2DashboardDisplay(SendDisplayUpdate),
+        new IRacingDashboardDisplay(SendDisplayUpdate),
+        new Ets2DashboardDisplay(SendDisplayUpdate),
     ];
 }
 
 var processTask = new Task(async () => {
     // Monitor processes
-    IEnumerable<DisplayBase> prevActiveDisplays = [];
+    IEnumerable<IDisplay> prevActiveDisplays = [];
     while (!token.IsCancellationRequested)
     {
         var activeDisplays = displays.Where(d => d.IsActive).ToList();
@@ -189,20 +189,4 @@ async Task SendDisplayUpdate(DisplayUpdate update)
 {
     logger.LogData(update);
     await GameDataHub.SendDisplayUpdate(update);
-}
-
-async Task ProcessReceivedData(object data, Func<object, DisplayUpdate> transformer)
-{
-    logger.LogData(JsonSerializer.Serialize(data, serializeOptions));
-
-    try
-    {
-        var update = transformer(data);
-        logger.LogData(update);
-        await GameDataHub.SendDisplayUpdate(update);
-    }
-    catch (Exception ex)
-    {
-        logger.Error($"Error processing data: {ex.Message}\n\n{ex.StackTrace}");
-    }
 }
