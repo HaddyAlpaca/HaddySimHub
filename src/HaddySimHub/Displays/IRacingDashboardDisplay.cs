@@ -1,7 +1,7 @@
-using HaddySimHub.Server.Models;
+using HaddySimHub.Models;
 using iRacingSDK;
 
-namespace HaddySimHub.Server.Displays;
+namespace HaddySimHub.Displays;
 
 internal sealed class IRacingDashboardDisplay : DisplayBase<DataSample>
 {

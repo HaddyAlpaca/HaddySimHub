@@ -1,6 +1,6 @@
-using HaddySimHub.Server.Models;
+using HaddySimHub.Models;
 
-namespace HaddySimHub.Server.Displays;
+namespace HaddySimHub.Displays;
 
 internal interface IDisplay
 {

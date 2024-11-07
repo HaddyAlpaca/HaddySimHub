@@ -1,7 +1,7 @@
 ﻿using System.IO.MemoryMappedFiles;
 using System.Runtime.InteropServices;
 
-namespace HaddySimHub.Server.Displays;
+namespace HaddySimHub.Displays;
 
 public interface ISharedMemoryReader<T>
     where T : struct
