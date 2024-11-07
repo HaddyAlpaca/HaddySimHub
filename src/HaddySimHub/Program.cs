@@ -1,17 +1,17 @@
-﻿using HaddySimHub.Server.Models;
+﻿using HaddySimHub.Models;
 using Microsoft.Extensions.Hosting;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
-using HaddySimHub.Server;
+using HaddySimHub;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
-using HaddySimHub.Server.Displays;
+using HaddySimHub.Displays;
 
-HaddySimHub.Server.Logging.ILogger logger = new HaddySimHub.Server.Logging.Logger("main");
+HaddySimHub.Logging.ILogger logger = new HaddySimHub.Logging.Logger("main");
 CancellationTokenSource cancellationTokenSource = new();
 CancellationToken token = cancellationTokenSource.Token;
 IEnumerable<IDisplay> displays = [];
@@ -68,30 +68,24 @@ var webServerTask = new Task(async () =>
     await webServer!.StartAsync(token);
 }, token);
 
-if (args.Contains("--simulate"))
-{
-    logger.Info("Start display simulation...");
-    displays = [new SimulateDisplay(SendDisplayUpdate)];
-}
-else
-{
-    // Setup display
-    displays =
-    [
-        new Dirt2DashboardDisplay(SendDisplayUpdate),
-        new IRacingDashboardDisplay(SendDisplayUpdate),
-        new Ets2DashboardDisplay(SendDisplayUpdate),
-    ];
-}
+// Setup display
+displays =
+[
+    new Dirt2DashboardDisplay(SendDisplayUpdate),
+    new IRacingDashboardDisplay(SendDisplayUpdate),
+    new Ets2DashboardDisplay(SendDisplayUpdate),
+];
 
 var processTask = new Task(async () => {
     // Monitor processes
     IEnumerable<IDisplay> prevActiveDisplays = [];
     while (!token.IsCancellationRequested)
     {
+        logger.Debug("Check active displays");
         var activeDisplays = displays.Where(d => d.IsActive).ToList();
         if (activeDisplays.Count == 0)
         {
+            logger.Debug("No active displays found");
             await SendDisplayUpdate(idleDisplayUpdate);
         }
 

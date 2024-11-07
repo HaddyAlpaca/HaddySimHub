@@ -1,8 +1,8 @@
-using HaddySimHub.Server.Models;
+using HaddySimHub.Models;
 using SCSSdkClient;
 using SCSSdkClient.Object;
 
-namespace HaddySimHub.Server.Displays;
+namespace HaddySimHub.Displays;
 
 internal sealed class Ets2DashboardDisplay : DisplayBase<SCSTelemetry>
 {

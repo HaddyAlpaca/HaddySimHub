@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using NLog;
 
-namespace HaddySimHub.Server.Logging
+namespace HaddySimHub.Logging
 {
     public class Logger(string name) : ILogger
     {

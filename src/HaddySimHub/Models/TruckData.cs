@@ -1,4 +1,4 @@
-﻿namespace HaddySimHub.Server.Models;
+﻿namespace HaddySimHub.Models;
 
 public sealed record TruckData
 {

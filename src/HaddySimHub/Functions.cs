@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace HaddySimHub.Server;
+namespace HaddySimHub;
 
 internal static class Functions
 {

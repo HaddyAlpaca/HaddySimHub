@@ -1,9 +1,9 @@
 ﻿using System.Net.Sockets;
 using System.Net;
 using System.Runtime.InteropServices;
-using HaddySimHub.Server.Models;
+using HaddySimHub.Models;
 
-namespace HaddySimHub.Server.Displays;
+namespace HaddySimHub.Displays;
 
 internal sealed class Dirt2DashboardDisplay : DisplayBase<Packet>
 {

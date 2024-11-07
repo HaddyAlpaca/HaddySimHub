@@ -1,4 +1,4 @@
-﻿namespace HaddySimHub.Server.Logging
+﻿namespace HaddySimHub.Logging
 {
     /// <summary>
     /// Logger interface.
