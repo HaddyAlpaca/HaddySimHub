@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import { filter, interval, take, tap } from 'rxjs';
 import { HttpTransportType, HubConnection, HubConnectionBuilder, IHttpConnectionOptions, LogLevel } from '@microsoft/signalr';
 
@@ -33,10 +33,11 @@ export interface DisplayUpdate {
 export class GameDataService {
   private _hubConnection: HubConnection;
 
-  public connectionStatus = signal<ConnectionInfo>({ status: ConnectionStatus.Disconnected });
+  private _connectionStatus = signal<ConnectionInfo>({ status: ConnectionStatus.Disconnected });
+  public connectionStatus = computed(() => this._connectionStatus());
 
-  private _displayUpdate = signal<DisplayUpdate>({ type: DisplayType.None });
-  public displayUpdate = this._displayUpdate.asReadonly();
+  private readonly _displayUpdate = signal<DisplayUpdate>({ type: DisplayType.None });
+  public readonly displayUpdate = computed(() => this._displayUpdate());
 
   public constructor() {
     const connectionOptions: IHttpConnectionOptions = {
@@ -51,18 +52,18 @@ export class GameDataService {
       .withAutomaticReconnect()
       .build();
 
-    this.connectionStatus.set({ status: ConnectionStatus.Connecting });
+    this._connectionStatus.set({ status: ConnectionStatus.Connecting });
     this._hubConnection.start().then(() => {
-      this.connectionStatus.set({ status: ConnectionStatus.Connected });
+      this._connectionStatus.set({ status: ConnectionStatus.Connected });
     }).catch((error) => {
-      this.connectionStatus.set({ status: ConnectionStatus.ConnectionError, message: error as string });
+      this._connectionStatus.set({ status: ConnectionStatus.ConnectionError, message: error as string });
       this.startReloadSequence();
     });
 
-    this._hubConnection.onreconnecting((error) => this.connectionStatus.set({ status: ConnectionStatus.Connecting, message: error?.message }));
-    this._hubConnection.onreconnected(() => this.connectionStatus.set({ status: ConnectionStatus.Connected }));
+    this._hubConnection.onreconnecting((error) => this._connectionStatus.set({ status: ConnectionStatus.Connecting, message: error?.message }));
+    this._hubConnection.onreconnected(() => this._connectionStatus.set({ status: ConnectionStatus.Connected }));
     this._hubConnection.onclose((error) => {
-      this.connectionStatus.set({ status: ConnectionStatus.Disconnected, message: error?.message });
+      this._connectionStatus.set({ status: ConnectionStatus.Disconnected, message: error?.message });
       this.startReloadSequence();
     });
 
@@ -74,11 +75,11 @@ export class GameDataService {
 
   private startReloadSequence(): void {
     let countDownSeconds = 10;
-    this.connectionStatus.update((value) => ({ ...value, reloadSeconds: countDownSeconds}));
+    this._connectionStatus.update((value) => ({ ...value, reloadSeconds: countDownSeconds}));
     interval(1000).pipe(
       take(countDownSeconds + 1),
       tap(() => {
-        this.connectionStatus.update((value) => ({ ...value, reloadSeconds: countDownSeconds }));
+        this._connectionStatus.update((value) => ({ ...value, reloadSeconds: countDownSeconds }));
         countDownSeconds--;
       }),
       filter(() => countDownSeconds <= 0),
