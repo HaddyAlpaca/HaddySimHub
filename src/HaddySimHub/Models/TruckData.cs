@@ -213,5 +213,5 @@ public sealed record TruckData
 
     public bool WaterTempWarningOn { get; init; }
 
-    public string[] Messages { get; init;} = [];
+    public string[] Messages { get; init; } = [];
 }
