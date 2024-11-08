@@ -212,4 +212,6 @@ public sealed record TruckData
     public float WaterTemp { get; init; }
 
     public bool WaterTempWarningOn { get; init; }
+
+    public string[] Messages { get; init;} = [];
 }
