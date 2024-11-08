@@ -81,7 +81,11 @@ var processTask = new Task(async () => {
     IEnumerable<IDisplay> prevActiveDisplays = [];
     while (!token.IsCancellationRequested)
     {
-        logger.Debug("Check active displays");
+        foreach(var display in displays)
+        {
+            logger.Debug($"{display.Description}, Active {display.IsActive}");
+        }
+
         var activeDisplays = displays.Where(d => d.IsActive).ToList();
         if (activeDisplays.Count == 0)
         {

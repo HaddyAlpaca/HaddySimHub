@@ -6,7 +6,7 @@ namespace HaddySimHub.Displays;
 
 internal sealed class Ets2DashboardDisplay : DisplayBase<SCSTelemetry>
 {
-    private IList<Notification> _notifications = [];
+    private IEnumerable<Notification> _notifications = [];
     private SCSSdkTelemetry? telemetry;
 
     public override void Start() {
@@ -33,6 +33,9 @@ internal sealed class Ets2DashboardDisplay : DisplayBase<SCSTelemetry>
 
     protected override DisplayUpdate ConvertToDisplayUpdate(SCSTelemetry data)
     {
+        var openNotifications = this._notifications.Where(n => n.Ttl >= DateTime.Now);
+        this._notifications = openNotifications;
+
         var displayData = new TruckData()
         {
             // Navigation info
@@ -98,7 +101,7 @@ internal sealed class Ets2DashboardDisplay : DisplayBase<SCSTelemetry>
             WaterTempWarningOn = data.TruckValues.CurrentValues.DashboardValues.WarningValues.WaterTemperature,
             BatteryVoltageWarningOn = data.TruckValues.CurrentValues.DashboardValues.WarningValues.BatteryVoltage,
             BatteryVoltage = data.TruckValues.CurrentValues.DashboardValues.BatteryVoltage,
-            Messages = this._notifications.Select(n => n.Message).ToArray(),
+            Messages = openNotifications.Select(n => n.Message).ToArray(),
         };
 
         return new DisplayUpdate { Type = DisplayType.TruckDashboard, Data = displayData };
