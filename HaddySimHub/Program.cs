@@ -159,7 +159,7 @@ void SetupLogging(bool debug)
     };
     logConfig.LoggingRules.Add(new LoggingRule(
         "*",
-        LogLevel.Debug,
+        debug? LogLevel.Debug : LogLevel.Info,
         LogLevel.Fatal,
         consoleTarget));
     logConfig.AddTarget("console", consoleTarget);
