@@ -10,6 +10,7 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 using HaddySimHub.Displays;
+using System.Text;
 
 HaddySimHub.Logging.ILogger logger = new HaddySimHub.Logging.Logger("main");
 CancellationTokenSource cancellationTokenSource = new();
@@ -81,16 +82,22 @@ var processTask = new Task(async () => {
     IEnumerable<IDisplay> prevActiveDisplays = [];
     while (!token.IsCancellationRequested)
     {
-        foreach(var display in displays)
-        {
-            logger.Debug($"{display.Description}, Active {display.IsActive}");
-        }
-
         var activeDisplays = displays.Where(d => d.IsActive).ToList();
         if (activeDisplays.Count == 0)
         {
             logger.Debug("No active displays found");
             await SendDisplayUpdate(idleDisplayUpdate);
+        }
+        else
+        {
+            StringBuilder sb = new();
+            sb.AppendLine("Active displays:");
+            foreach(var display in displays)
+            {
+                sb.AppendLine($"{display.Description}");
+            }
+
+            logger.Debug(sb.ToString());
         }
 
         activeDisplays.Where(g => !activeDisplays.Any(x => x.Description == g.Description)).ForEach(d => {
@@ -112,7 +119,7 @@ var processTask = new Task(async () => {
             }
             catch (Exception ex)
             {
-                logger.Error($"Error stoping datafeed of game {d.Description}: {ex.Message}\n\n{ex.StackTrace}");
+                logger.Error($"Error stopping datafeed of game {d.Description}: {ex.Message}\n\n{ex.StackTrace}");
             }
         });
         prevActiveDisplays = activeDisplays;
