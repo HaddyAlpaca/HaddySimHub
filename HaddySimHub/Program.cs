@@ -6,7 +6,6 @@ using NLog.Targets;
 using HaddySimHub;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
-using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 using HaddySimHub.Displays;
@@ -20,19 +19,11 @@ DisplayUpdate idleDisplayUpdate = new() { Type = DisplayType.None };
 JsonSerializerOptions serializeOptions = new() { IncludeFields = true };
 
 SetupLogging(args.Contains("--debug"));
+
 WebApplicationOptions options = new()
 {
-    ContentRootPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
+    ContentRootPath = AppContext.BaseDirectory
 };
-
-if (options.ContentRootPath is not null)
-{
-    string wwwRoot = Path.Combine(options.ContentRootPath, "wwwroot");
-    if (!Directory.Exists(wwwRoot))
-    {
-        Directory.CreateDirectory(wwwRoot);
-    }
-}
 
 var builder = WebApplication.CreateBuilder(options);
 builder.WebHost.UseKestrel(options =>
@@ -77,52 +68,69 @@ displays =
     new Ets2DashboardDisplay(SendDisplayUpdate),
 ];
 
+var testRun = args.Contains("--test-run");
 var processTask = new Task(async () => {
     // Monitor processes
     IEnumerable<IDisplay> prevActiveDisplays = [];
     while (!token.IsCancellationRequested)
     {
-        var activeDisplays = displays.Where(d => d.IsActive).ToList();
-        if (activeDisplays.Count == 0)
+        if (testRun)
         {
-            logger.Debug("No active displays found");
-            await SendDisplayUpdate(idleDisplayUpdate);
+            var update = new DisplayUpdate
+            {
+                Type = DisplayType.TruckDashboard,
+                Data = new TruckData
+                {
+                    Speed = (short)DateTime.Now.Second,
+                }
+            };
+            await SendDisplayUpdate(update);
         }
         else
         {
-            StringBuilder sb = new();
-            sb.AppendLine("Active displays:");
-            foreach(var display in displays)
+            var activeDisplays = displays.Where(d => d.IsActive).ToList();
+            if (activeDisplays.Count == 0)
             {
-                sb.AppendLine($"{display.Description}");
+                logger.Debug("No active displays found");
+                await SendDisplayUpdate(idleDisplayUpdate);
+            }
+            else
+            {
+                StringBuilder sb = new();
+                sb.AppendLine("Active displays:");
+                foreach(var display in displays)
+                {
+                    sb.AppendLine($"{display.Description}");
+                }
+
+                logger.Debug(sb.ToString());
             }
 
-            logger.Debug(sb.ToString());
+            activeDisplays.Where(g => !activeDisplays.Any(x => x.Description == g.Description)).ForEach(d => {
+                try
+                {
+                    logger.Info($"Start receiving data from {d.Description}");
+                    d.Start();
+                }
+                catch (Exception ex)
+                {
+                    logger.Error($"Error starting datafeed of game {d.Description}: {ex.Message}\n\n{ex.StackTrace}");
+                }
+            });
+            activeDisplays.Where(g => !activeDisplays.Any(x => x.Description == g.Description)).ForEach(d => {
+                try
+                {
+                    logger.Info($"Stop receiving data from {d.Description}");
+                    d.Stop();
+                }
+                catch (Exception ex)
+                {
+                    logger.Error($"Error stopping datafeed of game {d.Description}: {ex.Message}\n\n{ex.StackTrace}");
+                }
+            });
+            prevActiveDisplays = activeDisplays;
         }
 
-        activeDisplays.Where(g => !activeDisplays.Any(x => x.Description == g.Description)).ForEach(d => {
-            try
-            {
-                logger.Info($"Start receiving data from {d.Description}");
-                d.Start();
-            }
-            catch (Exception ex)
-            {
-                logger.Error($"Error starting datafeed of game {d.Description}: {ex.Message}\n\n{ex.StackTrace}");
-            }
-        });
-        activeDisplays.Where(g => !activeDisplays.Any(x => x.Description == g.Description)).ForEach(d => {
-            try
-            {
-                logger.Info($"Stop receiving data from {d.Description}");
-                d.Stop();
-            }
-            catch (Exception ex)
-            {
-                logger.Error($"Error stopping datafeed of game {d.Description}: {ex.Message}\n\n{ex.StackTrace}");
-            }
-        });
-        prevActiveDisplays = activeDisplays;
         await Task.Delay(TimeSpan.FromSeconds(2));
     }
 }, token);
