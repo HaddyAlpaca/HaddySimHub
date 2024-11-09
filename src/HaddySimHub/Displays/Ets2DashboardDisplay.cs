@@ -1,18 +1,45 @@
 using HaddySimHub.Models;
 using SCSSdkClient;
 using SCSSdkClient.Object;
+using static SCSSdkClient.Object.SCSTelemetry;
 
 namespace HaddySimHub.Displays;
 
-internal sealed class Ets2DashboardDisplay : DisplayBase<SCSTelemetry>
+internal sealed class Ets2DashboardDisplay(Func<DisplayUpdate, Task> updateDisplay) : DisplayBase<SCSTelemetry>(updateDisplay)
 {
     private IEnumerable<Notification> _notifications = [];
     private SCSSdkTelemetry? telemetry;
+    private SpecialEvents _specialEventsValues = new();
 
     public override void Start() {
         this.telemetry = new ();
         this.telemetry.Data += (SCSTelemetry data, bool newTimestamp) =>
         {
+            if (this._specialEventsValues.Fined != data.SpecialEventsValues.Fined)
+            {
+                string description = data.GamePlay.FinedEvent.Offence switch
+                {
+                    Offence.Speeding => "Snelheidsovertreding",
+                    Offence.Speeding_camera => "Snelheidscamera",
+                    Offence.Avoid_sleeping => "Rusttijdenovertreding",
+                    Offence.Crash => "Aanrijding",
+                    Offence.Red_signal => "Roodlichtovertreding",
+                    Offence.Hard_Shoulder_Violation => "Rijden over de vluchtstrook",
+                    _ => data.GamePlay.FinedEvent.Offence.ToString(),
+                };
+                string message = $"Boete: {description} {data.GamePlay.FinedEvent.Amount}";
+                this.AddNotification(message);
+            }
+
+            if (this._specialEventsValues.Tollgate != data.SpecialEventsValues.Tollgate)
+            {
+                string message = data.GamePlay.TollgateEvent.PayAmount == 0
+                    ? "Begin van tolweg."
+                    : $"Tol betaald: {data.GamePlay.TollgateEvent.PayAmount}";
+                this.AddNotification(message);
+            }
+
+            this._specialEventsValues = data.SpecialEventsValues;
             this._updateDisplay(this.ConvertToDisplayUpdate(data));
         };
     }
@@ -26,10 +53,6 @@ internal sealed class Ets2DashboardDisplay : DisplayBase<SCSTelemetry>
     public override string Description => "Euro Truck Simulator 2";
 
     public override bool IsActive => Functions.IsProcessRunning("eurotrucks2");
-
-    public Ets2DashboardDisplay(Func<DisplayUpdate, Task> updateDisplay) : base(updateDisplay)
-    {
-    }
 
     protected override DisplayUpdate ConvertToDisplayUpdate(SCSTelemetry data)
     {
@@ -105,6 +128,11 @@ internal sealed class Ets2DashboardDisplay : DisplayBase<SCSTelemetry>
         };
 
         return new DisplayUpdate { Type = DisplayType.TruckDashboard, Data = displayData };
+    }
+
+    private void AddNotification(string message)
+    {
+        this._notifications = [..this._notifications, new Notification { Message = message }];
     }
 
     private record Notification
