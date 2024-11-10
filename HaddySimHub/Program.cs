@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 using HaddySimHub.Displays;
 using System.Text;
+using System.Diagnostics;
 
 HaddySimHub.Logging.ILogger logger = new HaddySimHub.Logging.Logger("main");
 CancellationTokenSource cancellationTokenSource = new();
@@ -18,7 +19,8 @@ IEnumerable<IDisplay> displays = [];
 DisplayUpdate idleDisplayUpdate = new() { Type = DisplayType.None };
 JsonSerializerOptions serializeOptions = new() { IncludeFields = true };
 
-SetupLogging(args.Contains("--debug"));
+bool isDebugEnabled = args.Contains("--debug");
+SetupLogging(isDebugEnabled);
 
 WebApplicationOptions options = new()
 {
@@ -88,6 +90,14 @@ var processTask = new Task(async () => {
         }
         else
         {
+            if (isDebugEnabled)
+            {
+                var sb = new StringBuilder();
+                sb.AppendLine("Running processes:");
+                Process.GetProcesses().ForEach(p => sb.AppendLine($"- {p.ProcessName}"));
+                logger.Debug(sb.ToString());
+            }
+
             var activeDisplays = displays.Where(d => d.IsActive).ToList();
             if (activeDisplays.Count == 0)
             {
