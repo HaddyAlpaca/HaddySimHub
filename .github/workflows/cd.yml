@@ -16,7 +16,7 @@ jobs:
     uses: ./.github/workflows/ci.yml
   
   create_release:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     needs: ci
     defaults: 
       run:
@@ -27,7 +27,7 @@ jobs:
       dotnet_version: '8.0.100'
       node-version: 20
       clientapp_folder: './ClientApp/'
-      dist_folder: './dist'
+      dist_folder: '/dist'
       RELEASE_VERSION: v0.1.${{github.run_number}}
 
     steps:
