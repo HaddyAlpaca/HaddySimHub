@@ -90,14 +90,6 @@ var processTask = new Task(async () => {
         }
         else
         {
-            if (isDebugEnabled)
-            {
-                var sb = new StringBuilder();
-                sb.AppendLine("Running processes:");
-                Process.GetProcesses().ForEach(p => sb.AppendLine($"- {p.ProcessName}"));
-                logger.Debug(sb.ToString());
-            }
-
             var activeDisplays = displays.Where(d => d.IsActive).ToList();
             if (activeDisplays.Count == 0)
             {
@@ -108,7 +100,7 @@ var processTask = new Task(async () => {
             {
                 StringBuilder sb = new();
                 sb.AppendLine("Active displays:");
-                foreach(var display in displays)
+                foreach(var display in activeDisplays)
                 {
                     sb.AppendLine($"{display.Description}");
                 }
