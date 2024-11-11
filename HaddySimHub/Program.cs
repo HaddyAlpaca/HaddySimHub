@@ -108,7 +108,7 @@ var processTask = new Task(async () => {
                 logger.Debug(sb.ToString());
             }
 
-            activeDisplays.Where(g => !activeDisplays.Any(x => x.Description == g.Description)).ForEach(d => {
+            activeDisplays.Where(g => !prevActiveDisplays.Any(x => x.Description == g.Description)).ForEach(d => {
                 try
                 {
                     logger.Info($"Start receiving data from {d.Description}");
@@ -119,7 +119,7 @@ var processTask = new Task(async () => {
                     logger.Error($"Error starting datafeed of game {d.Description}: {ex.Message}\n\n{ex.StackTrace}");
                 }
             });
-            activeDisplays.Where(g => !activeDisplays.Any(x => x.Description == g.Description)).ForEach(d => {
+            prevActiveDisplays.Where(g => !activeDisplays.Any(x => x.Description == g.Description)).ForEach(d => {
                 try
                 {
                     logger.Info($"Stop receiving data from {d.Description}");
