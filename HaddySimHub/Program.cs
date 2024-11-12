@@ -10,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 using HaddySimHub.Displays;
 using System.Text;
-using System.Diagnostics;
 
 HaddySimHub.Logging.ILogger logger = new HaddySimHub.Logging.Logger("main");
 CancellationTokenSource cancellationTokenSource = new();
@@ -67,7 +66,7 @@ displays =
 [
     new Dirt2DashboardDisplay(SendDisplayUpdate),
     new IRacingDashboardDisplay(SendDisplayUpdate),
-    new Ets2DashboardDisplay(SendDisplayUpdate),
+    new Ets2DashboardDisplay(SendDisplayUpdate, logger),
 ];
 
 var testRun = args.Contains("--test-run");

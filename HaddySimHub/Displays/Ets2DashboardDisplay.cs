@@ -1,3 +1,4 @@
+using HaddySimHub.Logging;
 using HaddySimHub.Models;
 using SCSSdkClient;
 using SCSSdkClient.Object;
@@ -5,7 +6,7 @@ using static SCSSdkClient.Object.SCSTelemetry;
 
 namespace HaddySimHub.Displays;
 
-internal sealed class Ets2DashboardDisplay(Func<DisplayUpdate, Task> updateDisplay) : DisplayBase<SCSTelemetry>(updateDisplay)
+internal sealed class Ets2DashboardDisplay(Func<DisplayUpdate, Task> updateDisplay, ILogger logger) : DisplayBase<SCSTelemetry>(updateDisplay)
 {
     private IEnumerable<Notification> _notifications = [];
     private SCSSdkTelemetry? telemetry;
@@ -15,32 +16,39 @@ internal sealed class Ets2DashboardDisplay(Func<DisplayUpdate, Task> updateDispl
         this.telemetry = new ();
         this.telemetry.Data += (SCSTelemetry data, bool newTimestamp) =>
         {
-            if (this._specialEventsValues.Fined != data.SpecialEventsValues.Fined)
+            try
             {
-                string description = data.GamePlay.FinedEvent.Offence switch
+                if (this._specialEventsValues.Fined != data.SpecialEventsValues.Fined)
                 {
-                    Offence.Speeding => "Snelheidsovertreding",
-                    Offence.Speeding_camera => "Snelheidscamera",
-                    Offence.Avoid_sleeping => "Rusttijdenovertreding",
-                    Offence.Crash => "Aanrijding",
-                    Offence.Red_signal => "Roodlichtovertreding",
-                    Offence.Hard_Shoulder_Violation => "Rijden over de vluchtstrook",
-                    _ => data.GamePlay.FinedEvent.Offence.ToString(),
-                };
-                string message = $"Boete: {description} {data.GamePlay.FinedEvent.Amount}";
-                this.AddNotification(message);
-            }
+                    string description = data.GamePlay.FinedEvent.Offence switch
+                    {
+                        Offence.Speeding => "Snelheidsovertreding",
+                        Offence.Speeding_camera => "Snelheidscamera",
+                        Offence.Avoid_sleeping => "Rusttijdenovertreding",
+                        Offence.Crash => "Aanrijding",
+                        Offence.Red_signal => "Roodlichtovertreding",
+                        Offence.Hard_Shoulder_Violation => "Rijden over de vluchtstrook",
+                        _ => data.GamePlay.FinedEvent.Offence.ToString(),
+                    };
+                    string message = $"Boete: {description} {data.GamePlay.FinedEvent.Amount}";
+                    this.AddNotification(message);
+                }
 
-            if (this._specialEventsValues.Tollgate != data.SpecialEventsValues.Tollgate)
+                if (this._specialEventsValues.Tollgate != data.SpecialEventsValues.Tollgate)
+                {
+                    string message = data.GamePlay.TollgateEvent.PayAmount == 0
+                        ? "Begin van tolweg."
+                        : $"Tol betaald: {data.GamePlay.TollgateEvent.PayAmount}";
+                    this.AddNotification(message);
+                }
+
+                this._specialEventsValues = data.SpecialEventsValues;
+                this._updateDisplay(this.ConvertToDisplayUpdate(data));
+            }
+            catch(Exception ex)
             {
-                string message = data.GamePlay.TollgateEvent.PayAmount == 0
-                    ? "Begin van tolweg."
-                    : $"Tol betaald: {data.GamePlay.TollgateEvent.PayAmount}";
-                this.AddNotification(message);
+                logger.Error($"{ex.Message} : {ex.StackTrace}");
             }
-
-            this._specialEventsValues = data.SpecialEventsValues;
-            this._updateDisplay(this.ConvertToDisplayUpdate(data));
         };
     }
 
