@@ -47,7 +47,7 @@ internal sealed class Ets2DashboardDisplay(Func<DisplayUpdate, Task> updateDispl
             }
             catch(Exception ex)
             {
-                logger.Error($"{ex.Message} : {ex.StackTrace}");
+                logger.Error($"{ex.Message}\n\n{ex.StackTrace}");
             }
         };
     }
