@@ -1,17 +1,24 @@
+using HaddySimHub.Logging;
 using HaddySimHub.Models;
 using iRacingSDK;
 
 namespace HaddySimHub.Displays;
 
-internal sealed class IRacingDashboardDisplay : DisplayBase<DataSample>
+internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDisplay, ILogger logger) : DisplayBase<DataSample>(updateDisplay)
 {
-    public IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDisplay) : base(updateDisplay)
-    {
-    }
-
     public override void Start()
     {
-        iRacing.NewData += (data) => this._updateDisplay(this.ConvertToDisplayUpdate(data));
+        iRacing.NewData += (data) => 
+        {
+            try
+            {
+                this._updateDisplay(this.ConvertToDisplayUpdate(data));
+            }
+            catch (Exception ex)
+            {
+                logger.Error($"{ex.Message}\n\n{ex.StackTrace}");
+            }
+        };
         iRacing.StartListening();
     }
 
