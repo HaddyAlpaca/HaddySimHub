@@ -65,7 +65,7 @@ var webServerTask = new Task(async () =>
 displays =
 [
     new Dirt2DashboardDisplay(SendDisplayUpdate),
-    new IRacingDashboardDisplay(SendDisplayUpdate, logger),
+    new IRacingDashboardDisplay(SendDisplayUpdate),
     new Ets2DashboardDisplay(SendDisplayUpdate, logger),
 ];
 
