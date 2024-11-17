@@ -30,7 +30,7 @@ internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDi
     }
 
     public override string Description => "IRacing";
-    public override bool IsActive => Functions.IsProcessRunning("iracingui") && iRacingSDK.iRacing.IsConnected;
+    public override bool IsActive => Functions.IsProcessRunning("iracingui");
 
     protected override DisplayUpdate ConvertToDisplayUpdate(DataSample data)
     {
