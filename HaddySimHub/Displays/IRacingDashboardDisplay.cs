@@ -1,3 +1,4 @@
+using System.Text;
 using HaddySimHub.Logging;
 using HaddySimHub.Models;
 using iRacingSDK;
@@ -53,6 +54,7 @@ internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDi
             .Where(c => !c.HasRetired && (!c.Details.IsPaceCar || c.Details.IsOnPitRoad))
             .Select(c => new TrackPosition
             {
+                DriverName = telemetry.RaceCars.FirstOrDefault(c => c.CarIdx == c.CarIdx)?.Details.Driver.AbbrevName ?? "????",
                 LapDistPct = c.DistancePercentage,
                 Status =
                     c.CarIdx == telemetry.PlayerCarIdx ? TrackPositionStatus.IsPlayer :
@@ -101,6 +103,13 @@ internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDi
             DriverBehindLicense = carBehind?.Details.Driver.LicString ?? string.Empty,
             TrackPositions = trackPositions,
         };
+
+        StringBuilder sb = new();
+        sb.AppendLine("Track positions");
+        foreach(var p in trackPositions)
+        {
+            logger.Debug($"{p.LapDistPct}: {p.Status}");
+        }
 
         return new DisplayUpdate{ Type = DisplayType.RaceDashboard, Data = displayUpdate };
     }
