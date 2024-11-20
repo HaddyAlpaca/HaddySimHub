@@ -27,8 +27,6 @@ import pluginRxjs from 'eslint-plugin-rxjs';
 import pluginAngularRxjs from 'eslint-plugin-rxjs-angular';
 import appPlugin from 'eslint-plugin-app';
 
-import ngrxeslintConfigs from '@ngrx/eslint-plugin/v9/index.js';
-
 const noJasmineTestFilter = process.env.LINT_CONFIG === 'production' ? 'error' : 'off';
 
 export default tseslint.config(
@@ -55,8 +53,6 @@ export default tseslint.config(
             ...tseslint.configs.stylisticTypeChecked,
             // Apply the recommended Angular rules
             ...angulareslint.configs.tsRecommended,
-            // Apply the ngrx rules
-            ...fixupConfigRules(ngrxeslintConfigs.configs.all),
         ],
         plugins: {
             'deprecation': fixupPluginRules(deprecationPlugin),
@@ -106,10 +102,6 @@ export default tseslint.config(
             ],
             '@angular-eslint/no-conflicting-lifecycle': 'error',
             '@angular-eslint/use-lifecycle-interface': 'error',
-
-            // @ngrx
-            '@ngrx/use-consistent-global-store-name': ['warn', '_store'],
-            '@ngrx/prefer-effect-callback-in-block-statement': 'off',
 
             // @stylistic/ts
             '@stylistic/ts/semi': ['error', 'always'],
