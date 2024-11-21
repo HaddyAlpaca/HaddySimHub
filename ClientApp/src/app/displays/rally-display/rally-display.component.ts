@@ -6,15 +6,15 @@ import { DataElementComponent } from '@components/data-element/data-element.comp
 import { DataGroupComponent } from '@components/data-group/data-group.component';
 
 @Component({
-    selector: 'app-rally-display',
-    styleUrl: './rally-display.component.scss',
-    templateUrl: './rally-display.component.html',
-    encapsulation: ViewEncapsulation.None,
-    imports: [
-        SpeedometerComponent,
-        DataElementComponent,
-        DataGroupComponent,
-    ]
+  selector: 'app-rally-display',
+  styleUrl: './rally-display.component.scss',
+  templateUrl: './rally-display.component.html',
+  encapsulation: ViewEncapsulation.None,
+  imports: [
+    SpeedometerComponent,
+    DataElementComponent,
+    DataGroupComponent,
+  ],
 })
 export class RallyDisplayComponent extends DisplayComponent<RallyData> {
   protected override checkDataType(data: unknown): boolean {

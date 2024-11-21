@@ -33,8 +33,8 @@ describe('TrackPositionsComponent tests', () => {
 });
 
 @Component({
-    template: '<app-track-positions [positions]="positions" />',
-    imports: [TrackPositionsComponent]
+  template: '<app-track-positions [positions]="positions" />',
+  imports: [TrackPositionsComponent],
 })
 class TrackPositionsTestHostComponent {
   public positions: TrackPosition[] = [];

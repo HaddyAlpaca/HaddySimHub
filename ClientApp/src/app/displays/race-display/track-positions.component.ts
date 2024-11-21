@@ -16,10 +16,10 @@ export interface TrackPosition {
 }
 
 @Component({
-    selector: 'app-track-positions',
-    templateUrl: './track-positions.component.html',
-    styleUrl: './track-positions.component.scss',
-    imports: [CommonModule]
+  selector: 'app-track-positions',
+  templateUrl: './track-positions.component.html',
+  styleUrl: './track-positions.component.scss',
+  imports: [CommonModule],
 })
 export class TrackPositionsComponent {
   public positions = input<TrackPosition[]>([]);

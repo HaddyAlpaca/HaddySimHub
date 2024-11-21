@@ -251,8 +251,8 @@ describe('Race display component tests', () => {
 });
 
 @Component({
-    template: '<app-race-display [dataSource]="dataSource" />',
-    imports: [RaceDisplayComponent]
+  template: '<app-race-display [dataSource]="dataSource" />',
+  imports: [RaceDisplayComponent],
 })
 export class RaceDisplayTestComponent {
   public dataSource =  new RaceData();
