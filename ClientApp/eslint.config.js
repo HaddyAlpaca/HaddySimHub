@@ -68,7 +68,6 @@ export default tseslint.config(
                 ...globals.browser,
                 ...globals.jasmine,
                 ...globals.es6,
-                ...globals.jest,
             },
             parserOptions: {
                 // Enable typed liniting

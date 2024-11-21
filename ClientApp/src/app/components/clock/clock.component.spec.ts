@@ -3,15 +3,14 @@ import { ClockComponent } from './clock.component';
 import { ClockService } from './clock.service';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { ClockComponentHarness } from './clock.component.harness';
-import { createSpyObj } from '@testing/test-utils';
 
 describe('ClockComponent tests', () => {
   let fixture: ComponentFixture<ClockComponent>;
-  let mockClockService: jest.Mocked<ClockService>;
+  let mockClockService: jasmine.SpyObj<ClockService>;
 
   beforeEach(async () => {
-    mockClockService = createSpyObj(['currentTime']);
-    mockClockService.currentTime.mockReturnValue(new Date(2024, 5, 9, 15, 39, 12));
+    mockClockService = jasmine.createSpyObj<ClockService>('ClockService', ['currentTime']);
+    mockClockService.currentTime.and.returnValue(new Date(2024, 5, 9, 15, 39, 12));
 
     await TestBed.configureTestingModule({
       providers: [

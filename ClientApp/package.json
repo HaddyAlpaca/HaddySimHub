@@ -7,22 +7,10 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "jest --watch",
-    "test_ci": "jest",
+    "test": "ng test",
+    "test_ci": "ng test --no-watch --browsers=ChromeHeadless",
     "lint": "cross-env LINT_CONFIG=production ng lint --eslint-config eslint.config.js",
     "build:prod": "ng build --prod"
-  },
-  "jest": {
-    "preset": "jest-preset-angular",
-    "moduleNameMapper": {
-      "@components/(.*)": "<rootDir>/src/app/components/$1",
-      "@services/(.*)": "<rootDir>/src/app/services/$1",
-      "@testing/(.*)": "<rootDir>/src/app/testing/$1",
-      "@displays/(.*)": "<rootDir>/src/app/displays/$1"
-    },
-    "setupFilesAfterEnv": [
-      "<rootDir>/jest/setup.ts"
-    ]
   },
   "private": true,
   "engines": {
@@ -60,10 +48,16 @@
     "@angular/compiler-cli": "^18.2.7",
     "@eslint/compat": "^1.2.3",
     "@stylistic/eslint-plugin-ts": "2.11.0",
-    "@types/jest": "^29.5.14",
     "@types/node": "^22.9.1",
     "@typescript-eslint/eslint-plugin": "8.15.0",
     "@typescript-eslint/parser": "8.15.0",
+    "@types/jasmine": "~4.3.0",
+    "jasmine-core": "~4.6.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.1.0",
     "angular-eslint": "^18.4.1",
     "cross-env": "^7.0.3",
     "eslint": "9.15.0",
@@ -75,8 +69,6 @@
     "eslint-plugin-rxjs": "5.0.3",
     "eslint-plugin-rxjs-angular": "2.0.1",
     "globals": "^15.12.0",
-    "jest": "^29.7.0",
-    "jest-preset-angular": "^14.3.2",
     "typescript": "5.4.2",
     "typescript-eslint": "8.15.0"
   }
