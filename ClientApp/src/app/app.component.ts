@@ -11,7 +11,6 @@ import { RallyDisplayComponent } from '@displays/rally-display/rally-display.com
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  standalone: true,
   imports: [
     CommonModule,
     TruckDisplayComponent,

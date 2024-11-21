@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-clock',
   templateUrl: './clock.component.html',
-  standalone: true,
   imports: [CommonModule],
 })
 export class ClockComponent {

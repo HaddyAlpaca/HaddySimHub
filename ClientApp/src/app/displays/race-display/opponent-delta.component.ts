@@ -13,7 +13,6 @@ export interface DriverInfo {
 @Component({
   selector: 'app-opponent-delta',
   templateUrl: './opponent-delta.component.html',
-  standalone: true,
   imports: [
     DeltaTimePipe,
     IRatingPipe,

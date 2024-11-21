@@ -34,7 +34,6 @@ describe('TrackPositionsComponent tests', () => {
 
 @Component({
   template: '<app-track-positions [positions]="positions" />',
-  standalone: true,
   imports: [TrackPositionsComponent],
 })
 class TrackPositionsTestHostComponent {

@@ -5,7 +5,6 @@ import { GearPipe } from './gear.pipe';
   selector: 'app-speedometer',
   templateUrl: './speedometer.component.html',
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [GearPipe],
 })
 export class SpeedometerComponent {

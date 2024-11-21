@@ -19,7 +19,6 @@ export interface TrackPosition {
   selector: 'app-track-positions',
   templateUrl: './track-positions.component.html',
   styleUrl: './track-positions.component.scss',
-  standalone: true,
   imports: [CommonModule],
 })
 export class TrackPositionsComponent {

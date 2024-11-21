@@ -2,7 +2,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'timespan',
-  standalone: true,
 })
 export class TimespanPipe implements PipeTransform {
   public transform(milliseconds: number): string {

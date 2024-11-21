@@ -9,7 +9,6 @@ import { DataGroupComponent } from '@components/data-group/data-group.component'
   selector: 'app-rally-display',
   styleUrl: './rally-display.component.scss',
   templateUrl: './rally-display.component.html',
-  standalone: true,
   encapsulation: ViewEncapsulation.None,
   imports: [
     SpeedometerComponent,

@@ -15,7 +15,6 @@ import { NumberFlexDigitPipe } from '@components/number-flex-digit/number-flex-d
   styleUrl: 'truck-display.component.scss',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     NgClass,
     DecimalPipe,

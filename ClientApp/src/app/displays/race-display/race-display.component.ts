@@ -17,7 +17,6 @@ import { TimespanPipe } from '@components/timespan/timespan.pipe';
   styleUrl: 'race-display.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  standalone: true,
   imports: [
     CommonModule,
     DeltaTimePipe,

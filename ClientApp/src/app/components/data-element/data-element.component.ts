@@ -15,7 +15,6 @@ export enum DataType {
 @Component({
   selector: 'app-data-element',
   templateUrl: './data-element.component.html',
-  standalone: true,
   encapsulation: ViewEncapsulation.None,
 })
 export class DataElementComponent {

@@ -24,7 +24,6 @@ describe('SpeedometerComponent tests', () => {
 
 @Component({
   template: `<app-speedometer [rpm]="rpm" [speed]="speed" [gear]="gear" />`,
-  standalone: true,
   imports: [SpeedometerComponent],
 })
 class SpeedometerTestHostComponent {

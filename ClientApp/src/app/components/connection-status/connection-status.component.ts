@@ -5,13 +5,12 @@ import { ConnectionInfo, ConnectionStatus } from '@services/game-data.service';
   selector: 'app-connection-status',
   templateUrl: './connection-status.component.html',
   styleUrl: './connection-status.component.scss',
-  standalone: true,
 })
 export class ConnectionStatusComponent {
   public status = input<ConnectionInfo>({ status: ConnectionStatus.Disconnected });
 
   public connectionStatusDescription = computed(() => {
-    const statusDescriptions: { [key in ConnectionStatus]: string } = {
+    const statusDescriptions: Record<ConnectionStatus, string> = {
       [ConnectionStatus.Disconnected]: 'Disconnected',
       [ConnectionStatus.Connecting]: 'Connecting...',
       [ConnectionStatus.ConnectionError]: 'Error connecting',

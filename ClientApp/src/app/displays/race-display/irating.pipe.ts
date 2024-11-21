@@ -2,7 +2,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'irating',
-  standalone: true,
 })
 export class IRatingPipe implements PipeTransform {
   private readonly _numberFormat = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });

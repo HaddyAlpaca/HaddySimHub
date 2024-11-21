@@ -47,7 +47,6 @@ describe('ConnectionStatusComponent tests', () => {
 
 @Component({
   template: '<app-connection-status [status]="status" />',
-  standalone: true,
   imports: [ConnectionStatusComponent],
 })
 export class ConnectionStatusTestComponent {
