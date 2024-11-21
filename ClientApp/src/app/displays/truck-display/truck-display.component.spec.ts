@@ -96,9 +96,8 @@ describe('TruckDisplayComponent', () => {
 });
 
 @Component({
-  template: '<app-truck-display [dataSource]="dataSource" />',
-  standalone: true,
-  imports: [TruckDisplayComponent],
+    template: '<app-truck-display [dataSource]="dataSource" />',
+    imports: [TruckDisplayComponent]
 })
 export class TruckDisplayTestComponent {
   public dataSource = new TruckData();

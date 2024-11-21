@@ -3,10 +3,9 @@ import { ClockService } from './clock.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-clock',
-  templateUrl: './clock.component.html',
-  standalone: true,
-  imports: [CommonModule],
+    selector: 'app-clock',
+    templateUrl: './clock.component.html',
+    imports: [CommonModule]
 })
 export class ClockComponent {
   private _clockService = inject(ClockService);

@@ -37,9 +37,8 @@ describe('WaypointComponent tests', () => {
 });
 
 @Component({
-  template: `<app-waypoint [city]="city" [company]="company" />`,
-  standalone: true,
-  imports: [WaypointComponent],
+    template: `<app-waypoint [city]="city" [company]="company" />`,
+    imports: [WaypointComponent]
 })
 class WaypointTestHostComponent {
   public city = '';

@@ -8,18 +8,17 @@ import { ClockComponent } from '@components/clock/clock.component';
 import { RallyDisplayComponent } from '@displays/rally-display/rally-display.component';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
-  standalone: true,
-  imports: [
-    CommonModule,
-    TruckDisplayComponent,
-    RaceDisplayComponent,
-    RallyDisplayComponent,
-    ConnectionStatusComponent,
-    ClockComponent,
-  ],
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss',
+    imports: [
+        CommonModule,
+        TruckDisplayComponent,
+        RaceDisplayComponent,
+        RallyDisplayComponent,
+        ConnectionStatusComponent,
+        ClockComponent,
+    ]
 })
 export class AppComponent {
   private _gameDataService = inject(GameDataService);

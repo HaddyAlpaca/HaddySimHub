@@ -46,9 +46,8 @@ describe('ConnectionStatusComponent tests', () => {
 });
 
 @Component({
-  template: '<app-connection-status [status]="status" />',
-  standalone: true,
-  imports: [ConnectionStatusComponent],
+    template: '<app-connection-status [status]="status" />',
+    imports: [ConnectionStatusComponent]
 })
 export class ConnectionStatusTestComponent {
   public status = { status: ConnectionStatus.Disconnected };

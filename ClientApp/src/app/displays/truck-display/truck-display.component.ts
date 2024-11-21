@@ -10,23 +10,22 @@ import { GearPipe } from '@components/speedometer/gear.pipe';
 import { NumberFlexDigitPipe } from '@components/number-flex-digit/number-flex-digit.pipe';
 
 @Component({
-  selector: 'app-truck-display',
-  templateUrl: 'truck-display.component.html',
-  styleUrl: 'truck-display.component.scss',
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [
-    NgClass,
-    DecimalPipe,
-    TimespanPipe,
-    NumberNlPipe,
-    CommonModule,
-    WaypointComponent,
-    SpeedometerComponent,
-    GearPipe,
-    NumberFlexDigitPipe,
-  ],
+    selector: 'app-truck-display',
+    templateUrl: 'truck-display.component.html',
+    styleUrl: 'truck-display.component.scss',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        NgClass,
+        DecimalPipe,
+        TimespanPipe,
+        NumberNlPipe,
+        CommonModule,
+        WaypointComponent,
+        SpeedometerComponent,
+        GearPipe,
+        NumberFlexDigitPipe,
+    ]
 })
 export class TruckDisplayComponent extends DisplayComponent<TruckData> {
   protected override checkDataType(data: unknown): boolean {

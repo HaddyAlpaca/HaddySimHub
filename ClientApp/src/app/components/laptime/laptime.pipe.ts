@@ -2,7 +2,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'laptime',
-  standalone: true,
 })
 export class LapTimePipe implements PipeTransform {
   public transform(seconds: number): string {

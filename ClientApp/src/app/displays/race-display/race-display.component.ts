@@ -12,23 +12,22 @@ import { LapTimePipe } from '@components/laptime/laptime.pipe';
 import { TimespanPipe } from '@components/timespan/timespan.pipe';
 
 @Component({
-  selector: 'app-race-display',
-  templateUrl: 'race-display.component.html',
-  styleUrl: 'race-display.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
-  standalone: true,
-  imports: [
-    CommonModule,
-    DeltaTimePipe,
-    LapTimePipe,
-    TimespanPipe,
-    IRatingPipe,
-    TrackPositionsComponent,
-    SpeedometerComponent,
-    DataElementComponent,
-    OpponentDeltaComponent,
-  ],
+    selector: 'app-race-display',
+    templateUrl: 'race-display.component.html',
+    styleUrl: 'race-display.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        CommonModule,
+        DeltaTimePipe,
+        LapTimePipe,
+        TimespanPipe,
+        IRatingPipe,
+        TrackPositionsComponent,
+        SpeedometerComponent,
+        DataElementComponent,
+        OpponentDeltaComponent,
+    ]
 })
 export class RaceDisplayComponent extends DisplayComponent<RaceData> {
   protected override checkDataType(data: unknown): boolean {

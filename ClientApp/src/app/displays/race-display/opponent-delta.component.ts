@@ -11,13 +11,12 @@ export interface DriverInfo {
 }
 
 @Component({
-  selector: 'app-opponent-delta',
-  templateUrl: './opponent-delta.component.html',
-  standalone: true,
-  imports: [
-    DeltaTimePipe,
-    IRatingPipe,
-  ],
+    selector: 'app-opponent-delta',
+    templateUrl: './opponent-delta.component.html',
+    imports: [
+        DeltaTimePipe,
+        IRatingPipe,
+    ]
 })
 export class OpponentDeltaComponent {
   public caption = input.required<string>();
