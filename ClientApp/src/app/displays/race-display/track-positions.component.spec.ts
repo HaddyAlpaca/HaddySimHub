@@ -2,13 +2,19 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TrackPosition, TrackPositionStatus, TrackPositionsComponent } from './track-positions.component';
 import { TrackPositionsComponentHarness } from './track-positions.component.harness';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { Component } from '@angular/core';
+import { Component, provideExperimentalZonelessChangeDetection } from '@angular/core';
 
 describe('TrackPositionsComponent tests', () => {
   let fixture: ComponentFixture<TrackPositionsTestHostComponent>;
   let component: TrackPositionsTestHostComponent;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      providers: [
+        provideExperimentalZonelessChangeDetection(),
+      ],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(TrackPositionsTestHostComponent);
     component = fixture.componentInstance;
   });

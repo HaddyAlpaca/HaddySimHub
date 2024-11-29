@@ -2,12 +2,16 @@
   <app-clock />
 </div>
 <div class="display">
-  @if (gameDataService.truckData()) {
-    <app-truck-display [data]="gameDataService.truckData()" />
-  } @else if(gameDataService.raceData()) {
-    <app-race-display [data]="gameDataService.raceData()" />
-  } @else if(gameDataService.rallyData()) {
-    <app-rally-display [data]="gameDataService.rallyData()" />
+  @let truckData = gameDataService.truckData();
+  @let raceData = gameDataService.raceData();
+  @let rallyData = gameDataService.rallyData();
+
+  @if (truckData) {
+    <app-truck-display [data]="truckData" />
+  } @else if(raceData) {
+    <app-race-display [data]="raceData" />
+  } @else if(rallyData) {
+    <app-rally-display [data]="rallyData" />
   } @else {
     <app-connection-status [status]="gameDataService.connectionStatus()" />
   }

@@ -2,13 +2,19 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SpeedometerComponent } from './speedometer.component';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { SpeedometerComponentHarness } from './speedometer.component.harness';
-import { Component } from '@angular/core';
+import { Component, provideExperimentalZonelessChangeDetection } from '@angular/core';
 
 describe('SpeedometerComponent tests', () => {
   let fixture: ComponentFixture<SpeedometerTestHostComponent>;
   let component: SpeedometerTestHostComponent;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      providers: [
+        provideExperimentalZonelessChangeDetection(),
+      ],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(SpeedometerTestHostComponent);
     component = fixture.componentInstance;
   });
