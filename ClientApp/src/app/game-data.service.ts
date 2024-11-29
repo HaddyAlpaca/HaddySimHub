@@ -1,6 +1,9 @@
 import { computed, Injectable, signal } from '@angular/core';
 import { filter, interval, take, tap } from 'rxjs';
 import { HttpTransportType, HubConnection, HubConnectionBuilder, IHttpConnectionOptions, LogLevel } from '@microsoft/signalr';
+import { RaceData } from '@displays/race-display/race-data';
+import { RallyData } from '@displays/rally-display/rally-data';
+import { TruckData } from '@displays/truck-display/truck-data';
 
 export interface ConnectionInfo {
   status: ConnectionStatus;
@@ -15,16 +18,16 @@ export enum ConnectionStatus {
   Connected,
 }
 
-export enum DisplayType {
+enum DisplayType {
   None,
   TruckDashboard,
   RaceDashboard,
   RallyDashboard,
 }
 
-export interface DisplayUpdate {
+interface DisplayUpdate {
   type: DisplayType;
-  data?: unknown;
+  data: TruckData | RaceData | RallyData | undefined;
 }
 
 @Injectable({
@@ -33,11 +36,17 @@ export interface DisplayUpdate {
 export class GameDataService {
   private _hubConnection: HubConnection;
 
-  private _connectionStatus = signal<ConnectionInfo>({ status: ConnectionStatus.Disconnected });
-  public connectionStatus = computed(() => this._connectionStatus());
+  private readonly _connectionStatus = signal<ConnectionInfo>({ status: ConnectionStatus.Disconnected });
+  public readonly connectionStatus = computed(() => this._connectionStatus());
 
-  private readonly _displayUpdate = signal<DisplayUpdate>({ type: DisplayType.None });
-  public readonly displayUpdate = computed(() => this._displayUpdate());
+  private readonly _truckData = signal<TruckData | null>(null);
+  public readonly truckData = computed(() => this._truckData());
+
+  private _raceData = signal<RaceData | null>(null);
+  public readonly raceData = computed(() => this._raceData());
+
+  private _rallyData = signal<RallyData | null>(null);
+  public readonly rallyData = computed(() => this._rallyData());
 
   public constructor() {
     const connectionOptions: IHttpConnectionOptions = {
@@ -69,7 +78,29 @@ export class GameDataService {
 
     //Monitor emmited data
     this._hubConnection.on('displayUpdate', (update: DisplayUpdate) => {
-      this._displayUpdate.set(update);
+      let truckData = null;
+      let raceData = null;
+      let rallyData = null;
+
+      if (update?.data) {
+        switch(update.type) {
+          case DisplayType.TruckDashboard:
+            truckData = update.data as TruckData;
+            break;
+
+          case DisplayType.RaceDashboard:
+            raceData = update.data as RaceData;
+            break;
+
+          case DisplayType.RallyDashboard:
+            rallyData = update.data as RallyData;
+            break;
+        }
+      }
+
+      this._truckData.set(truckData);
+      this._raceData.set(raceData);
+      this._rallyData.set(rallyData);
     });
   }
 

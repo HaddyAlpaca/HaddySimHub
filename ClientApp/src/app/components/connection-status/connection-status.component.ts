@@ -1,5 +1,5 @@
 import { Component, computed, input } from '@angular/core';
-import { ConnectionInfo, ConnectionStatus } from '@services/game-data.service';
+import { ConnectionInfo, ConnectionStatus } from 'src/app/game-data.service';
 
 @Component({
   selector: 'app-connection-status',
