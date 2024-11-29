@@ -1,14 +1,12 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, effect, input } from '@angular/core';
 import { RaceData } from './race-data';
 import { CommonModule } from '@angular/common';
-import { IRatingPipe } from './irating.pipe';
 import { TrackPositionsComponent } from './track-positions.component';
 import { SpeedometerComponent } from '@components/speedometer/speedometer.component';
 import { DataElementComponent, DataType } from '@components/data-element/data-element.component';
 import { OpponentDeltaComponent } from './opponent-delta.component';
 import { DeltaTimePipe } from '@components/delta-time/delta-time.pipe';
 import { LapTimePipe } from '@components/laptime/laptime.pipe';
-import { TimespanPipe } from '@components/timespan/timespan.pipe';
 
 @Component({
   selector: 'app-race-display',
@@ -20,8 +18,6 @@ import { TimespanPipe } from '@components/timespan/timespan.pipe';
     CommonModule,
     DeltaTimePipe,
     LapTimePipe,
-    TimespanPipe,
-    IRatingPipe,
     TrackPositionsComponent,
     SpeedometerComponent,
     DataElementComponent,

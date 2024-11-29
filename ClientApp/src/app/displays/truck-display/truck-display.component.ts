@@ -4,7 +4,6 @@ import { TimespanPipe } from './timespan.pipe';
 import { NgClass, DecimalPipe, CommonModule } from '@angular/common';
 import { NumberNlPipe } from '@components/number-nl/number-nl.pipe';
 import { WaypointComponent } from './waypoint.component';
-import { SpeedometerComponent } from '@components/speedometer/speedometer.component';
 import { GearPipe } from '@components/speedometer/gear.pipe';
 import { NumberFlexDigitPipe } from '@components/number-flex-digit/number-flex-digit.pipe';
 import { DataType } from '@components/data-element/data-element.component';
@@ -22,7 +21,6 @@ import { DataType } from '@components/data-element/data-element.component';
     NumberNlPipe,
     CommonModule,
     WaypointComponent,
-    SpeedometerComponent,
     GearPipe,
     NumberFlexDigitPipe,
   ],

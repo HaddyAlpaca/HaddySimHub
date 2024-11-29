@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-
 import { TruckDisplayComponent } from './truck-display.component';
 import { TruckDashComponentHarness } from './truck-display.component.harness';
 import { TruckData } from './truck-data';
-import { Component } from '@angular/core';
+import { Component, provideExperimentalZonelessChangeDetection, signal } from '@angular/core';
 
 describe('TruckDisplayComponent', () => {
   let fixture: ComponentFixture<TruckDisplayTestComponent>;
@@ -13,6 +12,12 @@ describe('TruckDisplayComponent', () => {
   let harness: TruckDashComponentHarness;
 
   beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      providers: [
+        provideExperimentalZonelessChangeDetection(),
+      ],
+    }).compileComponents();
+
     //Set default values for the truck data
     data = new TruckData();
 
@@ -86,17 +91,17 @@ describe('TruckDisplayComponent', () => {
   });
 
   const patchData = (value: Record<string, unknown>): void => {
-    component.data = {
+    component.data.set({
       ...data,
       ...value,
-    };
+    });
   };
 });
 
 @Component({
-  template: '<app-truck-display [data]="data" />',
+  template: '<app-truck-display [data]="data()" />',
   imports: [TruckDisplayComponent],
 })
 export class TruckDisplayTestComponent {
-  public data = new TruckData();
+  public data = signal<TruckData>(new TruckData());
 }

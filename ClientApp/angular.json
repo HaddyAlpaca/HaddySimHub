@@ -89,8 +89,6 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "polyfills": [
-              "zone.js",
-              "zone.js/testing"
             ],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
@@ -109,7 +107,7 @@
             "lintFilePatterns": [
               "src/**/*.js",
               "src/**/*.ts",
-              "src/**/*.html",
+              "src/**/*.html"
             ]
           }
         }
