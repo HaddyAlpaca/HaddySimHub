@@ -241,19 +241,17 @@ describe('Race display component tests', () => {
   });
 
   const patchData = (value: Record<string, unknown>): void => {
-    const data = {
+    component.data = {
       ...raceData,
       ...value,
-    };
-
-    component.dataSource = data;
+    };;
   };
 });
 
 @Component({
-  template: '<app-race-display [dataSource]="dataSource" />',
+  template: '<app-race-display [data]="data" />',
   imports: [RaceDisplayComponent],
 })
 export class RaceDisplayTestComponent {
-  public dataSource =  new RaceData();
+  public data =  new RaceData();
 }

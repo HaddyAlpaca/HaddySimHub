@@ -86,19 +86,17 @@ describe('TruckDisplayComponent', () => {
   });
 
   const patchData = (value: Record<string, unknown>): void => {
-    const newData = {
+    component.data = {
       ...data,
       ...value,
     };
-
-    component.dataSource = newData;
   };
 });
 
 @Component({
-  template: '<app-truck-display [dataSource]="dataSource" />',
+  template: '<app-truck-display [data]="data" />',
   imports: [TruckDisplayComponent],
 })
 export class TruckDisplayTestComponent {
-  public dataSource = new TruckData();
+  public data = new TruckData();
 }
