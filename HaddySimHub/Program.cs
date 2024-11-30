@@ -72,10 +72,10 @@ displays =
 var testRun = args.Contains("--test-run");
 var processTask = new Task(async () => {
     // Monitor processes
-    IEnumerable<IDisplay> prevActiveDisplays = [];
-    while (!token.IsCancellationRequested)
+    if (testRun)
     {
-        if (testRun)
+        bool parkingBrakeOn = false;
+        while (!token.IsCancellationRequested)
         {
             var update = new DisplayUpdate
             {
@@ -83,11 +83,17 @@ var processTask = new Task(async () => {
                 Data = new TruckData
                 {
                     Speed = (short)DateTime.Now.Second,
+                    ParkingBrakeOn = !parkingBrakeOn,
                 }
             };
             await SendDisplayUpdate(update);
+            await Task.Delay(TimeSpan.FromSeconds(2));
         }
-        else
+    }
+    else
+    {
+        IEnumerable<IDisplay> prevActiveDisplays = [];
+        while (!token.IsCancellationRequested)
         {
             var activeDisplays = displays.Where(d => d.IsActive).ToList();
             if (activeDisplays.Count == 0)
