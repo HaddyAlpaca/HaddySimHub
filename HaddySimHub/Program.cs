@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 using HaddySimHub.Displays;
 using System.Text;
+using System.Diagnostics;
 
 HaddySimHub.Logging.ILogger logger = new HaddySimHub.Logging.Logger("main");
 CancellationTokenSource cancellationTokenSource = new();
@@ -74,7 +75,7 @@ var processTask = new Task(async () => {
     // Monitor processes
     if (testRun)
     {
-        bool parkingBrakeOn = false;
+        var rnd = new Random();
         while (!token.IsCancellationRequested)
         {
             var update = new DisplayUpdate
@@ -83,7 +84,7 @@ var processTask = new Task(async () => {
                 Data = new TruckData
                 {
                     Speed = (short)DateTime.Now.Second,
-                    ParkingBrakeOn = !parkingBrakeOn,
+                    ParkingBrakeOn = rnd.Next(2) >= 1,
                 }
             };
             await SendDisplayUpdate(update);
@@ -142,6 +143,7 @@ var processTask = new Task(async () => {
     }
 }, token);
 
+
 try
 {
     webServerTask.Start();
@@ -150,6 +152,11 @@ try
 catch(Exception ex)
 {
     logger.Fatal($"Unhandled Exception: {ex.Message}\n\n{ex.StackTrace}");
+
+    //Restart on crash
+    var applicationPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+    Process.Start(applicationPath);
+    Environment.Exit(Environment.ExitCode);
 }
 
 webServer.WaitForShutdown();
