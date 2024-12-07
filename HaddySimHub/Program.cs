@@ -12,160 +12,156 @@ using HaddySimHub.Displays;
 using System.Text;
 using System.Diagnostics;
 
-try
+HaddySimHub.Logging.ILogger logger = new HaddySimHub.Logging.Logger("main");
+CancellationTokenSource cancellationTokenSource = new();
+CancellationToken token = cancellationTokenSource.Token;
+IEnumerable<IDisplay> displays = [];
+DisplayUpdate idleDisplayUpdate = new() { Type = DisplayType.None };
+JsonSerializerOptions serializeOptions = new() { IncludeFields = true };
+
+bool isDebugEnabled = args.Contains("--debug");
+SetupLogging(isDebugEnabled);
+
+WebApplicationOptions options = new()
 {
-    HaddySimHub.Logging.ILogger logger = new HaddySimHub.Logging.Logger("main");
-    CancellationTokenSource cancellationTokenSource = new();
-    CancellationToken token = cancellationTokenSource.Token;
-    IEnumerable<IDisplay> displays = [];
-    DisplayUpdate idleDisplayUpdate = new() { Type = DisplayType.None };
-    JsonSerializerOptions serializeOptions = new() { IncludeFields = true };
+    ContentRootPath = AppContext.BaseDirectory
+};
 
-    bool isDebugEnabled = args.Contains("--debug");
-    SetupLogging(isDebugEnabled);
+var builder = WebApplication.CreateBuilder(options);
+builder.WebHost.UseKestrel(options =>
+{
+    options.ListenAnyIP(3333);
+});
 
-    WebApplicationOptions options = new()
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
     {
-        ContentRootPath = AppContext.BaseDirectory
-    };
-
-    var builder = WebApplication.CreateBuilder(options);
-    builder.WebHost.UseKestrel(options =>
-    {
-        options.ListenAnyIP(3333);
+        builder
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .SetIsOriginAllowed(origin => true);
     });
+});
+builder.Services.AddControllers();
+builder.Services.AddSignalR(o =>
+{
+    o.EnableDetailedErrors = true;
+});
 
-    builder.Services.AddCors(options =>
+var webServer = builder.Build();
+webServer.UseRouting();
+webServer.UseDefaultFiles();
+webServer.UseStaticFiles();
+webServer.UseCors();
+webServer.MapHub<GameDataHub>("/display-data");
+
+var webServerTask = new Task(async () =>
+{
+    await webServer!.StartAsync(token);
+}, token);
+
+// Setup display
+displays =
+[
+    new Dirt2DashboardDisplay(SendDisplayUpdate),
+    new IRacingDashboardDisplay(SendDisplayUpdate, logger),
+    new Ets2DashboardDisplay(SendDisplayUpdate, logger),
+];
+
+var testRun = args.Contains("--test-run");
+var processTask = new Task(async () => {
+    // Monitor processes
+    if (testRun)
     {
-        options.AddDefaultPolicy(builder =>
+        var rnd = new Random();
+        while (!token.IsCancellationRequested)
         {
-            builder
-                .AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-                .SetIsOriginAllowed(origin => true);
-        });
-    });
-    builder.Services.AddControllers();
-    builder.Services.AddSignalR(o =>
-    {
-        o.EnableDetailedErrors = true;
-    });
-
-    var webServer = builder.Build();
-    webServer.UseRouting();
-    webServer.UseDefaultFiles();
-    webServer.UseStaticFiles();
-    webServer.UseCors();
-    webServer.MapHub<GameDataHub>("/display-data");
-
-    var webServerTask = new Task(async () =>
-    {
-        await webServer!.StartAsync(token);
-    }, token);
-
-    // Setup display
-    displays =
-    [
-        new Dirt2DashboardDisplay(SendDisplayUpdate),
-        new IRacingDashboardDisplay(SendDisplayUpdate, logger),
-        new Ets2DashboardDisplay(SendDisplayUpdate, logger),
-    ];
-
-    var testRun = args.Contains("--test-run");
-    var processTask = new Task(async () => {
-        // Monitor processes
-        if (testRun)
-        {
-            var rnd = new Random();
-            while (!token.IsCancellationRequested)
+            var update = new DisplayUpdate
             {
-                var update = new DisplayUpdate
+                Type = DisplayType.TruckDashboard,
+                Data = new TruckData
                 {
-                    Type = DisplayType.TruckDashboard,
-                    Data = new TruckData
-                    {
-                        Speed = (short)DateTime.Now.Second,
-                        ParkingBrakeOn = rnd.Next(2) >= 1,
-                    }
-                };
-                await SendDisplayUpdate(update);
-                await Task.Delay(TimeSpan.FromSeconds(2));
-            }
-        }
-        else
-        {
-            IEnumerable<IDisplay> prevActiveDisplays = [];
-            while (!token.IsCancellationRequested)
-            {
-                var activeDisplays = displays.Where(d => d.IsActive).ToList();
-                if (activeDisplays.Count == 0)
-                {
-                    logger.Debug("No active displays found");
-                    await SendDisplayUpdate(idleDisplayUpdate);
+                    Speed = (short)DateTime.Now.Second,
+                    ParkingBrakeOn = rnd.Next(2) >= 1,
                 }
-                else
-                {
-                    StringBuilder sb = new();
-                    sb.AppendLine("Active displays:");
-                    foreach(var display in activeDisplays)
-                    {
-                        sb.AppendLine($"{display.Description}");
-                    }
-
-                    logger.Debug(sb.ToString());
-                }
-
-                activeDisplays.Where(g => !prevActiveDisplays.Any(x => x.Description == g.Description)).ForEach(d => {
-                    try
-                    {
-                        logger.Info($"Start receiving data from {d.Description}");
-                        d.Start();
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.Error($"Error starting datafeed of game {d.Description}: {ex.Message}\n\n{ex.StackTrace}");
-                    }
-                });
-                prevActiveDisplays.Where(g => !activeDisplays.Any(x => x.Description == g.Description)).ForEach(d => {
-                    try
-                    {
-                        logger.Info($"Stop receiving data from {d.Description}");
-                        d.Stop();
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.Error($"Error stopping datafeed of game {d.Description}: {ex.Message}\n\n{ex.StackTrace}");
-                    }
-                });
-                prevActiveDisplays = activeDisplays;
-            }
-
+            };
+            await SendDisplayUpdate(update);
             await Task.Delay(TimeSpan.FromSeconds(2));
         }
-    }, token);
-
-    try
-    {
-        webServerTask.Start();
-        processTask.Start();
     }
-    catch(Exception ex)
+    else
     {
-        logger.Fatal($"Unhandled Exception: {ex.Message}\n\n{ex.StackTrace}");
-    }
+        IEnumerable<IDisplay> prevActiveDisplays = [];
+        while (!token.IsCancellationRequested)
+        {
+            var activeDisplays = displays.Where(d => d.IsActive).ToList();
+            if (activeDisplays.Count == 0)
+            {
+                logger.Debug("No active displays found");
+                await SendDisplayUpdate(idleDisplayUpdate);
+            }
+            else
+            {
+                StringBuilder sb = new();
+                sb.AppendLine("Active displays:");
+                foreach(var display in activeDisplays)
+                {
+                    sb.AppendLine($"{display.Description}");
+                }
 
-    webServer.WaitForShutdown();
-    cancellationTokenSource.Cancel();
-    Task.WaitAll([webServerTask, processTask]);
-}
-catch
+                logger.Debug(sb.ToString());
+            }
+
+            activeDisplays.Where(g => !prevActiveDisplays.Any(x => x.Description == g.Description)).ForEach(d => {
+                try
+                {
+                    logger.Info($"Start receiving data from {d.Description}");
+                    d.Start();
+                }
+                catch (Exception ex)
+                {
+                    logger.Error($"Error starting datafeed of game {d.Description}: {ex.Message}\n\n{ex.StackTrace}");
+                }
+            });
+            prevActiveDisplays.Where(g => !activeDisplays.Any(x => x.Description == g.Description)).ForEach(d => {
+                try
+                {
+                    logger.Info($"Stop receiving data from {d.Description}");
+                    d.Stop();
+                }
+                catch (Exception ex)
+                {
+                    logger.Error($"Error stopping datafeed of game {d.Description}: {ex.Message}\n\n{ex.StackTrace}");
+                }
+            });
+            prevActiveDisplays = activeDisplays;
+        }
+
+        await Task.Delay(TimeSpan.FromSeconds(2));
+    }
+}, token);
+
+
+try
 {
+    webServerTask.Start();
+    processTask.Start();
+}
+catch(Exception ex)
+{
+    logger.Fatal($"Unhandled Exception: {ex.Message}\n\n{ex.StackTrace}");
+
     //Restart on crash
     var applicationPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
     Process.Start(applicationPath);
     Environment.Exit(Environment.ExitCode);
 }
+
+webServer.WaitForShutdown();
+cancellationTokenSource.Cancel();
+Task.WaitAll([webServerTask, processTask]);
 
 void SetupLogging(bool debug)
 {
