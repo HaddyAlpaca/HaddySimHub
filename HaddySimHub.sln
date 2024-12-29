@@ -9,6 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCSSdkClient", "SCSSdkClien
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iRacingSDK.Net", "iRacingSDK.Net\iRacingSDK.Net.csproj", "{9BA3407D-0295-4196-851E-8DB3E522178A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "barraider-sdtools", "barraider-sdtools\barraider-sdtools.csproj", "{6E1C5680-2B37-4518-9E63-84DE5569D9D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HaddyTruckSDPlugin", "HaddyTruckSDPlugin\HaddyTruckSDPlugin.csproj", "{011B1EE6-C627-4EF8-95F1-331B8E33A0E3}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "HaddySimHub.Shared", "HaddySimHub.Shared\HaddySimHub.Shared.shproj", "{294A92C7-D5FA-4C1B-8B18-C45AA3FE04C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,11 +33,24 @@ Global
 		{9BA3407D-0295-4196-851E-8DB3E522178A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BA3407D-0295-4196-851E-8DB3E522178A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BA3407D-0295-4196-851E-8DB3E522178A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E1C5680-2B37-4518-9E63-84DE5569D9D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E1C5680-2B37-4518-9E63-84DE5569D9D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E1C5680-2B37-4518-9E63-84DE5569D9D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E1C5680-2B37-4518-9E63-84DE5569D9D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{011B1EE6-C627-4EF8-95F1-331B8E33A0E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{011B1EE6-C627-4EF8-95F1-331B8E33A0E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{011B1EE6-C627-4EF8-95F1-331B8E33A0E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{011B1EE6-C627-4EF8-95F1-331B8E33A0E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A6C2F9A8-1E12-4F5A-A4F6-515A28544B9F}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		HaddySimHub.Shared\HaddySimHub.Shared.projitems*{011b1ee6-c627-4ef8-95f1-331b8e33a0e3}*SharedItemsImports = 5
+		HaddySimHub.Shared\HaddySimHub.Shared.projitems*{294a92c7-d5fa-4c1b-8b18-c45aa3fe04c7}*SharedItemsImports = 13
+		HaddySimHub.Shared\HaddySimHub.Shared.projitems*{4d5c7470-e2db-4233-89e5-09e145da5378}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

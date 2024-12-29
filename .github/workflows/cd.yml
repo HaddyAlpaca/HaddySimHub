@@ -40,7 +40,7 @@ jobs:
         dotnet-version: ${{ env.dotnet_version }}
 
     - name: Publish server app
-      run: dotnet publish ${{ env.app_path }} -r win-x64 --self-contained true -p:PublishDir=${{env.dist_folder}} /p:PublishSingleFile=true
+      run: dotnet publish ${{ env.app_path }} -r win-x64 -p:PublishDir=${{env.dist_folder}}
 
     - name: Install Node.js
       uses: actions/setup-node@v4

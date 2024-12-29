@@ -1,55 +1,17 @@
 using HaddySimHub.Logging;
-using HaddySimHub.Models;
+using HaddySimHub.Shared;
 using SCSSdkClient;
 using SCSSdkClient.Object;
 using static SCSSdkClient.Object.SCSTelemetry;
 
 namespace HaddySimHub.Displays;
 
-internal sealed class Ets2DashboardDisplay(Func<DisplayUpdate, Task> updateDisplay, ILogger logger) : DisplayBase<SCSTelemetry>(updateDisplay)
+internal sealed class Ets2DashboardDisplay(Func<DisplayUpdate, Task> updateDisplay) : DisplayBase<SCSTelemetry>(updateDisplay)
 {
-    private IEnumerable<Notification> _notifications = [];
     private SCSSdkTelemetry? telemetry;
-    private SpecialEvents _specialEventsValues = new();
 
     public override void Start() {
         this.telemetry = new ();
-        this.telemetry.Data += (SCSTelemetry data, bool newTimestamp) =>
-        {
-            try
-            {
-                if (this._specialEventsValues.Fined != data.SpecialEventsValues.Fined)
-                {
-                    string description = data.GamePlay.FinedEvent.Offence switch
-                    {
-                        Offence.Speeding => "Snelheidsovertreding",
-                        Offence.Speeding_camera => "Snelheidscamera",
-                        Offence.Avoid_sleeping => "Rusttijdenovertreding",
-                        Offence.Crash => "Aanrijding",
-                        Offence.Red_signal => "Roodlichtovertreding",
-                        Offence.Hard_Shoulder_Violation => "Rijden over de vluchtstrook",
-                        _ => data.GamePlay.FinedEvent.Offence.ToString(),
-                    };
-                    string message = $"Boete: {description} {data.GamePlay.FinedEvent.Amount}";
-                    this.AddNotification(message);
-                }
-
-                if (this._specialEventsValues.Tollgate != data.SpecialEventsValues.Tollgate)
-                {
-                    string message = data.GamePlay.TollgateEvent.PayAmount == 0
-                        ? "Begin van tolweg."
-                        : $"Tol betaald: {data.GamePlay.TollgateEvent.PayAmount}";
-                    this.AddNotification(message);
-                }
-
-                this._specialEventsValues = data.SpecialEventsValues;
-                this._updateDisplay(this.ConvertToDisplayUpdate(data));
-            }
-            catch(Exception ex)
-            {
-                logger.Error($"{ex.Message}\n\n{ex.StackTrace}");
-            }
-        };
     }
 
     public override void Stop()
@@ -64,9 +26,6 @@ internal sealed class Ets2DashboardDisplay(Func<DisplayUpdate, Task> updateDispl
 
     protected override DisplayUpdate ConvertToDisplayUpdate(SCSTelemetry data)
     {
-        var openNotifications = this._notifications.Where(n => n.Ttl >= DateTime.Now);
-        this._notifications = openNotifications;
-
         var displayData = new TruckData()
         {
             // Navigation info
@@ -132,20 +91,8 @@ internal sealed class Ets2DashboardDisplay(Func<DisplayUpdate, Task> updateDispl
             WaterTempWarningOn = data.TruckValues.CurrentValues.DashboardValues.WarningValues.WaterTemperature,
             BatteryVoltageWarningOn = data.TruckValues.CurrentValues.DashboardValues.WarningValues.BatteryVoltage,
             BatteryVoltage = data.TruckValues.CurrentValues.DashboardValues.BatteryVoltage,
-            Messages = openNotifications.Select(n => n.Message).ToArray(),
         };
 
         return new DisplayUpdate { Type = DisplayType.TruckDashboard, Data = displayData };
-    }
-
-    private void AddNotification(string message)
-    {
-        this._notifications = [..this._notifications, new Notification { Message = message }];
-    }
-
-    private record Notification
-    {
-        public string Message { get; init; } = string.Empty;
-        public DateTime Ttl { get; init; } = DateTime.Now.AddSeconds(10);
     }
 }

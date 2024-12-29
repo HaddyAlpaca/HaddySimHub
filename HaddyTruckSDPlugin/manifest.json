@@ -1,0 +1,38 @@
+{
+  "Actions": [
+    {
+      "Icon": "Images/toggleAction/icon",
+      "Name": "Haddy Alpaca Truck Plugin",
+      "States": [
+        {
+          "Image": "Images/toggleAction/defaultImage",
+          "TitleAlignment": "middle",
+          "FontSize": "12"
+        }
+      ],
+      "SupportedInMultiActions": true,
+      "Tooltip": "Haddy Alpaca Truck Plugin",
+      "UUID": "com.haddyalpaca.truck.toggle",
+      "PropertyInspectorPath": "PropertyInspector/Sample.html"
+    }
+  ],
+  "Author": "Haddy Alpaca",
+  "Description": "Sample Plugin to test SDTools",
+  "Name": "SDTools Sample Plugin",
+  "Icon": "Images/pluginIcon",
+  "URL": "https://barraider.com/",
+  "Version": "0.1",
+  "CodePath": "com.test.sdtools",
+  "Category": "Test",
+  "CategoryIcon": "Images/categoryIcon",
+  "OS": [
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ],
+  "SDKVersion": 2,
+  "Software": {
+    "MinimumVersion": "4.4.1"
+  }
+}

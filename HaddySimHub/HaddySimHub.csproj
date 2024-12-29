@@ -17,5 +17,6 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
     <PackageReference Include="NLog" Version="5.3.4" />
   </ItemGroup>
+  <Import Project="..\HaddySimHub.Shared\HaddySimHub.Shared.projitems" Label="Shared" />
 
 </Project>
