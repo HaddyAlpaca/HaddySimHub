@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>294a92c7-d5fa-4c1b-8b18-c45aa3fe04c7</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>HaddySimHub.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)DisplayType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DisplayUpdate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RaceData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RallyData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TrackPosition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TrackPositionStatus.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TruckData.cs" />
+  </ItemGroup>
+</Project>

@@ -1,5 +1,4 @@
-﻿using HaddySimHub.Models;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
@@ -11,6 +10,7 @@ using System.Text.Json;
 using HaddySimHub.Displays;
 using System.Text;
 using System.Diagnostics;
+using HaddySimHub.Shared;
 
 HaddySimHub.Logging.ILogger logger = new HaddySimHub.Logging.Logger("main");
 CancellationTokenSource cancellationTokenSource = new();
@@ -67,7 +67,7 @@ displays =
 [
     new Dirt2DashboardDisplay(SendDisplayUpdate),
     new IRacingDashboardDisplay(SendDisplayUpdate, logger),
-    new Ets2DashboardDisplay(SendDisplayUpdate, logger),
+    new Ets2DashboardDisplay(SendDisplayUpdate),
 ];
 
 var testRun = args.Contains("--test-run");
@@ -75,7 +75,7 @@ var processTask = new Task(async () => {
     // Monitor processes
     if (testRun)
     {
-        var rnd = new Random();
+        bool parkingBrakeOn = false;
         while (!token.IsCancellationRequested)
         {
             var update = new DisplayUpdate
@@ -84,7 +84,7 @@ var processTask = new Task(async () => {
                 Data = new TruckData
                 {
                     Speed = (short)DateTime.Now.Second,
-                    ParkingBrakeOn = rnd.Next(2) >= 1,
+                    ParkingBrakeOn = !parkingBrakeOn,
                 }
             };
             await SendDisplayUpdate(update);

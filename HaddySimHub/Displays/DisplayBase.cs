@@ -1,4 +1,4 @@
-using HaddySimHub.Models;
+using HaddySimHub.Shared;
 
 namespace HaddySimHub.Displays;
 

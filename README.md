@@ -4,6 +4,7 @@
 
 [![CI](https://github.com/HaddyAlpaca/HaddySimHub/actions/workflows/cd.yml/badge.svg)](https://github.com/HaddyAlpaca/HaddySimHub/actions/workflows/cd.yml)
 
-## Referenced repositories
+## Referenced/cloned repositories
 * https://github.com/hfoxy/iRacingSDK.Net
 * https://github.com/RenCloud/scs-sdk-plugin
+* https://github.com/BarRaider/streamdeck-tools
