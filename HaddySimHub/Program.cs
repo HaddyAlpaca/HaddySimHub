@@ -78,13 +78,14 @@ var processTask = new Task(async () => {
         bool parkingBrakeOn = false;
         while (!token.IsCancellationRequested)
         {
+            parkingBrakeOn = !parkingBrakeOn;
             var update = new DisplayUpdate
             {
                 Type = DisplayType.TruckDashboard,
                 Data = new TruckData
                 {
                     Speed = (short)DateTime.Now.Second,
-                    ParkingBrakeOn = !parkingBrakeOn,
+                    ParkingBrakeOn = parkingBrakeOn,
                 }
             };
             await SendDisplayUpdate(update);
