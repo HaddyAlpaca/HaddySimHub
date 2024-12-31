@@ -2,28 +2,23 @@
   "Actions": [
     {
       "Icon": "Images/toggleAction/icon",
-      "Name": "Haddy Alpaca Truck Plugin",
+      "Name": "Parking brake",
       "States": [
         {
-          "Image": "Images/toggleAction/defaultImage",
-          "TitleAlignment": "middle",
-          "FontSize": "12"
+          "Image": "Images/toggleAction/defaultImage"
         }
       ],
-      "SupportedInMultiActions": true,
-      "Tooltip": "Haddy Alpaca Truck Plugin",
-      "UUID": "com.haddyalpaca.truck.toggle",
-      "PropertyInspectorPath": "PropertyInspector/Sample.html"
+      "UUID": "com.haddyalpaca.truck.toggle"
     }
   ],
   "Author": "Haddy Alpaca",
-  "Description": "Sample Plugin to test SDTools",
-  "Name": "SDTools Sample Plugin",
+  "Description": "Haddy Alpaca Truck Plugin (ETS2)",
+  "Name": "Haddy Alpaca Truck Plugin",
   "Icon": "Images/pluginIcon",
-  "URL": "https://barraider.com/",
+  "URL": "https://github.com/HaddyAlpaca/HaddySimHub/",
   "Version": "0.1",
-  "CodePath": "com.test.sdtools",
-  "Category": "Test",
+  "CodePathWin": "HaddyTruckSDPlugin.exe",
+  "Category": "Haddy Alpaca Truck",
   "CategoryIcon": "Images/categoryIcon",
   "OS": [
     {
