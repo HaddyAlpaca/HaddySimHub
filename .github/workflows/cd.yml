@@ -42,6 +42,15 @@ jobs:
     - name: Publish server app
       run: dotnet publish ${{ env.app_path }} -r win-x64 -p:PublishDir=${{env.dist_folder}}
 
+    - name: Create Streamdeck plugins folder
+      run: mkdir ${{ env.dist_folder }}\sdPlugins
+
+    - name: Build truck Streamdeck plugin
+      run: |
+        dotnet build .\HaddyTruckSDPlugin\HaddyTruckSDPlugin.csproj -c Release
+        mkdir ${{ env.dist_folder }}\sdPlugins\com.haddyalpaca.truck
+        Copy-Item .\HaddyTruckSDPlugin\bin\Release\net9.0-windows\* -Destination ${{ env.dist_folder }}\sdPlugins\com.haddyalpaca.truck -Recurse -Force
+
     - name: Install Node.js
       uses: actions/setup-node@v4
       with:
@@ -60,7 +69,7 @@ jobs:
     - name: Copy client app  to distribution folder
       run: |
         mkdir ${{ env.dist_folder }}\wwwroot
-        Copy-Item ${{ env.clientapp_folder }}dist/haddy-sim-hub-client/browser/* -Destination ${{ env.dist_folder }}\wwwroot -Recurse -Force -Verbose
+        Copy-Item ${{ env.clientapp_folder }}dist/haddy-sim-hub-client/browser/* -Destination ${{ env.dist_folder }}\wwwroot -Recurse -Force
 
     - name: Zip build result
       run: Compress-Archive -Path ${{ env.dist_folder }}/* -Destination haddy-simhub.zip
