@@ -1,29 +1,44 @@
 {
   "Actions": [
     {
-      "Icon": "Images/toggleAction/icon",
-      "Name": "Haddy Alpaca Truck Plugin",
+      "Icon": "images/parking-brake/on",
+      "Name": "Parking brake",
       "States": [
         {
-          "Image": "Images/toggleAction/defaultImage",
-          "TitleAlignment": "middle",
-          "FontSize": "12"
+          "Image": "images/off"
         }
       ],
-      "SupportedInMultiActions": true,
-      "Tooltip": "Haddy Alpaca Truck Plugin",
-      "UUID": "com.haddyalpaca.truck.toggle",
-      "PropertyInspectorPath": "PropertyInspector/Sample.html"
+      "UUID": "com.haddyalpaca.truck.parking-brake"
+    },
+    {
+      "Icon": "images/hazard-lights/on",
+      "Name": "Hazard lights",
+      "States": [
+        {
+          "Image": "images/off"
+        }
+      ],
+      "UUID": "com.haddyalpaca.truck.hazard-lights"
+    },
+    {
+      "Icon": "images/high-beam/on",
+      "Name": "Hazard lights",
+      "States": [
+        {
+          "Image": "images/off"
+        }
+      ],
+      "UUID": "com.haddyalpaca.truck.high-beam"
     }
   ],
   "Author": "Haddy Alpaca",
-  "Description": "Sample Plugin to test SDTools",
-  "Name": "SDTools Sample Plugin",
-  "Icon": "Images/pluginIcon",
-  "URL": "https://barraider.com/",
+  "Description": "Haddy Alpaca Truck Plugin (ETS2)",
+  "Name": "Haddy Alpaca Truck Plugin",
+  "Icon": "images/pluginIcon",
+  "URL": "https://github.com/HaddyAlpaca/HaddySimHub/",
   "Version": "0.1",
-  "CodePath": "com.test.sdtools",
-  "Category": "Test",
+  "CodePathWin": "HaddyTruckSDPlugin.exe",
+  "Category": "Haddy Alpaca Truck",
   "CategoryIcon": "Images/categoryIcon",
   "OS": [
     {
