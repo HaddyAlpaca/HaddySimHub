@@ -2,20 +2,19 @@
 using HaddySimHub.Shared;
 using Microsoft.AspNetCore.SignalR.Client;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 
 namespace HaddyTruckSDPlugin
 {
-    [PluginActionId("com.haddyalpaca.truck.toggle")]
-    public class ToggleAction : KeypadBase
+    public abstract class KeyActionBase : KeypadBase
     {
         private readonly HubConnection _hubConnection;
-        private readonly string _imagesFolder = "Images/parking-brake/";
         private bool _signalRStarted = false;
-        private TruckData _truckData = new();
-        private bool? _on;
+        private string? _currentImage = null;
 
-        public ToggleAction(ISDConnection connection, InitialPayload payload)
+        protected string _keyStroke = string.Empty;
+        protected TruckData _truckData = new();
+
+        public KeyActionBase(ISDConnection connection, InitialPayload payload)
             : base(connection, payload)
         {
             this._hubConnection = new HubConnectionBuilder()
@@ -29,7 +28,12 @@ namespace HaddyTruckSDPlugin
                     update.Data is not null &&
                     update.Data is JsonElement element)
                 {
-                    var data = element.Deserialize<TruckData>();
+                    var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    };
+
+                    var data = element.Deserialize<TruckData>(options);
                     if (data is not null)
                     {
                         this._truckData = data;
@@ -43,7 +47,10 @@ namespace HaddyTruckSDPlugin
 
         public override void KeyReleased(KeyPayload payload)
         {
-            SendKeys.SendWait(" ");
+            if (!string.IsNullOrEmpty(this._keyStroke))
+            {
+                SendKeys.SendWait(this._keyStroke);
+            }
         }
 
         public override void OnTick()
@@ -54,7 +61,6 @@ namespace HaddyTruckSDPlugin
                 {
                     this._hubConnection.StartAsync().Wait();
                     this._signalRStarted = true;
-                    Logger.Instance.LogMessage(TracingLevel.INFO, "SignalR started.");
                 }
                 catch (Exception ex)
                 {
@@ -83,17 +89,27 @@ namespace HaddyTruckSDPlugin
 
         private async Task UpdateState()
         {
-            bool on = this._truckData.ParkingBrakeOn;
-            Logger.Instance.LogMessage(TracingLevel.INFO, "State: " + on);
-
-            if (this._on is null || this._on != on)
+            string image = this.GetStateImage();
+            if (this._currentImage is null || this._currentImage != image)
             {
-                this._on = on;
-                await this.SetImage(on ? "on" : "off");
+                this._currentImage = image;
+                await this.SetImage(image);
             }
         }
 
-        private async Task SetImage(string imageFile) => 
-            await Connection.SetImageAsync(Path.Combine(this._imagesFolder, imageFile));
+        protected abstract string GetStateImage();
+
+        private async Task SetImage(string imageFile) =>
+            await Connection.SetImageAsync(Path.Combine("images", GetPluginId(), imageFile));
+
+        private string GetPluginId()
+        {
+            // Get the PluginActionId attribute value
+            var attribute = (Attribute
+                .GetCustomAttributes(this.GetType(), typeof(PluginActionIdAttribute))
+                .FirstOrDefault()) as PluginActionIdAttribute;
+
+            return attribute?.ActionId.Split('.').Last() ?? string.Empty;
+        }
     }
 }

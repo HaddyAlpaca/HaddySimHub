@@ -1,20 +1,40 @@
 {
   "Actions": [
     {
-      "Icon": "Images/toggleAction/icon",
+      "Icon": "images/parking-brake/on",
       "Name": "Parking brake",
       "States": [
         {
-          "Image": "Images/toggleAction/defaultImage"
+          "Image": "images/off"
         }
       ],
-      "UUID": "com.haddyalpaca.truck.toggle"
+      "UUID": "com.haddyalpaca.truck.parking-brake"
+    },
+    {
+      "Icon": "images/hazard-lights/on",
+      "Name": "Hazard lights",
+      "States": [
+        {
+          "Image": "images/off"
+        }
+      ],
+      "UUID": "com.haddyalpaca.truck.hazard-lights"
+    },
+    {
+      "Icon": "images/high-beam/on",
+      "Name": "Hazard lights",
+      "States": [
+        {
+          "Image": "images/off"
+        }
+      ],
+      "UUID": "com.haddyalpaca.truck.high-beam"
     }
   ],
   "Author": "Haddy Alpaca",
   "Description": "Haddy Alpaca Truck Plugin (ETS2)",
   "Name": "Haddy Alpaca Truck Plugin",
-  "Icon": "Images/pluginIcon",
+  "Icon": "images/pluginIcon",
   "URL": "https://github.com/HaddyAlpaca/HaddySimHub/",
   "Version": "0.1",
   "CodePathWin": "HaddyTruckSDPlugin.exe",
