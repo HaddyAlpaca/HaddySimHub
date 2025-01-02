@@ -36,6 +36,7 @@ export class TruckData {
   public cruiseControlOn = false;
   public cruiseControlSpeed = 0;
   public gear = 0;
+  public parkingLightsOn = false;
   public lowBeamOn = false;
   public highBeamOn = false;
   public parkingBrakeOn = false;

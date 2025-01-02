@@ -1,8 +1,6 @@
-using HaddySimHub.Logging;
 using HaddySimHub.Shared;
 using SCSSdkClient;
 using SCSSdkClient.Object;
-using static SCSSdkClient.Object.SCSTelemetry;
 
 namespace HaddySimHub.Displays;
 
@@ -12,6 +10,10 @@ internal sealed class Ets2DashboardDisplay(Func<DisplayUpdate, Task> updateDispl
 
     public override void Start() {
         this.telemetry = new ();
+        this.telemetry.Data += (SCSTelemetry data, bool newTimestamp) =>
+        {
+            this._updateDisplay(this.ConvertToDisplayUpdate(data));
+        };
     }
 
     public override void Stop()
@@ -67,6 +69,7 @@ internal sealed class Ets2DashboardDisplay(Func<DisplayUpdate, Task> updateDispl
             SpeedLimit = (short)Math.Max(data.NavigationValues.SpeedLimit.Kph, 0),
             CruiseControlOn = data.TruckValues.CurrentValues.DashboardValues.CruiseControl,
             CruiseControlSpeed = (short)data.TruckValues.CurrentValues.DashboardValues.CruiseControlSpeed.Kph,
+            ParkingLightsOn = data.TruckValues.CurrentValues.LightsValues.Parking,
             LowBeamOn = data.TruckValues.CurrentValues.LightsValues.BeamLow,
             HighBeamOn = data.TruckValues.CurrentValues.LightsValues.BeamHigh,
             ParkingBrakeOn = data.TruckValues.CurrentValues.MotorValues.BrakeValues.ParkingBrake,
