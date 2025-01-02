@@ -139,6 +139,11 @@ public sealed record TruckData
     public short CruiseControlSpeed { get; init; }
 
     /// <summary>
+    /// Gets a value indicating whether parking lights are active.
+    /// </summary>
+    public bool ParkingLightsOn { get; init; }
+
+    /// <summary>
     /// Gets a value indicating whether low beam active.
     /// </summary>
     public bool LowBeamOn { get; init; }
