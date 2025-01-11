@@ -4,12 +4,10 @@ namespace HaddyTruckSDPlugin
 {
     [PluginActionId("com.haddyalpaca.truck.lights")]
 
-    public class LightsAction : KeyActionBase
+    public class LightsAction(ISDConnection connection, InitialPayload payload) :
+        KeyActionBase(connection, payload)
     {
-        public LightsAction(ISDConnection connection, InitialPayload payload) : base(connection, payload)
-        {
-            this._keyStroke = "L";
-        }
+        protected override string GetActionKeys() => "L";
 
         protected override string GetStateImage() => 
             _truckData.ParkingLightsOn

@@ -11,7 +11,6 @@ namespace HaddyTruckSDPlugin
         private bool _signalRStarted = false;
         private string? _currentImage = null;
 
-        protected string _keyStroke = string.Empty;
         protected TruckData _truckData = new();
 
         public KeyActionBase(ISDConnection connection, InitialPayload payload)
@@ -47,9 +46,10 @@ namespace HaddyTruckSDPlugin
 
         public override void KeyReleased(KeyPayload payload)
         {
-            if (!string.IsNullOrEmpty(this._keyStroke))
+            string keys = this.GetActionKeys();
+            if (!string.IsNullOrEmpty(keys))
             {
-                SendKeys.SendWait(this._keyStroke);
+                SendKeys.SendWait(keys);
             }
         }
 
@@ -96,6 +96,8 @@ namespace HaddyTruckSDPlugin
                 await this.SetImage(image);
             }
         }
+
+        protected abstract string GetActionKeys();
 
         protected abstract string GetStateImage();
 
