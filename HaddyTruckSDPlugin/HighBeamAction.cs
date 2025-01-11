@@ -3,12 +3,10 @@
 namespace HaddyTruckSDPlugin;
 
 [PluginActionId("com.haddyalpaca.truck.high-beam")]
-public class HighBeamAction : KeyActionBase
+public class HighBeamAction(ISDConnection connection, InitialPayload payload) :
+    KeyActionBase(connection, payload)
 {
-    public HighBeamAction(ISDConnection connection, InitialPayload payload) : base(connection, payload)
-    {
-        this._keyStroke = "K";
-    }
+    protected override string GetActionKeys() => "K";
 
     protected override string GetStateImage() =>
         this._truckData.HighBeamOn ? "on" : "off";
