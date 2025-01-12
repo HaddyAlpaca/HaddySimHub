@@ -14,7 +14,7 @@
     },
     {
       "Icon": "images/high-beam/on",
-      "Name": "Hazard lights",
+      "Name": "High beam",
       "States": [ { "Image": "images/off" } ],
       "UUID": "com.haddyalpaca.truck.high-beam"
     },
