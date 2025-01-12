@@ -23,6 +23,18 @@
       "Name": "Lights",
       "States": [ { "Image": "images/lights/off" } ],
       "UUID": "com.haddyalpaca.truck.lights"
+    },
+    {
+      "Icon": "images/confirm-execute/icon",
+      "Name": "Confirm",
+      "States": [ { "Image": "images/confirm-execute/icon" } ],
+      "UUID": "com.haddyalpaca.truck.confirm-execute"
+    },
+    {
+      "Icon": "images/attach-trailer/on",
+      "Name": "Attach trailer",
+      "States": [ { "Image": "images/attach-trailer/off" } ],
+      "UUID": "com.haddyalpaca.truck.attach-trailer"
     }
   ],
   "Author": "Haddy Alpaca",
