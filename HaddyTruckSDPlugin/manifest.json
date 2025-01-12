@@ -3,25 +3,25 @@
     {
       "Icon": "images/parking-brake/on",
       "Name": "Parking brake",
-      "States": [ { "Image": "images/off" } ],
+      "States": [ { "Image": "images/loading" } ],
       "UUID": "com.haddyalpaca.truck.parking-brake"
     },
     {
       "Icon": "images/hazard-lights/on",
       "Name": "Hazard lights",
-      "States": [ { "Image": "images/off" } ],
+      "States": [ { "Image": "images/loading" } ],
       "UUID": "com.haddyalpaca.truck.hazard-lights"
     },
     {
       "Icon": "images/high-beam/on",
       "Name": "Hazard lights",
-      "States": [ { "Image": "images/off" } ],
+      "States": [ { "Image": "images/loading" } ],
       "UUID": "com.haddyalpaca.truck.high-beam"
     },
     {
       "Icon": "images/lights/low-beam",
       "Name": "Lights",
-      "States": [ { "Image": "images/off" } ],
+      "States": [ { "Image": "images/loading" } ],
       "UUID": "com.haddyalpaca.truck.lights"
     }
   ],
