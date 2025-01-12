@@ -48,8 +48,8 @@ jobs:
     - name: Build truck Streamdeck plugin
       run: |
         dotnet build .\HaddyTruckSDPlugin\HaddyTruckSDPlugin.csproj -c Release
-        mkdir ${{ env.dist_folder }}\sdPlugins\com.haddyalpaca.truck
-        Copy-Item .\HaddyTruckSDPlugin\bin\Release\net9.0-windows\* -Destination ${{ env.dist_folder }}\sdPlugins\com.haddyalpaca.truck -Recurse -Force
+        mkdir ${{ env.dist_folder }}\sdPlugins\com.haddyalpaca.truck.sdPlugin
+        Copy-Item .\HaddyTruckSDPlugin\bin\Release\net9.0-windows\* -Destination ${{ env.dist_folder }}\sdPlugins\com.haddyalpaca.truck.sdPlugin -Recurse -Force
 
     - name: Install Node.js
       uses: actions/setup-node@v4
