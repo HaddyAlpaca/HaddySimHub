@@ -26,7 +26,7 @@
     },
     {
       "Icon": "images/confirm-execute/icon",
-      "Name": "Confirm",
+      "Name": "Confirm action",
       "States": [ { "Image": "images/confirm-execute/icon" } ],
       "UUID": "com.haddyalpaca.truck.confirm-execute"
     },
