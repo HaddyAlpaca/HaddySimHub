@@ -1,4 +1,5 @@
 ﻿using BarRaider.SdTools;
+using GregsStack.InputSimulatorStandard;
 using HaddySimHub.Shared;
 using Microsoft.AspNetCore.SignalR.Client;
 using System.Text.Json;
@@ -8,6 +9,7 @@ namespace HaddyTruckSDPlugin
     public abstract class KeyActionBase : KeypadBase
     {
         private readonly HubConnection _hubConnection;
+        private readonly InputSimulator _inputSimulator = new();
         private bool _signalRStarted = false;
         private string? _currentImage = null;
 
@@ -49,7 +51,7 @@ namespace HaddyTruckSDPlugin
             string keys = this.GetActionKeys();
             if (!string.IsNullOrEmpty(keys))
             {
-                SendKeys.SendWait(keys);
+                this._inputSimulator.Keyboard.TextEntry(keys);
             }
         }
 
