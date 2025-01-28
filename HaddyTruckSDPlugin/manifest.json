@@ -35,6 +35,12 @@
       "Name": "Attach trailer",
       "States": [ { "Image": "images/attach-trailer/off" } ],
       "UUID": "com.haddyalpaca.truck.attach-trailer"
+    },
+    {
+      "Icon": "images/wipers/on",
+      "Name": "Wipers",
+      "States": [ { "Image": "images/wipers/off" } ],
+      "UUID": "com.haddyalpaca.truck.wipers"
     }
   ],
   "Author": "Haddy Alpaca",
