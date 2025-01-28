@@ -93,6 +93,12 @@
     <None Update="Images\pluginIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="images\wipers\off.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="images\wipers\on.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="manifest.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -101,6 +107,7 @@
   <ItemGroup>
     <Folder Include="images\hazard-lights\" />
     <Folder Include="images\high-beam\" />
+    <Folder Include="images\wipers\" />
   </ItemGroup>
 
   <Import Project="..\HaddySimHub.Shared\HaddySimHub.Shared.projitems" Label="Shared" />
