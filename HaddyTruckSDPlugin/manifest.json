@@ -41,6 +41,12 @@
       "Name": "Wipers",
       "States": [ { "Image": "images/wipers/off" } ],
       "UUID": "com.haddyalpaca.truck.wipers"
+    },
+    {
+      "Icon": "images/camera-toggle/camera",
+      "Name": "Wipers",
+      "States": [ { "Image": "images/camera-toggle/camera" } ],
+      "UUID": "com.haddyalpaca.truck.camera-toggle"
     }
   ],
   "Author": "Haddy Alpaca",
