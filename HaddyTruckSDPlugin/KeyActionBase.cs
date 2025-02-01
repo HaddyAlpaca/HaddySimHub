@@ -12,6 +12,7 @@ namespace HaddyTruckSDPlugin
         private readonly InputSimulator _inputSimulator = new();
         private bool _signalRStarted = false;
         private string? _currentImage = null;
+        private string? _currentTitle = null;
 
         protected TruckData _truckData = new();
 
@@ -95,13 +96,21 @@ namespace HaddyTruckSDPlugin
             if (this._currentImage is null || this._currentImage != image)
             {
                 this._currentImage = image;
-                await this.SetImage(image);
+                await Connection.SetImageAsync(Path.Combine("images", GetPluginId(), image));
+            }
+
+            string title = this.GetTitle();
+            if (this._currentTitle is null || this._currentTitle != title)
+            {
+                await Connection.SetTitleAsync(this.GetTitle());
             }
         }
 
         protected abstract string GetActionKeys();
 
         protected abstract string GetStateImage();
+
+        protected virtual string GetTitle() => string.Empty;
 
         private async Task SetImage(string imageFile) =>
             await Connection.SetImageAsync(Path.Combine("images", GetPluginId(), imageFile));
