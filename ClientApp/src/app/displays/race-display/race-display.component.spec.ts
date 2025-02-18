@@ -21,6 +21,7 @@ describe('Race display component tests', () => {
     fixture = TestBed.createComponent(RaceDisplayTestComponent);
     component = fixture.componentInstance;
     harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, RaceDisplayComponentHarness);
+    raceData = new RaceData();
   });
 
   describe('Laps remaining tests', () => {
