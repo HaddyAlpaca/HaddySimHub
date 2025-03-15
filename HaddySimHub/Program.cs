@@ -11,6 +11,7 @@ using HaddySimHub.Displays;
 using System.Text;
 using System.Diagnostics;
 using HaddySimHub.Shared;
+using HaddySimHub.Displays.Dirt2;
 
 HaddySimHub.Logging.ILogger logger = new HaddySimHub.Logging.Logger("main");
 CancellationTokenSource cancellationTokenSource = new();
