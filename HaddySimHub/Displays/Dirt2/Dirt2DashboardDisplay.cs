@@ -32,13 +32,15 @@ internal sealed class Dirt2DashboardDisplay(Func<DisplayUpdate, Task> updateDisp
 
     private void ReceiveCallback(IAsyncResult result)
     {
-        if (_client is null)
+        if (_client is null || _endPoint is null)
         {
             return;
         }
 
         // Get data we received.
-        byte[] data = _client.EndReceive(result, ref _endPoint!);
+#pragma warning disable CS8601 // Possible null reference assignment.
+        byte[] data = _client.EndReceive(result, ref _endPoint);
+#pragma warning restore CS8601 // Possible null reference assignment.
 
         // Start receiving again.
         _client.BeginReceive(new AsyncCallback(ReceiveCallback), null);
@@ -48,9 +50,7 @@ internal sealed class Dirt2DashboardDisplay(Func<DisplayUpdate, Task> updateDisp
         try
         {
             // Get the header to retrieve the packet ID.
-#pragma warning disable CS8605 // Unboxing a possibly null value.
-            var packet = (Packet)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(Packet));
-#pragma warning restore CS8605 // Unboxing a possibly null value.
+            var packet = Marshal.PtrToStructure<Packet>(handle.AddrOfPinnedObject());
             _updateDisplay(ConvertToDisplayUpdate(packet));
         }
         finally
