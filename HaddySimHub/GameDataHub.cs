@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using HaddySimHub.Shared;
+using HaddySimHub.Models;
 
 namespace HaddySimHub;
 

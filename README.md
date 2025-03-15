@@ -7,4 +7,3 @@
 ## Referenced/cloned repositories
 * https://github.com/hfoxy/iRacingSDK.Net
 * https://github.com/RenCloud/scs-sdk-plugin
-* https://github.com/BarRaider/streamdeck-tools

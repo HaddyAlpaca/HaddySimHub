@@ -1,7 +1,7 @@
 ﻿using System.Net.Sockets;
 using System.Net;
 using System.Runtime.InteropServices;
-using HaddySimHub.Shared;
+using HaddySimHub.Models;
 
 namespace HaddySimHub.Displays.Dirt2;
 

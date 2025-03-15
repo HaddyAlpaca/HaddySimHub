@@ -42,15 +42,6 @@ jobs:
     - name: Publish server app
       run: dotnet publish ${{ env.app_path }} -r win-x64 -p:PublishDir=${{env.dist_folder}}
 
-    - name: Create Streamdeck plugins folder
-      run: mkdir ${{ env.dist_folder }}\sdPlugins
-
-    - name: Build truck Streamdeck plugin
-      run: |
-        dotnet build .\HaddyTruckSDPlugin\HaddyTruckSDPlugin.csproj -c Release
-        mkdir ${{ env.dist_folder }}\sdPlugins\com.haddyalpaca.truck.sdPlugin
-        Copy-Item .\HaddyTruckSDPlugin\bin\Release\net9.0-windows\* -Destination ${{ env.dist_folder }}\sdPlugins\com.haddyalpaca.truck.sdPlugin -Recurse -Force
-
     - name: Install Node.js
       uses: actions/setup-node@v4
       with:
