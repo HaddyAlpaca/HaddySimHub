@@ -318,7 +318,7 @@ export default tseslint.config(
           'error',
           {
             // Patterns are gitignore style patterns.
-            'patterns': ['*', '!*/', '!*.harness', '!@angular/cdk/testing', '!@angular/cdk/testing/**', '!@testing/component-harness-base']
+            'patterns': ['*', '!*/', '!*.harness', '!@angular/cdk/testing', '!@angular/cdk/testing/**']
           }
         ],
       }

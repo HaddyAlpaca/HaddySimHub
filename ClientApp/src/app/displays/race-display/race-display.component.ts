@@ -2,11 +2,8 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, effect
 import { RaceData } from './race-data';
 import { CommonModule } from '@angular/common';
 import { TrackPositionsComponent } from './track-positions.component';
-import { SpeedometerComponent } from '@components/speedometer/speedometer.component';
-import { DataElementComponent, DataType } from '@components/data-element/data-element.component';
 import { OpponentDeltaComponent } from './opponent-delta.component';
-import { DeltaTimePipe } from '@components/delta-time/delta-time.pipe';
-import { LapTimePipe } from '@components/laptime/laptime.pipe';
+import { DataElementComponent, DataType, DeltaTimePipe, LapTimePipe, SpeedometerComponent } from 'src/app/shared';
 
 @Component({
   selector: 'app-race-display',

@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, input } from '@angular/core';
-import { GearPipe } from './gear.pipe';
+import { GearPipe } from '../gear/gear.pipe';
 
 @Component({
   selector: 'app-speedometer',
