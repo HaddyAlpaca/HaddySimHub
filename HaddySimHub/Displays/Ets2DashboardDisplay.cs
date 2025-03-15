@@ -1,4 +1,4 @@
-using HaddySimHub.Shared;
+using HaddySimHub.Models;
 using SCSSdkClient;
 using SCSSdkClient.Object;
 

@@ -1,6 +1,6 @@
 using System.Text;
 using HaddySimHub.Logging;
-using HaddySimHub.Shared;
+using HaddySimHub.Models;
 using iRacingSDK;
 
 namespace HaddySimHub.Displays;
