@@ -151,12 +151,6 @@ describe('Race display component tests', () => {
     expect(await elementHarness.getValue()).toEqual('14.2 L');
   });
 
-  // it('Remaining session time is displayed', async () => {
-  //   patchData({ sessionTimeRemaining: (60 * 72 + 32) * 1000 });
-
-  //   expect(await harness.getElementText('#sessionTimeRemaining')).toEqual('01:12:32');
-  // });
-
   describe('Best lap delta time', () => {
     it('Delta time is displayed', async () => {
       patchData({ bestLapTimeDelta: 0.231 });

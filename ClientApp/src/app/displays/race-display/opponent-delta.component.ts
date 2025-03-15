@@ -1,6 +1,5 @@
 import { Component, input } from '@angular/core';
-import { IRatingPipe } from './irating.pipe';
-import { DeltaTimePipe } from '@components/delta-time/delta-time.pipe';
+import { DeltaTimePipe, IRatingPipe } from 'src/app/shared';
 
 export interface DriverInfo {
   name: string;

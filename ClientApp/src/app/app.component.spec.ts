@@ -3,10 +3,8 @@ import { AppComponent } from './app.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponentHarness } from './app.component.harness';
 import { ConnectionInfo, ConnectionStatus, GameDataService } from './game-data.service';
-import { TruckData } from '@displays/truck-display/truck-data';
-import { RaceData } from '@displays/race-display/race-data';
-import { RallyData } from '@displays/rally-display/rally-data';
 import { provideExperimentalZonelessChangeDetection, signal } from '@angular/core';
+import { TruckData, RaceData, RallyData } from './displays';
 
 class MockGameDataService {
   public truckData = signal<TruckData | null>(null);

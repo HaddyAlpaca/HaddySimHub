@@ -1,9 +1,7 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { filter, interval, take, tap } from 'rxjs';
 import { HttpTransportType, HubConnection, HubConnectionBuilder, IHttpConnectionOptions, LogLevel } from '@microsoft/signalr';
-import { RaceData } from '@displays/race-display/race-data';
-import { RallyData } from '@displays/rally-display/rally-data';
-import { TruckData } from '@displays/truck-display/truck-data';
+import { RaceData, RallyData, TruckData } from './displays';
 
 export interface ConnectionInfo {
   status: ConnectionStatus;
@@ -37,16 +35,16 @@ export class GameDataService {
   private _hubConnection: HubConnection;
 
   private readonly _connectionStatus = signal<ConnectionInfo>({ status: ConnectionStatus.Disconnected });
-  public readonly connectionStatus = computed(() => this._connectionStatus());
+  public readonly connectionStatus = this._connectionStatus.asReadonly();
 
   private readonly _truckData = signal<TruckData | null>(null);
-  public readonly truckData = computed(() => this._truckData());
+  public readonly truckData = this._truckData.asReadonly();
 
   private _raceData = signal<RaceData | null>(null);
-  public readonly raceData = computed(() => this._raceData());
+  public readonly raceData = this._raceData.asReadonly();
 
   private _rallyData = signal<RallyData | null>(null);
-  public readonly rallyData = computed(() => this._rallyData());
+  public readonly rallyData = this._rallyData.asReadonly();
 
   public constructor() {
     const connectionOptions: IHttpConnectionOptions = {
