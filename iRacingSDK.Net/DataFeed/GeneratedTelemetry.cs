@@ -16,10 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace iRacingSDK
 {
     public partial class Telemetry : Dictionary<string, object>
@@ -29,1809 +25,1131 @@ namespace iRacingSDK
         /// <summary>
         /// Seconds since session start
         /// </summary>
-        public System.Double SessionTime
-        {
-            get { return (System.Double)this["SessionTime"]; }
-        }
+        public double SessionTime => (double)this["SessionTime"];
 
         /// <summary>
         /// Session number
         /// </summary>
-        public System.Int32 SessionNum
-        {
-            get { return (System.Int32)this["SessionNum"]; }
-        }
+        public int SessionNum => (int)this["SessionNum"];
 
         /// <summary>
         /// Session state
         /// </summary>
-        public iRacingSDK.SessionState SessionState
-        {
-            get { return (iRacingSDK.SessionState)this["SessionState"]; }
-        }
+        public iRacingSDK.SessionState SessionState => (iRacingSDK.SessionState)this["SessionState"];
 
         /// <summary>
         /// Session ID
         /// </summary>
-        public System.Int32 SessionUniqueID
-        {
-            get { return (System.Int32)this["SessionUniqueID"]; }
-        }
+        public int SessionUniqueID => (int)this["SessionUniqueID"];
 
         /// <summary>
         /// Session flags
         /// </summary>
-        public iRacingSDK.SessionFlags SessionFlags
-        {
-            get { return (iRacingSDK.SessionFlags)(int)this["SessionFlags"]; }
-        }
+        public iRacingSDK.SessionFlags SessionFlags => (iRacingSDK.SessionFlags)(int)this["SessionFlags"];
 
         /// <summary>
         /// Seconds left till session ends
         /// </summary>
-        public System.Double SessionTimeRemain
-        {
-            get { return (System.Double)this["SessionTimeRemain"]; }
-        }
+        public double SessionTimeRemain => (double)this["SessionTimeRemain"];
 
         /// <summary>
         /// Old laps left till session ends use SessionLapsRemainEx
         /// </summary>
-        public System.Int32 SessionLapsRemain
-        {
-            get { return (System.Int32)this["SessionLapsRemain"]; }
-        }
+        public int SessionLapsRemain => (int)this["SessionLapsRemain"];
 
         /// <summary>
         /// New improved laps left till session ends
         /// </summary>
-        public System.Int32 SessionLapsRemainEx
-        {
-            get { return (System.Int32)this["SessionLapsRemainEx"]; }
-        }
+        public int SessionLapsRemainEx => (int)this["SessionLapsRemainEx"];
 
         /// <summary>
         /// The car index of the current person speaking on the radio
         /// </summary>
-        public System.Int32 RadioTransmitCarIdx
-        {
-            get { return (System.Int32)this["RadioTransmitCarIdx"]; }
-        }
+        public int RadioTransmitCarIdx => (int)this["RadioTransmitCarIdx"];
 
         /// <summary>
         /// The radio index of the current person speaking on the radio
         /// </summary>
-        public System.Int32 RadioTransmitRadioIdx
-        {
-            get { return (System.Int32)this["RadioTransmitRadioIdx"]; }
-        }
+        public int RadioTransmitRadioIdx => (int)this["RadioTransmitRadioIdx"];
 
         /// <summary>
         /// The frequency index of the current person speaking on the radio
         /// </summary>
-        public System.Int32 RadioTransmitFrequencyIdx
-        {
-            get { return (System.Int32)this["RadioTransmitFrequencyIdx"]; }
-        }
+        public int RadioTransmitFrequencyIdx => (int)this["RadioTransmitFrequencyIdx"];
 
         /// <summary>
         /// Default units for the user interface 0 = english 1 = metric
         /// </summary>
-        public iRacingSDK.DisplayUnits DisplayUnits
-        {
-            get { return (iRacingSDK.DisplayUnits)(System.Int32)this["DisplayUnits"]; }
-        }
+        public iRacingSDK.DisplayUnits DisplayUnits => (iRacingSDK.DisplayUnits)(int)this["DisplayUnits"];
 
         /// <summary>
         /// Driver activated flag
         /// </summary>
-        public System.Boolean DriverMarker
-        {
-            get { return (System.Boolean)this["DriverMarker"]; }
-        }
+        public bool DriverMarker => (bool)this["DriverMarker"];
 
         /// <summary>
         /// 1=Car on track physics running with player in car
         /// </summary>
-        public System.Boolean IsOnTrack
-        {
-            get { return (System.Boolean)this["IsOnTrack"]; }
-        }
+        public bool IsOnTrack => (bool)this["IsOnTrack"];
 
         /// <summary>
         /// 0=replay not playing  1=replay playing
         /// </summary>
-        public System.Boolean IsReplayPlaying
-        {
-            get { return (System.Boolean)this["IsReplayPlaying"]; }
-        }
+        public bool IsReplayPlaying => (bool)this["IsReplayPlaying"];
 
         /// <summary>
         /// Integer replay frame number (60 per second)
         /// </summary>
-        public System.Int32 ReplayFrameNum
-        {
-            get { return (System.Int32)this["ReplayFrameNum"]; }
-        }
+        public int ReplayFrameNum => (int)this["ReplayFrameNum"];
 
         /// <summary>
         /// Integer replay frame number from end of tape
         /// </summary>
-        public System.Int32 ReplayFrameNumEnd
-        {
-            get { return (System.Int32)this["ReplayFrameNumEnd"]; }
-        }
+        public int ReplayFrameNumEnd => (int)this["ReplayFrameNumEnd"];
 
         /// <summary>
         /// 0=disk based telemetry turned off  1=turned on
         /// </summary>
-        public System.Boolean IsDiskLoggingEnabled
-        {
-            get { return (System.Boolean)this["IsDiskLoggingEnabled"]; }
-        }
+        public bool IsDiskLoggingEnabled => (bool)this["IsDiskLoggingEnabled"];
 
         /// <summary>
         /// 0=disk based telemetry file not being written  1=being written
         /// </summary>
-        public System.Boolean IsDiskLoggingActive
-        {
-            get { return (System.Boolean)this["IsDiskLoggingActive"]; }
-        }
+        public bool IsDiskLoggingActive => (bool)this["IsDiskLoggingActive"];
 
         /// <summary>
         /// Average frames per second
         /// </summary>
-        public System.Single FrameRate
-        {
-            get { return (System.Single)this["FrameRate"]; }
-        }
+        public float FrameRate => (float)this["FrameRate"];
 
         /// <summary>
         /// Percent of available tim bg thread took with a 1 sec avg
         /// </summary>
-        public System.Single CpuUsageBG
-        {
-            get { return (System.Single)this["CpuUsageBG"]; }
-        }
+        public float CpuUsageBG => (float)this["CpuUsageBG"];
 
         /// <summary>
         /// Players position in race
         /// </summary>
-        public System.Int32 PlayerCarPosition
-        {
-            get { return (System.Int32)this["PlayerCarPosition"]; }
-        }
+        public int PlayerCarPosition => (int)this["PlayerCarPosition"];
 
         /// <summary>
         /// Players class position in race
         /// </summary>
-        public System.Int32 PlayerCarClassPosition
-        {
-            get { return (System.Int32)this["PlayerCarClassPosition"]; }
-        }
+        public int PlayerCarClassPosition => (int)this["PlayerCarClassPosition"];
 
         /// <summary>
         /// Player car class id
         /// </summary>
-        public System.Int32 PlayerCarClass
-        {
-            get { return (System.Int32)this["PlayerCarClass"]; }
-        }
+        public int PlayerCarClass => (int)this["PlayerCarClass"];
 
         /// <summary>
         /// Players car track surface type
         /// </summary>
-        public System.Int32 PlayerTrackSurface
-        {
-            get { return (System.Int32)this["PlayerTrackSurface"]; }
-        }
+        public int PlayerTrackSurface => (int)this["PlayerTrackSurface"];
 
         /// <summary>
         /// Players car track surface material type
         /// </summary>
-        public System.Int32 PlayerTrackSurfaceMaterial
-        {
-            get { return (System.Int32)this["PlayerTrackSurfaceMaterial"]; }
-        }
+        public int PlayerTrackSurfaceMaterial => (int)this["PlayerTrackSurfaceMaterial"];
 
         /// <summary>
         /// Players carIdx
         /// </summary>
-        public System.Int32 PlayerCarIdx
-        {
-            get { return (System.Int32)this["PlayerCarIdx"]; }
-        }
+        public int PlayerCarIdx => (int)this["PlayerCarIdx"];
 
         /// <summary>
         /// Players team incident count for this session
         /// </summary>
-        public System.Int32 PlayerCarTeamIncidentCount
-        {
-            get { return (System.Int32)this["PlayerCarTeamIncidentCount"]; }
-        }
+        public int PlayerCarTeamIncidentCount => (int)this["PlayerCarTeamIncidentCount"];
 
         /// <summary>
         /// Players own incident count for this session
         /// </summary>
-        public System.Int32 PlayerCarMyIncidentCount
-        {
-            get { return (System.Int32)this["PlayerCarMyIncidentCount"]; }
-        }
+        public int PlayerCarMyIncidentCount => (int)this["PlayerCarMyIncidentCount"];
 
         /// <summary>
         /// Teams current drivers incident count for this session
         /// </summary>
-        public System.Int32 PlayerCarDriverIncidentCount
-        {
-            get { return (System.Int32)this["PlayerCarDriverIncidentCount"]; }
-        }
+        public int PlayerCarDriverIncidentCount => (int)this["PlayerCarDriverIncidentCount"];
 
         /// <summary>
         /// Players weight penalty
         /// </summary>
-        public System.Single PlayerCarWeightPenalty
-        {
-            get { return (System.Single)this["PlayerCarWeightPenalty"]; }
-        }
+        public float PlayerCarWeightPenalty => (float)this["PlayerCarWeightPenalty"];
 
         /// <summary>
         /// Players power adjust
         /// </summary>
-        public System.Single PlayerCarPowerAdjust
-        {
-            get { return (System.Single)this["PlayerCarPowerAdjust"]; }
-        }
+        public float PlayerCarPowerAdjust => (float)this["PlayerCarPowerAdjust"];
 
         /// <summary>
         /// Players dry tire set limit
         /// </summary>
-        public System.Int32 PlayerCarDryTireSetLimit
-        {
-            get { return (System.Int32)this["PlayerCarDryTireSetLimit"]; }
-        }
+        public int PlayerCarDryTireSetLimit => (int)this["PlayerCarDryTireSetLimit"];
 
         /// <summary>
         /// Players car is being towed if time is greater than zero
         /// </summary>
-        public System.Single PlayerCarTowTime
-        {
-            get { return (System.Single)this["PlayerCarTowTime"]; }
-        }
+        public float PlayerCarTowTime => (float)this["PlayerCarTowTime"];
 
         /// <summary>
         /// Players car is properly in there pitstall
         /// </summary>
-        public System.Boolean PlayerCarInPitStall
-        {
-            get { return (System.Boolean)this["PlayerCarInPitStall"]; }
-        }
+        public bool PlayerCarInPitStall => (bool)this["PlayerCarInPitStall"];
 
         /// <summary>
         /// Players car pit service status bits
         /// </summary>
-        public System.Int32 PlayerCarPitSvStatus
-        {
-            get { return (System.Int32)this["PlayerCarPitSvStatus"]; }
-        }
+        public int PlayerCarPitSvStatus => (int)this["PlayerCarPitSvStatus"];
 
         /// <summary>
         /// Players car current tire compound
         /// </summary>
-        public System.Int32 PlayerTireCompound
-        {
-            get { return (System.Int32)this["PlayerTireCompound"]; }
-        }
+        public int PlayerTireCompound => (int)this["PlayerTireCompound"];
 
         /// <summary>
         /// Players car number of fast repairs used
         /// </summary>
-        public System.Int32 PlayerFastRepairsUsed
-        {
-            get { return (System.Int32)this["PlayerFastRepairsUsed"]; }
-        }
+        public int PlayerFastRepairsUsed => (int)this["PlayerFastRepairsUsed"];
 
         /// <summary>
         /// Laps started by car index
         /// </summary>
-        public System.Int32[] CarIdxLap
-        {
-            get { return (System.Int32[])this["CarIdxLap"]; }
-        }
+        public int[] CarIdxLap => (int[])this["CarIdxLap"];
 
         /// <summary>
         /// Laps completed by car index
         /// </summary>
-        public System.Int32[] CarIdxLapCompleted
-        {
-            get { return (System.Int32[])this["CarIdxLapCompleted"]; }
-        }
+        public int[] CarIdxLapCompleted => (int[])this["CarIdxLapCompleted"];
 
         /// <summary>
         /// Percentage distance around lap by car index
         /// </summary>
-        public System.Single[] CarIdxLapDistPct
-        {
-            get { return (System.Single[])this["CarIdxLapDistPct"]; }
-        }
+        public float[] CarIdxLapDistPct => (float[])this["CarIdxLapDistPct"];
 
         /// <summary>
         /// Track surface type by car index
         /// </summary>
-        public iRacingSDK.TrackLocation[] CarIdxTrackSurface
-        {
-            get { return (iRacingSDK.TrackLocation[])this["CarIdxTrackSurface"]; }
-        }
+        public iRacingSDK.TrackLocation[] CarIdxTrackSurface => (iRacingSDK.TrackLocation[])this["CarIdxTrackSurface"];
 
         /// <summary>
         /// On pit road between the cones by car index
         /// </summary>
-        public System.Boolean[] CarIdxOnPitRoad
-        {
-            get { return (System.Boolean[])this["CarIdxOnPitRoad"]; }
-        }
+        public bool[] CarIdxOnPitRoad => (bool[])this["CarIdxOnPitRoad"];
 
         /// <summary>
         /// Cars position in race by car index
         /// </summary>
-        public System.Int32[] CarIdxPosition
-        {
-            get { return (System.Int32[])this["CarIdxPosition"]; }
-        }
+        public int[] CarIdxPosition => (int[])this["CarIdxPosition"];
 
         /// <summary>
         /// Cars class position in race by car index
         /// </summary>
-        public System.Int32[] CarIdxClassPosition
-        {
-            get { return (System.Int32[])this["CarIdxClassPosition"]; }
-        }
+        public int[] CarIdxClassPosition => (int[])this["CarIdxClassPosition"];
 
         /// <summary>
         /// Race time behind leader or fastest lap time otherwise
         /// </summary>
-        public System.Single[] CarIdxF2Time
-        {
-            get { return (System.Single[])this["CarIdxF2Time"]; }
-        }
+        public float[] CarIdxF2Time => (float[])this["CarIdxF2Time"];
 
         /// <summary>
         /// Estimated time to reach current location on track
         /// </summary>
-        public System.Single[] CarIdxEstTime
-        {
-            get { return (System.Single[])this["CarIdxEstTime"]; }
-        }
+        public float[] CarIdxEstTime => (float[])this["CarIdxEstTime"];
 
         /// <summary>
         /// Cars last lap time
         /// </summary>
-        public System.Single[] CarIdxLastLapTime
-        {
-            get { return (System.Single[])this["CarIdxLastLapTime"]; }
-        }
+        public float[] CarIdxLastLapTime => (float[])this["CarIdxLastLapTime"];
 
         /// <summary>
         /// Cars best lap time
         /// </summary>
-        public System.Single[] CarIdxBestLapTime
-        {
-            get { return (System.Single[])this["CarIdxBestLapTime"]; }
-        }
+        public float[] CarIdxBestLapTime => (float[])this["CarIdxBestLapTime"];
 
         /// <summary>
         /// Cars best lap number
         /// </summary>
-        public System.Int32[] CarIdxBestLapNum
-        {
-            get { return (System.Int32[])this["CarIdxBestLapNum"]; }
-        }
+        public int[] CarIdxBestLapNum => (int[])this["CarIdxBestLapNum"];
 
         /// <summary>
         /// Cars current tire compound
         /// </summary>
-        public System.Int32[] CarIdxTireCompound
-        {
-            get { return (System.Int32[])this["CarIdxTireCompound"]; }
-        }
+        public int[] CarIdxTireCompound => (int[])this["CarIdxTireCompound"];
 
         /// <summary>
         /// Cars Qual tire compound
         /// </summary>
-        public System.Int32[] CarIdxQualTireCompound
-        {
-            get { return (System.Int32[])this["CarIdxQualTireCompound"]; }
-        }
+        public int[] CarIdxQualTireCompound => (int[])this["CarIdxQualTireCompound"];
 
         /// <summary>
         /// Cars Qual tire compound is locked-in
         /// </summary>
-        public System.Boolean[] CarIdxQualTireCompoundLocked
-        {
-            get { return (System.Boolean[])this["CarIdxQualTireCompoundLocked"]; }
-        }
+        public bool[] CarIdxQualTireCompoundLocked => (bool[])this["CarIdxQualTireCompoundLocked"];
 
         /// <summary>
         /// How many fast repairs each car has used
         /// </summary>
-        public System.Int32[] CarIdxFastRepairsUsed
-        {
-            get { return (System.Int32[])this["CarIdxFastRepairsUsed"]; }
-        }
+        public int[] CarIdxFastRepairsUsed => (int[])this["CarIdxFastRepairsUsed"];
 
         /// <summary>
         /// Session flags for each player
         /// </summary>
-        public System.Int32[] CarIdxSessionFlags
-        {
-            get { return (System.Int32[])this["CarIdxSessionFlags"]; }
-        }
+        public int[] CarIdxSessionFlags => (int[])this["CarIdxSessionFlags"];
 
         /// <summary>
         /// Are we pacing or not
         /// </summary>
-        public System.Int32 PaceMode
-        {
-            get { return (System.Int32)this["PaceMode"]; }
-        }
+        public int PaceMode => (int)this["PaceMode"];
 
         /// <summary>
         /// What line cars are pacing in  or -1 if not pacing
         /// </summary>
-        public System.Int32[] CarIdxPaceLine
-        {
-            get { return (System.Int32[])this["CarIdxPaceLine"]; }
-        }
+        public int[] CarIdxPaceLine => (int[])this["CarIdxPaceLine"];
 
         /// <summary>
         /// What row cars are pacing in  or -1 if not pacing
         /// </summary>
-        public System.Int32[] CarIdxPaceRow
-        {
-            get { return (System.Int32[])this["CarIdxPaceRow"]; }
-        }
+        public int[] CarIdxPaceRow => (int[])this["CarIdxPaceRow"];
 
         /// <summary>
         /// Pacing status flags for each car
         /// </summary>
-        public System.Int32[] CarIdxPaceFlags
-        {
-            get { return (System.Int32[])this["CarIdxPaceFlags"]; }
-        }
+        public int[] CarIdxPaceFlags => (int[])this["CarIdxPaceFlags"];
 
         /// <summary>
         /// Is the player car on pit road between the cones
         /// </summary>
-        public System.Boolean OnPitRoad
-        {
-            get { return (System.Boolean)this["OnPitRoad"]; }
-        }
+        public bool OnPitRoad => (bool)this["OnPitRoad"];
 
         /// <summary>
         /// Steering wheel angle by car index
         /// </summary>
-        public System.Single[] CarIdxSteer
-        {
-            get { return (System.Single[])this["CarIdxSteer"]; }
-        }
+        public float[] CarIdxSteer => (float[])this["CarIdxSteer"];
 
         /// <summary>
         /// Engine rpm by car index
         /// </summary>
-        public System.Single[] CarIdxRPM
-        {
-            get { return (System.Single[])this["CarIdxRPM"]; }
-        }
+        public float[] CarIdxRPM => (float[])this["CarIdxRPM"];
 
         /// <summary>
         /// -1=reverse  0=neutral  1..n=current gear by car index
         /// </summary>
-        public System.Int32[] CarIdxGear
-        {
-            get { return (System.Int32[])this["CarIdxGear"]; }
-        }
+        public int[] CarIdxGear => (int[])this["CarIdxGear"];
 
         /// <summary>
         /// Steering wheel angle
         /// </summary>
-        public System.Single SteeringWheelAngle
-        {
-            get { return (System.Single)this["SteeringWheelAngle"]; }
-        }
+        public float SteeringWheelAngle => (float)this["SteeringWheelAngle"];
 
         /// <summary>
         /// 0=off throttle to 1=full throttle
         /// </summary>
-        public System.Single Throttle
-        {
-            get { return (System.Single)this["Throttle"]; }
-        }
+        public float Throttle => (float)this["Throttle"];
 
         /// <summary>
         /// 0=brake released to 1=max pedal force
         /// </summary>
-        public System.Single Brake
-        {
-            get { return (System.Single)this["Brake"]; }
-        }
+        public float Brake => (float)this["Brake"];
 
         /// <summary>
         /// 0=disengaged to 1=fully engaged
         /// </summary>
-        public System.Single Clutch
-        {
-            get { return (System.Single)this["Clutch"]; }
-        }
+        public float Clutch => (float)this["Clutch"];
 
         /// <summary>
         /// -1=reverse  0=neutral  1..n=current gear
         /// </summary>
-        public System.Int32 Gear
-        {
-            get { return (System.Int32)this["Gear"]; }
-        }
+        public int Gear => (int)this["Gear"];
 
         /// <summary>
         /// Engine rpm
         /// </summary>
-        public System.Single RPM
-        {
-            get { return (System.Single)this["RPM"]; }
-        }
+        public float RPM => (float)this["RPM"];
 
         /// <summary>
         /// Laps started count
         /// </summary>
-        public System.Int32 Lap
-        {
-            get { return (System.Int32)this["Lap"]; }
-        }
+        public int Lap => (int)this["Lap"];
 
         /// <summary>
         /// Laps completed count
         /// </summary>
-        public System.Int32 LapCompleted
-        {
-            get { return (System.Int32)this["LapCompleted"]; }
-        }
+        public int LapCompleted => (int)this["LapCompleted"];
 
         /// <summary>
         /// Meters traveled from S/F this lap
         /// </summary>
-        public System.Single LapDist
-        {
-            get { return (System.Single)this["LapDist"]; }
-        }
+        public float LapDist => (float)this["LapDist"];
 
         /// <summary>
         /// Percentage distance around lap
         /// </summary>
-        public System.Single LapDistPct
-        {
-            get { return (System.Single)this["LapDistPct"]; }
-        }
+        public float LapDistPct => (float)this["LapDistPct"];
 
         /// <summary>
         /// Laps completed in race
         /// </summary>
-        public System.Int32 RaceLaps
-        {
-            get { return (System.Int32)this["RaceLaps"]; }
-        }
+        public int RaceLaps => (int)this["RaceLaps"];
 
         /// <summary>
         /// Players best lap number
         /// </summary>
-        public System.Int32 LapBestLap
-        {
-            get { return (System.Int32)this["LapBestLap"]; }
-        }
+        public int LapBestLap => (int)this["LapBestLap"];
 
         /// <summary>
         /// Players best lap time
         /// </summary>
-        public System.Single LapBestLapTime
-        {
-            get { return (System.Single)this["LapBestLapTime"]; }
-        }
+        public float LapBestLapTime => (float)this["LapBestLapTime"];
 
         /// <summary>
         /// Players last lap time
         /// </summary>
-        public System.Single LapLastLapTime
-        {
-            get { return (System.Single)this["LapLastLapTime"]; }
-        }
+        public float LapLastLapTime => (float)this["LapLastLapTime"];
 
         /// <summary>
         /// Estimate of players current lap time as shown in F3 box
         /// </summary>
-        public System.Single LapCurrentLapTime
-        {
-            get { return (System.Single)this["LapCurrentLapTime"]; }
-        }
+        public float LapCurrentLapTime => (float)this["LapCurrentLapTime"];
 
         /// <summary>
         /// Player num consecutive clean laps completed for N average
         /// </summary>
-        public System.Int32 LapLasNLapSeq
-        {
-            get { return (System.Int32)this["LapLasNLapSeq"]; }
-        }
+        public int LapLasNLapSeq => (int)this["LapLasNLapSeq"];
 
         /// <summary>
         /// Player last N average lap time
         /// </summary>
-        public System.Single LapLastNLapTime
-        {
-            get { return (System.Single)this["LapLastNLapTime"]; }
-        }
+        public float LapLastNLapTime => (float)this["LapLastNLapTime"];
 
         /// <summary>
         /// Player last lap in best N average lap time
         /// </summary>
-        public System.Int32 LapBestNLapLap
-        {
-            get { return (System.Int32)this["LapBestNLapLap"]; }
-        }
+        public int LapBestNLapLap => (int)this["LapBestNLapLap"];
 
         /// <summary>
         /// Player best N average lap time
         /// </summary>
-        public System.Single LapBestNLapTime
-        {
-            get { return (System.Single)this["LapBestNLapTime"]; }
-        }
+        public float LapBestNLapTime => (float)this["LapBestNLapTime"];
 
         /// <summary>
         /// Delta time for best lap
         /// </summary>
-        public System.Single LapDeltaToBestLap
-        {
-            get { return (System.Single)this["LapDeltaToBestLap"]; }
-        }
+        public float LapDeltaToBestLap => (float)this["LapDeltaToBestLap"];
 
         /// <summary>
         /// Rate of change of delta time for best lap
         /// </summary>
-        public System.Single LapDeltaToBestLap_DD
-        {
-            get { return (System.Single)this["LapDeltaToBestLap_DD"]; }
-        }
+        public float LapDeltaToBestLap_DD => (float)this["LapDeltaToBestLap_DD"];
 
         /// <summary>
         /// Delta time for best lap is valid
         /// </summary>
-        public System.Boolean LapDeltaToBestLap_OK
-        {
-            get { return (System.Boolean)this["LapDeltaToBestLap_OK"]; }
-        }
+        public bool LapDeltaToBestLap_OK => (bool)this["LapDeltaToBestLap_OK"];
 
         /// <summary>
         /// Delta time for optimal lap
         /// </summary>
-        public System.Single LapDeltaToOptimalLap
-        {
-            get { return (System.Single)this["LapDeltaToOptimalLap"]; }
-        }
+        public float LapDeltaToOptimalLap => (float)this["LapDeltaToOptimalLap"];
 
         /// <summary>
         /// Rate of change of delta time for optimal lap
         /// </summary>
-        public System.Single LapDeltaToOptimalLap_DD
-        {
-            get { return (System.Single)this["LapDeltaToOptimalLap_DD"]; }
-        }
+        public float LapDeltaToOptimalLap_DD => (float)this["LapDeltaToOptimalLap_DD"];
 
         /// <summary>
         /// Delta time for optimal lap is valid
         /// </summary>
-        public System.Boolean LapDeltaToOptimalLap_OK
-        {
-            get { return (System.Boolean)this["LapDeltaToOptimalLap_OK"]; }
-        }
+        public bool LapDeltaToOptimalLap_OK => (bool)this["LapDeltaToOptimalLap_OK"];
 
         /// <summary>
         /// Delta time for session best lap
         /// </summary>
-        public System.Single LapDeltaToSessionBestLap
-        {
-            get { return (System.Single)this["LapDeltaToSessionBestLap"]; }
-        }
+        public float LapDeltaToSessionBestLap => (float)this["LapDeltaToSessionBestLap"];
 
         /// <summary>
         /// Rate of change of delta time for session best lap
         /// </summary>
-        public System.Single LapDeltaToSessionBestLap_DD
-        {
-            get { return (System.Single)this["LapDeltaToSessionBestLap_DD"]; }
-        }
+        public float LapDeltaToSessionBestLap_DD => (float)this["LapDeltaToSessionBestLap_DD"];
 
         /// <summary>
         /// Delta time for session best lap is valid
         /// </summary>
-        public System.Boolean LapDeltaToSessionBestLap_OK
-        {
-            get { return (System.Boolean)this["LapDeltaToSessionBestLap_OK"]; }
-        }
+        public bool LapDeltaToSessionBestLap_OK => (bool)this["LapDeltaToSessionBestLap_OK"];
 
         /// <summary>
         /// Delta time for session optimal lap
         /// </summary>
-        public System.Single LapDeltaToSessionOptimalLap
-        {
-            get { return (System.Single)this["LapDeltaToSessionOptimalLap"]; }
-        }
+        public float LapDeltaToSessionOptimalLap => (float)this["LapDeltaToSessionOptimalLap"];
 
         /// <summary>
         /// Rate of change of delta time for session optimal lap
         /// </summary>
-        public System.Single LapDeltaToSessionOptimalLap_DD
-        {
-            get { return (System.Single)this["LapDeltaToSessionOptimalLap_DD"]; }
-        }
+        public float LapDeltaToSessionOptimalLap_DD => (float)this["LapDeltaToSessionOptimalLap_DD"];
 
         /// <summary>
         /// Delta time for session optimal lap is valid
         /// </summary>
-        public System.Boolean LapDeltaToSessionOptimalLap_OK
-        {
-            get { return (System.Boolean)this["LapDeltaToSessionOptimalLap_OK"]; }
-        }
+        public bool LapDeltaToSessionOptimalLap_OK => (bool)this["LapDeltaToSessionOptimalLap_OK"];
 
         /// <summary>
         /// Delta time for session last lap
         /// </summary>
-        public System.Single LapDeltaToSessionLastlLap
-        {
-            get { return (System.Single)this["LapDeltaToSessionLastlLap"]; }
-        }
+        public float LapDeltaToSessionLastlLap => (float)this["LapDeltaToSessionLastlLap"];
 
         /// <summary>
         /// Rate of change of delta time for session last lap
         /// </summary>
-        public System.Single LapDeltaToSessionLastlLap_DD
-        {
-            get { return (System.Single)this["LapDeltaToSessionLastlLap_DD"]; }
-        }
+        public float LapDeltaToSessionLastlLap_DD => (float)this["LapDeltaToSessionLastlLap_DD"];
 
         /// <summary>
         /// Delta time for session last lap is valid
         /// </summary>
-        public System.Boolean LapDeltaToSessionLastlLap_OK
-        {
-            get { return (System.Boolean)this["LapDeltaToSessionLastlLap_OK"]; }
-        }
+        public bool LapDeltaToSessionLastlLap_OK => (bool)this["LapDeltaToSessionLastlLap_OK"];
 
         /// <summary>
         /// Longitudinal acceleration (including gravity)
         /// </summary>
-        public System.Single LongAccel
-        {
-            get { return (System.Single)this["LongAccel"]; }
-        }
+        public float LongAccel => (float)this["LongAccel"];
 
         /// <summary>
         /// Lateral acceleration (including gravity)
         /// </summary>
-        public System.Single LatAccel
-        {
-            get { return (System.Single)this["LatAccel"]; }
-        }
+        public float LatAccel => (float)this["LatAccel"];
 
         /// <summary>
         /// Vertical acceleration (including gravity)
         /// </summary>
-        public System.Single VertAccel
-        {
-            get { return (System.Single)this["VertAccel"]; }
-        }
+        public float VertAccel => (float)this["VertAccel"];
 
         /// <summary>
         /// Roll rate
         /// </summary>
-        public System.Single RollRate
-        {
-            get { return (System.Single)this["RollRate"]; }
-        }
+        public float RollRate => (float)this["RollRate"];
 
         /// <summary>
         /// Pitch rate
         /// </summary>
-        public System.Single PitchRate
-        {
-            get { return (System.Single)this["PitchRate"]; }
-        }
+        public float PitchRate => (float)this["PitchRate"];
 
         /// <summary>
         /// Yaw rate
         /// </summary>
-        public System.Single YawRate
-        {
-            get { return (System.Single)this["YawRate"]; }
-        }
+        public float YawRate => (float)this["YawRate"];
 
         /// <summary>
         /// GPS vehicle speed
         /// </summary>
-        public System.Single Speed
-        {
-            get { return (System.Single)this["Speed"]; }
-        }
+        public float Speed => (float)this["Speed"];
 
         /// <summary>
         /// X velocity
         /// </summary>
-        public System.Single VelocityX
-        {
-            get { return (System.Single)this["VelocityX"]; }
-        }
+        public float VelocityX => (float)this["VelocityX"];
 
         /// <summary>
         /// Y velocity
         /// </summary>
-        public System.Single VelocityY
-        {
-            get { return (System.Single)this["VelocityY"]; }
-        }
+        public float VelocityY => (float)this["VelocityY"];
 
         /// <summary>
         /// Z velocity
         /// </summary>
-        public System.Single VelocityZ
-        {
-            get { return (System.Single)this["VelocityZ"]; }
-        }
+        public float VelocityZ => (float)this["VelocityZ"];
 
         /// <summary>
         /// Yaw orientation
         /// </summary>
-        public System.Single Yaw
-        {
-            get { return (System.Single)this["Yaw"]; }
-        }
+        public float Yaw => (float)this["Yaw"];
 
         /// <summary>
         /// Yaw orientation relative to north
         /// </summary>
-        public System.Single YawNorth
-        {
-            get { return (System.Single)this["YawNorth"]; }
-        }
+        public float YawNorth => (float)this["YawNorth"];
 
         /// <summary>
         /// Pitch orientation
         /// </summary>
-        public System.Single Pitch
-        {
-            get { return (System.Single)this["Pitch"]; }
-        }
+        public float Pitch => (float)this["Pitch"];
 
         /// <summary>
         /// Roll orientation
         /// </summary>
-        public System.Single Roll
-        {
-            get { return (System.Single)this["Roll"]; }
-        }
+        public float Roll => (float)this["Roll"];
 
         /// <summary>
         /// Indicate action the reset key will take 0 enter 1 exit 2 reset
         /// </summary>
-        public System.Int32 EnterExitReset
-        {
-            get { return (System.Int32)this["EnterExitReset"]; }
-        }
+        public int EnterExitReset => (int)this["EnterExitReset"];
 
         /// <summary>
         /// Temperature of track at start/finish line
         /// </summary>
-        public System.Single TrackTemp
-        {
-            get { return (System.Single)this["TrackTemp"]; }
-        }
+        public float TrackTemp => (float)this["TrackTemp"];
 
         /// <summary>
         /// Temperature of track measured by crew around track
         /// </summary>
-        public System.Single TrackTempCrew
-        {
-            get { return (System.Single)this["TrackTempCrew"]; }
-        }
+        public float TrackTempCrew => (float)this["TrackTempCrew"];
 
         /// <summary>
         /// Temperature of air at start/finish line
         /// </summary>
-        public System.Single AirTemp
-        {
-            get { return (System.Single)this["AirTemp"]; }
-        }
+        public float AirTemp => (float)this["AirTemp"];
 
         /// <summary>
         /// Weather type (0=constant  1=dynamic)
         /// </summary>
-        public iRacingSDK.WeatherType WeatherType
-        {
-            get { return (iRacingSDK.WeatherType)(System.Int32)this["WeatherType"]; }
-        }
+        public iRacingSDK.WeatherType WeatherType => (iRacingSDK.WeatherType)(int)this["WeatherType"];
 
         /// <summary>
         /// Skies (0=clear/1=p cloudy/2=m cloudy/3=overcast)
         /// </summary>
-        public iRacingSDK.Skies Skies
-        {
-            get { return (iRacingSDK.Skies)(System.Int32)this["Skies"]; }
-        }
+        public iRacingSDK.Skies Skies => (iRacingSDK.Skies)(int)this["Skies"];
 
         /// <summary>
         /// Density of air at start/finish line
         /// </summary>
-        public System.Single AirDensity
-        {
-            get { return (System.Single)this["AirDensity"]; }
-        }
+        public float AirDensity => (float)this["AirDensity"];
 
         /// <summary>
         /// Pressure of air at start/finish line
         /// </summary>
-        public System.Single AirPressure
-        {
-            get { return (System.Single)this["AirPressure"]; }
-        }
+        public float AirPressure => (float)this["AirPressure"];
 
         /// <summary>
         /// Wind velocity at start/finish line
         /// </summary>
-        public System.Single WindVel
-        {
-            get { return (System.Single)this["WindVel"]; }
-        }
+        public float WindVel => (float)this["WindVel"];
 
         /// <summary>
         /// Wind direction at start/finish line
         /// </summary>
-        public System.Single WindDir
-        {
-            get { return (System.Single)this["WindDir"]; }
-        }
+        public float WindDir => (float)this["WindDir"];
 
         /// <summary>
         /// Relative Humidity
         /// </summary>
-        public System.Single RelativeHumidity
-        {
-            get { return (System.Single)this["RelativeHumidity"]; }
-        }
+        public float RelativeHumidity => (float)this["RelativeHumidity"];
 
         /// <summary>
         /// Fog level
         /// </summary>
-        public System.Single FogLevel
-        {
-            get { return (System.Single)this["FogLevel"]; }
-        }
+        public float FogLevel => (float)this["FogLevel"];
 
         /// <summary>
         /// Status of driver change lap requirements
         /// </summary>
-        public System.Int32 DCLapStatus
-        {
-            get { return (System.Int32)this["DCLapStatus"]; }
-        }
+        public int DCLapStatus => (int)this["DCLapStatus"];
 
         /// <summary>
         /// Number of team drivers who have run a stint
         /// </summary>
-        public System.Int32 DCDriversSoFar
-        {
-            get { return (System.Int32)this["DCDriversSoFar"]; }
-        }
+        public int DCDriversSoFar => (int)this["DCDriversSoFar"];
 
         /// <summary>
         /// True if it is ok to reload car textures at this time
         /// </summary>
-        public System.Boolean OkToReloadTextures
-        {
-            get { return (System.Boolean)this["OkToReloadTextures"]; }
-        }
+        public bool OkToReloadTextures => (bool)this["OkToReloadTextures"];
 
         /// <summary>
         /// Time left for mandatory pit repairs if repairs are active
         /// </summary>
-        public System.Single PitRepairLeft
-        {
-            get { return (System.Single)this["PitRepairLeft"]; }
-        }
+        public float PitRepairLeft => (float)this["PitRepairLeft"];
 
         /// <summary>
         /// Time left for optional repairs if repairs are active
         /// </summary>
-        public System.Single PitOptRepairLeft
-        {
-            get { return (System.Single)this["PitOptRepairLeft"]; }
-        }
+        public float PitOptRepairLeft => (float)this["PitOptRepairLeft"];
 
         /// <summary>
         /// Is the player getting pit stop service
         /// </summary>
-        public System.Boolean PitstopActive
-        {
-            get { return (System.Boolean)this["PitstopActive"]; }
-        }
+        public bool PitstopActive => (bool)this["PitstopActive"];
 
         /// <summary>
         /// How many fast repairs used so far
         /// </summary>
-        public System.Int32 FastRepairUsed
-        {
-            get { return (System.Int32)this["FastRepairUsed"]; }
-        }
+        public int FastRepairUsed => (int)this["FastRepairUsed"];
 
         /// <summary>
         /// How many fast repairs left  255 is unlimited
         /// </summary>
-        public System.Int32 FastRepairAvailable
-        {
-            get { return (System.Int32)this["FastRepairAvailable"]; }
-        }
+        public int FastRepairAvailable => (int)this["FastRepairAvailable"];
 
         /// <summary>
         /// Active camera's focus car index
         /// </summary>
-        public System.Int32 CamCarIdx
-        {
-            get { return (System.Int32)this["CamCarIdx"]; }
-        }
+        public int CamCarIdx => (int)this["CamCarIdx"];
 
         /// <summary>
         /// Active camera number
         /// </summary>
-        public System.Int32 CamCameraNumber
-        {
-            get { return (System.Int32)this["CamCameraNumber"]; }
-        }
+        public int CamCameraNumber => (int)this["CamCameraNumber"];
 
         /// <summary>
         /// Active camera group number
         /// </summary>
-        public System.Int32 CamGroupNumber
-        {
-            get { return (System.Int32)this["CamGroupNumber"]; }
-        }
+        public int CamGroupNumber => (int)this["CamGroupNumber"];
 
         /// <summary>
         /// State of camera system
         /// </summary>
-        public System.Int32 CamCameraState
-        {
-            get { return (System.Int32)this["CamCameraState"]; }
-        }
+        public int CamCameraState => (int)this["CamCameraState"];
 
         /// <summary>
         /// 1=Car on track physics running
         /// </summary>
-        public System.Boolean IsOnTrackCar
-        {
-            get { return (System.Boolean)this["IsOnTrackCar"]; }
-        }
+        public bool IsOnTrackCar => (bool)this["IsOnTrackCar"];
 
         /// <summary>
         /// 1=Car in garage physics running
         /// </summary>
-        public System.Boolean IsInGarage
-        {
-            get { return (System.Boolean)this["IsInGarage"]; }
-        }
+        public bool IsInGarage => (bool)this["IsInGarage"];
 
         /// <summary>
         /// Output torque on steering shaft
         /// </summary>
-        public System.Single SteeringWheelTorque
-        {
-            get { return (System.Single)this["SteeringWheelTorque"]; }
-        }
+        public float SteeringWheelTorque => (float)this["SteeringWheelTorque"];
 
         /// <summary>
         /// Force feedback % max torque on steering shaft unsigned
         /// </summary>
-        public System.Single SteeringWheelPctTorque
-        {
-            get { return (System.Single)this["SteeringWheelPctTorque"]; }
-        }
+        public float SteeringWheelPctTorque => (float)this["SteeringWheelPctTorque"];
 
         /// <summary>
         /// Force feedback % max torque on steering shaft signed
         /// </summary>
-        public System.Single SteeringWheelPctTorqueSign
-        {
-            get { return (System.Single)this["SteeringWheelPctTorqueSign"]; }
-        }
+        public float SteeringWheelPctTorqueSign => (float)this["SteeringWheelPctTorqueSign"];
 
         /// <summary>
         /// Force feedback % max torque on steering shaft signed stops
         /// </summary>
-        public System.Single SteeringWheelPctTorqueSignStops
-        {
-            get { return (System.Single)this["SteeringWheelPctTorqueSignStops"]; }
-        }
+        public float SteeringWheelPctTorqueSignStops => (float)this["SteeringWheelPctTorqueSignStops"];
 
         /// <summary>
         /// Force feedback % max damping
         /// </summary>
-        public System.Single SteeringWheelPctDamper
-        {
-            get { return (System.Single)this["SteeringWheelPctDamper"]; }
-        }
+        public float SteeringWheelPctDamper => (float)this["SteeringWheelPctDamper"];
 
         /// <summary>
         /// Steering wheel max angle
         /// </summary>
-        public System.Single SteeringWheelAngleMax
-        {
-            get { return (System.Single)this["SteeringWheelAngleMax"]; }
-        }
+        public float SteeringWheelAngleMax => (float)this["SteeringWheelAngleMax"];
 
         /// <summary>
         /// DEPRECATED use DriverCarSLBlinkRPM instead
         /// </summary>
-        public System.Single ShiftIndicatorPct
-        {
-            get { return (System.Single)this["ShiftIndicatorPct"]; }
-        }
+        public float ShiftIndicatorPct => (float)this["ShiftIndicatorPct"];
 
         /// <summary>
         /// Friction torque applied to gears when shifting or grinding
         /// </summary>
-        public System.Single ShiftPowerPct
-        {
-            get { return (System.Single)this["ShiftPowerPct"]; }
-        }
+        public float ShiftPowerPct => (float)this["ShiftPowerPct"];
 
         /// <summary>
         /// RPM of shifter grinding noise
         /// </summary>
-        public System.Single ShiftGrindRPM
-        {
-            get { return (System.Single)this["ShiftGrindRPM"]; }
-        }
+        public float ShiftGrindRPM => (float)this["ShiftGrindRPM"];
 
         /// <summary>
         /// Raw throttle input 0=off throttle to 1=full throttle
         /// </summary>
-        public System.Single ThrottleRaw
-        {
-            get { return (System.Single)this["ThrottleRaw"]; }
-        }
+        public float ThrottleRaw => (float)this["ThrottleRaw"];
 
         /// <summary>
         /// Raw brake input 0=brake released to 1=max pedal force
         /// </summary>
-        public System.Single BrakeRaw
-        {
-            get { return (System.Single)this["BrakeRaw"]; }
-        }
+        public float BrakeRaw => (float)this["BrakeRaw"];
 
         /// <summary>
         /// Peak torque mapping to direct input units for FFB
         /// </summary>
-        public System.Single SteeringWheelPeakForceNm
-        {
-            get { return (System.Single)this["SteeringWheelPeakForceNm"]; }
-        }
+        public float SteeringWheelPeakForceNm => (float)this["SteeringWheelPeakForceNm"];
 
         /// <summary>
         /// Bitfield for warning lights
         /// </summary>
-        public iRacingSDK.EngineWarnings EngineWarnings
-        {
-            get { return (iRacingSDK.EngineWarnings)(System.Int32)this["EngineWarnings"]; }
-        }
+        public iRacingSDK.EngineWarnings EngineWarnings => (iRacingSDK.EngineWarnings)(int)this["EngineWarnings"];
 
         /// <summary>
         /// Liters of fuel remaining
         /// </summary>
-        public System.Single FuelLevel
-        {
-            get { return (System.Single)this["FuelLevel"]; }
-        }
+        public float FuelLevel => (float)this["FuelLevel"];
 
         /// <summary>
         /// Percent fuel remaining
         /// </summary>
-        public System.Single FuelLevelPct
-        {
-            get { return (System.Single)this["FuelLevelPct"]; }
-        }
+        public float FuelLevelPct => (float)this["FuelLevelPct"];
 
         /// <summary>
         /// Bitfield of pit service checkboxes
         /// </summary>
-        public System.Int32 PitSvFlags
-        {
-            get { return (System.Int32)this["PitSvFlags"]; }
-        }
+        public int PitSvFlags => (int)this["PitSvFlags"];
 
         /// <summary>
         /// Pit service left front tire pressure
         /// </summary>
-        public System.Single PitSvLFP
-        {
-            get { return (System.Single)this["PitSvLFP"]; }
-        }
+        public float PitSvLFP => (float)this["PitSvLFP"];
 
         /// <summary>
         /// Pit service right front tire pressure
         /// </summary>
-        public System.Single PitSvRFP
-        {
-            get { return (System.Single)this["PitSvRFP"]; }
-        }
+        public float PitSvRFP => (float)this["PitSvRFP"];
 
         /// <summary>
         /// Pit service left rear tire pressure
         /// </summary>
-        public System.Single PitSvLRP
-        {
-            get { return (System.Single)this["PitSvLRP"]; }
-        }
+        public float PitSvLRP => (float)this["PitSvLRP"];
 
         /// <summary>
         /// Pit service right rear tire pressure
         /// </summary>
-        public System.Single PitSvRRP
-        {
-            get { return (System.Single)this["PitSvRRP"]; }
-        }
+        public float PitSvRRP => (float)this["PitSvRRP"];
 
         /// <summary>
         /// Pit service fuel add amount
         /// </summary>
-        public System.Single PitSvFuel
-        {
-            get { return (System.Single)this["PitSvFuel"]; }
-        }
+        public float PitSvFuel => (float)this["PitSvFuel"];
 
         /// <summary>
         /// Replay playback speed
         /// </summary>
-        public System.Int32 ReplayPlaySpeed
-        {
-            get { return (System.Int32)this["ReplayPlaySpeed"]; }
-        }
+        public int ReplayPlaySpeed => (int)this["ReplayPlaySpeed"];
 
         /// <summary>
         /// 0=not slow motion  1=replay is in slow motion
         /// </summary>
-        public System.Boolean ReplayPlaySlowMotion
-        {
-            get { return (System.Boolean)this["ReplayPlaySlowMotion"]; }
-        }
+        public bool ReplayPlaySlowMotion => (bool)this["ReplayPlaySlowMotion"];
 
         /// <summary>
         /// Seconds since replay session start
         /// </summary>
-        public System.Double ReplaySessionTime
-        {
-            get { return (System.Double)this["ReplaySessionTime"]; }
-        }
+        public double ReplaySessionTime => (double)this["ReplaySessionTime"];
 
         /// <summary>
         /// Replay session number
         /// </summary>
-        public System.Int32 ReplaySessionNum
-        {
-            get { return (System.Int32)this["ReplaySessionNum"]; }
-        }
+        public int ReplaySessionNum => (int)this["ReplaySessionNum"];
 
         /// <summary>
         /// In car front anti roll bar adjustment
         /// </summary>
-        public System.Single dcAntiRollFront
-        {
-            get { return (System.Single)this["dcAntiRollFront"]; }
-        }
+        public float DcAntiRollFront => (float)this["dcAntiRollFront"];
 
         /// <summary>
         /// In car brake bias adjustment
         /// </summary>
-        public System.Single dcBrakeBias
-        {
-            get { return (System.Single)this["dcBrakeBias"]; }
-        }
+        public float DcBrakeBias => this.ContainsKey("dcBrakeBias") ? (float)this["dcBrakeBias"] : 0;
 
         /// <summary>
         /// In car traction control adjustment
         /// </summary>
-        public System.Single dcTractionControl
-        {
-            get { return (System.Single)this["dcTractionControl"]; }
-        }
+        public float DcTractionControl => (float)this["dcTractionControl"];
 
         /// <summary>
         /// In car abs adjustment
         /// </summary>
-        public System.Single dcABS
-        {
-            get { return (System.Single)this["dcABS"]; }
-        }
+        public float DcABS => (float)this["dcABS"];
 
         /// <summary>
         /// In car throttle shape adjustment
         /// </summary>
-        public System.Single dcThrottleShape
-        {
-            get { return (System.Single)this["dcThrottleShape"]; }
-        }
+        public float DcThrottleShape => (float)this["dcThrottleShape"];
 
         /// <summary>
         /// In car fuel mixture adjustment
         /// </summary>
-        public System.Single dcFuelMixture
-        {
-            get { return (System.Single)this["dcFuelMixture"]; }
-        }
+        public float DcFuelMixture => (float)this["dcFuelMixture"];
 
         /// <summary>
         /// Pitstop qtape adjustment
         /// </summary>
-        public System.Single dpQtape
-        {
-            get { return (System.Single)this["dpQtape"]; }
-        }
+        public float DpQtape => (float)this["dpQtape"];
 
         /// <summary>
         /// Pitstop wedge adjustment
         /// </summary>
-        public System.Single dpWedgeAdj
-        {
-            get { return (System.Single)this["dpWedgeAdj"]; }
-        }
+        public float DpWedgeAdj => (float)this["dpWedgeAdj"];
 
         /// <summary>
         /// In car rear anti roll bar adjustment
         /// </summary>
-        public System.Single dcAntiRollRear
-        {
-            get { return (System.Single)this["dcAntiRollRear"]; }
-        }
+        public float dcAntiRollRear => (float)this["dcAntiRollRear"];
 
         /// <summary>
         /// Pitstop rear wing adjustment
         /// </summary>
-        public System.Single dpRWingSetting
-        {
-            get { return (System.Single)this["dpRWingSetting"]; }
-        }
+        public float dpRWingSetting => (float)this["dpRWingSetting"];
 
         /// <summary>
         /// Engine coolant temp
         /// </summary>
-        public System.Single WaterTemp
-        {
-            get { return (System.Single)this["WaterTemp"]; }
-        }
+        public float WaterTemp => (float)this["WaterTemp"];
 
         /// <summary>
         /// Engine coolant level
         /// </summary>
-        public System.Single WaterLevel
-        {
-            get { return (System.Single)this["WaterLevel"]; }
-        }
+        public float WaterLevel => (float)this["WaterLevel"];
 
         /// <summary>
         /// Engine fuel pressure
         /// </summary>
-        public System.Single FuelPress
-        {
-            get { return (System.Single)this["FuelPress"]; }
-        }
+        public float FuelPress => (float)this["FuelPress"];
 
         /// <summary>
         /// Engine fuel used instantaneous
         /// </summary>
-        public System.Single FuelUsePerHour
-        {
-            get { return (System.Single)this["FuelUsePerHour"]; }
-        }
+        public float FuelUsePerHour => (float)this["FuelUsePerHour"];
 
         /// <summary>
         /// Engine oil temperature
         /// </summary>
-        public System.Single OilTemp
-        {
-            get { return (System.Single)this["OilTemp"]; }
-        }
+        public float OilTemp => (float)this["OilTemp"];
 
         /// <summary>
         /// Engine oil pressure
         /// </summary>
-        public System.Single OilPress
-        {
-            get { return (System.Single)this["OilPress"]; }
-        }
+        public float OilPress => (float)this["OilPress"];
 
         /// <summary>
         /// Engine oil level
         /// </summary>
-        public System.Single OilLevel
-        {
-            get { return (System.Single)this["OilLevel"]; }
-        }
+        public float OilLevel => (float)this["OilLevel"];
 
         /// <summary>
         /// Engine voltage
         /// </summary>
-        public System.Single Voltage
-        {
-            get { return (System.Single)this["Voltage"]; }
-        }
+        public float Voltage => (float)this["Voltage"];
 
         /// <summary>
         /// Engine manifold pressure
         /// </summary>
-        public System.Single ManifoldPress
-        {
-            get { return (System.Single)this["ManifoldPress"]; }
-        }
+        public float ManifoldPress => (float)this["ManifoldPress"];
 
         /// <summary>
         /// RR brake line pressure
         /// </summary>
-        public System.Single RRbrakeLinePress
-        {
-            get { return (System.Single)this["RRbrakeLinePress"]; }
-        }
+        public float RRbrakeLinePress => (float)this["RRbrakeLinePress"];
 
         /// <summary>
         /// RR tire cold pressure  as set in the garage
         /// </summary>
-        public System.Single RRcoldPressure
-        {
-            get { return (System.Single)this["RRcoldPressure"]; }
-        }
+        public float RRcoldPressure => (float)this["RRcoldPressure"];
 
         /// <summary>
         /// RR tire left carcass temperature
         /// </summary>
-        public System.Single RRtempCL
-        {
-            get { return (System.Single)this["RRtempCL"]; }
-        }
+        public float RRtempCL => (float)this["RRtempCL"];
 
         /// <summary>
         /// RR tire middle carcass temperature
         /// </summary>
-        public System.Single RRtempCM
-        {
-            get { return (System.Single)this["RRtempCM"]; }
-        }
+        public float RRtempCM => (float)this["RRtempCM"];
 
         /// <summary>
         /// RR tire right carcass temperature
         /// </summary>
-        public System.Single RRtempCR
-        {
-            get { return (System.Single)this["RRtempCR"]; }
-        }
+        public float RRtempCR => (float)this["RRtempCR"];
 
         /// <summary>
         /// RR tire left percent tread remaining
         /// </summary>
-        public System.Single RRwearL
-        {
-            get { return (System.Single)this["RRwearL"]; }
-        }
+        public float RRwearL => (float)this["RRwearL"];
 
         /// <summary>
         /// RR tire middle percent tread remaining
         /// </summary>
-        public System.Single RRwearM
-        {
-            get { return (System.Single)this["RRwearM"]; }
-        }
+        public float RRwearM => (float)this["RRwearM"];
 
         /// <summary>
         /// RR tire right percent tread remaining
         /// </summary>
-        public System.Single RRwearR
-        {
-            get { return (System.Single)this["RRwearR"]; }
-        }
+        public float RRwearR => (float)this["RRwearR"];
 
         /// <summary>
         /// LR brake line pressure
         /// </summary>
-        public System.Single LRbrakeLinePress
-        {
-            get { return (System.Single)this["LRbrakeLinePress"]; }
-        }
+        public float LRbrakeLinePress => (float)this["LRbrakeLinePress"];
 
         /// <summary>
         /// LR tire cold pressure  as set in the garage
         /// </summary>
-        public System.Single LRcoldPressure
-        {
-            get { return (System.Single)this["LRcoldPressure"]; }
-        }
+        public float LRcoldPressure => (float)this["LRcoldPressure"];
 
         /// <summary>
         /// LR tire left carcass temperature
         /// </summary>
-        public System.Single LRtempCL
-        {
-            get { return (System.Single)this["LRtempCL"]; }
-        }
+        public float LRtempCL => (float)this["LRtempCL"];
 
         /// <summary>
         /// LR tire middle carcass temperature
         /// </summary>
-        public System.Single LRtempCM
-        {
-            get { return (System.Single)this["LRtempCM"]; }
-        }
+        public float LRtempCM => (float)this["LRtempCM"];
 
         /// <summary>
         /// LR tire right carcass temperature
         /// </summary>
-        public System.Single LRtempCR
-        {
-            get { return (System.Single)this["LRtempCR"]; }
-        }
+        public float LRtempCR => (float)this["LRtempCR"];
 
         /// <summary>
         /// LR tire left percent tread remaining
         /// </summary>
-        public System.Single LRwearL
-        {
-            get { return (System.Single)this["LRwearL"]; }
-        }
+        public float LRwearL => (float)this["LRwearL"];
 
         /// <summary>
         /// LR tire middle percent tread remaining
         /// </summary>
-        public System.Single LRwearM
-        {
-            get { return (System.Single)this["LRwearM"]; }
-        }
+        public float LRwearM => (float)this["LRwearM"];
 
         /// <summary>
         /// LR tire right percent tread remaining
         /// </summary>
-        public System.Single LRwearR
-        {
-            get { return (System.Single)this["LRwearR"]; }
-        }
+        public float LRwearR => (float)this["LRwearR"];
 
         /// <summary>
         /// RF brake line pressure
         /// </summary>
-        public System.Single RFbrakeLinePress
-        {
-            get { return (System.Single)this["RFbrakeLinePress"]; }
-        }
+        public float RFbrakeLinePress => (float)this["RFbrakeLinePress"];
 
         /// <summary>
         /// RF tire cold pressure  as set in the garage
         /// </summary>
-        public System.Single RFcoldPressure
-        {
-            get { return (System.Single)this["RFcoldPressure"]; }
-        }
+        public float RFcoldPressure => (float)this["RFcoldPressure"];
 
         /// <summary>
         /// RF tire left carcass temperature
         /// </summary>
-        public System.Single RFtempCL
-        {
-            get { return (System.Single)this["RFtempCL"]; }
-        }
+        public float RFtempCL => (float)this["RFtempCL"];
 
         /// <summary>
         /// RF tire middle carcass temperature
         /// </summary>
-        public System.Single RFtempCM
-        {
-            get { return (System.Single)this["RFtempCM"]; }
-        }
+        public float RFtempCM => (float)this["RFtempCM"];
 
         /// <summary>
         /// RF tire right carcass temperature
         /// </summary>
-        public System.Single RFtempCR
-        {
-            get { return (System.Single)this["RFtempCR"]; }
-        }
+        public float RFtempCR => (float)this["RFtempCR"];
 
         /// <summary>
         /// RF tire left percent tread remaining
         /// </summary>
-        public System.Single RFwearL
-        {
-            get { return (System.Single)this["RFwearL"]; }
-        }
+        public float RFwearL => (float)this["RFwearL"];
 
         /// <summary>
         /// RF tire middle percent tread remaining
         /// </summary>
-        public System.Single RFwearM
-        {
-            get { return (System.Single)this["RFwearM"]; }
-        }
+        public float RFwearM => (float)this["RFwearM"];
 
         /// <summary>
         /// RF tire right percent tread remaining
         /// </summary>
-        public System.Single RFwearR
-        {
-            get { return (System.Single)this["RFwearR"]; }
-        }
+        public float RFwearR => (float)this["RFwearR"];
 
         /// <summary>
         /// LF brake line pressure
         /// </summary>
-        public System.Single LFbrakeLinePress
-        {
-            get { return (System.Single)this["LFbrakeLinePress"]; }
-        }
+        public float LFbrakeLinePress => (float)this["LFbrakeLinePress"];
 
         /// <summary>
         /// LF tire cold pressure  as set in the garage
         /// </summary>
-        public System.Single LFcoldPressure
-        {
-            get { return (System.Single)this["LFcoldPressure"]; }
-        }
+        public float LFcoldPressure => (float)this["LFcoldPressure"];
 
         /// <summary>
         /// LF tire left carcass temperature
         /// </summary>
-        public System.Single LFtempCL
-        {
-            get { return (System.Single)this["LFtempCL"]; }
-        }
+        public float LFtempCL => (float)this["LFtempCL"];
 
         /// <summary>
         /// LF tire middle carcass temperature
         /// </summary>
-        public System.Single LFtempCM
-        {
-            get { return (System.Single)this["LFtempCM"]; }
-        }
+        public float LFtempCM => (float)this["LFtempCM"];
 
         /// <summary>
         /// LF tire right carcass temperature
         /// </summary>
-        public System.Single LFtempCR
-        {
-            get { return (System.Single)this["LFtempCR"]; }
-        }
+        public float LFtempCR => (float)this["LFtempCR"];
 
         /// <summary>
         /// LF tire left percent tread remaining
         /// </summary>
-        public System.Single LFwearL
-        {
-            get { return (System.Single)this["LFwearL"]; }
-        }
+        public float LFwearL => (float)this["LFwearL"];
 
         /// <summary>
         /// LF tire middle percent tread remaining
         /// </summary>
-        public System.Single LFwearM
-        {
-            get { return (System.Single)this["LFwearM"]; }
-        }
+        public float LFwearM => (float)this["LFwearM"];
 
         /// <summary>
         /// LF tire right percent tread remaining
         /// </summary>
-        public System.Single LFwearR
-        {
-            get { return (System.Single)this["LFwearR"]; }
-        }
+        public float LFwearR => (float)this["LFwearR"];
 
         /// <summary>
         /// RR shock deflection
         /// </summary>
-        public System.Single RRshockDefl
-        {
-            get { return (System.Single)this["RRshockDefl"]; }
-        }
+        public float RRshockDefl => (float)this["RRshockDefl"];
 
         /// <summary>
         /// RR shock velocity
         /// </summary>
-        public System.Single RRshockVel
-        {
-            get { return (System.Single)this["RRshockVel"]; }
-        }
+        public float RRshockVel => (float)this["RRshockVel"];
 
         /// <summary>
         /// LR shock deflection
         /// </summary>
-        public System.Single LRshockDefl
-        {
-            get { return (System.Single)this["LRshockDefl"]; }
-        }
+        public float LRshockDefl => (float)this["LRshockDefl"];
 
         /// <summary>
         /// LR shock velocity
         /// </summary>
-        public System.Single LRshockVel
-        {
-            get { return (System.Single)this["LRshockVel"]; }
-        }
+        public float LRshockVel => (float)this["LRshockVel"];
 
         /// <summary>
         /// RF shock deflection
         /// </summary>
-        public System.Single RFshockDefl
-        {
-            get { return (System.Single)this["RFshockDefl"]; }
-        }
+        public float RFshockDefl => (float)this["RFshockDefl"];
 
         /// <summary>
         /// RF shock velocity
         /// </summary>
-        public System.Single RFshockVel
-        {
-            get { return (System.Single)this["RFshockVel"]; }
-        }
+        public float RFshockVel => (float)this["RFshockVel"];
 
         /// <summary>
         /// LF shock deflection
         /// </summary>
-        public System.Single LFshockDefl
-        {
-            get { return (System.Single)this["LFshockDefl"]; }
-        }
+        public float LFshockDefl => (float)this["LFshockDefl"];
 
         /// <summary>
         /// LF shock velocity
         /// </summary>
-        public System.Single LFshockVel
-        {
-            get { return (System.Single)this["LFshockVel"]; }
-        }
+        public float LFshockVel => (float)this["LFshockVel"];
 
         /// <summary>
         /// RRSH shock deflection
         /// </summary>
-        public System.Single RRSHshockDefl
-        {
-            get { return (System.Single)this["RRSHshockDefl"]; }
-        }
+        public float RRSHshockDefl => (float)this["RRSHshockDefl"];
 
         /// <summary>
         /// LRSH shock deflection
         /// </summary>
-        public System.Single LRSHshockDefl
-        {
-            get { return (System.Single)this["LRSHshockDefl"]; }
-        }
+        public float LRSHshockDefl => (float)this["LRSHshockDefl"];
 
         /// <summary>
         /// RFSH shock deflection
         /// </summary>
-        public System.Single RFSHshockDefl
-        {
-            get { return (System.Single)this["RFSHshockDefl"]; }
-        }
+        public float RFSHshockDefl => (float)this["RFSHshockDefl"];
 
         /// <summary>
         /// LFSH shock deflection
         /// </summary>
-        public System.Single LFSHshockDefl
-        {
-            get { return (System.Single)this["LFSHshockDefl"]; }
-        }
+        public float LFSHshockDefl => (float)this["LFSHshockDefl"];
 
         /// <summary>
         /// 
         /// </summary>
-        public System.Int32 TickCount
-        {
-            get { return (System.Int32)this["TickCount"]; }
-        }
+        public int TickCount => (int)this["TickCount"];
     }
 }

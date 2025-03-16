@@ -85,7 +85,7 @@ internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDi
             Gear = telemetry.Gear,
             Rpm = (int)telemetry.RPM,
             Speed = (int)Math.Round(telemetry.Speed * 3.6),
-            BrakeBias = telemetry.dcBrakeBias,
+            BrakeBias = telemetry.DcBrakeBias,
             FuelRemaining = telemetry.FuelLevel,
             AirTemp = telemetry.AirTemp,
             TrackTemp = telemetry.TrackTemp,

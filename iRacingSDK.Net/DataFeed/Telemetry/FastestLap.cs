@@ -10,10 +10,10 @@ namespace iRacingSDK
 
         public static bool operator ==(FastLap a, FastLap b)
         {
-            if ((object)a == null && (object)b == null)
+            if (a is null && b is null)
                 return true;
 
-            if ((object)a == null || (object)b == null)
+            if (a is null || b is null)
                 return false;
             
             return a.Driver == b.Driver && a.Time == b.Time;
@@ -26,7 +26,7 @@ namespace iRacingSDK
 
         public override bool Equals(object obj)
         {
-            return obj is FastLap && this == (FastLap)obj;
+            return obj is FastLap lap && this == lap;
         }
 
         public override int GetHashCode()
