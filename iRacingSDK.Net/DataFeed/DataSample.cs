@@ -16,54 +16,53 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace iRacingSDK
+namespace iRacingSDK;
+
+[Serializable]
+public class DataSample
 {
-    [Serializable]
-    public class DataSample
+    private Telemetry telemetry;
+    private SessionData sessionData;
+
+    public static readonly DataSample YetToConnected = new DataSample { IsConnected = false };
+    public DataSample LastSample { get; set; }
+
+    public bool IsConnected { get; set; }
+    public SessionData SessionData
     {
-        private Telemetry telemetry;
-        private SessionData sessionData;
-
-        public static readonly DataSample YetToConnected = new DataSample { IsConnected = false };
-        public DataSample LastSample { get; set; }
-
-        public bool IsConnected { get; set; }
-        public SessionData SessionData
+        get
         {
-            get
-            {
-                if (!IsConnected)
-                    throw new Exception("Attempt to read session data before connection to iRacing");
+            if (!IsConnected)
+                throw new Exception("Attempt to read session data before connection to iRacing");
 
-                if (sessionData == null)
-                    throw new Exception("SessionData is null");
+            if (sessionData == null)
+                throw new Exception("SessionData is null");
 
-                return sessionData;
-            }
-            set 
-            {
-                sessionData = value;
-            }
+            return sessionData;
         }
-
-        public Telemetry Telemetry
+        set 
         {
-            get
-            {
-                if (!IsConnected)
-                    throw new Exception("Attempt to read telemetry data before connection to iRacing");
-
-                if (telemetry == null)
-                    throw new Exception("Telemetry is null");
-
-                return telemetry;
-            }
-            set
-            {
-                telemetry = value;
-            }
+            sessionData = value;
         }
-        
-        public Dictionary<string, string> TelemetryDescription { get; internal set; }
     }
+
+    public Telemetry Telemetry
+    {
+        get
+        {
+            if (!IsConnected)
+                throw new Exception("Attempt to read telemetry data before connection to iRacing");
+
+            if (telemetry == null)
+                throw new Exception("Telemetry is null");
+
+            return telemetry;
+        }
+        set
+        {
+            telemetry = value;
+        }
+    }
+    
+    public Dictionary<string, string> TelemetryDescription { get; internal set; }
 }

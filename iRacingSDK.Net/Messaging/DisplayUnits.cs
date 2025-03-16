@@ -16,13 +16,10 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
+namespace iRacingSDK;
 
-namespace iRacingSDK
+public enum DisplayUnits
 {
-    public enum DisplayUnits
-    {
-        EnglishImperial = 0,
-        Metric = 1
-    }
+    EnglishImperial = 0,
+    Metric = 1
 }

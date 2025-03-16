@@ -16,29 +16,25 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
+namespace iRacingSDK;
 
-namespace iRacingSDK
+/// <summary>
+/// Search replay tape for events
+/// </summary>
+public enum ReplaySearchMode
 {
+    ToStart = 0,
+    ToEnd,
+    PrevSession,
+    NextSession,
+    PrevLap,
+    NextLap,
+    PrevFrame,
+    NextFrame,
+    PrevIncident,
+
     /// <summary>
-    /// Search replay tape for events
+    /// Camera select car and move to 4 seconds before incident
     /// </summary>
-    public enum ReplaySearchMode
-    {
-        ToStart = 0,
-        ToEnd,
-        PrevSession,
-        NextSession,
-        PrevLap,
-        NextLap,
-        PrevFrame,
-        NextFrame,
-        PrevIncident,
-
-        /// <summary>
-        /// Camera select car and move to 4 seconds before incident
-        /// </summary>
-        NextIncident
-    };
-
-}
+    NextIncident
+};

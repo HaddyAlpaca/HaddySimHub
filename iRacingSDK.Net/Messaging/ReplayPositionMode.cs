@@ -16,14 +16,11 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
+namespace iRacingSDK;
 
-namespace iRacingSDK
+public enum ReplayPositionMode
 {
-    public enum ReplayPositionMode
-    {
-        Begin = 0,
-        Current,
-        End
-    };
-}
+    Begin = 0,
+    Current,
+    End
+};

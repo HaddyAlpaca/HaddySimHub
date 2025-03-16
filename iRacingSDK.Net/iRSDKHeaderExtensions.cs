@@ -16,43 +16,32 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.IO.MemoryMappedFiles;
-using System.Runtime.InteropServices;
-using System.Collections.Generic;
-using System.Threading;
-using System.Linq;
-using Win32.Synchronization;
+namespace iRacingSDK;
 
-namespace iRacingSDK
+public static class iRSDKHeaderExtensions
 {
-    public static class iRSDKHeaderExtensions
+    public static bool HasChangedSinceReading(this iRSDKHeader header, VarBufWithIndex buf) =>
+        header.varBuf[buf.index].tickCount != buf.tickCount;
+
+    public static VarBufWithIndex FindLatestBuf(this iRSDKHeader header, int requestedTickCount)
     {
-        public static bool HasChangedSinceReading(this iRSDKHeader header, VarBufWithIndex buf)
-        {
-            return header.varBuf[buf.index].tickCount != buf.tickCount;
-        }
+        VarBuf maxBuf = new();
+        int maxIndex = -1;
 
-        public static VarBufWithIndex FindLatestBuf(this iRSDKHeader header, int requestedTickCount)
+        for (var i = 0; i < header.numBuf; i++)
         {
-            VarBuf maxBuf = new VarBuf();
-            int maxIndex = -1;
+            var b = header.varBuf[i];
 
-            for (var i = 0; i < header.numBuf; i++)
+            if (b.tickCount == requestedTickCount)
+                return new VarBufWithIndex() { tickCount = requestedTickCount, bufOffset = b.bufOffset, index = i };
+
+            if (b.tickCount > maxBuf.tickCount)
             {
-                var b = header.varBuf[i];
-
-                if (b.tickCount == requestedTickCount)
-                    return new VarBufWithIndex() { tickCount = requestedTickCount, bufOffset = b.bufOffset, index = i };
-
-                if (b.tickCount > maxBuf.tickCount)
-                {
-                    maxBuf = b;
-                    maxIndex = i;
-                }
+                maxBuf = b;
+                maxIndex = i;
             }
-
-            return new VarBufWithIndex() { tickCount = maxBuf.tickCount, bufOffset = maxBuf.bufOffset, index = maxIndex };
         }
+
+        return new VarBufWithIndex() { tickCount = maxBuf.tickCount, bufOffset = maxBuf.bufOffset, index = maxIndex };
     }
 }

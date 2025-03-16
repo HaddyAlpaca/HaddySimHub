@@ -16,9 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
-using System.Linq;
-
 namespace iRacingSDK
 {
     public static partial class DataSampleExtensions

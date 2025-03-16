@@ -16,16 +16,13 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
+namespace iRacingSDK;
 
-namespace iRacingSDK
+public enum TrackLocation
 {
-    public enum TrackLocation
-    {
-        NotInWorld = -1,
-        OffTrack,
-        InPitStall,
-        AproachingPits,
-        OnTrack
-    }
+    NotInWorld = -1,
+    OffTrack,
+    InPitStall,
+    AproachingPits,
+    OnTrack
 }

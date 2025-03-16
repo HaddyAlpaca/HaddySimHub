@@ -16,12 +16,11 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace iRacingSDK
+namespace iRacingSDK;
+
+public struct VarBufWithIndex
 {
-    public struct VarBufWithIndex
-	{
-		public int tickCount;
-		public int bufOffset;
-		public int index;
-	}
+	public int tickCount;
+	public int bufOffset;
+	public int index;
 }

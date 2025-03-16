@@ -16,13 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace iRacingSDK.Support
+namespace iRacingSDK.Support;
+
+public static class StringExtensions
 {
-    public static class StringExtensions
-    {
-        public static string F(this string self, params object[] args)
-        {
-            return string.Format(self, args);
-        }
-    }
+    public static string F(this string self, params object[] args) => string.Format(self, args);
 }

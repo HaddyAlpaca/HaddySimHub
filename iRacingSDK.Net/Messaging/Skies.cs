@@ -16,15 +16,12 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
+namespace iRacingSDK;
 
-namespace iRacingSDK
+public enum Skies
 {
-    public enum Skies
-    {
-        Clear = 0,
-        PartlyCloudy = 1,
-        MostlyCloudy = 2,
-        Overcast = 3
-    }
+    Clear = 0,
+    PartlyCloudy = 1,
+    MostlyCloudy = 2,
+    Overcast = 3
 }

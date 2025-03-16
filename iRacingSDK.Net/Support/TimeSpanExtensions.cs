@@ -16,35 +16,13 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
+namespace iRacingSDK.Support;
 
-namespace iRacingSDK.Support
+public static class TimeSpanExtensions
 {
-    public static class TimeSpanExtensions
-    {
-        public static TimeSpan Seconds(this int seconds)
-        {
-            return TimeSpan.FromSeconds(seconds);
-        }
-
-        public static TimeSpan Second(this int seconds)
-        {
-            return TimeSpan.FromSeconds(seconds);
-        }
-
-        public static TimeSpan Seconds(this double seconds)
-        {
-            return TimeSpan.FromSeconds(seconds);
-        }
-
-        public static TimeSpan Minutes(this int minutes)
-        {
-            return TimeSpan.FromMinutes(minutes);
-        }
-
-        public static TimeSpan Minutes(this double minutes)
-        {
-            return TimeSpan.FromMinutes(minutes);
-        }
-    }
+    public static TimeSpan Seconds(this int seconds) => TimeSpan.FromSeconds(seconds);
+    public static TimeSpan Second(this int seconds) => TimeSpan.FromSeconds(seconds);
+    public static TimeSpan Seconds(this double seconds) => TimeSpan.FromSeconds(seconds);
+    public static TimeSpan Minutes(this int minutes) => TimeSpan.FromMinutes(minutes);
+    public static TimeSpan Minutes(this double minutes) => TimeSpan.FromMinutes(minutes);
 }

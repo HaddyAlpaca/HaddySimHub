@@ -19,107 +19,73 @@
 using System.Text;
 using iRacingSDK.Support;
 
-namespace iRacingSDK
+namespace iRacingSDK;
+
+public partial class Telemetry : Dictionary<string, object>
 {
-    public class CarArray : IEnumerable<Car>
+    public SessionData._SessionInfo._Sessions Session 
     {
-        private readonly Car[] cars;
-        
-        public CarArray(Telemetry telemetry)
+        get 
         {
-            var drivers = telemetry.SessionData.DriverInfo.CompetingDrivers;
+            if (SessionNum < 0 || SessionNum >= SessionData.SessionInfo.Sessions.Length)
+                return null;
 
-            cars = new Car[drivers.Length];
-
-            for (var i = 0; i < drivers.Length; i++)
-                cars[i] = new Car(telemetry, i);
+            return SessionData.SessionInfo.Sessions[SessionNum];
         }
-
-        public Car this[long carIdx]
-        {
-            get
-            {
-                if (carIdx < 0)
-                    throw new Exception("Attempt to load car details for negative car index {0}".F(carIdx));
-
-                if (carIdx >= cars.Length)
-                    throw new Exception("Attempt to load car details for unknown carIndex.  carIdx: {0}, maxNumber: {1}".F(carIdx, cars.Length - 1));
-
-                return cars[carIdx];
-            }
-        }
-
-        public IEnumerator<Car> GetEnumerator() => (cars as IEnumerable<Car>).GetEnumerator();
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => cars.GetEnumerator();
     }
 
-    public partial class Telemetry : Dictionary<string, object>
+    public Car CamCar => Cars[CamCarIdx];
+
+    CarArray cars;
+    public CarArray Cars
     {
-        public SessionData._SessionInfo._Sessions Session 
+        get
         {
-            get 
-            {
-                if (SessionNum < 0 || SessionNum >= SessionData.SessionInfo.Sessions.Length)
-                    return null;
+            if (cars != null)
+                return cars;
 
-                return SessionData.SessionInfo.Sessions[SessionNum];
-            }
+            return cars = new CarArray(this);
+        }
+    }
+
+    public CarDetails[] CarDetails { get { return Cars.Select(c => c.Details).ToArray(); } }
+
+    public IEnumerable<Car> RaceCars => Cars.Where(c => !c.Details.IsPaceCar);
+
+    public bool UnderPaceCar => this.CarIdxTrackSurface[0] == TrackLocation.OnTrack;
+
+    public Dictionary<string, string> Descriptions { get; internal set; }
+
+    public override string ToString()
+    {
+        var result = new StringBuilder();
+
+        foreach (var kv in this)
+        {
+            var key = kv.Key;
+            var description = (Descriptions != null && Descriptions.ContainsKey(key)) ? Descriptions[key] : "";
+            var value = ConvertToSpecificType(key, kv.Value);
+
+            var type = value.GetType().ToString();
+
+            result.Append("TeleKey: | {0,-30} | {1,-30} | {2,30} | {3}\n".F(key, type, value, description));
         }
 
-        public Car CamCar => Cars[CamCarIdx];
+        return result.ToString();
+    }
 
-        CarArray cars;
-        public CarArray Cars
+    private object ConvertToSpecificType(string key, object value)
+    {
+        return key switch
         {
-            get
-            {
-                if (cars != null)
-                    return cars;
-
-                return cars = new CarArray(this);
-            }
-        }
-
-        public CarDetails[] CarDetails { get { return Cars.Select(c => c.Details).ToArray(); } }
-
-        public IEnumerable<Car> RaceCars => Cars.Where(c => !c.Details.IsPaceCar);
-
-        public bool UnderPaceCar => this.CarIdxTrackSurface[0] == TrackLocation.OnTrack;
-
-        public Dictionary<string, string> Descriptions { get; internal set; }
-
-        public override string ToString()
-        {
-            var result = new StringBuilder();
-
-            foreach (var kv in this)
-            {
-                var key = kv.Key;
-                var description = (Descriptions != null && Descriptions.ContainsKey(key)) ? Descriptions[key] : "";
-                var value = ConvertToSpecificType(key, kv.Value);
-
-                var type = value.GetType().ToString();
-
-                result.Append("TeleKey: | {0,-30} | {1,-30} | {2,30} | {3}\n".F(key, type, value, description));
-            }
-
-            return result.ToString();
-        }
-
-        private object ConvertToSpecificType(string key, object value)
-        {
-            return key switch
-            {
-                "SessionState" => (SessionState)(int)value,
-                "SessionFlags" => (SessionFlags)(int)value,
-                "EngineWarnings" => (EngineWarnings)(int)value,
-                "CarIdxTrackSurface" => ((int[])value).Select(v => (TrackLocation)v).ToArray(),
-                "DisplayUnits" => (DisplayUnits)(int)value,
-                "WeatherType" => (WeatherType)(int)value,
-                "Skies" => (Skies)(int)value,
-                _ => value,
-            };
-        }
+            "SessionState" => (SessionState)(int)value,
+            "SessionFlags" => (SessionFlags)(int)value,
+            "EngineWarnings" => (EngineWarnings)(int)value,
+            "CarIdxTrackSurface" => ((int[])value).Select(v => (TrackLocation)v).ToArray(),
+            "DisplayUnits" => (DisplayUnits)(int)value,
+            "WeatherType" => (WeatherType)(int)value,
+            "Skies" => (Skies)(int)value,
+            _ => value,
+        };
     }
 }

@@ -16,13 +16,10 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
+namespace iRacingSDK;
 
-namespace iRacingSDK
+public enum WeatherType
 {
-    public enum WeatherType
-    {
-        Constant = 0,
-        Dynamic = 1
-    }
+    Constant = 0,
+    Dynamic = 1
 }
