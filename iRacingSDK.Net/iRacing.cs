@@ -16,46 +16,39 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace iRacingSDK
+namespace iRacingSDK;
+
+public static class iRacing
 {
-    public static class iRacing
+    static iRacingConnection instance;
+    static iRacingEvents eventInstance;
+
+    static iRacing()
     {
-        static iRacingConnection instance;
-        static iRacingEvents eventInstance;
+        instance = new iRacingConnection();
+        eventInstance = new iRacingEvents();
+    }
 
-        static iRacing()
+    public static Replay Replay => instance.Replay;
+    public static PitCommand PitCommand => instance.PitCommand;
+
+    public static bool IsConnected => instance.IsConnected;
+
+    public static IEnumerable<DataSample> GetDataFeed() => instance.GetDataFeed();
+
+    public static void StartListening() => eventInstance.StartListening();
+
+    public static void StopListening() => eventInstance.StopListening();
+
+    public static event Action<DataSample> NewData
+    {
+        add
         {
-            instance = new iRacingConnection();
-            eventInstance = new iRacingEvents();
+            eventInstance.NewData += value;
         }
-
-        public static Replay Replay => instance.Replay;
-        public static PitCommand PitCommand => instance.PitCommand;
-
-        public static bool IsConnected => instance.IsConnected;
-
-        public static IEnumerable<DataSample> GetDataFeed() => instance.GetDataFeed();
-
-        public static void StartListening()
+        remove
         {
-            eventInstance.StartListening();
-        }
-
-        public static void StopListening()
-        {
-            eventInstance.StopListening();
-        }
-
-        public static event Action<DataSample> NewData
-        {
-            add
-            {
-                eventInstance.NewData += value;
-            }
-            remove
-            {
-                eventInstance.NewData -= value;
-            }
+            eventInstance.NewData -= value;
         }
     }
 }

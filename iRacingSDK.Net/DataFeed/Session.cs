@@ -16,43 +16,37 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+namespace iRacingSDK;
 
-namespace iRacingSDK
+public partial class SessionData
 {
-    public partial class SessionData
+    public partial class _SessionInfo
     {
-        public partial class _SessionInfo
+        public partial class _Sessions
         {
-            public partial class _Sessions
+            public int _SessionLaps
             {
-                public int _SessionLaps
+                get
                 {
-                    get
-                    {
-                        int result = 0;
-                        int.TryParse(SessionLaps, out result);
-                        return result;
-                    }
+                    int result = 0;
+                    int.TryParse(SessionLaps, out result);
+                    return result;
                 }
-
-                public double _SessionTime
-                {
-                    get
-                    {
-                        double result = 0;
-                        double.TryParse(SessionTime.Replace(" sec", ""), out result);
-                        return result;
-                    }
-                }
-
-                public bool IsLimitedSessionLaps => SessionLaps.ToLower() != "unlimited";
-
-                public bool IsLimitedTime => SessionTime.ToLower() != "unlimited";
             }
+
+            public double _SessionTime
+            {
+                get
+                {
+                    double result = 0;
+                    double.TryParse(SessionTime.Replace(" sec", ""), out result);
+                    return result;
+                }
+            }
+
+            public bool IsLimitedSessionLaps => SessionLaps.ToLower() != "unlimited";
+
+            public bool IsLimitedTime => SessionTime.ToLower() != "unlimited";
         }
+    }
 	}
-}

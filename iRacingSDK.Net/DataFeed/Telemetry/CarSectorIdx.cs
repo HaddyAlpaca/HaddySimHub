@@ -16,25 +16,25 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace iRacingSDK
-{
-    public partial class Telemetry : Dictionary<string, object>
+namespace iRacingSDK;
+
+public partial class Telemetry : Dictionary<string, object>
 	{
 		LapSector[] carSectorIdx;
-        public LapSector[] CarSectorIdx //0 -> Start/Finish, 1 -> 33%, 2-> 66%
+    public LapSector[] CarSectorIdx //0 -> Start/Finish, 1 -> 33%, 2-> 66%
+    {
+        get
         {
-            get
-            {
-                if (carSectorIdx != null)
-                    return carSectorIdx;
+            if (carSectorIdx != null)
+                return carSectorIdx;
 
-                carSectorIdx = new LapSector[64];
-                for(int i = 0; i < 64; i++)
+            carSectorIdx = new LapSector[64];
+            for(int i = 0; i < 64; i++)
 					carSectorIdx[i] = new LapSector(this.CarIdxLap[i], ToSectorFromPercentage(CarIdxLapDistPct[i]));
 
-                return carSectorIdx;
-            }
+            return carSectorIdx;
         }
+    }
 
 		static int ToSectorFromPercentage(float percentage)
 		{
@@ -46,5 +46,4 @@ namespace iRacingSDK
 
 			return 0;
 		}
-    }
 }

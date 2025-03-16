@@ -15,12 +15,9 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Collections.Generic;
-
 namespace iRacingSDK
 {
-	public static partial class DataSampleExtensions
+    public static partial class DataSampleExtensions
 	{
 		/// <summary>
 		/// Assume replay is playing forward

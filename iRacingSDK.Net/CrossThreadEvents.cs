@@ -16,129 +16,120 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace iRacingSDK;
 
-using System;
-using System.Collections.Generic;
-using System.Threading;
-
-namespace iRacingSDK
+public class CrossThreadEvents<T1, T2>
 {
-    public class CrossThreadEvents<T1, T2>
+    event Action<T1, T2> evnt;
+
+    Dictionary<Action<T1, T2>, Action<T1, T2>> evntDelegates = new Dictionary<Action<T1, T2>, Action<T1, T2>>();
+
+    public void Invoke(T1 t1, T2 t2)
     {
-        event Action<T1, T2> evnt;
-
-        Dictionary<Action<T1, T2>, Action<T1, T2>> evntDelegates = new Dictionary<Action<T1, T2>, Action<T1, T2>>();
-
-        public void Invoke(T1 t1, T2 t2)
-        {
-            if (evnt != null)
-                evnt(t1, t2);
-        }
-
-        public event Action<T1, T2> Event
-        {
-            add
-            {
-                var context = SynchronizationContext.Current;
-                Action<T1, T2> newDelgate;
-
-                if (context != null)
-                    newDelgate = (t1, t2) => context.Send(i => value(t1, t2), null);
-                else
-                    newDelgate = value;
-
-                evntDelegates.Add(value, newDelgate);
-                evnt += newDelgate;
-            }
-
-            remove
-            {
-                var context = SynchronizationContext.Current;
-
-                var delgate = evntDelegates[value];
-                evntDelegates.Remove(value);
-
-                evnt -= delgate;
-            }
-        }
+        evnt?.Invoke(t1, t2);
     }
 
-    public class CrossThreadEvents<T>
+    public event Action<T1, T2> Event
     {
-        event Action<T> evnt;
-
-        Dictionary<Action<T>, Action<T>> evntDelegates = new Dictionary<Action<T>, Action<T>>();
-
-        public void Invoke(T t)
+        add
         {
-            if (evnt != null)
-                evnt(t);
+            var context = SynchronizationContext.Current;
+            Action<T1, T2> newDelgate;
+
+            if (context != null)
+                newDelgate = (t1, t2) => context.Send(i => value(t1, t2), null);
+            else
+                newDelgate = value;
+
+            evntDelegates.Add(value, newDelgate);
+            evnt += newDelgate;
         }
 
-        public event Action<T> Event 
+        remove
         {
-            add
-            {
-                var context = SynchronizationContext.Current;
-                Action<T> newDelgate;
+            var context = SynchronizationContext.Current;
 
-                if (context != null)
-                    newDelgate = (d) => context.Send(i => value(d), null);
-                else
-                    newDelgate = value;
+            var delgate = evntDelegates[value];
+            evntDelegates.Remove(value);
 
-                evntDelegates.Add(value, newDelgate);
-                evnt += newDelgate;
-            }
-
-            remove
-            {
-                var context = SynchronizationContext.Current;
-
-                var delgate = evntDelegates[value];
-                evntDelegates.Remove(value);
-
-                evnt -= delgate;
-            }
+            evnt -= delgate;
         }
     }
+}
 
-    public class CrossThreadEvents
+public class CrossThreadEvents<T>
+{
+    event Action<T> evnt;
+
+    Dictionary<Action<T>, Action<T>> evntDelegates = new Dictionary<Action<T>, Action<T>>();
+
+    public void Invoke(T t)
     {
-        event Action evnt;
+        evnt?.Invoke(t);
+    }
 
-        Dictionary<Action, Action> evntDelegates = new Dictionary<Action, Action>();
-
-        public void Invoke()
+    public event Action<T> Event 
+    {
+        add
         {
-            if (evnt != null)
-                evnt();
+            var context = SynchronizationContext.Current;
+            Action<T> newDelgate;
+
+            if (context != null)
+                newDelgate = (d) => context.Send(i => value(d), null);
+            else
+                newDelgate = value;
+
+            evntDelegates.Add(value, newDelgate);
+            evnt += newDelgate;
         }
-        public event Action Event
+
+        remove
         {
-            add
-            {
-                var context = SynchronizationContext.Current;
-                Action newDelgate;
+            var context = SynchronizationContext.Current;
 
-                if (context != null)
-                    newDelgate = () => context.Send(i => value(), null);
-                else
-                    newDelgate = value;
+            var delgate = evntDelegates[value];
+            evntDelegates.Remove(value);
 
-                evntDelegates.Add(value, newDelgate);
-                evnt += newDelgate;
-            }
+            evnt -= delgate;
+        }
+    }
+}
 
-            remove
-            {
-                var context = SynchronizationContext.Current;
+public class CrossThreadEvents
+{
+    event Action evnt;
 
-                var delgate = evntDelegates[value];
-                evntDelegates.Remove(value);
+    Dictionary<Action, Action> evntDelegates = new Dictionary<Action, Action>();
 
-                evnt -= delgate;
-            }
+    public void Invoke()
+    {
+        evnt?.Invoke();
+    }
+    public event Action Event
+    {
+        add
+        {
+            var context = SynchronizationContext.Current;
+            Action newDelgate;
+
+            if (context != null)
+                newDelgate = () => context.Send(i => value(), null);
+            else
+                newDelgate = value;
+
+            evntDelegates.Add(value, newDelgate);
+            evnt += newDelgate;
+        }
+
+        remove
+        {
+            var context = SynchronizationContext.Current;
+
+            var delgate = evntDelegates[value];
+            evntDelegates.Remove(value);
+
+            evnt -= delgate;
         }
     }
 }

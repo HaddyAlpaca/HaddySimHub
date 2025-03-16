@@ -16,21 +16,14 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace iRacingSDK
+namespace iRacingSDK;
+
+public partial class Telemetry : Dictionary<string, object>
 {
-    public partial class Telemetry : Dictionary<string, object>
+    int[] carIdxPitStopCount;
+    public int[] CarIdxPitStopCount
     {
-        int[] carIdxPitStopCount;
-        public int[] CarIdxPitStopCount
-        {
-            get
-            {
-                return carIdxPitStopCount;
-            }
-            set
-            {
-                carIdxPitStopCount = value;
-            }
-        }
+        get => carIdxPitStopCount;
+        set => carIdxPitStopCount = value;
     }
 }

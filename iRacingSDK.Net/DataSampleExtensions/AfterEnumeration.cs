@@ -17,8 +17,6 @@
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
 using iRacingSDK.Support;
-using System;
-using System.Collections.Generic;
 
 namespace iRacingSDK
 {

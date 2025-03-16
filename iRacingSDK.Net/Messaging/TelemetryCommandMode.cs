@@ -16,23 +16,20 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
+namespace iRacingSDK;
 
-namespace iRacingSDK
+public enum TelemetryCommandMode
 {
-    public enum TelemetryCommandMode
-    {
-        /// <summary>
-        /// Turn telemetry recording off
-        /// </summary>
-        Stop = 0,
-        /// <summary>
-        /// Turn telemetry recording on
-        /// </summary>
-        Start,
-        /// <summary>
-        /// Write current file to disk and start a new one
-        /// </summary>
-        Restart
-    };
-}
+    /// <summary>
+    /// Turn telemetry recording off
+    /// </summary>
+    Stop = 0,
+    /// <summary>
+    /// Turn telemetry recording on
+    /// </summary>
+    Start,
+    /// <summary>
+    /// Write current file to disk and start a new one
+    /// </summary>
+    Restart
+};

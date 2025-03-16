@@ -17,95 +17,94 @@
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 using System.Runtime.Serialization;
 
-namespace iRacingSDK
+namespace iRacingSDK;
+
+[Serializable]
+public partial class Telemetry : Dictionary<string, object>
 {
-    [Serializable]
-	public partial class Telemetry : Dictionary<string, object>
+	public Telemetry()
 	{
-		public Telemetry()
-		{
-		}
+	}
 
 #pragma warning disable SYSLIB0051 // Type or member is obsolete
-        public Telemetry(SerializationInfo info, StreamingContext context) : base(info, context) {
+public Telemetry(SerializationInfo info, StreamingContext context) : base(info, context) {
 
-		}
+	}
 #pragma warning restore SYSLIB0051 // Type or member is obsolete
-    }
+}
 
+[Serializable]
+public partial class SessionData
+{
 	[Serializable]
-	public partial class SessionData
+	public partial class _WeekendInfo
 	{
 		[Serializable]
-		public partial class _WeekendInfo
+		public partial class _WeekendOptions
 		{
-			[Serializable]
-			public partial class _WeekendOptions
-			{
-			}
+		}
 				
-			[Serializable]
-			public partial class _TelemetryOptions
-			{
-			}
+		[Serializable]
+		public partial class _TelemetryOptions
+		{
 		}
+	}
 			
+	[Serializable]
+	public partial class _SessionInfo
+	{
 		[Serializable]
-		public partial class _SessionInfo
+		public partial class _Sessions
 		{
 			[Serializable]
-			public partial class _Sessions
+			public partial class _ResultsPositions
 			{
-				[Serializable]
-				public partial class _ResultsPositions
-				{
-				}
-
-				[Serializable]
-				public partial class _ResultsFastestLap
-				{
-				}
 			}
-		}
 
-		[Serializable]
-		public partial class _CameraInfo
-		{
 			[Serializable]
-			public partial class _Groups
-			{
-				[Serializable]
-				public partial class _Cameras
-				{
-				}
-			}
-		}
-
-		[Serializable]
-		public partial class _RadioInfo
-		{
-			[Serializable]
-			public partial class _Radios
+			public partial class _ResultsFastestLap
 			{
 			}
 		}
+	}
 
+	[Serializable]
+	public partial class _CameraInfo
+	{
 		[Serializable]
-		public partial class _DriverInfo
+		public partial class _Groups
 		{
 			[Serializable]
-			public partial class _Drivers
+			public partial class _Cameras
 			{
 			}
 		}
+	}
 
+	[Serializable]
+	public partial class _RadioInfo
+	{
 		[Serializable]
-		public partial class _SplitTimeInfo
+		public partial class _Radios
 		{
-			[Serializable]
-			public partial class _Sectors
-			{
-			}
+		}
+	}
+
+	[Serializable]
+	public partial class _DriverInfo
+	{
+		[Serializable]
+		public partial class _Drivers
+		{
+		}
+	}
+
+	[Serializable]
+	public partial class _SplitTimeInfo
+	{
+		[Serializable]
+		public partial class _Sectors
+		{
 		}
 	}
 }

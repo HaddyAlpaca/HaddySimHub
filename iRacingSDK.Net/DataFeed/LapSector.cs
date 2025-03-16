@@ -15,65 +15,36 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
-using System;
+namespace iRacingSDK;
 
-namespace iRacingSDK
+public struct LapSector(int lapNumber, int sector)
 {
-    public struct LapSector
+    public readonly int LapNumber = lapNumber;
+    public readonly int Sector = sector;
+
+    public static LapSector ForLap(int lapNumber) => new LapSector(lapNumber, 0);
+
+    public override bool Equals(object obj) => obj is LapSector sector && this == sector;
+
+    public override int GetHashCode() => LapNumber << 4 + Sector;
+
+    public static bool operator ==(LapSector x, LapSector y) =>
+        x.LapNumber == y.LapNumber && x.Sector == y.Sector;
+
+    public static bool operator !=(LapSector x, LapSector y) => !(x == y);
+
+    public static bool operator >=(LapSector x, LapSector y)
     {
-        public readonly int LapNumber;
-        public readonly int Sector;
+        if (x.LapNumber > y.LapNumber)
+            return true;
 
-        public LapSector(int lapNumber, int sector)
-        {
-            Sector = sector;
-            LapNumber = lapNumber;
-        }
+        if (x.LapNumber == y.LapNumber && x.Sector >= y.Sector)
+            return true;
 
-        public static LapSector ForLap(int lapNumber)
-        {
-            return new LapSector(lapNumber, 0);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is LapSector sector && this == sector;
-        }
-
-        public override int GetHashCode()
-        {
-            return LapNumber << 4 + Sector;
-        }
-        
-        public static bool operator ==(LapSector x, LapSector y)
-        {
-            return x.LapNumber == y.LapNumber && x.Sector == y.Sector;
-        }
-
-        public static bool operator !=(LapSector x, LapSector y)
-        {
-            return !(x == y);
-        }
-
-        public static bool operator >=(LapSector x, LapSector y)
-        {
-            if (x.LapNumber > y.LapNumber)
-                return true;
-
-            if (x.LapNumber == y.LapNumber && x.Sector >= y.Sector)
-                return true;
-
-            return false;
-        }
-
-        public static bool operator <=(LapSector x, LapSector y)
-        {
-            return y >= x;
-        }
-
-        public override string ToString()
-        {
-            return string.Format("Lap: {0}, Sector: {1}", LapNumber, Sector);
-        }
+        return false;
     }
+
+    public static bool operator <=(LapSector x, LapSector y) => y >= x;
+
+    public override string ToString() => string.Format("Lap: {0}, Sector: {1}", LapNumber, Sector);
 }

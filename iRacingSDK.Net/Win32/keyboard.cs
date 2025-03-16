@@ -16,23 +16,16 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+namespace Win32;
 
-namespace Win32
+public static class Keyboard
 {
-    public static class Keyboard
-    {
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
 
-        public const int KEYEVENTF_KEYUP = 0x02;
-        public const byte VK_MENU = 0x12;
-        public const byte VK_F9 = 0x78;
-        public const byte VK_F10 = 0x79;
-        public const byte VK_TAB = 0x09;
-    }
+    public const int KEYEVENTF_KEYUP = 0x02;
+    public const byte VK_MENU = 0x12;
+    public const byte VK_F9 = 0x78;
+    public const byte VK_F10 = 0x79;
+    public const byte VK_TAB = 0x09;
 }

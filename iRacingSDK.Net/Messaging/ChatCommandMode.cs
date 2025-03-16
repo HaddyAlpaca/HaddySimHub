@@ -16,27 +16,24 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
+namespace iRacingSDK;
 
-namespace iRacingSDK
+public enum ChatCommandMode
 {
-    public enum ChatCommandMode
-    {
-        /// <summary>
-        /// pass in a number from 1-15 representing the chat macro to launch
-        /// </summary>
-        Macro = 0,
-        /// <summary>
-        /// Open up a new chat window
-        /// </summary>
-        BeginChat,
-        /// <summary>
-        /// Reply to last private chat
-        /// </summary>
-        Reply,
-        /// <summary>
-        /// Close chat window
-        /// </summary>
-        Cancel
-    };
-}
+    /// <summary>
+    /// pass in a number from 1-15 representing the chat macro to launch
+    /// </summary>
+    Macro = 0,
+    /// <summary>
+    /// Open up a new chat window
+    /// </summary>
+    BeginChat,
+    /// <summary>
+    /// Reply to last private chat
+    /// </summary>
+    Reply,
+    /// <summary>
+    /// Close chat window
+    /// </summary>
+    Cancel
+};

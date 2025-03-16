@@ -16,12 +16,11 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.IO.MemoryMappedFiles;
 
-namespace iRacingSDK
-{
-	public static class MemoryMappedViewAccessorExtensions
+namespace iRacingSDK;
+
+public static class MemoryMappedViewAccessorExtensions
 	{
 		public unsafe delegate T MyFn<T>(byte* ptr);
 
@@ -40,4 +39,3 @@ namespace iRacingSDK
 		}
 	}
 	
-}

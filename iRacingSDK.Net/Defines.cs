@@ -16,20 +16,12 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.IO.MemoryMappedFiles;
-using System.Runtime.InteropServices;
-using System.Collections.Generic;
-using System.Threading;
-using System.Linq;
+namespace iRacingSDK;
 
-namespace iRacingSDK
+public class Defines
 {
-    public class Defines
-    {
-        public const int MaxString = 32;
-        public const int MaxDesc = 64;
-        public const int UnlimitedLaps = 32767;
-        public const float IRSDK_UNLIMITED_TIME = 604800.0f;
-    }
+    public const int MaxString = 32;
+    public const int MaxDesc = 64;
+    public const int UnlimitedLaps = 32767;
+    public const float IRSDK_UNLIMITED_TIME = 604800.0f;
 }

@@ -16,13 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.IO.MemoryMappedFiles;
 using System.Runtime.InteropServices;
-using System.Collections.Generic;
-using System.Threading;
-using System.Linq;
-using Win32.Synchronization;
 
 namespace Win32
 {

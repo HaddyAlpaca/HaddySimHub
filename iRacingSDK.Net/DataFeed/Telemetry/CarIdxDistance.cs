@@ -16,27 +16,26 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace iRacingSDK
-{
-    public partial class Telemetry : Dictionary<string, object>
+namespace iRacingSDK;
+
+public partial class Telemetry : Dictionary<string, object>
 	{
-        float[] carIdxDistance;
-        public float[] CarIdxDistance
+    float[] carIdxDistance;
+    public float[] CarIdxDistance
+    {
+        get
         {
-            get
-            {
-                if (carIdxDistance == null)
-                    carIdxDistance = Enumerable.Range(0, 64)
-                        .Select(CarIdx => this.CarIdxLap[CarIdx] + this.CarIdxLapDistPct[CarIdx] )
-                        .ToArray();
+            if (carIdxDistance == null)
+                carIdxDistance = Enumerable.Range(0, 64)
+                    .Select(CarIdx => this.CarIdxLap[CarIdx] + this.CarIdxLapDistPct[CarIdx] )
+                    .ToArray();
 
-                return carIdxDistance;
-            }
-            internal set
-            {
-                carIdxDistance = value;
-            }
+            return carIdxDistance;
         }
-
+        internal set
+        {
+            carIdxDistance = value;
+        }
     }
+
 }

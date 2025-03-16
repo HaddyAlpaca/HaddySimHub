@@ -16,21 +16,14 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
+namespace iRacingSDK;
 
-namespace iRacingSDK
+public partial class Telemetry : Dictionary<string, object>
 {
-    public partial class Telemetry : Dictionary<string, object>
-    {
-        public bool[] HasSeenCheckeredFlag;
-        public bool IsFinalLap;
-        public bool LeaderHasFinished;
-        public bool[] HasRetired;
-            
-        public bool HasData(int carIdx)
-        {
-            return this.CarIdxTrackSurface[carIdx] != TrackLocation.NotInWorld;
-        }
-    }
+    public bool[] HasSeenCheckeredFlag;
+    public bool IsFinalLap;
+    public bool LeaderHasFinished;
+    public bool[] HasRetired;
+
+    public bool HasData(int carIdx) => this.CarIdxTrackSurface[carIdx] != TrackLocation.NotInWorld;
 }
