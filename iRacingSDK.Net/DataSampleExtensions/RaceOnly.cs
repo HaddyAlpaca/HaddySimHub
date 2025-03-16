@@ -16,24 +16,23 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace iRacingSDK
+namespace iRacingSDK;
+
+public static partial class DataSampleExtensions
 {
-    public static partial class DataSampleExtensions
+    public static IEnumerable<DataSample> RaceOnly(this IEnumerable<DataSample> samples)
     {
-        public static IEnumerable<DataSample> RaceOnly(this IEnumerable<DataSample> samples)
+        iRacing.Replay.MoveToStartOfRace();
+
+        foreach (var data in samples)
         {
-            iRacing.Replay.MoveToStartOfRace();
+            if (data.Telemetry.SessionState == SessionState.Checkered)
+                break;
 
-            foreach (var data in samples)
-            {
-                if (data.Telemetry.SessionState == SessionState.Checkered)
-                    break;
+            if (data.Telemetry.SessionState != SessionState.Racing)
+                continue;
 
-                if (data.Telemetry.SessionState != SessionState.Racing)
-                    continue;
-
-                yield return data;
-            }
+            yield return data;
         }
     }
 }

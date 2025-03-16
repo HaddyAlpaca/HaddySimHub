@@ -18,41 +18,40 @@
 
 using System.Diagnostics;
 
-namespace iRacingSDK
-{
-    public static partial class DataSampleExtensions
-    {
-        /// <summary>
-        /// Filters out DataSamples that have a ReplayFrameNumber of 0.
-        /// </summary>
-        public static IEnumerable<DataSample> VerifyReplayFrames(this IEnumerable<DataSample> samples)
-        {
-            bool hasLoggedBadReplayFrameNum = false;
-            bool hasLoggedBadSessionNum = false;
+namespace iRacingSDK;
 
-            foreach (var data in samples)
+public static partial class DataSampleExtensions
+{
+    /// <summary>
+    /// Filters out DataSamples that have a ReplayFrameNumber of 0.
+    /// </summary>
+    public static IEnumerable<DataSample> VerifyReplayFrames(this IEnumerable<DataSample> samples)
+    {
+        bool hasLoggedBadReplayFrameNum = false;
+        bool hasLoggedBadSessionNum = false;
+
+        foreach (var data in samples)
+        {
+            if (data.Telemetry.ReplayFrameNum == 0 ) 
             {
-                if (data.Telemetry.ReplayFrameNum == 0 ) 
+                Trace.WriteLine("Received bad sample.  No ReplayFrameNumber.", "DEBUG");
+                if (!hasLoggedBadReplayFrameNum )
                 {
-                    Trace.WriteLine("Received bad sample.  No ReplayFrameNumber.", "DEBUG");
-                    if (!hasLoggedBadReplayFrameNum )
-                    {
-                        Trace.WriteLine(data.Telemetry.ToString(), "DEBUG");
-                        hasLoggedBadReplayFrameNum = true;
-                    }
-                } 
-                else if( data.Telemetry.Session == null )
-                {
-                    Trace.WriteLine("Received bad sample.  Invalid SessionNum.", "DEBUG");
-                    if (!hasLoggedBadSessionNum )
-                    {
-                        Trace.WriteLine(data.Telemetry.ToString(), "DEBUG");
-                        hasLoggedBadSessionNum = true;
-                    }
+                    Trace.WriteLine(data.Telemetry.ToString(), "DEBUG");
+                    hasLoggedBadReplayFrameNum = true;
                 }
-                else
-                    yield return data;
+            } 
+            else if( data.Telemetry.Session == null )
+            {
+                Trace.WriteLine("Received bad sample.  Invalid SessionNum.", "DEBUG");
+                if (!hasLoggedBadSessionNum )
+                {
+                    Trace.WriteLine(data.Telemetry.ToString(), "DEBUG");
+                    hasLoggedBadSessionNum = true;
+                }
             }
+            else
+                yield return data;
         }
     }
 }

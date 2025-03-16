@@ -16,33 +16,32 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace iRacingSDK
+namespace iRacingSDK;
+
+public static partial class DataSampleExtensions
 {
-    public static partial class DataSampleExtensions
+    public static IEnumerable<DataSample> AtSpeed(this IEnumerable<DataSample> samples, int replaySpeed, Func<DataSample, bool> fn)
     {
-        public static IEnumerable<DataSample> AtSpeed(this IEnumerable<DataSample> samples, int replaySpeed, Func<DataSample, bool> fn)
-        {
-            var speedBeenSet = false;
+        var speedBeenSet = false;
 
-            foreach (var data in samples)
+        foreach (var data in samples)
+        {
+            if (fn(data) && !speedBeenSet && data.Telemetry.ReplayPlaySpeed != replaySpeed)
             {
-                if (fn(data) && !speedBeenSet && data.Telemetry.ReplayPlaySpeed != replaySpeed)
-                {
-                    iRacing.Replay.SetSpeed(replaySpeed);
-                    speedBeenSet = true;
-                }
-
-                if (speedBeenSet)
-                    if (data.Telemetry.ReplayPlaySpeed == replaySpeed)
-                        speedBeenSet = false;
-
-                yield return data;
+                iRacing.Replay.SetSpeed(replaySpeed);
+                speedBeenSet = true;
             }
-        }
 
-        public static IEnumerable<DataSample> AtSpeed(this IEnumerable<DataSample> samples, int replaySpeed)
-        {
-            return AtSpeed(samples, replaySpeed, (data) => true);
+            if (speedBeenSet)
+                if (data.Telemetry.ReplayPlaySpeed == replaySpeed)
+                    speedBeenSet = false;
+
+            yield return data;
         }
+    }
+
+    public static IEnumerable<DataSample> AtSpeed(this IEnumerable<DataSample> samples, int replaySpeed)
+    {
+        return AtSpeed(samples, replaySpeed, (data) => true);
     }
 }

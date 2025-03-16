@@ -16,13 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace iRacingSDK
+namespace iRacingSDK;
+
+public static partial class DataSampleExtensions
 {
-    public static partial class DataSampleExtensions
-    {
-        public static AfterEnumeration TakeUntil(this IEnumerable<DataSample> samples, TimeSpan period)
-        {
-            return new AfterEnumeration(samples, period);
-        }
-    }
+    public static AfterEnumeration TakeUntil(this IEnumerable<DataSample> samples, TimeSpan period) => new(samples, period);
 }

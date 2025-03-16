@@ -16,16 +16,15 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace iRacingSDK
+namespace iRacingSDK;
+
+public static partial class DataSampleExtensions
 {
-    public static partial class DataSampleExtensions
+    public static void EmitTo(this IEnumerable<DataSample> samples, Func<DataSample, bool> emitter)
     {
-        public static void EmitTo(this IEnumerable<DataSample> samples, Func<DataSample, bool> emitter)
-        {
-            foreach (var d in samples)
-                if (!emitter(d))
-                    return;
-        }
+        foreach (var d in samples)
+            if (!emitter(d))
+                return;
     }
 }
 

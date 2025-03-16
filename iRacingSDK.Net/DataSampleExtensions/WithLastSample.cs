@@ -15,27 +15,26 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
-namespace iRacingSDK
+namespace iRacingSDK;
+
+public static partial class DataSampleExtensions
 {
-    public static partial class DataSampleExtensions
+	/// <summary>
+	/// Mixes in the LastSample field 
+	/// Also disconnect the link list - so only the immediate sample has ref to last sample.
+	/// </summary>
+	public static IEnumerable<DataSample> WithLastSample(this IEnumerable<DataSample> samples)
 	{
-		/// <summary>
-		/// Mixes in the LastSample field 
-        /// Also disconnect the link list - so only the immediate sample has ref to last sample.
-		/// </summary>
-		public static IEnumerable<DataSample> WithLastSample(this IEnumerable<DataSample> samples)
+	DataSample lastDataSample = null;
+
+		foreach (var data in samples)
 		{
-            DataSample lastDataSample = null;
+		data.LastSample = lastDataSample;
+		if (lastDataSample != null)
+			lastDataSample.LastSample = null;
+		lastDataSample = data;
 
-			foreach (var data in samples)
-			{
-                data.LastSample = lastDataSample;
-                if (lastDataSample != null)
-                    lastDataSample.LastSample = null;
-                lastDataSample = data;
-
-				yield return data;
-			}
+			yield return data;
 		}
 	}
 }
