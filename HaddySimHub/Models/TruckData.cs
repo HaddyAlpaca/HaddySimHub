@@ -217,4 +217,6 @@ public sealed record TruckData
     public float WaterTemp { get; init; }
 
     public bool WaterTempWarningOn { get; init; }
+    public uint RetarderLevel { get; init; }
+    public uint RetarderStepCount { get; init; }
 }
