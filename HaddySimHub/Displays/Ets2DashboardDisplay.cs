@@ -94,6 +94,8 @@ internal sealed class Ets2DashboardDisplay(Func<DisplayUpdate, Task> updateDispl
             WaterTempWarningOn = data.TruckValues.CurrentValues.DashboardValues.WarningValues.WaterTemperature,
             BatteryVoltageWarningOn = data.TruckValues.CurrentValues.DashboardValues.WarningValues.BatteryVoltage,
             BatteryVoltage = data.TruckValues.CurrentValues.DashboardValues.BatteryVoltage,
+            RetarderLevel = data.TruckValues.CurrentValues.MotorValues.BrakeValues.RetarderLevel,
+            RetarderStepCount = data.TruckValues.ConstantsValues.MotorValues.RetarderStepCount,
         };
 
         return new DisplayUpdate { Type = DisplayType.TruckDashboard, Data = displayData };

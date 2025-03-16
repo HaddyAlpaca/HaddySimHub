@@ -204,13 +204,17 @@
     </div>
     <div class="col-6">
       <div class="card dashboard-lights">
-        <div class="icon-text-control" id="fuel">
-          <img class="dashboard-light" src="/assets/images/fuel.svg" [ngClass]="{'filter-orange': data().fuelWarningOn}">
-          <div>{{data().fuelDistance | numberFlexDigit}} km ({{data().fuelAmount | numberFlexDigit}} l)</div>
+        <div class="icon-text-control" [ngClass]="{'hidden': !data().retarderStepCount}">
+          <img class="dashboard-light" src="/assets/images/retarder.svg" [ngClass]="{'filter-orange': data().retarderLevel}">
+          <div>{{data().retarderLevel}}/{{data().retarderStepCount}}</div>
         </div>
         <div class="icon-text-control" [ngClass]="{'hidden': !data().cruiseControlOn}">
           <img class="dashboard-light" src="/assets/images/cruise-control.png">
           <div>{{data().cruiseControlSpeed}} km/h</div>
+        </div>
+        <div class="icon-text-control" id="fuel">
+          <img class="dashboard-light" src="/assets/images/fuel.svg" [ngClass]="{'filter-orange': data().fuelWarningOn}">
+          <div>{{data().fuelDistance | numberFlexDigit}} km ({{data().fuelAmount | numberFlexDigit}} l)</div>
         </div>
         <div class="icon-text-control"  id="adBlue">
           <img class="dashboard-light" src="/assets/images/adblue.svg" [ngClass]="{'filter-orange': data().adBlueWarningOn}">

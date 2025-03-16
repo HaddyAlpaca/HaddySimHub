@@ -57,4 +57,6 @@ export class TruckData {
   public oilTemp = 0;
   public waterTemp = 0;
   public waterTempWarningOn = false;
+  public retarderLevel = 0;
+  public retarderStepCount = 0;
 }
