@@ -16,14 +16,11 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace iRacingSDK
 {
-	public partial class Telemetry : Dictionary<string, object>
+    public partial class Telemetry : Dictionary<string, object>
     {
         float? raceDistance;
 
