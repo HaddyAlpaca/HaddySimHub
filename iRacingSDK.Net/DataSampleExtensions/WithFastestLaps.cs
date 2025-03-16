@@ -16,54 +16,53 @@
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace iRacingSDK
+namespace iRacingSDK;
+
+public static partial class DataSampleExtensions
 {
-    public static partial class DataSampleExtensions
+    public static IEnumerable<DataSample> WithFastestLaps(this IEnumerable<DataSample> samples)
     {
-        public static IEnumerable<DataSample> WithFastestLaps(this IEnumerable<DataSample> samples)
-        {
-            FastLap lastFastLap = null;
-            var lastDriverLaps = new int[64];
-            var driverLapStartTime = new double[64];
-            var fastestLapTime = double.MaxValue;
+        FastLap lastFastLap = null;
+        var lastDriverLaps = new int[64];
+        var driverLapStartTime = new double[64];
+        var fastestLapTime = double.MaxValue;
 
 			foreach (var data in samples.ForwardOnly())
+        {
+            var carsAndLaps = data.Telemetry
+                .CarIdxLap
+                .Select((l, i) => new { CarIdx = i, Lap = l })
+                .Skip(1)
+                .Take(data.SessionData.DriverInfo.CompetingDrivers.Length - 1);
+
+            foreach (var lap in carsAndLaps)
             {
-                var carsAndLaps = data.Telemetry
-                    .CarIdxLap
-                    .Select((l, i) => new { CarIdx = i, Lap = l })
-                    .Skip(1)
-                    .Take(data.SessionData.DriverInfo.CompetingDrivers.Length - 1);
+                if (lap.Lap == -1)
+                    continue;
 
-                foreach (var lap in carsAndLaps)
+                if (lap.Lap == lastDriverLaps[lap.CarIdx] + 1)
                 {
-                    if (lap.Lap == -1)
-                        continue;
+                    var lapTime = data.Telemetry.SessionTime - driverLapStartTime[lap.CarIdx];
 
-                    if (lap.Lap == lastDriverLaps[lap.CarIdx] + 1)
+                    driverLapStartTime[lap.CarIdx] = data.Telemetry.SessionTime;
+                    lastDriverLaps[lap.CarIdx] = lap.Lap;
+
+                    if (lap.Lap > 1 && lapTime < fastestLapTime)
                     {
-                        var lapTime = data.Telemetry.SessionTime - driverLapStartTime[lap.CarIdx];
+                        fastestLapTime = lapTime;
 
-                        driverLapStartTime[lap.CarIdx] = data.Telemetry.SessionTime;
-                        lastDriverLaps[lap.CarIdx] = lap.Lap;
-
-                        if (lap.Lap > 1 && lapTime < fastestLapTime)
+                        lastFastLap = new FastLap
                         {
-                            fastestLapTime = lapTime;
-
-                            lastFastLap = new FastLap
-                            {
-                                Time = TimeSpan.FromSeconds(lapTime),
-                                Driver = data.SessionData.DriverInfo.CompetingDrivers[lap.CarIdx]
-                            };
-                        }
+                            Time = TimeSpan.FromSeconds(lapTime),
+                            Driver = data.SessionData.DriverInfo.CompetingDrivers[lap.CarIdx]
+                        };
                     }
                 }
-
-                data.Telemetry.FastestLap = lastFastLap;
-
-                yield return data;
             }
+
+            data.Telemetry.FastestLap = lastFastLap;
+
+            yield return data;
         }
     }
 }

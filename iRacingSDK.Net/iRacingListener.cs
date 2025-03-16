@@ -107,7 +107,7 @@ public class iRacingEvents : IDisposable
 
         try
         {
-            foreach (var d in instance.GetDataFeed(logging: false))
+            foreach (var d in instance.GetDataFeed(logging: false).WithCorrectedDistances())
             {
                 if (requestCancel)
                     return;

@@ -19,60 +19,59 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
 
-namespace iRacingSDK
+namespace iRacingSDK;
+
+public static partial class DataSampleExtensions
 {
-    public static partial class DataSampleExtensions
+    /// <summary>
+    /// Similiar to GetDataFeed, except DataSample can be buffered upto maxBufferLength to asist in reducing loss of data packets
+    /// Therefore, DataSamples yield from this enumeration may have a higher latency of values.
+    /// </summary>
+    /// <param name="iRacingConnection"></param>
+    /// <param name="maxBufferLength"></param>
+    /// <returns></returns>
+    public static IEnumerable<DataSample> GetBufferedDataFeed(this iRacingConnection iRacingConnection, int maxBufferLength = 10)
     {
-        /// <summary>
-        /// Similiar to GetDataFeed, except DataSample can be buffered upto maxBufferLength to asist in reducing loss of data packets
-        /// Therefore, DataSamples yield from this enumeration may have a higher latency of values.
-        /// </summary>
-        /// <param name="iRacingConnection"></param>
-        /// <param name="maxBufferLength"></param>
-        /// <returns></returns>
-        public static IEnumerable<DataSample> GetBufferedDataFeed(this iRacingConnection iRacingConnection, int maxBufferLength = 10)
+        return _GetBufferedDataFeed(iRacingConnection, maxBufferLength).WithLastSample();
+    }
+
+    static IEnumerable<DataSample> _GetBufferedDataFeed(iRacingConnection iRacingConnection, int maxBufferLength)
+    {
+        var que = new ConcurrentQueue<DataSample>();
+        bool cancelRequest = false;
+
+        var t = new Task(() => EnqueueSamples(que, iRacingConnection, maxBufferLength, ref cancelRequest));
+        t.Start();
+
+        try
         {
-            return _GetBufferedDataFeed(iRacingConnection, maxBufferLength).WithLastSample();
-        }
+            DataSample data;
 
-        static IEnumerable<DataSample> _GetBufferedDataFeed(iRacingConnection iRacingConnection, int maxBufferLength)
-        {
-            var que = new ConcurrentQueue<DataSample>();
-            bool cancelRequest = false;
-
-            var t = new Task(() => EnqueueSamples(que, iRacingConnection, maxBufferLength, ref cancelRequest));
-            t.Start();
-
-            try
+            while (true)
             {
-                DataSample data;
-
-                while (true)
-                {
-                    if (que.TryDequeue(out data))
-                        yield return data;
-                }
-            }
-            finally
-            {
-                cancelRequest = true;
-                t.Wait(200);
-                t.Dispose();
+                if (que.TryDequeue(out data))
+                    yield return data;
             }
         }
-
-        static void EnqueueSamples(ConcurrentQueue<DataSample> que, iRacingConnection samples, int maxBufferLength, ref bool cancelRequest)
+        finally
         {
-            foreach (var data in samples.GetRawDataFeed())
-            {
-                if (cancelRequest)
-                    return;
+            cancelRequest = true;
+            t.Wait(200);
+            t.Dispose();
+        }
+    }
 
-                if (que.Count < maxBufferLength)
-                    que.Enqueue(data);
-                else
-                    Debug.WriteLine(string.Format("Dropped DataSample {0}.", data.Telemetry.TickCount));
-            }
+    static void EnqueueSamples(ConcurrentQueue<DataSample> que, iRacingConnection samples, int maxBufferLength, ref bool cancelRequest)
+    {
+        foreach (var data in samples.GetRawDataFeed())
+        {
+            if (cancelRequest)
+                return;
+
+            if (que.Count < maxBufferLength)
+                que.Enqueue(data);
+            else
+                Debug.WriteLine(string.Format("Dropped DataSample {0}.", data.Telemetry.TickCount));
         }
     }
 }

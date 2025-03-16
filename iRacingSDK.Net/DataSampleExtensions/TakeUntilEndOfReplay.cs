@@ -15,36 +15,35 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
-namespace iRacingSDK
-{
-    public static partial class DataSampleExtensions
+namespace iRacingSDK;
+
+public static partial class DataSampleExtensions
 	{
 		/// <summary>
 		/// Assume replay is playing forward
-        /// If Frame numbers do not advance after 100 identical framenumbers, the enumerator is stopped
+    /// If Frame numbers do not advance after 100 identical framenumbers, the enumerator is stopped
 		/// </summary>
 		public static IEnumerable<DataSample> TakeUntilEndOfReplay(this IEnumerable<DataSample> samples)
 		{
-            const int MaxRetryCount = 100;
-            var retryCount = MaxRetryCount;
-            var lastFrameNumber = -1;
+        const int MaxRetryCount = 100;
+        var retryCount = MaxRetryCount;
+        var lastFrameNumber = -1;
 
 			foreach (var data in samples)
 			{
-                if (lastFrameNumber == data.Telemetry.ReplayFrameNum)
-                {
-                    if (retryCount-- <= 0)
-                        break;
-                }
-                else
-                {
-                    retryCount = MaxRetryCount;
-                    lastFrameNumber = data.Telemetry.ReplayFrameNum;
-                }
+            if (lastFrameNumber == data.Telemetry.ReplayFrameNum)
+            {
+                if (retryCount-- <= 0)
+                    break;
+            }
+            else
+            {
+                retryCount = MaxRetryCount;
+                lastFrameNumber = data.Telemetry.ReplayFrameNum;
+            }
 
 				yield return data;
 			}
 		}
 	}
-}
 
