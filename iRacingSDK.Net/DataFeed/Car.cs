@@ -64,7 +64,7 @@ public class Car
 
     public TimeSpan LastTimeSpan
     {
-        get { return LastTime.Seconds(); }
+        get { return TimeSpan.FromSeconds(LastTime); }
     }
 
     public double LastTime
