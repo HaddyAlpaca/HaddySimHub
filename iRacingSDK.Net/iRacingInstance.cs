@@ -1,21 +1,3 @@
-// This file is part of iRacingSDK.
-//
-// Copyright 2014 Dean Netherton
-// https://github.com/vipoo/iRacingSDK.Net
-//
-// iRacingSDK is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// iRacingSDK is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with iRacingSDK.  If not, see <http://www.gnu.org/licenses/>.
-
 using System.Diagnostics;
 using iRacingSDK.Support;
 
@@ -23,14 +5,12 @@ namespace iRacingSDK;
 
 public class iRacingConnection
 {
-    readonly CrossThreadEvents connected = new CrossThreadEvents();
-    readonly CrossThreadEvents disconnected = new CrossThreadEvents();
-    readonly CrossThreadEvents<DataSample> newSessionData = new CrossThreadEvents<DataSample>();
-    
-    DataFeed dataFeed = null;
-    bool isRunning = false;
-    iRacingMemory iRacingMemory;
-    internal bool IsRunning { get { return isRunning; } }
+    private readonly CrossThreadEvents connected = new();
+    private readonly CrossThreadEvents disconnected = new();
+    private readonly CrossThreadEvents<DataSample> newSessionData = new();
+    private DataFeed dataFeed = null;
+    private bool isRunning = false;
+    private iRacingMemory iRacingMemory;
 
     long processingTime;
     public long ProcessingTime { get { return processingTime * 1000000L / Stopwatch.Frequency; } }
@@ -40,8 +20,6 @@ public class iRacingConnection
 
     long yieldTime;
     public long YieldTime { get { return (yieldTime * 1000000L / Stopwatch.Frequency) ; } }
-
-    public readonly Replay Replay;
     public readonly PitCommand PitCommand;
 
     public bool IsConnected { get; private set; }
@@ -66,7 +44,6 @@ public class iRacingConnection
 
     public iRacingConnection()
     {
-        this.Replay = new Replay(this);
         this.PitCommand = new PitCommand();
         this.iRacingMemory = new iRacingMemory();
     }
