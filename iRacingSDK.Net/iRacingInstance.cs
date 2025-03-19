@@ -5,14 +5,12 @@ namespace iRacingSDK;
 
 public class iRacingConnection
 {
-    readonly CrossThreadEvents connected = new CrossThreadEvents();
-    readonly CrossThreadEvents disconnected = new CrossThreadEvents();
-    readonly CrossThreadEvents<DataSample> newSessionData = new CrossThreadEvents<DataSample>();
-    
-    DataFeed dataFeed = null;
-    bool isRunning = false;
-    iRacingMemory iRacingMemory;
-    internal bool IsRunning { get { return isRunning; } }
+    private readonly CrossThreadEvents connected = new();
+    private readonly CrossThreadEvents disconnected = new();
+    private readonly CrossThreadEvents<DataSample> newSessionData = new();
+    private DataFeed dataFeed = null;
+    private bool isRunning = false;
+    private iRacingMemory iRacingMemory;
 
     long processingTime;
     public long ProcessingTime { get { return processingTime * 1000000L / Stopwatch.Frequency; } }

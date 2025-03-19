@@ -10,8 +10,7 @@ public partial class SessionData
             {
                 get
                 {
-                    int result = 0;
-                    int.TryParse(SessionLaps, out result);
+                    int.TryParse(SessionLaps, out int result);
                     return result;
                 }
             }
@@ -20,8 +19,7 @@ public partial class SessionData
             {
                 get
                 {
-                    double result = 0;
-                    double.TryParse(SessionTime.Replace(" sec", ""), out result);
+                    double.TryParse(SessionTime.Replace(" sec", ""), out double result);
                     return result;
                 }
             }
@@ -31,4 +29,4 @@ public partial class SessionData
             public bool IsLimitedTime => SessionTime.ToLower() != "unlimited";
         }
     }
-	}
+}

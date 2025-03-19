@@ -2,8 +2,8 @@ namespace iRacingSDK;
 
 public static class iRacing
 {
-    static iRacingConnection instance;
-    static iRacingEvents eventInstance;
+    private static iRacingConnection instance;
+    private static iRacingEvents eventInstance;
 
     static iRacing()
     {
