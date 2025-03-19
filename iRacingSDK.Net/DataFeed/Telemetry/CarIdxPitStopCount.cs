@@ -2,7 +2,7 @@ namespace iRacingSDK;
 
 public partial class Telemetry : Dictionary<string, object>
 {
-    int[] carIdxPitStopCount;
+    private int[] carIdxPitStopCount;
     public int[] CarIdxPitStopCount
     {
         get => carIdxPitStopCount;

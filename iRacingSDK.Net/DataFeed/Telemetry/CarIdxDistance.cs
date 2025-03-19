@@ -7,10 +7,7 @@ public partial class Telemetry : Dictionary<string, object>
     {
         get
         {
-            if (carIdxDistance == null)
-                carIdxDistance = Enumerable.Range(0, 64)
-                    .Select(CarIdx => this.CarIdxLap[CarIdx] + this.CarIdxLapDistPct[CarIdx] )
-                    .ToArray();
+            carIdxDistance ??= [.. Enumerable.Range(0, 64).Select(CarIdx => this.CarIdxLap[CarIdx] + this.CarIdxLapDistPct[CarIdx] )];
 
             return carIdxDistance;
         }

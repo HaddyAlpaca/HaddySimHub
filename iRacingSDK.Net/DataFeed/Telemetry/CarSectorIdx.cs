@@ -1,8 +1,8 @@
 ﻿namespace iRacingSDK;
 
 public partial class Telemetry : Dictionary<string, object>
-	{
-		LapSector[] carSectorIdx;
+{
+    private LapSector[] carSectorIdx;
     public LapSector[] CarSectorIdx //0 -> Start/Finish, 1 -> 33%, 2-> 66%
     {
         get
@@ -18,14 +18,14 @@ public partial class Telemetry : Dictionary<string, object>
         }
     }
 
-		static int ToSectorFromPercentage(float percentage)
-		{
-			if (percentage > 0.66)
-				return 2;
+	static int ToSectorFromPercentage(float percentage)
+	{
+		if (percentage > 0.66)
+			return 2;
 
-			else if (percentage > 0.33)
-				return 1;
+		else if (percentage > 0.33)
+			return 1;
 
-			return 0;
-		}
+		return 0;
+	}
 }

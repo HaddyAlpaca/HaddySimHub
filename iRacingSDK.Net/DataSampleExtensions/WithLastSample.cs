@@ -8,14 +8,14 @@ public static partial class DataSampleExtensions
 	/// </summary>
 	public static IEnumerable<DataSample> WithLastSample(this IEnumerable<DataSample> samples)
 	{
-	DataSample lastDataSample = null;
+		DataSample lastDataSample = null;
 
 		foreach (var data in samples)
 		{
-		data.LastSample = lastDataSample;
-		if (lastDataSample != null)
-			lastDataSample.LastSample = null;
-		lastDataSample = data;
+			data.LastSample = lastDataSample;
+			if (lastDataSample != null)
+				lastDataSample.LastSample = null;
+			lastDataSample = data;
 
 			yield return data;
 		}
