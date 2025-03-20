@@ -13,6 +13,22 @@ using System.Diagnostics;
 using HaddySimHub.Models;
 using HaddySimHub.Displays.Dirt2;
 
+//Check for updates
+try
+{
+    var startUpdater = await Updater.UpdateAvailable();
+    if (startUpdater)
+    {
+        Console.WriteLine("Update available. Starting updater...");
+        Process.Start("Updater.exe");
+        return;
+    }
+}
+catch (Exception ex)
+{
+    LogManager.GetCurrentClassLogger().Error($"Error checking for updates: {ex.Message}\n\n{ex.StackTrace}");
+}
+
 HaddySimHub.Logging.ILogger logger = new HaddySimHub.Logging.Logger("main");
 CancellationTokenSource cancellationTokenSource = new();
 CancellationToken token = cancellationTokenSource.Token;
