@@ -13,6 +13,14 @@ using System.Diagnostics;
 using HaddySimHub.Models;
 using HaddySimHub.Displays.Dirt2;
 
+// Ensure single instance of the application
+Mutex mutex = new(true, "HaddySimHub_SingleInstance", out bool createdNew);
+if (!createdNew)
+{
+    Console.WriteLine("Another instance of the application is already running.");
+    return;
+}
+
 //Check for updates
 try
 {
