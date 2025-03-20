@@ -3,6 +3,14 @@ using System.IO.Compression;
 using System.Diagnostics;
 using Updater;
 
+// Ensure single instance of the application
+Mutex mutex = new(true, "HaddySimHubUpdater_SingleInstance", out bool createdNew);
+if (!createdNew)
+{
+    Console.WriteLine("Another instance of the application is already running.");
+    return;
+}
+
 HttpClient client = new();
 string apiUrl = "https://api.github.com/repos/HaddyAlpaca/HaddySimHub/releases/latest";
 string exePath = @"C:\HaddySimHub\HaddySimHub.exe";
