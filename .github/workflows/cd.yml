@@ -40,7 +40,10 @@ jobs:
         dotnet-version: ${{ env.dotnet_version }}
 
     - name: Publish server app
-      run: dotnet publish ${{ env.app_path }} -r win-x64 -p:PublishDir=${{env.dist_folder}}
+      run: dotnet publish ./HaddySimHub -r win-x64 -p:PublishDir=${{env.dist_folder}}
+
+    - name: Publish updater app
+      run: dotnet publish ./Updater -r win-x64 -p:PublishDir=${{env.dist_folder}}
 
     - name: Install Node.js
       uses: actions/setup-node@v4
