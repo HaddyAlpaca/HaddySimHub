@@ -7,7 +7,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
+    "test": "ng test --browsers=ChromeHeadless",
     "test_ci": "ng test --no-watch --browsers=ChromeHeadless",
     "lint": "cross-env LINT_CONFIG=production ng lint --eslint-config eslint.config.js",
     "build:prod": "ng build --prod"
