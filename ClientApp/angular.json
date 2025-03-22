@@ -90,6 +90,7 @@
             "polyfills": [
             ],
             "tsConfig": "tsconfig.spec.json",
+            "karmaConfig": "karma.conf.cjs",
             "assets": [
               "src/favicon.ico",
               "src/assets"
