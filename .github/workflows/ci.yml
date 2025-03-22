@@ -19,19 +19,27 @@ jobs:
   - name: Checkout
     uses: actions/checkout@v4
 
+  - name: Cache NuGet packages
+    uses: actions/cache@v3
+    with:
+      path: ~/.nuget/packages
+      key: nuget-${{ runner.os }}-${{ hashFiles('**/packages.lock.json') }}
+      restore-keys: |
+        nuget-${{ runner.os }}-
+
   - name: Install .NET Core
     uses: actions/setup-dotnet@v4
     with:
       dotnet-version: ${{ env.dotnet_version }}
 
   - name: Restore dependencies
-    run:  dotnet restore ${{ env.solution_file }}
-  
+    run: dotnet restore ${{ env.solution_file }}
+
   - name: Build
-    run:  dotnet build ${{ env.solution_file }} --no-restore
-  
+    run: dotnet build ${{ env.solution_file }} --no-restore
+
   - name: Test
-    run:  dotnet test ${{ env.solution_file }} --no-build
+    run: dotnet test ${{ env.solution_file }} --no-restore --no-build --verbosity normal
 
  clientapp-tests:
   name: Frontend tests
@@ -45,13 +53,21 @@ jobs:
   steps:
     - uses: actions/checkout@v4
 
+    - name: Cache node modules
+      uses: actions/cache@v3
+      with:
+        path: ~/.npm
+        key: npm-${{ runner.os }}-${{ hashFiles('ClientApp/src/package-lock.json') }}
+        restore-keys: |
+          npm-${{ runner.os }}-
+
     - name: Install Node.js
       uses: actions/setup-node@v4
       with:
         node-version: ${{ env.node-version }}
 
     - name: Install dependencies
-      run: npm install
+      run: npm ci
     
     - name: Lint
       run: npm run lint
