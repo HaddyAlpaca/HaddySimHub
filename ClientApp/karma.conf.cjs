@@ -15,7 +15,6 @@ module.exports = function (config) {
         require('karma-spec-reporter')
       ],
       
-      // Client configuration: keeping the Jasmine Spec Runner output visible in the browser
       client: {
         clearContext: false
       },
@@ -31,27 +30,12 @@ module.exports = function (config) {
         showBrowser: false,         // print the browser for each spec
         showSpecTiming: true,       // print the time elapsed for each spec
       },
-      
-      // Web server port
       port: 9876,
-      
-      // Enable colors in the output (reporters and logs)
       colors: true,
-      
-      // Level of logging
       logLevel: config.LOG_INFO,
-      
-      // Watch file changes and re-run tests automatically
       autoWatch: true,
-      
-      // Start these browsers; here, Chrome is used
-      browsers: ['Chrome'],
-      
-      // Continuous Integration mode:
-      // if true, Karma captures browsers, runs the tests, and exits
+      browsers: ['ChromeHeadless'],
       singleRun: false,
-      
-      // Concurrency level: how many browser instances should be started simultaneously
       concurrency: Infinity,
     });
   };
