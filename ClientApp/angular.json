@@ -87,6 +87,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
+            "builderMode": "application",
             "polyfills": [
             ],
             "tsConfig": "tsconfig.spec.json",
