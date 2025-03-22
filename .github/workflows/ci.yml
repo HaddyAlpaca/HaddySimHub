@@ -39,7 +39,7 @@ jobs:
     run: dotnet build ${{ env.solution_file }} --no-restore
 
   - name: Test
-    run: dotnet test ${{ env.solution_file }} --no-restore --no-build --verbosity minimal
+    run: dotnet test ${{ env.solution_file }} --no-restore --no-build --verbosity normal
 
  clientapp-tests:
   name: Frontend tests
