@@ -34,16 +34,24 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
+    - name: Cache NuGet packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.nuget/packages
+        key: nuget-${{ runner.os }}-${{ hashFiles('**/packages.lock.json') }}
+        restore-keys: |
+          nuget-${{ runner.os }}-
+
     - name: Install .NET Core
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ env.dotnet_version }}
 
     - name: Publish server app
-      run: dotnet publish ./HaddySimHub -r win-x64 -p:PublishDir=${{env.dist_folder}}
+      run: dotnet publish ./HaddySimHub -r win-x64 -p:PublishDir=${{env.dist_folder}} --no-restore
 
     - name: Publish updater app
-      run: dotnet publish ./Updater -r win-x64 -p:PublishDir=${{env.dist_folder}}
+      run: dotnet publish ./Updater -r win-x64 -p:PublishDir=${{env.dist_folder}} --no-restore
 
     - name: Install Node.js
       uses: actions/setup-node@v4
@@ -54,16 +62,16 @@ jobs:
       working-directory: ${{ env.clientapp_folder }}
       run: |
         Remove-Item package-lock.json
-        npm install
+        npm ci
 
     - name: Build client app
       working-directory: ${{ env.clientapp_folder }}
       run: npm run build --omit=dev
 
-    - name: Copy client app  to distribution folder
+    - name: Copy client app to distribution folder
       run: |
-        mkdir ${{ env.dist_folder }}\wwwroot
-        Copy-Item ${{ env.clientapp_folder }}dist/haddy-sim-hub-client/browser/* -Destination ${{ env.dist_folder }}\wwwroot -Recurse -Force
+        mkdir -Force ${{ env.dist_folder }}\wwwroot
+        robocopy ${{ env.clientapp_folder }}dist/haddy-sim-hub-client/browser ${{ env.dist_folder }}\wwwroot /E
 
     - name: Zip build result
       run: Compress-Archive -Path ${{ env.dist_folder }}/* -Destination haddy-simhub.zip
