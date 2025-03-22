@@ -49,13 +49,14 @@ jobs:
         dotnet-version: ${{ env.dotnet_version }}
 
     - name: Restore dependencies
-      run: dotnet restore ${{ env.solution_file }}
+      run: dotnet restore ${{ env.solution_file }} --runtime win-x64
 
     - name: Publish server app
-      run: dotnet publish ./HaddySimHub -r win-x64 -p:PublishDir=${{env.dist_folder}} --no-restore
-
+      run: dotnet publish ./HaddySimHub -r win-x64 --output ${{ env.dist_folder }} --no-restore
+    
     - name: Publish updater app
-      run: dotnet publish ./Updater -r win-x64 -p:PublishDir=${{env.dist_folder}} --no-restore
+      run: dotnet publish ./Updater -r win-x64 --output ${{ env.dist_folder }} --no-restore
+    
 
     - name: Install Node.js
       uses: actions/setup-node@v4
