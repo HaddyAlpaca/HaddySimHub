@@ -57,6 +57,13 @@ jobs:
     - name: Publish updater app
       run: dotnet publish ./Updater -r win-x64 --output ${{ env.dist_folder }} --no-restore
     
+    - name: Cache node modules
+      uses: actions/cache@v3
+      with:
+        path: ~/.npm
+        key: npm-${{ runner.os }}-${{ hashFiles('ClientApp/src/package-lock.json') }}
+        restore-keys: |
+          npm-${{ runner.os }}-
 
     - name: Install Node.js
       uses: actions/setup-node@v4
@@ -65,9 +72,7 @@ jobs:
     
     - name: Install client app dependencies
       working-directory: ${{ env.clientapp_folder }}
-      run: |
-        Remove-Item package-lock.json
-        npm ci
+      run: npm ci
 
     - name: Build client app
       working-directory: ${{ env.clientapp_folder }}
