@@ -27,7 +27,7 @@ jobs:
       dotnet_version: '9.0.100'
       node-version: 20
       clientapp_folder: './ClientApp/'
-      dist_folder: 'dist'
+      dist_folder: './dist'
       RELEASE_VERSION: v0.1.${{github.run_number}}
       solution_file: ./HaddySimHub.sln
 
@@ -80,12 +80,11 @@ jobs:
 
     - name: Copy client app to distribution folder
       run: |
-        mkdir -Force ${{ env.dist_folder }}\wwwroot
-        robocopy ${{ env.clientapp_folder }}dist/haddy-sim-hub-client/browser ${{ env.dist_folder }}\wwwroot /E
-        if ($LASTEXITCODE -lt 8) { exit 0 } else { exit $LASTEXITCODE }
+        mkdir -p ${{ env.dist_folder }}/wwwroot
+        cp -r ${{ env.clientapp_folder }}dist/haddy-sim-hub-client/browser/* ${{ env.dist_folder }}/wwwroot/
 
     - name: Zip build result
-      run: Compress-Archive -Path ${{ env.dist_folder }}/* -Destination haddy-simhub.zip
+      run: zip -r haddy-simhub.zip ${{ env.dist_folder }}/*
 
     - name: Create release and upload assets
       run: |
