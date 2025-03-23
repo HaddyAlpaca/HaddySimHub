@@ -27,7 +27,7 @@ jobs:
       dotnet_version: '9.0.100'
       node-version: 20
       clientapp_folder: './ClientApp/'
-      dist_folder: '/dist'
+      dist_folder: 'dist'
       RELEASE_VERSION: v0.1.${{github.run_number}}
       solution_file: ./HaddySimHub.sln
 
