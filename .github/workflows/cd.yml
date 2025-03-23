@@ -84,7 +84,9 @@ jobs:
         cp -r ${{ env.clientapp_folder }}dist/haddy-sim-hub-client/browser/* ${{ env.dist_folder }}/wwwroot/
 
     - name: Zip build result
-      run: zip -r haddy-simhub.zip ${{ env.dist_folder }}/*
+      run: |
+        cd ${{ env.dist_folder }}
+        zip -r ../haddy-simhub.zip ./*
 
     - name: Create release and upload assets
       run: |
