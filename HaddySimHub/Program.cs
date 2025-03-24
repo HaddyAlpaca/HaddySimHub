@@ -17,19 +17,18 @@ using HaddySimHub.Displays.Dirt2;
 Mutex mutex = new(true, "HaddySimHub_SingleInstance", out bool createdNew);
 if (!createdNew)
 {
-    Console.WriteLine("Another instance of the application is already running.");
+    Console.WriteLine("Another instance HaddySimHub is already running.");
     return;
 }
 
 //Check for updates
 try
 {
-    var startUpdater = await Updater.UpdateAvailable();
-    if (startUpdater)
+    Updater updater = new();
+    if (await updater.UpdateAvailable())
     {
         Console.WriteLine("Update available. Starting updater...");
-        Process.Start("Updater.exe");
-        return;
+        updater.Update();
     }
 }
 catch (Exception ex)

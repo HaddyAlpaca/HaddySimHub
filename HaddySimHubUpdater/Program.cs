@@ -21,8 +21,8 @@ if (!createdNew)
 
 HttpClient client = new();
 string apiUrl = "https://api.github.com/repos/HaddyAlpaca/HaddySimHub/releases/latest";
+string exePath = @"C:\HaddySimHub\HaddySimHub.exe";
 string assetName = "haddy-simhub.zip";
-string exeName = "HaddySimHub.exe";
 string zipFilePath = string.Empty;
 
 try
@@ -49,6 +49,7 @@ try
     // Define the paths
     var tempFolderPath = Path.GetTempPath();
     zipFilePath = Path.Combine(tempFolderPath, assetName);
+    var extractPath = Path.GetDirectoryName(exePath);
 
     // Download the asset
     Console.WriteLine($"Downloading {assetName} to {zipFilePath}...");
@@ -69,31 +70,43 @@ try
         Console.WriteLine($"Stopping {process.ProcessName} (PID {process.Id})...");
         process.Kill();
         //Wait for the process to exit
-        process.WaitForExit();
+        process.WaitForExit(5000); // Wait for 5 seconds
+        if (!process.HasExited)
+        {
+            Console.WriteLine($"Process {process.ProcessName} (PID {process.Id}) did not exit in time...");
+        }
     }
 
     //Delete the old files and folders
     Console.WriteLine("Deleting old version...");
-    if (Directory.Exists(exeFolder))
+    if (Directory.Exists(extractPath))
     {
-        Directory.Delete(exeFolder, true);
+        Directory.Delete(extractPath, true);
     }
 
     // Extract the ZIP file
-    Console.WriteLine($"Extracting {zipFilePath} to {exeFolder}...");
-    ZipFile.ExtractToDirectory(zipFilePath, exeFolder, true);
-    Console.WriteLine($"Extraction complete. Files are in {exeFolder}");
+    Console.WriteLine($"Extracting {zipFilePath} to {extractPath}...");
+    ZipFile.ExtractToDirectory(zipFilePath, extractPath!, true);
+    Console.WriteLine($"Extraction complete. Files are in {extractPath}");
 
     //Create version file
     Console.WriteLine($"Creating version file: {release.TagName}");
-    File.WriteAllText(Path.Combine(exeFolder, "version.txt"), release.TagName);
+    File.WriteAllText(Path.Combine(extractPath!, "version.txt"), release.TagName);
 
     // Start the application
-    string exePath = Path.Combine(exeFolder, exeName);
     if (File.Exists(exePath))
     {
         Console.WriteLine($"Starting {exePath}...");
-        Process.Start(exePath);
+
+        try
+        {
+            Process.Start(exePath);
+        }
+        catch (Exception startEx)
+        {
+            Console.WriteLine($"Failed to start {exePath}: {startEx.Message}");
+            // Log the exception for further investigation
+        }
     }
     else
     {
