@@ -1,0 +1,122 @@
+﻿using System.Net.Http.Json;
+using System.IO.Compression;
+using System.Diagnostics;
+using HaddySimHubUpdater;
+
+if (args.Length == 0)
+{
+    Console.WriteLine("Usage: HaddySimHubUpdater <folder_of_executable>");
+    return;
+}
+
+string exeFolder = args[0];
+
+// Ensure single instance of the application
+Mutex mutex = new(true, "HaddySimHubUpdater_SingleInstance", out bool createdNew);
+if (!createdNew)
+{
+    Console.WriteLine("Another instance of HaddySimHubUpdater is already running.");
+    return;
+}
+
+HttpClient client = new();
+string apiUrl = "https://api.github.com/repos/HaddyAlpaca/HaddySimHub/releases/latest";
+string assetName = "haddy-simhub.zip";
+string exeName = "HaddySimHub.exe";
+string zipFilePath = string.Empty;
+
+try
+{
+    // Set the User-Agent header as required by GitHub API
+    client.DefaultRequestHeaders.Add("User-Agent", "HaddySimHub Updater");
+
+    // Fetch the latest release information
+    var release = await client.GetFromJsonAsync<Release>(apiUrl);
+    if (release == null)
+    {
+        Console.WriteLine("Failed to fetch release information.");
+        return;
+    }
+
+    // Extract the assets array
+    var downloadUrl = release.Assets.FirstOrDefault(a => a.Name.Equals(assetName))?.BrowserDownloadUrl;
+    if (string.IsNullOrEmpty(downloadUrl))
+    {
+        Console.WriteLine("No assets found in the latest release.");
+        return;
+    }
+
+    // Define the paths
+    var tempFolderPath = Path.GetTempPath();
+    zipFilePath = Path.Combine(tempFolderPath, assetName);
+
+    // Download the asset
+    Console.WriteLine($"Downloading {assetName} to {zipFilePath}...");
+    var assetData = await client.GetByteArrayAsync(downloadUrl);
+    await File.WriteAllBytesAsync(zipFilePath, assetData);
+    Console.WriteLine($"Downloaded and saved to {zipFilePath}");
+
+    // Ensure the destination folder exists
+    if (!Directory.Exists(exeFolder))
+    {
+        Directory.CreateDirectory(exeFolder);
+    }
+
+    //Stop the application
+    Process[] processes = Process.GetProcessesByName("HaddySimHub");
+    foreach (Process process in processes)
+    {
+        Console.WriteLine($"Stopping {process.ProcessName} (PID {process.Id})...");
+        process.Kill();
+        //Wait for the process to exit
+        process.WaitForExit();
+    }
+
+    //Delete the old files and folders
+    Console.WriteLine("Deleting old version...");
+    if (Directory.Exists(exeFolder))
+    {
+        Directory.Delete(exeFolder, true);
+    }
+
+    // Extract the ZIP file
+    Console.WriteLine($"Extracting {zipFilePath} to {exeFolder}...");
+    ZipFile.ExtractToDirectory(zipFilePath, exeFolder, true);
+    Console.WriteLine($"Extraction complete. Files are in {exeFolder}");
+
+    //Create version file
+    Console.WriteLine($"Creating version file: {release.TagName}");
+    File.WriteAllText(Path.Combine(exeFolder, "version.txt"), release.TagName);
+
+    // Start the application
+    string exePath = Path.Combine(exeFolder, exeName);
+    if (File.Exists(exePath))
+    {
+        Console.WriteLine($"Starting {exePath}...");
+        Process.Start(exePath);
+    }
+    else
+    {
+        Console.WriteLine($"Executable not found: {exePath}");
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"An error occurred: {ex.Message}");
+}
+finally
+{
+    // Delete the ZIP file after extraction and execution attempt
+    if (!string.IsNullOrEmpty(zipFilePath) && File.Exists(zipFilePath))
+    {
+        try
+        {
+            File.Delete(zipFilePath);
+            Console.WriteLine($"Deleted temp file: {zipFilePath}");
+        }
+        catch (Exception deleteEx)
+        {
+            Console.WriteLine($"Failed to delete ZIP file: {deleteEx.Message}");
+        }
+    }
+}

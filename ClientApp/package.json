@@ -1,15 +1,14 @@
 {
   "name": "haddy-sim-hub-client",
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "test_ci": "ng test --no-watch",
-    "lint": "cross-env LINT_CONFIG=production ng lint --eslint-config eslint.config.js",
+    "test": "ng test --code-coverage=true",
+    "test_ci": "ng test --no-watch --code-coverage=true",
+    "lint": "cross-env LINT_CONFIG=production ng lint --eslint-config eslint.config.mjs",
     "build:prod": "ng build --prod"
   },
   "private": true,
@@ -67,6 +66,9 @@
     "karma-coverage": "~2.2.1",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "karma-jasmine-order-reporter": "^1.2.0",
+    "karma-junit-reporter": "^2.0.1",
+    "karma-sabarivka-reporter": "^3.3.1",
     "karma-spec-reporter": "^0.0.36",
     "typescript": "5.8.2",
     "typescript-eslint": "8.27.0"
