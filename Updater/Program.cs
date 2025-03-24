@@ -65,7 +65,11 @@ try
         Console.WriteLine($"Stopping {process.ProcessName} (PID {process.Id})...");
         process.Kill();
         //Wait for the process to exit
-        process.WaitForExit();
+        process.WaitForExit(5000); // Wait for 5 seconds
+        if (!process.HasExited)
+        {
+            Console.WriteLine($"Process {process.ProcessName} (PID {process.Id}) did not exit in time...");
+        }
     }
 
     //Delete the old files and folders
@@ -88,7 +92,16 @@ try
     if (File.Exists(exePath))
     {
         Console.WriteLine($"Starting {exePath}...");
-        Process.Start(exePath);
+
+        try
+        {
+            Process.Start(exePath);
+        }
+        catch (Exception startEx)
+        {
+            Console.WriteLine($"Failed to start {exePath}: {startEx.Message}");
+            // Log the exception for further investigation
+        }
     }
     else
     {
