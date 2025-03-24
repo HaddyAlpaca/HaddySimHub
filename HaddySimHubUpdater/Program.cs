@@ -3,11 +3,19 @@ using System.IO.Compression;
 using System.Diagnostics;
 using HaddySimHubUpdater;
 
+if (args.Length == 0)
+{
+    Console.WriteLine("Usage: HaddySimHubUpdater <folder_of_executable>");
+    return;
+}
+
+string exeFolder = args[0];
+
 // Ensure single instance of the application
 Mutex mutex = new(true, "HaddySimHubUpdater_SingleInstance", out bool createdNew);
 if (!createdNew)
 {
-    Console.WriteLine("Another instance of the application is already running.");
+    Console.WriteLine("Another instance of HaddySimHubUpdater is already running.");
     return;
 }
 
@@ -15,7 +23,6 @@ HttpClient client = new();
 string apiUrl = "https://api.github.com/repos/HaddyAlpaca/HaddySimHub/releases/latest";
 string exePath = @"C:\HaddySimHub\HaddySimHub.exe";
 string assetName = "haddy-simhub.zip";
-
 string zipFilePath = string.Empty;
 
 try
@@ -28,16 +35,14 @@ try
     if (release == null)
     {
         Console.WriteLine("Failed to fetch release information.");
-        Console.ReadLine(); // Prevent immediate exit
         return;
     }
 
     // Extract the assets array
-    var downloadUrl = release.Assets.FirstOrDefault(a => a.Name.Equals("haddy-simhub.zip"))?.BrowserDownloadUrl;
+    var downloadUrl = release.Assets.FirstOrDefault(a => a.Name.Equals(assetName))?.BrowserDownloadUrl;
     if (string.IsNullOrEmpty(downloadUrl))
     {
         Console.WriteLine("No assets found in the latest release.");
-        Console.ReadLine(); // Prevent immediate exit
         return;
     }
 
@@ -53,9 +58,9 @@ try
     Console.WriteLine($"Downloaded and saved to {zipFilePath}");
 
     // Ensure the destination folder exists
-    if (!Directory.Exists(extractPath))
+    if (!Directory.Exists(exeFolder))
     {
-        Directory.CreateDirectory(extractPath!);
+        Directory.CreateDirectory(exeFolder);
     }
 
     //Stop the application
@@ -65,7 +70,11 @@ try
         Console.WriteLine($"Stopping {process.ProcessName} (PID {process.Id})...");
         process.Kill();
         //Wait for the process to exit
-        process.WaitForExit();
+        process.WaitForExit(5000); // Wait for 5 seconds
+        if (!process.HasExited)
+        {
+            Console.WriteLine($"Process {process.ProcessName} (PID {process.Id}) did not exit in time...");
+        }
     }
 
     //Delete the old files and folders
@@ -88,18 +97,25 @@ try
     if (File.Exists(exePath))
     {
         Console.WriteLine($"Starting {exePath}...");
-        Process.Start(exePath);
+
+        try
+        {
+            Process.Start(exePath);
+        }
+        catch (Exception startEx)
+        {
+            Console.WriteLine($"Failed to start {exePath}: {startEx.Message}");
+            // Log the exception for further investigation
+        }
     }
     else
     {
         Console.WriteLine($"Executable not found: {exePath}");
-        Console.ReadLine(); // Prevent immediate exit if the exe is missing
     }
 }
 catch (Exception ex)
 {
     Console.WriteLine($"An error occurred: {ex.Message}");
-    Console.ReadLine(); // Prevent immediate exit on error
 }
 finally
 {
@@ -114,7 +130,6 @@ finally
         catch (Exception deleteEx)
         {
             Console.WriteLine($"Failed to delete ZIP file: {deleteEx.Message}");
-            Console.ReadLine(); // Prevent immediate exit if the file can't be deleted
         }
     }
 }

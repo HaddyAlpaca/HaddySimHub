@@ -12,7 +12,7 @@
   */
 
 /*@ts-check*/
-import { fixupConfigRules, fixupPluginRules } from '@eslint/compat';
+import { fixupPluginRules } from '@eslint/compat';
 
 import globals from 'globals';
 import eslint from '@eslint/js';
@@ -183,6 +183,8 @@ export default tseslint.config(
             '@typescript-eslint/unified-signatures': 'error',
 
             // custom
+            'app/no-jasmine-test-filter': noJasmineTestFilter,
+            'app/jasmine-clear-describe': 'error',
             'app/no-component-constructor-subscribe': 'error',
 
             // eslint-plugin-deprecation
