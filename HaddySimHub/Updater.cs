@@ -59,7 +59,15 @@ namespace HaddySimHub
             foreach (var file in Directory.GetFiles(AppContext.BaseDirectory, "HaddySimHubUpdater.*"))
             {
                 string destFile = Path.Combine(_tempFolder, Path.GetFileName(file));
-                File.Copy(file, destFile, true);
+                try
+                {
+                    File.Copy(file, destFile, true);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error copying file {file} to {destFile}: {ex.Message}");
+                    Console.WriteLine("Please update manually.");
+                }
             }
 
             string updaterPath = Path.Combine(_tempFolder, "HaddySimHubUpdater.exe");
