@@ -55,7 +55,7 @@ jobs:
       run: dotnet publish ./HaddySimHub -r win-x64 --output ${{ env.dist_folder }} --no-restore
     
     - name: Publish updater app
-      run: dotnet publish ./Updater -r win-x64 --output ${{ env.dist_folder }} --no-restore
+      run: dotnet publish ./HaddySimHubUpdater -r win-x64 --output ${{ env.dist_folder }} --no-restore
     
     - name: Cache node modules
       uses: actions/cache@v3
