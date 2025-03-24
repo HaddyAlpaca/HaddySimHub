@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Updater;
+namespace HaddySimHubUpdater;
 
 internal class Release
 {

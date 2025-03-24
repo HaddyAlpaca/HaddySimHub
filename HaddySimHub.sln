@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCSSdkClient", "SCSSdkClien
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iRacingSDK.Net", "iRacingSDK.Net\iRacingSDK.Net.csproj", "{9BA3407D-0295-4196-851E-8DB3E522178A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Updater\Updater.csproj", "{05336AD5-8D65-40C9-94E1-2CFDC1D96FB8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HaddySimHubUpdater", "HaddySimHubUpdater\HaddySimHubUpdater.csproj", "{05336AD5-8D65-40C9-94E1-2CFDC1D96FB8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

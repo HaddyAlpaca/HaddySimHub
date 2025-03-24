@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Json;
 using System.IO.Compression;
 using System.Diagnostics;
-using Updater;
+using HaddySimHubUpdater;
 
 // Ensure single instance of the application
 Mutex mutex = new(true, "HaddySimHubUpdater_SingleInstance", out bool createdNew);
