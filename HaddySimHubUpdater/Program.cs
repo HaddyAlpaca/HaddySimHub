@@ -1,21 +1,28 @@
 ﻿using System.Net.Http.Json;
 using System.IO.Compression;
 using System.Diagnostics;
-using Updater;
+using HaddySimHubUpdater;
+
+if (args.Length == 0)
+{
+    Console.WriteLine("Usage: HaddySimHubUpdater <folder_of_executable>");
+    return;
+}
+
+string exeFolder = args[0];
 
 // Ensure single instance of the application
 Mutex mutex = new(true, "HaddySimHubUpdater_SingleInstance", out bool createdNew);
 if (!createdNew)
 {
-    Console.WriteLine("Another instance of the application is already running.");
+    Console.WriteLine("Another instance of HaddySimHubUpdater is already running.");
     return;
 }
 
 HttpClient client = new();
 string apiUrl = "https://api.github.com/repos/HaddyAlpaca/HaddySimHub/releases/latest";
-string exePath = @"C:\HaddySimHub\HaddySimHub.exe";
 string assetName = "haddy-simhub.zip";
-
+string exeName = "HaddySimHub.exe";
 string zipFilePath = string.Empty;
 
 try
@@ -28,23 +35,20 @@ try
     if (release == null)
     {
         Console.WriteLine("Failed to fetch release information.");
-        Console.ReadLine(); // Prevent immediate exit
         return;
     }
 
     // Extract the assets array
-    var downloadUrl = release.Assets.FirstOrDefault(a => a.Name.Equals("haddy-simhub.zip"))?.BrowserDownloadUrl;
+    var downloadUrl = release.Assets.FirstOrDefault(a => a.Name.Equals(assetName))?.BrowserDownloadUrl;
     if (string.IsNullOrEmpty(downloadUrl))
     {
         Console.WriteLine("No assets found in the latest release.");
-        Console.ReadLine(); // Prevent immediate exit
         return;
     }
 
     // Define the paths
     var tempFolderPath = Path.GetTempPath();
     zipFilePath = Path.Combine(tempFolderPath, assetName);
-    var extractPath = Path.GetDirectoryName(exePath);
 
     // Download the asset
     Console.WriteLine($"Downloading {assetName} to {zipFilePath}...");
@@ -53,9 +57,9 @@ try
     Console.WriteLine($"Downloaded and saved to {zipFilePath}");
 
     // Ensure the destination folder exists
-    if (!Directory.Exists(extractPath))
+    if (!Directory.Exists(exeFolder))
     {
-        Directory.CreateDirectory(extractPath!);
+        Directory.CreateDirectory(exeFolder);
     }
 
     //Stop the application
@@ -65,54 +69,40 @@ try
         Console.WriteLine($"Stopping {process.ProcessName} (PID {process.Id})...");
         process.Kill();
         //Wait for the process to exit
-        process.WaitForExit(5000); // Wait for 5 seconds
-        if (!process.HasExited)
-        {
-            Console.WriteLine($"Process {process.ProcessName} (PID {process.Id}) did not exit in time...");
-        }
+        process.WaitForExit();
     }
 
     //Delete the old files and folders
     Console.WriteLine("Deleting old version...");
-    if (Directory.Exists(extractPath))
+    if (Directory.Exists(exeFolder))
     {
-        Directory.Delete(extractPath, true);
+        Directory.Delete(exeFolder, true);
     }
 
     // Extract the ZIP file
-    Console.WriteLine($"Extracting {zipFilePath} to {extractPath}...");
-    ZipFile.ExtractToDirectory(zipFilePath, extractPath!, true);
-    Console.WriteLine($"Extraction complete. Files are in {extractPath}");
+    Console.WriteLine($"Extracting {zipFilePath} to {exeFolder}...");
+    ZipFile.ExtractToDirectory(zipFilePath, exeFolder, true);
+    Console.WriteLine($"Extraction complete. Files are in {exeFolder}");
 
     //Create version file
     Console.WriteLine($"Creating version file: {release.TagName}");
-    File.WriteAllText(Path.Combine(extractPath!, "version.txt"), release.TagName);
+    File.WriteAllText(Path.Combine(exeFolder, "version.txt"), release.TagName);
 
     // Start the application
+    string exePath = Path.Combine(exeFolder, exeName);
     if (File.Exists(exePath))
     {
         Console.WriteLine($"Starting {exePath}...");
-
-        try
-        {
-            Process.Start(exePath);
-        }
-        catch (Exception startEx)
-        {
-            Console.WriteLine($"Failed to start {exePath}: {startEx.Message}");
-            // Log the exception for further investigation
-        }
+        Process.Start(exePath);
     }
     else
     {
         Console.WriteLine($"Executable not found: {exePath}");
-        Console.ReadLine(); // Prevent immediate exit if the exe is missing
     }
 }
 catch (Exception ex)
 {
     Console.WriteLine($"An error occurred: {ex.Message}");
-    Console.ReadLine(); // Prevent immediate exit on error
 }
 finally
 {
@@ -127,7 +117,6 @@ finally
         catch (Exception deleteEx)
         {
             Console.WriteLine($"Failed to delete ZIP file: {deleteEx.Message}");
-            Console.ReadLine(); // Prevent immediate exit if the file can't be deleted
         }
     }
 }

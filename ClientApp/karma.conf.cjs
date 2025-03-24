@@ -7,12 +7,36 @@ module.exports = function (config) {
       plugins: [
         require('karma-jasmine'),
         require('karma-chrome-launcher'),
-        require('karma-spec-reporter')
+        require('karma-coverage'),
+        require('karma-jasmine-order-reporter'),
+        require('karma-junit-reporter'),
+        require('karma-sabarivka-reporter'),
+        require('karma-spec-reporter'),
       ],
       client: {
         clearContext: false
       },
-      reporters: ['spec'],
+      coverageReporter: {
+        dir: require('path').join(__dirname, './coverage'),
+        include: [
+          // These are the include options for karma-sabarivka-reporter
+          // Specify include pattern(s) first
+          'src/**/*.(ts|js)',
+          // Then specify "do not include" patterns (note `!` sign on the beginning of each statement)
+          '!src/**/*.spec.(ts|js)',
+          '!src/main.(ts|js)',
+          '!src/environments/**/*.(ts|js)',
+        ],
+        reporters: [
+          { type: 'html', subdir: 'report-html' },
+        ],
+        fixWebpackSourcePaths: true,
+      },
+      junitReporter: {
+        outputDir: require('path').join(__dirname, './junit'),
+        outputFile: 'TESTS.xml'
+      },
+      reporters: ['spec', 'sabarivka', 'jasmine-order', 'junit', 'coverage'],
       specReporter: {
         maxLogLines: 5,             // limit number of lines logged per test
         suppressSummary: false,      // do not print summary
