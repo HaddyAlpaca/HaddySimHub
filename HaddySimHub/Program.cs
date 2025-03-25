@@ -24,11 +24,10 @@ if (!createdNew)
 //Check for updates
 try
 {
-    Updater updater = new();
-    if (await updater.UpdateAvailable())
+    if (await Updater.UpdateAvailable())
     {
         Console.WriteLine("Update available. Starting updater...");
-        updater.Update();
+        Updater.Update();
     }
 }
 catch (Exception ex)

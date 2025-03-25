@@ -1,4 +1,5 @@
 using HaddySimHub.Models;
+using HaddySimHub.Shared;
 using SCSSdkClient;
 using SCSSdkClient.Object;
 
@@ -24,7 +25,7 @@ internal sealed class Ets2DashboardDisplay(Func<DisplayUpdate, Task> updateDispl
 
     public override string Description => "Euro Truck Simulator 2";
 
-    public override bool IsActive => Functions.IsProcessRunning("eurotrucks2");
+    public override bool IsActive => ProcessHelper.IsProcessRunning("eurotrucks2");
 
     protected override DisplayUpdate ConvertToDisplayUpdate(SCSTelemetry data)
     {

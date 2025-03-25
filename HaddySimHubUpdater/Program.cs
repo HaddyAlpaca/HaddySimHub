@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Json;
 using System.IO.Compression;
 using System.Diagnostics;
-using HaddySimHubUpdater;
+using HaddySimHub.Shared;
 
 if (args.Length == 0)
 {
@@ -19,19 +19,16 @@ if (!createdNew)
     return;
 }
 
-HttpClient client = new();
-string apiUrl = "https://api.github.com/repos/HaddyAlpaca/HaddySimHub/releases/latest";
-string exePath = @"C:\HaddySimHub\HaddySimHub.exe";
-string assetName = "haddy-simhub.zip";
 string zipFilePath = string.Empty;
-
 try
 {
+    HttpClient client = new();
+
     // Set the User-Agent header as required by GitHub API
     client.DefaultRequestHeaders.Add("User-Agent", "HaddySimHub Updater");
 
     // Fetch the latest release information
-    var release = await client.GetFromJsonAsync<Release>(apiUrl);
+    var release = await client.GetFromJsonAsync<Release>(UpdateConstants.ReleaseUrl);
     if (release == null)
     {
         Console.WriteLine("Failed to fetch release information.");
@@ -39,7 +36,7 @@ try
     }
 
     // Extract the assets array
-    var downloadUrl = release.Assets.FirstOrDefault(a => a.Name.Equals(assetName))?.BrowserDownloadUrl;
+    var downloadUrl = release.Assets.FirstOrDefault(a => a.Name.Equals(UpdateConstants.AssetName))?.BrowserDownloadUrl;
     if (string.IsNullOrEmpty(downloadUrl))
     {
         Console.WriteLine("No assets found in the latest release.");
@@ -48,11 +45,10 @@ try
 
     // Define the paths
     var tempFolderPath = Path.GetTempPath();
-    zipFilePath = Path.Combine(tempFolderPath, assetName);
-    var extractPath = Path.GetDirectoryName(exePath);
+    zipFilePath = Path.Combine(tempFolderPath, UpdateConstants.AssetName);
 
     // Download the asset
-    Console.WriteLine($"Downloading {assetName} to {zipFilePath}...");
+    Console.WriteLine($"Downloading {UpdateConstants.AssetName} to {zipFilePath}...");
     var assetData = await client.GetByteArrayAsync(downloadUrl);
     await File.WriteAllBytesAsync(zipFilePath, assetData);
     Console.WriteLine($"Downloaded and saved to {zipFilePath}");
@@ -77,40 +73,32 @@ try
         }
     }
 
-    //Delete the old files and folders
-    Console.WriteLine("Deleting old version...");
-    if (Directory.Exists(extractPath))
-    {
-        Directory.Delete(extractPath, true);
-    }
-
     // Extract the ZIP file
-    Console.WriteLine($"Extracting {zipFilePath} to {extractPath}...");
-    ZipFile.ExtractToDirectory(zipFilePath, extractPath!, true);
-    Console.WriteLine($"Extraction complete. Files are in {extractPath}");
+    Console.WriteLine($"Extracting {zipFilePath} to {exeFolder}...");
+    ZipFile.ExtractToDirectory(zipFilePath, exeFolder, true);
+    Console.WriteLine($"Extraction complete. Files are in {exeFolder}");
 
     //Create version file
     Console.WriteLine($"Creating version file: {release.TagName}");
-    File.WriteAllText(Path.Combine(extractPath!, "version.txt"), release.TagName);
+    File.WriteAllText(Path.Combine(exeFolder, "version.txt"), release.TagName);
 
     // Start the application
-    if (File.Exists(exePath))
+    if (File.Exists(UpdateConstants.ExePath))
     {
-        Console.WriteLine($"Starting {exePath}...");
+        Console.WriteLine($"Starting {UpdateConstants.ExePath}...");
 
         try
         {
-            Process.Start(exePath);
+            Process.Start(UpdateConstants.ExePath);
         }
         catch (Exception startEx)
         {
-            Console.WriteLine($"Failed to start {exePath}: {startEx.Message}");
-            // Log the exception for further investigation
+            Console.WriteLine($"Failed to start {UpdateConstants.ExePath}: {startEx.Message}");
         }
     }
     else
     {
-        Console.WriteLine($"Executable not found: {exePath}");
+        Console.WriteLine($"Executable not found: {UpdateConstants.ExePath}");
     }
 }
 catch (Exception ex)

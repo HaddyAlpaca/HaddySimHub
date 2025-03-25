@@ -2,6 +2,7 @@
 using System.Net;
 using System.Runtime.InteropServices;
 using HaddySimHub.Models;
+using HaddySimHub.Shared;
 
 namespace HaddySimHub.Displays.Dirt2;
 
@@ -12,7 +13,7 @@ internal sealed class Dirt2DashboardDisplay(Func<DisplayUpdate, Task> updateDisp
     private UdpClient? _client;
 
     public override string Description => "Dirt Rally 2";
-    public override bool IsActive => Functions.IsProcessRunning("dirtrally2");
+    public override bool IsActive => ProcessHelper.IsProcessRunning("dirtrally2");
     public override void Start()
     {
         _client ??= new UdpClient(PORT);
