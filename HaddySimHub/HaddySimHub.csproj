@@ -8,6 +8,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HaddySimHub.Shared\HaddySimHub.Shared.csproj" />
     <ProjectReference Include="..\SCSSdkClient\SCSSdkClient.csproj" />
     <ProjectReference Include="..\iRacingSDK.Net\iRacingSDK.Net.csproj" />
   </ItemGroup>

@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iRacingSDK.Net", "iRacingSD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HaddySimHubUpdater", "HaddySimHubUpdater\HaddySimHubUpdater.csproj", "{05336AD5-8D65-40C9-94E1-2CFDC1D96FB8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HaddySimHub.Shared", "HaddySimHub.Shared\HaddySimHub.Shared.csproj", "{6E4B809E-0C0D-48C1-B855-2FF55FDC1CFE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{05336AD5-8D65-40C9-94E1-2CFDC1D96FB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05336AD5-8D65-40C9-94E1-2CFDC1D96FB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05336AD5-8D65-40C9-94E1-2CFDC1D96FB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E4B809E-0C0D-48C1-B855-2FF55FDC1CFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E4B809E-0C0D-48C1-B855-2FF55FDC1CFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E4B809E-0C0D-48C1-B855-2FF55FDC1CFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E4B809E-0C0D-48C1-B855-2FF55FDC1CFE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,30 +1,21 @@
-﻿using System.ComponentModel;
+﻿using HaddySimHub.Shared;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace HaddySimHub
 {
-    internal class Updater
+    internal static class Updater
     {
-        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        private static extern bool MoveFileEx(string lpExistingFileName, string? lpNewFileName, int dwFlags);
-        private const int MOVEFILE_DELAY_UNTIL_REBOOT = 0x00000004;
-        private readonly string _releaseUrl = "https://api.github.com/repos/HaddyAlpaca/HaddySimHub/releases/latest";
-        private readonly string _versionFile = Path.Combine(AppContext.BaseDirectory, "version.txt");
-        private readonly string _tempFolder = Path.Combine(Path.GetTempPath(), $"HaddySimHubUpdater_{Guid.NewGuid()}");
-
-        public async Task<bool> UpdateAvailable()
+        public static async Task<bool> UpdateAvailable()
         {
             // Read version file
-            var currentVersion = File.Exists(_versionFile) ? File.ReadAllText(_versionFile) : null;
+            var currentVersion = File.Exists(UpdateConstants.VersionFile) ? File.ReadAllText(UpdateConstants.VersionFile) : null;
             Console.WriteLine($"Current version: {currentVersion ?? "Unknown"}");
 
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Add("User-Agent", "HaddySimHub");
 
-            var response = client.GetAsync(_releaseUrl).Result;
+            var response = client.GetAsync(UpdateConstants.ReleaseUrl).Result;
             response.EnsureSuccessStatusCode();
 
             var json = await response.Content.ReadAsStringAsync();
@@ -43,22 +34,19 @@ namespace HaddySimHub
             return false;
         }
 
-        public void Update()
+        public static void Update()
         {
-            StartUpdater();
-            MarkTempFolderForDeleteOnReboot();
-        }
-
-        private void StartUpdater()
-        {
-            if (!Directory.Exists(_tempFolder))
+            string tempFolder = UpdateConstants.TempFolder;
+            if (Directory.Exists(tempFolder))
             {
-                Directory.CreateDirectory(_tempFolder);
+                Directory.Delete(tempFolder, true);
             }
 
-            foreach (var file in Directory.GetFiles(AppContext.BaseDirectory, "HaddySimHubUpdater.*"))
+            Directory.CreateDirectory(tempFolder);
+
+            foreach (var file in Directory.GetFiles(AppContext.BaseDirectory, "HaddySimHub*.*"))
             {
-                string destFile = Path.Combine(_tempFolder, Path.GetFileName(file));
+                string destFile = Path.Combine(tempFolder, Path.GetFileName(file));
                 try
                 {
                     File.Copy(file, destFile, true);
@@ -70,7 +58,7 @@ namespace HaddySimHub
                 }
             }
 
-            string updaterPath = Path.Combine(_tempFolder, "HaddySimHubUpdater.exe");
+            string updaterPath = Path.Combine(tempFolder, "HaddySimHubUpdater.exe");
             if (!File.Exists(updaterPath))
             {
                 Console.WriteLine("Updater not found. Please update manually.");
@@ -79,30 +67,5 @@ namespace HaddySimHub
 
             Process.Start(updaterPath, AppContext.BaseDirectory);
         }
-
-        private void MarkTempFolderForDeleteOnReboot()
-        {
-            // Mark the temporary folder for deletion on the next reboot
-            try
-            {
-                if (!MoveFileEx(_tempFolder, null, MOVEFILE_DELAY_UNTIL_REBOOT))
-                {
-                    throw new Win32Exception(Marshal.GetLastWin32Error());
-                }
-
-                Console.WriteLine($"Temp folder marked for deletion on next reboot: {_tempFolder}");
-            }
-            catch (Win32Exception ex)
-            {
-                Console.WriteLine($"An error occurred while marking temp folder for deletion: {ex.Message}");
-            }
-            return;
-        }
-    }
-
-    internal class Release
-    {
-        [JsonPropertyName("tag_name")]
-        public string TagName { get; set; } = string.Empty;
     }
 }

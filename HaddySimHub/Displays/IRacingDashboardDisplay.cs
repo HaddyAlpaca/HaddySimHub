@@ -1,6 +1,7 @@
 using System.Text;
 using HaddySimHub.Logging;
 using HaddySimHub.Models;
+using HaddySimHub.Shared;
 using iRacingSDK;
 
 namespace HaddySimHub.Displays;
@@ -31,7 +32,7 @@ internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDi
     }
 
     public override string Description => "IRacing";
-    public override bool IsActive => Functions.IsProcessRunning("iracingui");
+    public override bool IsActive => ProcessHelper.IsProcessRunning("iracingui");
 
     protected override DisplayUpdate ConvertToDisplayUpdate(DataSample data)
     {

@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace HaddySimHubUpdater;
+namespace HaddySimHub.Shared;
 
-internal class Release
+public class Release
 {
     [JsonPropertyName("tag_name")]
     public string TagName { get; set; } = string.Empty;
