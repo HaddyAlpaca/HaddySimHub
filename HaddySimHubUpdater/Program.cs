@@ -19,10 +19,10 @@ if (!createdNew)
     return;
 }
 
+string zipFilePath = string.Empty;
 try
 {
     HttpClient client = new();
-    string zipFilePath = string.Empty;
 
     // Set the User-Agent header as required by GitHub API
     client.DefaultRequestHeaders.Add("User-Agent", "HaddySimHub Updater");
