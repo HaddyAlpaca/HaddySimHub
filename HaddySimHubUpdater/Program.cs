@@ -19,11 +19,11 @@ if (!createdNew)
     return;
 }
 
-HttpClient client = new();
-string zipFilePath = string.Empty;
-
 try
 {
+    HttpClient client = new();
+    string zipFilePath = string.Empty;
+
     // Set the User-Agent header as required by GitHub API
     client.DefaultRequestHeaders.Add("User-Agent", "HaddySimHub Updater");
 
@@ -71,13 +71,6 @@ try
         {
             Console.WriteLine($"Process {process.ProcessName} (PID {process.Id}) did not exit in time...");
         }
-    }
-
-    //Delete the old files and folders
-    Console.WriteLine("Deleting old version...");
-    if (Directory.Exists(exeFolder))
-    {
-        Directory.Delete(exeFolder, true);
     }
 
     // Extract the ZIP file
