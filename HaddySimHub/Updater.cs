@@ -44,7 +44,7 @@ namespace HaddySimHub
 
             Directory.CreateDirectory(tempFolder);
 
-            foreach (var file in Directory.GetFiles(AppContext.BaseDirectory, "HaddySimHub*.*"))
+            foreach (var file in Directory.GetFiles(Path.Combine(AppContext.BaseDirectory, "Updater"), "HaddySimHub*.*"))
             {
                 string destFile = Path.Combine(tempFolder, Path.GetFileName(file));
                 try
