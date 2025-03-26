@@ -65,7 +65,15 @@ namespace HaddySimHub
                 return;
             }
 
-            Process.Start(updaterPath, AppContext.BaseDirectory);
+            try
+            {
+                Process.Start(updaterPath, AppContext.BaseDirectory);
+                Environment.Exit(0);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Starting updater failed: {ex.Message}");
+            }
         }
     }
 }
