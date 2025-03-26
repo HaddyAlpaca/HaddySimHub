@@ -12,6 +12,7 @@ using System.Text;
 using System.Diagnostics;
 using HaddySimHub.Models;
 using HaddySimHub.Displays.Dirt2;
+using HaddySimHub.TestRunners;
 
 // Ensure single instance of the application
 Mutex mutex = new(true, "HaddySimHub_SingleInstance", out bool createdNew);
@@ -98,22 +99,8 @@ var processTask = new Task(async () => {
     // Monitor processes
     if (testRun)
     {
-        bool parkingBrakeOn = false;
-        while (!token.IsCancellationRequested)
-        {
-            parkingBrakeOn = !parkingBrakeOn;
-            var update = new DisplayUpdate
-            {
-                Type = DisplayType.TruckDashboard,
-                Data = new TruckData
-                {
-                    Speed = (short)DateTime.Now.Second,
-                    ParkingBrakeOn = parkingBrakeOn,
-                }
-            };
-            await SendDisplayUpdate(update);
-            await Task.Delay(TimeSpan.FromSeconds(2));
-        }
+        var testRunner = new TruckTestRunner();
+        await testRunner.RunAsync(token);
     }
     else
     {
