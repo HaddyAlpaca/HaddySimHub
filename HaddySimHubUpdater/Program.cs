@@ -83,22 +83,23 @@ try
     File.WriteAllText(Path.Combine(exeFolder, "version.txt"), release.TagName);
 
     // Start the application
-    if (File.Exists(UpdateConstants.ExePath))
+    string exePath = Path.Combine(exeFolder, "HaddySimHub.exe");
+    if (File.Exists(exePath))
     {
-        Console.WriteLine($"Starting {UpdateConstants.ExePath}...");
+        Console.WriteLine($"Starting {exePath}...");
 
         try
         {
-            Process.Start(UpdateConstants.ExePath);
+            Process.Start(exePath);
         }
         catch (Exception startEx)
         {
-            Console.WriteLine($"Failed to start {UpdateConstants.ExePath}: {startEx.Message}");
+            Console.WriteLine($"Failed to start {exePath}: {startEx.Message}");
         }
     }
     else
     {
-        Console.WriteLine($"Executable not found: {UpdateConstants.ExePath}");
+        Console.WriteLine($"Executable not found: {exePath}");
     }
 }
 catch (Exception ex)
