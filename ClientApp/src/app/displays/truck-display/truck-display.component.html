@@ -204,10 +204,6 @@
     </div>
     <div class="col-6">
       <div class="card dashboard-lights">
-        <div class="icon-text-control" [ngClass]="{'hidden': !data().retarderStepCount}">
-          <img class="dashboard-light" src="/assets/images/retarder.svg" [ngClass]="{'filter-orange': data().retarderLevel}">
-          <div>{{data().retarderLevel}}/{{data().retarderStepCount}}</div>
-        </div>
         <div class="icon-text-control" [ngClass]="{'hidden': !data().cruiseControlOn}">
           <img class="dashboard-light" src="/assets/images/cruise-control.png">
           <div>{{data().cruiseControlSpeed}} km/h</div>
@@ -246,6 +242,10 @@
     </div>
     <div class="col-6">
       <div class="card dashboard-lights">
+        <div class="icon-text-control" [ngClass]="{'hidden': !data().retarderStepCount}">
+          <img class="dashboard-light" src="/assets/images/retarder.svg" [ngClass]="{'filter-orange': data().retarderLevel}">
+          <div>{{data().retarderLevel}}/{{data().retarderStepCount}}</div>
+        </div>
         <div class="icon-text-control" id="acceleration">
           <img class="dashboard-light" src="/assets/images/throttle.svg">
           <div>{{data().throttle}} %</div>
