@@ -7,12 +7,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
-using HaddySimHub.Displays;
-using System.Text;
 using System.Diagnostics;
-using HaddySimHub.Models;
-using HaddySimHub.Displays.Dirt2;
-using HaddySimHub.TestRunners;
+using HaddySimHub.Runners;
 
 // Ensure single instance of the application
 Mutex mutex = new(true, "HaddySimHub_SingleInstance", out bool createdNew);
@@ -39,8 +35,6 @@ catch (Exception ex)
 HaddySimHub.Logging.ILogger logger = new HaddySimHub.Logging.Logger("main");
 CancellationTokenSource cancellationTokenSource = new();
 CancellationToken token = cancellationTokenSource.Token;
-IEnumerable<IDisplay> displays = [];
-DisplayUpdate idleDisplayUpdate = new() { Type = DisplayType.None };
 JsonSerializerOptions serializeOptions = new() { IncludeFields = true };
 
 bool isDebugEnabled = args.Contains("--debug");
@@ -86,72 +80,21 @@ var webServerTask = new Task(async () =>
     await webServer!.StartAsync(token);
 }, token);
 
-// Setup display
-displays =
-[
-    new Dirt2DashboardDisplay(SendDisplayUpdate),
-    new IRacingDashboardDisplay(SendDisplayUpdate, logger),
-    new Ets2DashboardDisplay(SendDisplayUpdate),
-];
-
 var testRun = args.Contains("--test-run");
-var processTask = new Task(async () => {
+var processTask = new Task(async () =>
+{
     // Monitor processes
+    IRunner runner;
     if (testRun)
     {
-        var testRunner = new TruckTestRunner();
-        await testRunner.RunAsync(token);
+        runner = new TruckTestRunner();
     }
     else
     {
-        IEnumerable<IDisplay> prevActiveDisplays = [];
-        while (!token.IsCancellationRequested)
-        {
-            var activeDisplays = displays.Where(d => d.IsActive).ToList();
-            if (activeDisplays.Count == 0)
-            {
-                logger.Debug("No active displays found");
-                await SendDisplayUpdate(idleDisplayUpdate);
-            }
-            else
-            {
-                StringBuilder sb = new();
-                sb.AppendLine("Active displays:");
-                foreach(var display in activeDisplays)
-                {
-                    sb.AppendLine($"{display.Description}");
-                }
-
-                logger.Debug(sb.ToString());
-            }
-
-            activeDisplays.Where(g => !prevActiveDisplays.Any(x => x.Description == g.Description)).ForEach(d => {
-                try
-                {
-                    logger.Info($"Start receiving data from {d.Description}");
-                    d.Start();
-                }
-                catch (Exception ex)
-                {
-                    logger.Error($"Error starting datafeed of game {d.Description}: {ex.Message}\n\n{ex.StackTrace}");
-                }
-            });
-            prevActiveDisplays.Where(g => !activeDisplays.Any(x => x.Description == g.Description)).ForEach(d => {
-                try
-                {
-                    logger.Info($"Stop receiving data from {d.Description}");
-                    d.Stop();
-                }
-                catch (Exception ex)
-                {
-                    logger.Error($"Error stopping datafeed of game {d.Description}: {ex.Message}\n\n{ex.StackTrace}");
-                }
-            });
-            prevActiveDisplays = activeDisplays;
-        }
-
-        await Task.Delay(TimeSpan.FromSeconds(2));
+        runner = new DisplaysRunner(logger);
     }
+
+    await runner.RunAsync(token);
 }, token);
 
 
@@ -160,7 +103,7 @@ try
     webServerTask.Start();
     processTask.Start();
 }
-catch(Exception ex)
+catch (Exception ex)
 {
     logger.Fatal($"Unhandled Exception: {ex.Message}\n\n{ex.StackTrace}");
 
@@ -174,7 +117,7 @@ webServer.WaitForShutdown();
 cancellationTokenSource.Cancel();
 Task.WaitAll([webServerTask, processTask]);
 
-void SetupLogging(bool debug)
+static void SetupLogging(bool debug)
 {
     var logConfig = new LoggingConfiguration();
 
@@ -184,7 +127,7 @@ void SetupLogging(bool debug)
     };
     logConfig.LoggingRules.Add(new LoggingRule(
         "*",
-        debug? LogLevel.Debug : LogLevel.Info,
+        debug ? LogLevel.Debug : LogLevel.Info,
         LogLevel.Fatal,
         consoleTarget));
     logConfig.AddTarget("console", consoleTarget);
@@ -221,10 +164,4 @@ void SetupLogging(bool debug)
     logConfig.AddTarget("general-logfile", fileTarget);
 
     LogManager.Configuration = logConfig;
-}
-
-async Task SendDisplayUpdate(DisplayUpdate update)
-{
-    logger.LogData(update);
-    await GameDataHub.SendDisplayUpdate(update);
 }
