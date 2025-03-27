@@ -1,8 +1,8 @@
 using HaddySimHub.Models;
 
-namespace HaddySimHub.TestRunners;
+namespace HaddySimHub.Runners;
 
-internal class TruckTestRunner : ITestRunner
+internal class TruckTestRunner : IRunner
 {
     public async Task RunAsync(CancellationToken cancellationToken)
     {
