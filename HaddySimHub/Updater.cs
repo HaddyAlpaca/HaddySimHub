@@ -10,7 +10,7 @@ namespace HaddySimHub
         {
             // Read version file
             var currentVersion = File.Exists(UpdateConstants.VersionFile) ? File.ReadAllText(UpdateConstants.VersionFile) : null;
-            Console.WriteLine($"Current version: {currentVersion ?? "Unknown"}");
+            Logger.Info($"Current version: {currentVersion ?? "Unknown"}");
 
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Add("User-Agent", "HaddySimHub");
@@ -25,12 +25,12 @@ namespace HaddySimHub
             var update = currentVersion is null || latestVersion is null || currentVersion != latestVersion;
             if (update)
             {
-                Console.WriteLine($"New version available: {latestVersion}");
+                Logger.Info($"New version available: {latestVersion}");
                 return true;
             }
 
-            Console.WriteLine($"No update available");
-            Console.WriteLine($"Current version: {(currentVersion is null ? "Unknown" : currentVersion)}");
+            Logger.Info($"No update available");
+            Logger.Info($"Current version: {(currentVersion is null ? "Unknown" : currentVersion)}");
             return false;
         }
 
@@ -53,15 +53,14 @@ namespace HaddySimHub
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error copying file {file} to {destFile}: {ex.Message}");
-                    Console.WriteLine("Please update manually.");
+                    Logger.Error($"Error copying file {file} to {destFile}: {ex.Message}\nPlease update manually.");
                 }
             }
 
             string updaterPath = Path.Combine(tempFolder, "HaddySimHubUpdater.exe");
             if (!File.Exists(updaterPath))
             {
-                Console.WriteLine("Updater not found. Please update manually.");
+                Logger.Error("Updater not found. Please update manually.");
                 return;
             }
 
@@ -72,7 +71,7 @@ namespace HaddySimHub
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Starting updater failed: {ex.Message}");
+                Logger.Error($"Starting updater failed: {ex.Message}");
             }
         }
     }
