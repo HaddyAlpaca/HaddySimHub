@@ -9,36 +9,37 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 using System.Diagnostics;
 using HaddySimHub.Runners;
+using Logger = HaddySimHub.Logger;
 
 // Ensure single instance of the application
 Mutex mutex = new(true, "HaddySimHub_SingleInstance", out bool createdNew);
 if (!createdNew)
 {
-    Console.WriteLine("Another instance HaddySimHub is already running.");
+    Logger.Error("Another instance HaddySimHub is already running.");
     return;
 }
+
+// Setup logging
+bool isDebugEnabled = args.Contains("--debug");
+Logger.Setup(isDebugEnabled);
 
 //Check for updates
 try
 {
     if (await Updater.UpdateAvailable())
     {
-        Console.WriteLine("Update available. Starting updater...");
+        Logger.Info("Update available. Starting updater...");
         Updater.Update();
     }
 }
 catch (Exception ex)
 {
-    LogManager.GetCurrentClassLogger().Error($"Error checking for updates: {ex.Message}\n\n{ex.StackTrace}");
+    Logger.Error($"Error checking for updates: {ex.Message}\n\n{ex.StackTrace}");
 }
 
-HaddySimHub.Logging.ILogger logger = new HaddySimHub.Logging.Logger("main");
 CancellationTokenSource cancellationTokenSource = new();
 CancellationToken token = cancellationTokenSource.Token;
 JsonSerializerOptions serializeOptions = new() { IncludeFields = true };
-
-bool isDebugEnabled = args.Contains("--debug");
-SetupLogging(isDebugEnabled);
 
 WebApplicationOptions options = new()
 {
@@ -91,7 +92,7 @@ var processTask = new Task(async () =>
     }
     else
     {
-        runner = new DisplaysRunner(logger);
+        runner = new DisplaysRunner();
     }
 
     await runner.RunAsync(token);
@@ -105,7 +106,7 @@ try
 }
 catch (Exception ex)
 {
-    logger.Fatal($"Unhandled Exception: {ex.Message}\n\n{ex.StackTrace}");
+    Logger.Fatal($"Unhandled Exception: {ex.Message}\n\n{ex.StackTrace}");
 
     //Restart on crash
     var applicationPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
@@ -116,52 +117,3 @@ catch (Exception ex)
 webServer.WaitForShutdown();
 cancellationTokenSource.Cancel();
 Task.WaitAll([webServerTask, processTask]);
-
-static void SetupLogging(bool debug)
-{
-    var logConfig = new LoggingConfiguration();
-
-    var consoleTarget = new ColoredConsoleTarget
-    {
-        Layout = @"${message}"
-    };
-    logConfig.LoggingRules.Add(new LoggingRule(
-        "*",
-        debug ? LogLevel.Debug : LogLevel.Info,
-        LogLevel.Fatal,
-        consoleTarget));
-    logConfig.AddTarget("console", consoleTarget);
-
-    if (debug)
-    {
-        // Setup data logging
-        var debugTarget = new FileTarget
-        {
-            FileName = "log/${date:format=yyyy-MM-dd}-${logger}-data.log",
-            Layout = @"${message}",
-        };
-
-        logConfig.LoggingRules.Add(new LoggingRule(
-            "*",
-            LogLevel.Trace,
-            LogLevel.Trace,
-            debugTarget));
-        logConfig.AddTarget("data-logfile", debugTarget);
-    }
-
-    // General
-    var fileTarget = new FileTarget
-    {
-        FileName = "log/${date:format=yyyy-MM-dd}.log",
-        Layout = @"${longdate} ${uppercase:${level}}: ${message}",
-    };
-
-    logConfig.LoggingRules.Add(new LoggingRule(
-        "*",
-        debug ? LogLevel.Debug : LogLevel.Info,
-        LogLevel.Fatal,
-        fileTarget));
-    logConfig.AddTarget("general-logfile", fileTarget);
-
-    LogManager.Configuration = logConfig;
-}

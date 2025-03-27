@@ -1,12 +1,11 @@
 using System.Text;
-using HaddySimHub.Logging;
 using HaddySimHub.Models;
 using HaddySimHub.Shared;
 using iRacingSDK;
 
 namespace HaddySimHub.Displays;
 
-internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDisplay, ILogger logger) : DisplayBase<DataSample>(updateDisplay)
+internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDisplay) : DisplayBase<DataSample>(updateDisplay)
 {
     public override void Start()
     {
@@ -18,7 +17,7 @@ internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDi
             }
             catch (Exception ex)
             {
-                logger.Error($"{ex.Message}\n\n{ex.StackTrace}");
+                Logger.Error($"{ex.Message}\n\n{ex.StackTrace}");
             }
         };
         iRacing.StartListening();
@@ -109,7 +108,7 @@ internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDi
         sb.AppendLine("Track positions");
         foreach(var p in trackPositions)
         {
-            logger.Debug($"{p.LapDistPct}: {p.Status}");
+            Logger.Debug($"{p.LapDistPct}: {p.Status}");
         }
 
         return new DisplayUpdate{ Type = DisplayType.RaceDashboard, Data = displayUpdate };
