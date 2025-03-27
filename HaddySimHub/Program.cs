@@ -1,119 +1,141 @@
 ﻿using Microsoft.Extensions.Hosting;
-using NLog;
-using NLog.Config;
-using NLog.Targets;
 using HaddySimHub;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using System.Text.Json;
-using System.Diagnostics;
 using HaddySimHub.Runners;
 using Logger = HaddySimHub.Logger;
 
-// Ensure single instance of the application
-Mutex mutex = new(true, "HaddySimHub_SingleInstance", out bool createdNew);
-if (!createdNew)
+public class Program
 {
-    Logger.Error("Another instance HaddySimHub is already running.");
-    return;
-}
-
-// Setup logging
-bool isDebugEnabled = args.Contains("--debug");
-Logger.Setup(isDebugEnabled);
-
-//Check for updates
-try
-{
-    if (await Updater.UpdateAvailable())
+    public static async Task Main(string[] args)
     {
-        Logger.Info("Update available. Starting updater...");
-        Updater.Update();
-    }
-}
-catch (Exception ex)
-{
-    Logger.Error($"Error checking for updates: {ex.Message}\n\n{ex.StackTrace}");
-}
+        VerifySingleInstance();
+        Logger.Setup(args.Contains("--debug"));
 
-CancellationTokenSource cancellationTokenSource = new();
-CancellationToken token = cancellationTokenSource.Token;
-JsonSerializerOptions serializeOptions = new() { IncludeFields = true };
+        if (!args.Contains("--no-update"))
+        {
+            await CheckForUpdates();
+        }
 
-WebApplicationOptions options = new()
-{
-    ContentRootPath = AppContext.BaseDirectory
-};
+        using CancellationTokenSource cancellationTokenSource = new();
+        CancellationToken token = cancellationTokenSource.Token;
 
-var builder = WebApplication.CreateBuilder(options);
-builder.WebHost.UseKestrel(options =>
-{
-    options.ListenAnyIP(3333);
-});
+        Console.CancelKeyPress += (sender, eventArgs) =>
+        {
+            eventArgs.Cancel = true;
+            cancellationTokenSource.Cancel();
+            Logger.Info("Ctrl+C pressed. Exiting application...");
+        };
 
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(builder =>
-    {
-        builder
-            .AllowAnyOrigin()
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .SetIsOriginAllowed(origin => true);
-    });
-});
-builder.Services.AddControllers();
-builder.Services.AddSignalR(o =>
-{
-    o.EnableDetailedErrors = true;
-});
+        WebApplication webServer = CreateWebServer(args);
 
-var webServer = builder.Build();
-webServer.UseRouting();
-webServer.UseDefaultFiles();
-webServer.UseStaticFiles();
-webServer.UseCors();
-webServer.MapHub<GameDataHub>("/display-data");
+        Task webServerTask = RunWebServerAsync(webServer, token);
+        Task processTask = RunProcessAsync(args, token);
+        await Task.WhenAll(webServerTask, processTask);
 
-var webServerTask = new Task(async () =>
-{
-    await webServer!.StartAsync(token);
-}, token);
-
-var testRun = args.Contains("--test-run");
-var processTask = new Task(async () =>
-{
-    // Monitor processes
-    IRunner runner;
-    if (testRun)
-    {
-        runner = new TruckTestRunner();
-    }
-    else
-    {
-        runner = new DisplaysRunner();
+        cancellationTokenSource.Cancel();
     }
 
-    await runner.RunAsync(token);
-}, token);
+    private static WebApplication CreateWebServer(string[] args)
+    {
+        WebApplicationOptions options = new() { ContentRootPath = AppContext.BaseDirectory };
+        var builder = WebApplication.CreateBuilder(options);
 
+        // Configure Kestrel to listen on port 3333 on any IP.
+        builder.WebHost.UseKestrel(options => options.ListenAnyIP(3333));
 
-try
-{
-    webServerTask.Start();
-    processTask.Start();
+        // Configure CORS, controllers, and SignalR.
+        builder.Services.AddCors(corsOptions =>
+        {
+            corsOptions.AddDefaultPolicy(policyBuilder =>
+            {
+                policyBuilder
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+        });
+        builder.Services.AddControllers();
+        builder.Services.AddSignalR(options => options.EnableDetailedErrors = true);
+
+        var app = builder.Build();
+        app.UseRouting();
+        app.UseDefaultFiles();
+        app.UseStaticFiles();
+        app.UseCors();
+        app.MapHub<GameDataHub>("/display-data");
+
+        return app;
+    }
+
+    private static async Task RunWebServerAsync(WebApplication webServer, CancellationToken token)
+    {
+        try
+        {
+            await webServer.StartAsync(token);
+            await webServer.WaitForShutdownAsync(token);
+        }
+        catch (OperationCanceledException)
+        {
+            // Expected cancellation, no action required.
+        }
+        catch (Exception ex)
+        {
+            Logger.Fatal($"Web server error: {ex.Message}\n\n{ex.StackTrace}");
+        }
+    }
+
+    private static async Task RunProcessAsync(string[] args, CancellationToken token)
+    {
+        try
+        {
+            IRunner runner = args.FirstOrDefault(arg => arg.StartsWith("--test-runner:", StringComparison.OrdinalIgnoreCase))?
+                .Split(':')?.Last()?.ToLower() switch
+            {
+                "truck" => new TruckTestRunner(),
+                "race" => new RaceTestRunner(),
+                "rally" => new RallyTestRunner(),
+                _ => new DisplaysRunner()
+            };
+
+            Logger.Info($"Starting process runner: {runner.GetType().Name}");
+
+            await runner.RunAsync(token);
+        }
+        catch (OperationCanceledException)
+        {
+            // Expected cancellation, no action required.
+        }
+        catch (Exception ex)
+        {
+            Logger.Fatal($"Process runner error: {ex.Message}\n\n{ex.StackTrace}");
+        }
+    }
+
+    private static void VerifySingleInstance()
+    {
+        using Mutex mutex = new(true, "HaddySimHub_SingleInstance", out bool createdNew);
+        if (!createdNew)
+        {
+            Logger.Error("Another instance of HaddySimHub is already running.");
+            Environment.Exit(1);
+        }
+    }
+
+    private static async Task CheckForUpdates()
+    {
+        try
+        {
+            if (await Updater.UpdateAvailable())
+            {
+                Logger.Info("Update available. Starting updater...");
+                Updater.Update();
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.Error($"Error checking for updates: {ex.Message}\n\n{ex.StackTrace}");
+        }
+    }
 }
-catch (Exception ex)
-{
-    Logger.Fatal($"Unhandled Exception: {ex.Message}\n\n{ex.StackTrace}");
-
-    //Restart on crash
-    var applicationPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-    Process.Start(applicationPath);
-    Environment.Exit(Environment.ExitCode);
-}
-
-webServer.WaitForShutdown();
-cancellationTokenSource.Cancel();
-Task.WaitAll([webServerTask, processTask]);

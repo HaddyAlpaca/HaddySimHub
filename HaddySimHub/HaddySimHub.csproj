@@ -7,6 +7,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Logging\**" />
+    <EmbeddedResource Remove="Logging\**" />
+    <None Remove="Logging\**" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HaddySimHub.Shared\HaddySimHub.Shared.csproj" />
     <ProjectReference Include="..\SCSSdkClient\SCSSdkClient.csproj" />
