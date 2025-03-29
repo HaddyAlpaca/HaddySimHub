@@ -23,7 +23,7 @@
   border: 2px solid gray;
 
   &.player {
-    background-color: yellow;
+    background-color: orchid;
   }
 
   &.same-lap {
@@ -40,5 +40,9 @@
 
   &.pace-car {
     background-color: white;
+  }
+
+  &.in-pits {
+    background-color: gray;
   }
 }
