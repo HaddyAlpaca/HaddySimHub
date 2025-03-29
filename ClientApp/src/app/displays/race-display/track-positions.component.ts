@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
 import { Component, input } from '@angular/core';
 
 export enum TrackPositionStatus {
@@ -19,7 +19,7 @@ export interface TrackPosition {
   selector: 'app-track-positions',
   templateUrl: './track-positions.component.html',
   styleUrl: './track-positions.component.scss',
-  imports: [CommonModule],
+  imports: [NgClass],
 })
 export class TrackPositionsComponent {
   public positions = input<TrackPosition[]>([]);

@@ -21,4 +21,24 @@
   transform: translateY(-50%);
   border-radius: 50%;
   border: 2px solid gray;
+
+  &.player {
+    background-color: yellow;
+  }
+
+  &.same-lap {
+    background-color: green;
+  }
+
+  &.lap-ahead {
+    background-color: red;
+  }
+
+  &.lap-behind {
+    background-color: blue;
+  }
+
+  &.pace-car {
+    background-color: white;
+  }
 }

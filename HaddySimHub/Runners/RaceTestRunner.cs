@@ -16,8 +16,8 @@ internal class RaceTestRunner : IRunner
                     Speed = (short)DateTime.Now.Second,
                     Gear = (short)new Random().Next(-1, 7),
                     Rpm = (short)new Random().Next(0, 10000),
-                    TrackTemp = (float)new Random().Next(10, 50),
-                    AirTemp = (float)new Random().Next(10, 50),
+                    TrackTemp = new Random().Next(10, 50),
+                    AirTemp = new Random().Next(10, 50),
                     SessionType = "Practice",
                     IsLimitedTime = false,
                     DriverBehindName = "Driver Behind",
@@ -32,17 +32,17 @@ internal class RaceTestRunner : IRunner
                     DriverAheadLicense = "A",
                     DriverAheadLicenseColor = "#00FF00",
                     DriverAheadDelta = new Random().Next(-10, -1),
-                    BestLapTime = (float)new Random().Next(60, 120),
+                    BestLapTime = new Random().Next(60, 120),
                     BestLapTimeDelta = new Random().Next(-10, 10),
-                    LastLapTime = (float)new Random().Next(60, 120),
+                    LastLapTime = new Random().Next(60, 120),
                     LastLapTimeDelta = new Random().Next(-10, 10),
-                    BrakeBias = (float)new Random().Next(0, 100),
-                    CurrentLapTime = (float)new Random().Next(60, 120),
+                    BrakeBias = new Random().Next(0, 100),
+                    CurrentLapTime = new Random().Next(60, 120),
                     PitLimiterOn = new Random().Next(0, 2) == 1,
                     CurrentLap = new Random().Next(1, 10),
                     LastSectorNum = new Random().Next(1, 3),
-                    LastSectorTime = (float)new Random().Next(10, 30),
-                    FuelRemaining = (float)new Random().Next(0, 100),
+                    LastSectorTime = new Random().Next(10, 30),
+                    FuelRemaining = new Random().Next(0, 100),
                     Incidents = new Random().Next(0, 10),
                     MaxIncidents = 17,
                     Position = new Random().Next(1, 20),
@@ -54,7 +54,7 @@ internal class RaceTestRunner : IRunner
             await Task.Delay(TimeSpan.FromSeconds(2), cancellationToken);
         }
     }
-    private TrackPosition[] GenerateRandomTrackPositions()
+    private static TrackPosition[] GenerateRandomTrackPositions()
     {
         var trackPositions = new List<TrackPosition>();
 
@@ -62,29 +62,37 @@ internal class RaceTestRunner : IRunner
         {
             trackPositions.Add(new TrackPosition
             {
-                LapDistPct = (float)new Random().NextDouble(),
+                LapDistPct = (float)new Random().NextDouble() * 100,
                 Status = TrackPositionStatus.SameLap,
             });
         }
 
+
+        // Add player
+        trackPositions.Add(new TrackPosition
+        {
+            LapDistPct = (float)new Random().NextDouble() * 100,
+            Status = TrackPositionStatus.IsPlayer,
+        });
+
         // Add a driver that is a lap ahead
         trackPositions.Add(new TrackPosition
         {
-            LapDistPct = 0,
+            LapDistPct = (float)new Random().NextDouble() * 100,
             Status = TrackPositionStatus.LapAhead,
         });
 
         // Add a pace car
         trackPositions.Add(new TrackPosition
         {
-            LapDistPct = (float)new Random().NextDouble(),
+            LapDistPct = (float)new Random().NextDouble() * 100,
             Status = TrackPositionStatus.IsPaceCar,
         });
 
         // Add a car that is in the pits
         trackPositions.Add(new TrackPosition
         {
-            LapDistPct = (float)new Random().NextDouble(),
+            LapDistPct = 0,
             Status = TrackPositionStatus.InPits,
         });
 
