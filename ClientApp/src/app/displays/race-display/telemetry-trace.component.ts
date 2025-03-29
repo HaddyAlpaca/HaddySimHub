@@ -7,7 +7,7 @@ import { Component, AfterViewInit, ViewChild, ElementRef, input, effect } from '
 })
 export class TelemetryTraceComponent implements AfterViewInit {
   @ViewChild('canvas', { static: false })
-  public canvasRef!: ElementRef<HTMLCanvasElement>;
+  private _canvasRef!: ElementRef<HTMLCanvasElement>;
 
   private _ctx!: CanvasRenderingContext2D;
   private _brakeDataPoints: number[] = [];
@@ -18,10 +18,11 @@ export class TelemetryTraceComponent implements AfterViewInit {
   public throttlePct = input.required<number>();
 
   public ngAfterViewInit(): void {
-    const canvas = this.canvasRef.nativeElement;
+    const canvas = this._canvasRef.nativeElement;
     const context = canvas.getContext('2d');
     if (!context) {
-      throw new Error('Failed to get canvas context');
+      console.error('Failed to get canvas context. Telemetry trace will not be displayed.');
+      return;
     }
     this._ctx = context;
   }
@@ -48,8 +49,13 @@ export class TelemetryTraceComponent implements AfterViewInit {
   }
 
   private drawTraces(): void {
-    const canvas = this.canvasRef.nativeElement;
+    const canvas = this._canvasRef?.nativeElement;
     const ctx = this._ctx;
+
+    if (!canvas || !ctx) {
+      return;
+    }
+
     // Clear the entire canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
