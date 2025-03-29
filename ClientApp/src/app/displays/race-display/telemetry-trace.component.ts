@@ -96,6 +96,6 @@ export class TelemetryTraceComponent implements AfterViewInit {
   }
 
   private getMaxDataPoints(): number {
-    return this._canvasRef.nativeElement.width;
+    return this._canvasRef?.nativeElement.width ?? 500;
   }
 }
