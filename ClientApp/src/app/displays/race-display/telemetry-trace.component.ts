@@ -53,7 +53,7 @@ export class TelemetryTraceComponent implements AfterViewInit {
     // Clear the entire canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const widthPerPoint = canvas.width / (this.maxDataPoints() - 1);
+    const widthPerPoint = this.maxDataPoints() > 1 ? canvas.width / (this.maxDataPoints() - 1) : 0;
 
     // Draw Brake Trace in Red
     ctx.beginPath();
