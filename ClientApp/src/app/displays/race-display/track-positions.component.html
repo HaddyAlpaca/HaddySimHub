@@ -2,6 +2,16 @@
   <div class="center-line"></div>
 
   @for(position of positions(); track $index) {
-    <div class="track-item" [style.left.%]="position.lapDistPct"></div>
+    <div 
+      class="track-item" 
+      [ngClass]="{
+        'player': position.status === TrackPositionStatus.IsPlayer,
+        'pace-car': position.status === TrackPositionStatus.IsPaceCar,
+        'lap-ahead': position.status === TrackPositionStatus.LapAhead,
+        'lap-behind': position.status === TrackPositionStatus.LapBehind,
+        'same-lap': position.status === TrackPositionStatus.SameLap,
+      }" 
+      [style.left.%]="position.lapDistPct">
+    </div>
   }
 </div>
