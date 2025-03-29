@@ -13,7 +13,6 @@ export class TelemetryTraceComponent implements AfterViewInit {
   private _brakeDataPoints: number[] = [];
   private _throttleDataPoints: number[] = [];
 
-  public maxDataPoints = input(500);
   public brakePct = input.required<number>();
   public throttlePct = input.required<number>();
 
@@ -38,10 +37,11 @@ export class TelemetryTraceComponent implements AfterViewInit {
     this._throttleDataPoints.push(throttle);
 
     // Maintain a fixed-size buffer by shifting out the oldest data when necessary
-    if (this._brakeDataPoints.length > this.maxDataPoints()) {
+    const maxDataPoints = this.getMaxDataPoints();
+    if (this._brakeDataPoints.length > maxDataPoints) {
       this._brakeDataPoints.shift();
     }
-    if (this._throttleDataPoints.length > this.maxDataPoints()) {
+    if (this._throttleDataPoints.length > maxDataPoints) {
       this._throttleDataPoints.shift();
     }
 
@@ -59,7 +59,8 @@ export class TelemetryTraceComponent implements AfterViewInit {
     // Clear the entire canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const widthPerPoint = this.maxDataPoints() > 1 ? canvas.width / (this.maxDataPoints() - 1) : 0;
+    const maxDataPoints = this.getMaxDataPoints();
+    const widthPerPoint = maxDataPoints > 1 ? canvas.width / (maxDataPoints - 1) : 0;
 
     // Draw Brake Trace in Red
     ctx.beginPath();
@@ -92,5 +93,9 @@ export class TelemetryTraceComponent implements AfterViewInit {
     ctx.strokeStyle = 'blue';
     ctx.lineWidth = 2;
     ctx.stroke();
+  }
+
+  private getMaxDataPoints(): number {
+    return this._canvasRef.nativeElement.width;
   }
 }
