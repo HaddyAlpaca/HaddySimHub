@@ -13,7 +13,7 @@ export class TelemetryTraceComponent implements AfterViewInit {
   private _brakeDataPoints: number[] = [];
   private _throttleDataPoints: number[] = [];
 
-  public maxDataPoints = input(100);
+  public maxDataPoints = input(500);
   public brakePct = input.required<number>();
   public throttlePct = input.required<number>();
 

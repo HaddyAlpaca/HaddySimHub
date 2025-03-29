@@ -6,8 +6,12 @@ internal class RaceTestRunner : IRunner
 {
     public async Task RunAsync(CancellationToken cancellationToken)
     {
+        int brakePct = 0;
+        int throttlePct = 100;
         while (!cancellationToken.IsCancellationRequested)
         {
+            // Oscillation between 0 and 100 for brake and throttle
+
             var update = new DisplayUpdate
             {
                 Type = DisplayType.RaceDashboard,
