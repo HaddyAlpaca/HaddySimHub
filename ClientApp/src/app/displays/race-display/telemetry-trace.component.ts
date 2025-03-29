@@ -21,7 +21,8 @@ export class TelemetryTraceComponent implements AfterViewInit {
     const canvas = this.canvasRef.nativeElement;
     const context = canvas.getContext('2d');
     if (!context) {
-      throw new Error('Failed to get canvas context');
+      console.error('Failed to get canvas context. Telemetry trace will not be displayed.');
+      return;
     }
     this._ctx = context;
   }
