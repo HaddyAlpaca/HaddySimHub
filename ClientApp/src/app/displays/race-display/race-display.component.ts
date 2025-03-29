@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { TrackPositionsComponent } from './track-positions.component';
 import { OpponentDeltaComponent } from './opponent-delta.component';
 import { DataElementComponent, DataType, DeltaTimePipe, LapTimePipe, SpeedometerComponent } from 'src/app/shared';
+import { TelemetryTraceComponent } from './telemetry-trace.component';
 
 @Component({
   selector: 'app-race-display',
@@ -19,6 +20,7 @@ import { DataElementComponent, DataType, DeltaTimePipe, LapTimePipe, Speedometer
     SpeedometerComponent,
     DataElementComponent,
     OpponentDeltaComponent,
+    TelemetryTraceComponent,
   ],
 })
 export class RaceDisplayComponent {
