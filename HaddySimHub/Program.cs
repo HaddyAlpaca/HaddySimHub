@@ -28,7 +28,7 @@ public class Program
             Logger.Info("Ctrl+C pressed. Exiting application...");
         };
 
-        WebApplication webServer = CreateWebServer(args);
+        WebApplication webServer = CreateWebServer();
 
         Task webServerTask = RunWebServerAsync(webServer, token);
         Task processTask = RunProcessAsync(args, token);
@@ -37,7 +37,7 @@ public class Program
         cancellationTokenSource.Cancel();
     }
 
-    private static WebApplication CreateWebServer(string[] args)
+    private static WebApplication CreateWebServer()
     {
         WebApplicationOptions options = new() { ContentRootPath = AppContext.BaseDirectory };
         var builder = WebApplication.CreateBuilder(options);
@@ -90,14 +90,25 @@ public class Program
     {
         try
         {
-            IRunner runner = args.FirstOrDefault(arg => arg.StartsWith("--test-runner:", StringComparison.OrdinalIgnoreCase))?
-                .Split(':')?.Last()?.ToLower() switch
+            string? testRunnerArg = args.FirstOrDefault(arg => arg.StartsWith("--test-runner:", StringComparison.OrdinalIgnoreCase));
+            string? testRunnerName = testRunnerArg?.Split(':')?.Last();
+            IRunner? runner = testRunnerName?.ToLower() switch
             {
                 "truck" => new TruckTestRunner(),
                 "race" => new RaceTestRunner(),
                 "rally" => new RallyTestRunner(),
-                _ => new DisplaysRunner()
+                _ => testRunnerArg is null ? new DisplaysRunner() : null,
             };
+
+            if (runner is null)
+            {
+                Logger.Error(testRunnerName is null 
+                    ? $"Argument '{testRunnerArg}' is invalid. Expected format: '--test-runner:<name>'."
+                    : $"Value '{testRunnerName}' for argument '--test-runner:' is invalid.");
+
+                Exit(1);
+                return;
+            }
 
             Logger.Info($"Starting process runner: {runner.GetType().Name}");
 
@@ -119,7 +130,7 @@ public class Program
         if (!createdNew)
         {
             Logger.Error("Another instance of HaddySimHub is already running.");
-            Environment.Exit(1);
+            Exit(1);
         }
     }
 
@@ -137,5 +148,11 @@ public class Program
         {
             Logger.Error($"Error checking for updates: {ex.Message}\n\n{ex.StackTrace}");
         }
+    }
+
+    private static void Exit(int exitCode)
+    {
+        Logger.Info($"Exiting with code {exitCode}.");
+        Environment.Exit(exitCode);
     }
 }
