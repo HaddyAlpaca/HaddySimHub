@@ -54,7 +54,6 @@ internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDi
             .Where(c => !c.HasRetired && (!c.Details.IsPaceCar || c.Details.IsOnPitRoad))
             .Select(c => new TrackPosition
             {
-                DriverName = telemetry.RaceCars.FirstOrDefault(c => c.CarIdx == c.CarIdx)?.Details.Driver.AbbrevName ?? "????",
                 LapDistPct = c.DistancePercentage,
                 Status =
                     c.CarIdx == telemetry.PlayerCarIdx ? TrackPositionStatus.IsPlayer :
