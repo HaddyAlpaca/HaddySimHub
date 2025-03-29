@@ -10,6 +10,7 @@
         'lap-ahead': position.status === TrackPositionStatus.LapAhead,
         'lap-behind': position.status === TrackPositionStatus.LapBehind,
         'same-lap': position.status === TrackPositionStatus.SameLap,
+        'in-pits': position.status === TrackPositionStatus.InPits,
       }" 
       [style.left.%]="position.lapDistPct">
     </div>
