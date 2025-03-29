@@ -12,9 +12,8 @@ export class TelemetryTraceComponent implements AfterViewInit {
   private _ctx!: CanvasRenderingContext2D;
   private _brakeDataPoints: number[] = [];
   private _throttleDataPoints: number[] = [];
-  @Input() maxDataPoints = 100;
-  private _maxDataPointsInternal = this.maxDataPoints;
 
+  public maxDataPoints = input(100);
   public brakePct = input.required<number>();
   public throttlePct = input.required<number>();
 
@@ -38,10 +37,10 @@ export class TelemetryTraceComponent implements AfterViewInit {
     this._throttleDataPoints.push(throttle);
 
     // Maintain a fixed-size buffer by shifting out the oldest data when necessary
-    if (this._brakeDataPoints.length > this._maxDataPoints) {
+    if (this._brakeDataPoints.length > this.maxDataPoints()) {
       this._brakeDataPoints.shift();
     }
-    if (this._throttleDataPoints.length > this._maxDataPoints) {
+    if (this._throttleDataPoints.length > this.maxDataPoints()) {
       this._throttleDataPoints.shift();
     }
 
@@ -54,7 +53,7 @@ export class TelemetryTraceComponent implements AfterViewInit {
     // Clear the entire canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const widthPerPoint = canvas.width / (this._maxDataPoints - 1);
+    const widthPerPoint = canvas.width / (this.maxDataPoints() - 1);
 
     // Draw Brake Trace in Red
     ctx.beginPath();
