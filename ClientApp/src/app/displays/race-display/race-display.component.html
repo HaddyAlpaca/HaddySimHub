@@ -81,6 +81,11 @@
       <app-track-positions [positions]="data().trackPositions" />
     </div>
   </div>
+  <div class="row">
+    <div class="col-12">
+      <app-telemetry-trace [brakePct]="data().brakePct" [throttlePct]="data().throttlePct" />
+    </div>
+  </div>
 </div>
 
 @if (data().pitLimiterOn) {
