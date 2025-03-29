@@ -126,11 +126,21 @@ public class Program
 
     private static void VerifySingleInstance()
     {
-        using Mutex mutex = new(true, "HaddySimHub_SingleInstance", out bool createdNew);
-        if (!createdNew)
+        var currentProcess = System.Diagnostics.Process.GetCurrentProcess();
+        var processes = System.Diagnostics.Process.GetProcessesByName(currentProcess.ProcessName);
+
+        foreach (var process in processes)
         {
-            Logger.Error("Another instance of HaddySimHub is already running.");
-            Exit(1);
+            if (process.Id != currentProcess.Id)
+            {
+                Logger.Info($"Killing process {process.ProcessName} with ID {process.Id}.");
+                process.Kill();
+                process.WaitForExit(5000); // Wait for 5 seconds
+                if (!process.HasExited)
+                {
+                    Console.WriteLine($"Process {process.ProcessName} (PID {process.Id}) did not exit in time...");
+                }
+            }
         }
     }
 
