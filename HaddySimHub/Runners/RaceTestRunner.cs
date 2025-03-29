@@ -11,6 +11,18 @@ internal class RaceTestRunner : IRunner
         while (!cancellationToken.IsCancellationRequested)
         {
             // Oscillation between 0 and 100 for brake and throttle
+            // When 0 is reached increase by 1 until 100 is reached
+            // Oscillate brakePct and throttlePct between 0 and 100
+            if (brakePct < 100 && throttlePct > 0)
+            {
+                brakePct++;
+                throttlePct--;
+            }
+            else if (brakePct > 0 && throttlePct < 100)
+            {
+                brakePct--;
+                throttlePct++;
+            }
 
             var update = new DisplayUpdate
             {
@@ -52,6 +64,8 @@ internal class RaceTestRunner : IRunner
                     Position = new Random().Next(1, 20),
                     TotalLaps = new Random().Next(10, 20),
                     TrackPositions = GenerateRandomTrackPositions(),
+                    BrakePct = brakePct,
+                    ThrottlePct = throttlePct,
                 }
             };
             await GameDataHub.SendDisplayUpdate(update);
