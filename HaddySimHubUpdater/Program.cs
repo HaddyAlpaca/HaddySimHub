@@ -12,12 +12,7 @@ if (args.Length == 0)
 string exeFolder = args[0];
 
 // Ensure single instance of the application
-Mutex mutex = new(true, "HaddySimHubUpdater_SingleInstance", out bool createdNew);
-if (!createdNew)
-{
-    Console.WriteLine("Another instance of HaddySimHubUpdater is already running.");
-    return;
-}
+KillProcess("HaddySimHubUpdater");
 
 string zipFilePath = string.Empty;
 try
@@ -60,18 +55,7 @@ try
     }
 
     //Stop the application
-    Process[] processes = Process.GetProcessesByName("HaddySimHub");
-    foreach (Process process in processes)
-    {
-        Console.WriteLine($"Stopping {process.ProcessName} (PID {process.Id})...");
-        process.Kill();
-        //Wait for the process to exit
-        process.WaitForExit(5000); // Wait for 5 seconds
-        if (!process.HasExited)
-        {
-            Console.WriteLine($"Process {process.ProcessName} (PID {process.Id}) did not exit in time...");
-        }
-    }
+    KillProcess("HaddySimHub");
 
     // Extract the ZIP file
     Console.WriteLine($"Extracting {zipFilePath} to {exeFolder}...");
@@ -119,6 +103,26 @@ finally
         catch (Exception deleteEx)
         {
             Console.WriteLine($"Failed to delete ZIP file: {deleteEx.Message}");
+        }
+    }
+}
+
+static void KillProcess(string name)
+{
+    Process currentProcess = Process.GetCurrentProcess();
+    Process[] processes = Process.GetProcessesByName(name);
+
+    foreach (var process in processes)
+    {
+        if (process.Id != currentProcess.Id)
+        {
+            Console.WriteLine($"Killing process {process.ProcessName} with ID {process.Id}.");
+            process.Kill();
+            process.WaitForExit(5000); // Wait for 5 seconds
+            if (!process.HasExited)
+            {
+                Console.WriteLine($"Process {process.ProcessName} (PID {process.Id}) did not exit in time...");
+            }
         }
     }
 }
