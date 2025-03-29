@@ -183,8 +183,8 @@
     <div class="col-6" style="padding-right: 10px;">
       <div class="card gauge">
         <label class="unit text-center">Km/h</label>
-        <div class="gear text-center" [ngClass]="{'over-speed-limit': data().speedLimit && data().speed > data().speedLimit}">{{data().speed}}</div>
-        <div class="speed-limit" [ngClass]="{'hidden': !data().speedLimit}">{{data().speedLimit}}</div>
+        <div class="gear text-center">{{data().speed}}</div>
+        <div class="speed-limit" [ngClass]="{'over-speed-limit': data().speedLimit && data().speed > data().speedLimit}">{{data().speedLimit ? data().speedLimit : '--'}}</div>
       </div>
     </div>
   </div>
