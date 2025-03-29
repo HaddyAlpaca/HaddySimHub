@@ -37,4 +37,6 @@ export class RaceData {
   public maxIncidents = 0;
   public flag: '' | 'yellow' | 'green' | 'blue' | 'white' | 'finish' | 'black' | 'black-orange' | 'red' = '';
   public trackPositions: TrackPosition[] = [];
+  public brakePct = 0;
+  public throttlePct = 0;
 }
