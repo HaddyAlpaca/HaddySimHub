@@ -12,7 +12,8 @@ export class TelemetryTraceComponent implements AfterViewInit {
   private _ctx!: CanvasRenderingContext2D;
   private _brakeDataPoints: number[] = [];
   private _throttleDataPoints: number[] = [];
-  private _maxDataPoints = 100;
+  @Input() maxDataPoints = 100;
+  private _maxDataPointsInternal = this.maxDataPoints;
 
   public brakePct = input.required<number>();
   public throttlePct = input.required<number>();
