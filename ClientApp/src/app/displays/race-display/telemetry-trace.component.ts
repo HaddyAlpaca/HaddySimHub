@@ -62,37 +62,28 @@ export class TelemetryTraceComponent implements AfterViewInit {
     const maxDataPoints = this.getMaxDataPoints();
     const widthPerPoint = maxDataPoints > 1 ? canvas.width / (maxDataPoints - 1) : 0;
 
-    // Draw Brake Trace in Red
-    ctx.beginPath();
-    for (let i = 0; i < this._brakeDataPoints.length; i++) {
-      const x = i * widthPerPoint;
-      // Convert brake percentage to y coordinate (invert y axis so that 100 is at the top)
-      const y = canvas.height - (this._brakeDataPoints[i] / 100) * canvas.height;
-      if (i === 0) {
-        ctx.moveTo(x, y);
-      } else {
-        ctx.lineTo(x, y);
+    const drawTrace = (dataPoints: number[], color: string): void => {
+      ctx.beginPath();
+      for (let i = 0; i < dataPoints.length; i++) {
+        const x = i * widthPerPoint;
+        // Convert percentage to y coordinate (invert y axis so that 100 is at the top)
+        const y = canvas.height - (dataPoints[i] / 100) * canvas.height;
+        if (i === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
       }
-    }
-    ctx.strokeStyle = 'red';
-    ctx.lineWidth = 2;
-    ctx.stroke();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    };
 
-    // Draw Throttle Trace in Blue
-    ctx.beginPath();
-    for (let i = 0; i < this._throttleDataPoints.length; i++) {
-      const x = i * widthPerPoint;
-      // Convert throttle percentage to y coordinate (invert y axis so that 100 is at the top)
-      const y = canvas.height - (this._throttleDataPoints[i] / 100) * canvas.height;
-      if (i === 0) {
-        ctx.moveTo(x, y);
-      } else {
-        ctx.lineTo(x, y);
-      }
-    }
-    ctx.strokeStyle = 'blue';
-    ctx.lineWidth = 2;
-    ctx.stroke();
+    // Draw Brake Trace in Red
+    drawTrace(this._brakeDataPoints, 'red');
+
+    // Draw Throttle Trace in Green
+    drawTrace(this._throttleDataPoints, 'green');
   }
 
   private getMaxDataPoints(): number {
