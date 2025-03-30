@@ -69,7 +69,7 @@ internal class RaceTestRunner : IRunner
                 }
             };
             await GameDataHub.SendDisplayUpdate(update);
-            await Task.Delay(TimeSpan.FromSeconds(2), cancellationToken);
+            await Task.Delay(TimeSpan.FromSeconds(.5), cancellationToken);
         }
     }
     private static TrackPosition[] GenerateRandomTrackPositions()
