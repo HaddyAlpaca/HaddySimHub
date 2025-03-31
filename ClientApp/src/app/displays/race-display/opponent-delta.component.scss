@@ -1,0 +1,25 @@
+.name-class-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.opponent-delta {
+    text-align: center;
+
+    .label {
+      text-align: center;
+    }
+}
+
+.driver-name {
+    color: yellowgreen;
+}
+
+.driver-class {
+    border-radius: 5px;
+    background-color: green;
+    padding: 0px 5px 0px 5px;
+    margin-left: 20px;
+    font-size: 2vw;
+}

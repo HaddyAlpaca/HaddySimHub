@@ -2,7 +2,9 @@
   <div class="label caption">{{caption()}}</div>
   <div>
     <div class="delta-time">{{driverInfo().delta| deltatime: false}}</div>
-    <div class="label driver-name">{{driverInfo().name}}</div>
-    <div class="driver-class" [style.background-color]="driverInfo().licenseColor">{{driverInfo().license}} ({{driverInfo().rating | irating}})</div>
+    <div class="name-class-row">
+      <div class="driver-name">{{driverInfo().name}}</div>
+      <div class="driver-class" [style.background-color]="driverInfo().licenseColor">{{driverInfo().license}} ({{driverInfo().rating | irating}})</div>
+    </div>
   </div>
 </div>
