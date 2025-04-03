@@ -1,8 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { TruckDisplayComponent } from './truck-display.component';
+import { TruckData, TruckDisplayComponent } from './truck-display.component';
 import { TruckDashComponentHarness } from './truck-display.component.harness';
-import { TruckData } from './truck-data';
 import { Component, provideExperimentalZonelessChangeDetection, signal } from '@angular/core';
 
 describe('TruckDisplayComponent', () => {
@@ -19,7 +18,7 @@ describe('TruckDisplayComponent', () => {
     }).compileComponents();
 
     //Set default values for the truck data
-    data = new TruckData();
+    data = {} as TruckData;
 
     fixture = TestBed.createComponent(TruckDisplayTestComponent);
     component = fixture.componentInstance;
@@ -103,5 +102,5 @@ describe('TruckDisplayComponent', () => {
   imports: [TruckDisplayComponent],
 })
 export class TruckDisplayTestComponent {
-  public data = signal<TruckData>(new TruckData());
+  public data = signal<TruckData>({} as TruckData);
 }

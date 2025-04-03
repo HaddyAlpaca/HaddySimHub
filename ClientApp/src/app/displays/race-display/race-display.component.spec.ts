@@ -1,8 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RaceDisplayComponent } from './race-display.component';
+import { RaceData, RaceDisplayComponent } from './race-display.component';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { RaceDisplayComponentHarness } from './race-display.component.harness';
-import { RaceData } from './race-data';
 import { Component, provideExperimentalZonelessChangeDetection, signal } from '@angular/core';
 
 describe('Race display component tests', () => {
@@ -21,7 +20,7 @@ describe('Race display component tests', () => {
     fixture = TestBed.createComponent(RaceDisplayTestComponent);
     component = fixture.componentInstance;
     harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, RaceDisplayComponentHarness);
-    raceData = new RaceData();
+    raceData = {} as RaceData;
   });
 
   describe('Laps remaining tests', () => {
@@ -254,5 +253,5 @@ describe('Race display component tests', () => {
   imports: [RaceDisplayComponent],
 })
 export class RaceDisplayTestComponent {
-  public data = signal<RaceData>(new RaceData());
+  public data = signal<RaceData>({} as RaceData);
 }

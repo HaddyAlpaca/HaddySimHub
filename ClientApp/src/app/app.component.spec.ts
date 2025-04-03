@@ -40,7 +40,7 @@ describe('AppComponent tests', () => {
   });
 
   it('should show the truck display when truck data is available', async () => {
-    mockGameDataService.truckData.set(new TruckData());
+    mockGameDataService.truckData.set({} as TruckData);
 
     const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, AppComponentHarness);
 
@@ -51,7 +51,7 @@ describe('AppComponent tests', () => {
   });
 
   it('should show the race display when race data is available', async () => {
-    mockGameDataService.raceData.set(new RaceData());
+    mockGameDataService.raceData.set({} as RaceData);
 
     const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, AppComponentHarness);
 
@@ -62,7 +62,7 @@ describe('AppComponent tests', () => {
   });
 
   it('should show the rally display when rally data is available', async () => {
-    mockGameDataService.rallyData.set(new RallyData());
+    mockGameDataService.rallyData.set({} as RallyData);
 
     const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, AppComponentHarness);
 
