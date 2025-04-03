@@ -10,7 +10,6 @@
             <app-data-element description="Lap" id="laps" [value]="data().currentLap" [total]="data().totalLaps" />
           </div>
         </div>
-        <!-- <app-data-element description="Time remaining" [value]="data().sessionTimeRemaining" [class.hidden]="!data().IsLimitedTime" /> -->
         <div class="label">Last sector</div>
         <div id="lastSector">{{data().lastSectorNum <= 0 ? '-' : data().lastSectorNum}}: {{data().lastSectorTime | laptime}}</div>
         <div class="row">

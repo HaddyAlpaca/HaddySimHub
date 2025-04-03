@@ -1,6 +1,6 @@
 export { RaceDisplayComponent } from './race-display/race-display.component';
-export { RaceData } from './race-display/race-data';
+export type { RaceData } from './race-display/race-display.component';
 export { RallyDisplayComponent } from './rally-display/rally-display.component';
-export { RallyData } from './rally-display/rally-data';
+export type { RallyData } from './rally-display/rally-display.component';
 export { TruckDisplayComponent } from './truck-display/truck-display.component';
-export { TruckData } from './truck-display/truck-data';
+export type { TruckData } from './truck-display/truck-display.component';

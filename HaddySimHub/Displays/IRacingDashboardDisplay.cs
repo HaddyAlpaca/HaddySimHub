@@ -7,6 +7,9 @@ namespace HaddySimHub.Displays;
 
 internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDisplay) : DisplayBase<DataSample>(updateDisplay)
 {
+    private int[]? _lastLaps;
+    private int? _sessionNum;
+
     public override void Start()
     {
         iRacing.NewData += (data) => 
@@ -40,12 +43,52 @@ internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDi
         var sessionData = data.SessionData;
         var session = sessionData.SessionInfo.Sessions.First(s => s.SessionNum == telemetry.SessionNum);
 
-        Car? carBehind = null;
-        Car? carAhead = null;
-        if (session.IsRace)
+        this._lastLaps ??= (int[])telemetry.CarIdxLap.Clone();
+
+        if (this._sessionNum != telemetry.SessionNum)
         {
-            carBehind = telemetry.RaceCars.FirstOrDefault(c => c.Position == telemetry.PlayerCarPosition + 1);
-            carAhead = telemetry.RaceCars.FirstOrDefault(c => c.Position == telemetry.PlayerCarPosition - 1);
+            this._sessionNum = telemetry.SessionNum;
+            this._lastLaps = (int[])telemetry.CarIdxLap.Clone();
+        }
+
+        foreach (var driver in sessionData.DriverInfo.CompetingDrivers)
+        {
+            var carIdx = (int)driver.CarIdx;
+
+            if (!telemetry.HasData(carIdx))
+            {
+                Logger.Error($"Car {carIdx} does not have telemetry data.");
+                continue;
+            }
+
+            var carIdxLap = telemetry.CarIdxLap[carIdx];
+            var carIdxLapDistPct = telemetry.CarIdxLapDistPct[carIdx];
+            if (carIdxLap > this._lastLaps[carIdx] && carIdxLapDistPct > 0.80f)
+            {
+                // The car has passed the start/finish line and the percentage is in the 80% range.
+                // Set the percentage to 0% to avoid the bug in iRacing data stream.
+                carIdxLapDistPct = 0;
+            }
+
+            this._lastLaps[carIdx] = carIdxLap;
+
+            // Build a log message
+            var logMessage = new StringBuilder();
+            logMessage.AppendLine($"*** Car {carIdx} telemetry data ***");
+            logMessage.AppendLine($"Lap: {carIdxLap}");
+            logMessage.AppendLine($"LapDistPct: {telemetry.CarIdxLapDistPct[carIdx]} (Corrected: {carIdxLapDistPct})");
+            logMessage.AppendLine($"Distance: {telemetry.CarIdxDistance}");
+            logMessage.AppendLine($"TotalDistance: {carIdxLap + carIdxLapDistPct}");
+            logMessage.AppendLine($"Username: {driver.UserName}");
+            logMessage.AppendLine($"CarNumber: {driver.CarNumber}");
+            logMessage.AppendLine($"License color {driver.LicColor}");
+            logMessage.AppendLine($"License string {driver.LicString}");
+            logMessage.AppendLine($"License level {driver.LicLevel}");
+            logMessage.AppendLine($"License sublevel {driver.LicSubLevel}");
+            logMessage.AppendLine($"IRating: {driver.IRating}");
+            logMessage.AppendLine($"In pit: {telemetry.CarIdxOnPitRoad}");
+            logMessage.AppendLine($"Est time: {telemetry.CarIdxEstTime}");
+            Logger.Debug(logMessage.ToString());
         }
 
         // Update track positions
@@ -63,6 +106,14 @@ internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDi
                     telemetry.Session.IsRace && c.TotalDistance - playerCar.TotalDistance > .8 ? TrackPositionStatus.LapAhead :
                     TrackPositionStatus.SameLap,
             }).ToArray();
+
+        Car? carBehind = null;
+        Car? carAhead = null;
+        if (session.IsRace)
+        {
+            carBehind = telemetry.RaceCars.FirstOrDefault(c => c.Position == telemetry.PlayerCarPosition + 1);
+            carAhead = telemetry.RaceCars.FirstOrDefault(c => c.Position == telemetry.PlayerCarPosition - 1);
+        }
 
         var displayUpdate = new RaceData
         {

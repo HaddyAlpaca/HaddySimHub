@@ -1,10 +1,50 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, effect, input } from '@angular/core';
-import { RaceData } from './race-data';
 import { CommonModule } from '@angular/common';
-import { TrackPositionsComponent } from './track-positions.component';
+import { TrackPosition, TrackPositionsComponent } from './track-positions.component';
 import { OpponentDeltaComponent } from './opponent-delta.component';
 import { DataElementComponent, DataType, DeltaTimePipe, LapTimePipe, SpeedometerComponent } from 'src/app/shared';
 import { TelemetryTraceComponent } from './telemetry-trace.component';
+
+export interface RaceData {
+  sessionType: string;
+  IsLimitedTime: boolean;
+  isLimitedSessionLaps: boolean;
+  currentLap: number;
+  totalLaps: number;
+  sessionTimeRemaining: number;
+  position: number;
+  speed: number;
+  gear: number;
+  rpm: number;
+  trackTemp: number;
+  airTemp: number;
+  fuelRemaining: number;
+  brakeBias: number;
+  strengthOfField: number;
+  lastSectorNum: number;
+  lastSectorTime: number;
+  lastLapTime: number;
+  lastLapTimeDelta: number;
+  bestLapTime: number;
+  bestLapTimeDelta: number;
+  driverBehindName: string;
+  driverBehindLicense: string;
+  driverBehindLicenseColor: string;
+  driverBehindIRating: number;
+  driverBehindDelta: number;
+  driverAheadName: string;
+  driverAheadLicense: string;
+  driverAheadLicenseColor: string;
+  driverAheadIRating: number;
+  driverAheadDelta: number;
+  pitLimiterOn: boolean;
+  incidents: number;
+  maxIncidents: number;
+  flag: '' | 'yellow' | 'green' | 'blue' | 'white' | 'finish' | 'black' | 'black-orange' | 'red';
+  trackPositions: TrackPosition[];
+  brakePct: number;
+  throttlePct: number;
+}
 
 @Component({
   selector: 'app-race-display',
@@ -66,6 +106,5 @@ export class RaceDisplayComponent {
       this._gapAheadDelta = data.driverAheadDelta - this._lastGapAhead;
       this._lastGapAhead = data.driverAheadDelta;
     });
-
   }
 }
