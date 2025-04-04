@@ -60,6 +60,12 @@ app-race-display {
     &.border-yellow {
       border-color: yellow;
     }
+
+    &:has(.flag) {
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+    }
   }
 
   .center-column {
@@ -94,13 +100,8 @@ app-race-display {
   }
 
   .flag {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
     width: 100%;
-    height: 135px;
-    transform: translateX(-50%);
-    border-radius: 15px;
+    height: 100%;
 
     &.yellow {
       background-color: yellow;
