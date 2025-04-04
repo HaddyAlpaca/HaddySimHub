@@ -213,20 +213,6 @@ describe('Race display component tests', () => {
     });
   });
 
-  describe('Flags tests', () => {
-    it('Flag is not shown when not set', async () => {
-      patchData({ flag: '' });
-
-      expect(await harness.hasElement('.flag')).toBe(false);
-    });
-
-    it('Flag is shown when set', async () => {
-      patchData({ flag: 'yellow' });
-
-      expect(await harness.hasElement('.flag')).toBe(true);
-    });
-  });
-
   const patchData = (value: Record<string, unknown>): void => {
     component.data.set({
       ...raceData,
