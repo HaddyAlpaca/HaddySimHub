@@ -1,11 +1,9 @@
 app-race-display {
-  app-data-element {
-    label {
-      text-transform: uppercase;
-      font-size: 1.5vw;
-      text-align: right;
-      color: gold;
-    }
+  .container {
+    max-width: unset;
+    color: white;
+    font-size: 3vw;
+    text-align: right;
   }
 
   app-speedometer {
@@ -21,27 +19,20 @@ app-race-display {
     }
 
     .rpm, .speed {
-      font-size: 4vw;
+      font-size: 3vw;
     }
 
     .gear {
       text-align: center;
-      font-size: 10vw;
+      font-size: 8vw;
     }
-  }
-
-  .container {
-    max-width: unset;
-    color: white;
-    font-size: 3vw;
-    text-align: right;
   }
 
   .row {
     margin-top: 10px;
   }
 
-  .label {
+  label {
     text-transform: uppercase;
     font-size: 1.5vw;
     text-align: right;
@@ -52,29 +43,8 @@ app-race-display {
     text-align: center;
   }
 
-  .sessionType {
-    text-align: right;
-  }
-
-  .delta-time {
-    font-weight: bold;
-    text-align: center;
-  }
-
   .best-laptime {
     color: purple;
-  }
-
-  .driver-name {
-    color: yellowgreen;
-  }
-
-  .driver-class {
-    border-radius: 5px;
-    background-color: green;
-    padding: 0px 5px 0px 5px;
-    margin-left: 20px;
-    font-size: 2vw;
   }
 
   .group-border {
@@ -82,26 +52,24 @@ app-race-display {
     padding: 10px 20px 10px 20px;
     border-radius: 20px;
     height: 100%;
+
+    &.border-blue {
+      border-color: rgba(0, 0, 255, 0.555);
+    }
+  
+    &.border-yellow {
+      border-color: yellow;
+    }
   }
 
-  .border-blue {
-    border-color: rgba(0, 0, 255, 0.555);
-  }
-
-  .border-yellow {
-    border-color: yellow;
-  }
-
-  #deltaTime {
-    font-size: 4vw;
+  .center-column {
+    display: grid;
+    grid-template-rows: 8fr 2fr;
+    gap: 10px;
   }
 
   .hidden {
     visibility: hidden;
-  }
-
-  .sof {
-    text-align: center;
   }
 
   .text-red {
@@ -112,13 +80,9 @@ app-race-display {
     color: green;
   }
 
-  .text-yellow {
-    color: yellow;
-  }
-
   .pit-limiter {
     position: absolute;
-    top: 50%;
+    top: 20%;
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: orange;
@@ -126,6 +90,7 @@ app-race-display {
     color: black;
     padding: 5px 45px 5px 45px;
     border-radius: 15px;
+    animation: text-blinker 2s linear infinite;
   }
 
   .flag {
@@ -136,56 +101,46 @@ app-race-display {
     height: 135px;
     transform: translateX(-50%);
     border-radius: 15px;
-  }
 
-  .flag.yellow {
-    background-color: yellow;
-  }
+    &.yellow {
+      background-color: yellow;
+    }
+  
+    &.green {
+      background-color: green;
+    }
+  
+    &.white {
+      background-color: white;
+    }
+  
+    &.blue {
+      background-color: blue;
+    }
+  
+    &.red {
+      background-color: red;
+    }
 
-  .flag.green {
-    background-color: green;
-  }
+    &.black {
+      background-color: black;
+    }
 
-  .flag.white {
-    background-color: white;
-  }
-
-  .flag.blue {
-    background-color: blue;
-  }
-
-  .flag.red {
-    background-color: red;
-  }
-
-  .flag.black {
-    background-color: black;
-    border: 1px solid white;
-  }
-
-  .flag.black-orange {
-    background-color: black;
-    border: 1px solid white;
-  }
-
-  .flag.black-orange::after {
-    content: '';
-    border-radius: 50%;
-    background-color: orange;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    height: 75%;
-    aspect-ratio: 1;
-  }
-
-  .blink {
-    animation: blinker 2s linear infinite;
-  }
-
-  .blink-text {
-    animation: text-blinker 2s linear infinite;
+    &.black-orange {
+      background-color: black;
+    }
+  
+    &.black-orange::after {
+      content: '';
+      border-radius: 50%;
+      background-color: orange;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      height: 75%;
+      aspect-ratio: 1;
+    }
   }
 
   @keyframes text-blinker {
@@ -193,11 +148,4 @@ app-race-display {
       color: transparent;
     }
   }
-
-  @keyframes blinker {
-    50% {
-      opacity: 0;
-    }
-  }
 }
-

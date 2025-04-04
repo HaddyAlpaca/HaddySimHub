@@ -177,7 +177,7 @@ internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDi
             SessionFlags.greenHeld => "green",
             SessionFlags.black => "black",
             SessionFlags.repair => "black-orange",
-            _ => string.Empty,
+            _ => "green",
         };
     }
 }

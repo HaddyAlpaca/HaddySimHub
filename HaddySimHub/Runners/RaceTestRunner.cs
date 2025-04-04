@@ -66,6 +66,12 @@ internal class RaceTestRunner : IRunner
                     TrackPositions = GenerateRandomTrackPositions(),
                     BrakePct = brakePct,
                     ThrottlePct = throttlePct,
+                    Flag = new Random().Next(0, 2) switch
+                    {
+                        1 => "yellow",
+                        2 => "red",
+                        _ => "green",
+                    },
                 }
             };
             await GameDataHub.SendDisplayUpdate(update);

@@ -30,8 +30,7 @@ describe('Race display component tests', () => {
         currentLap: 2,
       });
 
-      const elementHarness = await harness.getDataElementHarness('laps');
-      expect(await elementHarness.getValue()).toEqual('2');
+      expect(await harness.getElementText('#laps')).toEqual('2');
     });
 
     it('When session is not a timed session, display laps completed and total laps', async () => {
@@ -41,8 +40,7 @@ describe('Race display component tests', () => {
         totalLaps: 10,
       });
 
-      const elementHarness = await harness.getDataElementHarness('laps');
-      expect(await elementHarness.getValue()).toEqual('2/10');
+      expect(await harness.getElementText('#laps')).toEqual('2/10');
     });
   });
 
@@ -71,53 +69,46 @@ describe('Race display component tests', () => {
     it('brake bias is displayed', async () => {
       patchData({ brakeBias: 56.2 });
 
-      const elementHarness = await harness.getDataElementHarness('brakeBias');
-      expect(await elementHarness.getValue()).toEqual('56.2');
+      expect(await harness.getElementText('#brakeBias')).toEqual('56.2');
     });
 
     it('brake bias without decimal places is displayed with one decimal place', async () => {
       patchData({ brakeBias: 56 });
 
-      const elementHarness = await harness.getDataElementHarness('brakeBias');
-      expect(await elementHarness.getValue()).toEqual('56.0');
+      expect(await harness.getElementText('#brakeBias')).toEqual('56.0');
     });
 
     it('brake bias with 2 decimal places is displayed with one decimal place', async () => {
       patchData({ brakeBias: 56.28 });
 
-      const elementHarness = await harness.getDataElementHarness('brakeBias');
-      expect(await elementHarness.getValue()).toEqual('56.3');
+      expect(await harness.getElementText('#brakeBias')).toEqual('56.3');
     });
   });
 
   it('Air temp is displayed', async () => {
     patchData({ airTemp: 25.3 });
 
-    const elementHarness = await harness.getDataElementHarness('air-temp');
-    expect(await elementHarness.getValue()).toEqual('25.3 °C');
+    expect(await harness.getElementText('#air-temp')).toEqual('25.3 °C');
   });
 
   it('Track temp are displayed', async () => {
     patchData({ trackTemp: 32 });
 
-    const elementHarness = await harness.getDataElementHarness('track-temp');
-    expect(await elementHarness.getValue()).toEqual('32.0 °C');
+    expect(await harness.getElementText('#track-temp')).toEqual('32.0 °C');
   });
 
   describe('Last laptime tests', () => {
     it('empty laptime', async () => {
       patchData({ lastLapTime: 0 });
 
-      const elementHarness = await harness.getDataElementHarness('lastLapTime');
-      expect(await elementHarness.getValue()).toEqual('--:--.---');
+      expect(await harness.getElementText('#lastLapTime')).toEqual('--:--.---');
 
     });
 
     it('valid laptime', async () => {
       patchData({ lastLapTime: 94.421 });
 
-      const elementHarness = await harness.getDataElementHarness('lastLapTime');
-      expect(await elementHarness.getValue()).toEqual('01:34.421');
+      expect(await harness.getElementText('#lastLapTime')).toEqual('01:34.421');
 
     });
   });
@@ -139,15 +130,13 @@ describe('Race display component tests', () => {
   it('Position is displayed', async () => {
     patchData({ position: 3 });
 
-    const elementHarness = await harness.getDataElementHarness('position');
-    expect(await elementHarness.getValue()).toEqual('3');
+    expect(await harness.getElementText('#position')).toEqual('3');
   });
 
   it('Fuel remaining is displayed', async () => {
     patchData({ fuelRemaining: 14.2 });
 
-    const elementHarness = await harness.getDataElementHarness('fuelRemaining');
-    expect(await elementHarness.getValue()).toEqual('14.2 L');
+    expect(await harness.getElementText('#fuelRemaining')).toEqual('14.2 L');
   });
 
   describe('Best lap delta time', () => {
@@ -178,7 +167,7 @@ describe('Race display component tests', () => {
     });
   });
 
-  describe('Driver behind', () => {
+  describe('Driver behind tests', () => {
     it('Driver name and delta are displayed', async () => {
       patchData({ driverBehindName: 'David Coulthard', driverBehindDelta: 1.2 });
 
@@ -187,7 +176,7 @@ describe('Race display component tests', () => {
     });
   });
 
-  describe('Driver ahead', () => {
+  describe('Driver ahead tests', () => {
     it('Driver name and delta are displayed', async () => {
       patchData({ driverAheadName: 'Enrique Bernoldi', driverAheadDelta: 1.2 });
 
@@ -196,7 +185,7 @@ describe('Race display component tests', () => {
     });
   });
 
-  describe('Pit limiter', () => {
+  describe('Pit limiter tests', () => {
     it('Pit limter is not shown when off', async () => {
       patchData({ pitLimiterOn: false });
 
@@ -210,23 +199,21 @@ describe('Race display component tests', () => {
     });
   });
 
-  describe('Incidents', () => {
+  describe('Incidents tests', () => {
     it('Without max incidents only incidents are shown', async () => {
       patchData({ incidents: 5, maxIncidents: 999 });
 
-      const elementHarness = await harness.getDataElementHarness('incidents');
-      expect(await elementHarness.getValue()).toEqual('5');
+      expect(await harness.getElementText('#incidents')).toEqual('5');
     });
 
     it('Max incidents are shown when set', async () => {
       patchData({ incidents: 3, maxIncidents: 17 });
 
-      const elementHarness = await harness.getDataElementHarness('incidents');
-      expect(await elementHarness.getValue()).toEqual('3/17');
+      expect(await harness.getElementText('#incidents')).toEqual('3/17');
     });
   });
 
-  describe('Flags', () => {
+  describe('Flags tests', () => {
     it('Flag is not shown when not set', async () => {
       patchData({ flag: '' });
 

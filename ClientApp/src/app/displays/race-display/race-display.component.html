@@ -1,96 +1,112 @@
 <div class="container">
-  <div class="row" style="margin-top: 40px;">
+  <div class="row">
     <div class="col-4">
       <div class="group-border border-blue">
         <div class="row">
           <div class="col-6">
-            <app-data-element description="Position" id="position" [value]="data().position" />
+            <label>Air</label>
+            <div id="air-temp">{{data().airTemp |number:'1.1-1':'en-US'}} &deg;C</div>
           </div>
           <div class="col-6">
-            <app-data-element description="Lap" id="laps" [value]="data().currentLap" [total]="data().totalLaps" />
+            <label>Track</label>
+            <div id="track-temp">{{data().trackTemp |number:'1.1-1':'en-US'}} &deg;C</div>
           </div>
         </div>
-        <div class="label">Last sector</div>
-        <div id="lastSector">{{data().lastSectorNum <= 0 ? '-' : data().lastSectorNum}}: {{data().lastSectorTime | laptime}}</div>
+        <div class="row">
+          <div class="col-12">
+            <label>SOF</label>
+            <div>{{data().strengthOfField ? data().strengthOfField : '---' }}</div>
+          </div>
+        </div>
         <div class="row">
           <div class="col-6">
-            <app-data-element description="Last laptime" id="lastLapTime" [value]="data().lastLapTime" [dataType]="DataType.LapTime" />
+            <label>Last laptime</label>
+            <div class="last-laptime" id="lastLapTime">{{data().lastLapTime | laptime}}</div>
           </div>
           <div class="col-6">
-            <div class="label">Delta</div>
+            <label>Delta</label>
             <div id="lastLapTimeDelta" [ngClass]="{'text-green': data().lastLapTimeDelta < 0, 'text-red': data().lastLapTimeDelta > 0}">{{data().lastLapTimeDelta | deltatime}}</div>
           </div>
         </div>
         <div class="row">
           <div class="col-6">
-            <div class="label">Best laptime</div>
+            <label>Best laptime</label>
             <div class="best-laptime" id="bestLapTime">{{data().bestLapTime | laptime}}</div>
           </div>
           <div class="col-6">
-            <div class="label">Delta</div>
+            <label>Delta</label>
             <div id="bestLapTimeDelta" [ngClass]="{'text-green': data().bestLapTimeDelta < 0, 'text-red': data().bestLapTimeDelta > 0}">{{data().bestLapTimeDelta | deltatime}}</div>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-4 group-border border-yellow">
-      <app-speedometer [rpm]="data().rpm" [gear]="data().gear" [speed]="data().speed" />
+    <div class="col-4 center-column">
+      <div class=" group-border border-yellow">
+        <app-speedometer [rpm]="data().rpm" [gear]="data().gear" [speed]="data().speed" />
+      </div>
+      <div class=" group-border border-blue">
+        <div class="flag" [ngClass]="data().flag"></div>
+      </div>
     </div>
-    <div class="col-4" style="height: 100%;">
+    <div class="col-4">
       <div class="group-border border-blue">
-        <app-data-element description="Brake bias" id="brakeBias" [value]="data().brakeBias" [dataType]="DataType.NumberOneDecimal" />
-        <app-data-element description="Fuel remaining" id="fuelRemaining" [value]="data().fuelRemaining" unit="L" [dataType]="DataType.NumberOneDecimal" />
         <div class="row">
           <div class="col-6">
-            <app-data-element description="Air" id="air-temp" [value]="data().airTemp" [dataType]="DataType.NumberOneDecimal" unit="&deg;C" />
+            <label>Brake bias</label>
+            <div id="brakeBias">{{data().brakeBias |number:'1.1-1':'en-US'}}</div>
           </div>
           <div class="col-6">
-            <app-data-element description="Track" id="track-temp" [value]="data().trackTemp" [dataType]="DataType.NumberOneDecimal" unit="&deg;C" />
+            <label>Fuel remaining</label>
+            <div id="fuelRemaining">{{data().fuelRemaining |number:'1.1-1':'en-US'}} L</div>
           </div>
         </div>
         <div class="row">
-          <div class="col-6">
-            @if (data().strengthOfField) {
-              <app-data-element description="SOF" [value]="data().strengthOfField" />
+          <div class="col-12">
+            <label>Incidents</label>
+            @if (data().maxIncidents === 999) {
+              <div id="incidents">{{data().incidents}}</div>
+            } @else {
+              <div id="incidents">{{data().incidents}}/{{data().maxIncidents}}</div>
             }
           </div>
-          <div class="col-6">
-            <app-data-element description="Incidents" id="incidents" [value]="data().incidents" [total]="data().maxIncidents === 999 ? undefined : data().maxIncidents" />
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <label>Lap</label>
+            @if (data().totalLaps > 0) {
+              <div id="laps">{{data().currentLap}}/{{data().totalLaps}}</div>
+            } @else {
+              <div id="laps">{{data().currentLap}}</div>
+            }
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <label>Position</label>
+            <div id="position">{{data().position}}</div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="row" style="padding-right: 0; margin-top: 40px;">
+  <div class="row">
     <div class="col-6">
       <app-opponent-delta
         id="driverBehindInfo"
         caption="Driver behind"
         [driverInfo]="driverBehindInfo()" />
     </div>
-    <div class="col-6" style="padding-right: 0;">
+    <div class="col-6">
       <app-opponent-delta
         id="driverAheadInfo"
         caption="Driver ahead"
         [driverInfo]="driverAheadInfo()" />
     </div>
   </div>
-  <div class="row">
-    <div class="col-12">
-      <app-track-positions [positions]="data().trackPositions" />
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-12">
-      <app-telemetry-trace [brakePct]="data().brakePct" [throttlePct]="data().throttlePct" />
-    </div>
-  </div>
+  <app-track-positions [positions]="data().trackPositions" />
+  <app-telemetry-trace [brakePct]="data().brakePct" [throttlePct]="data().throttlePct" />
 </div>
 
 @if (data().pitLimiterOn) {
   <div class="pit-limiter blink-text">Pit Limiter</div>
 }
-@else if (data().flag) {
-  <div class="flag blink" [ngClass]="data().flag"></div>
-}
-

@@ -1,5 +1,5 @@
 import { Component, input, ViewEncapsulation } from '@angular/core';
-import { SpeedometerComponent, DataElementComponent, DataGroupComponent, DataType } from 'src/app/shared';
+import { SpeedometerComponent, LapTimePipe } from 'src/app/shared';
 
 export interface RallyData {
   speed: number;
@@ -31,11 +31,9 @@ export interface RallyData {
   encapsulation: ViewEncapsulation.None,
   imports: [
     SpeedometerComponent,
-    DataElementComponent,
-    DataGroupComponent,
+    LapTimePipe,
   ],
 })
 export class RallyDisplayComponent {
-  public readonly DataType = DataType;
   public data = input.required<RallyData>({});
 }

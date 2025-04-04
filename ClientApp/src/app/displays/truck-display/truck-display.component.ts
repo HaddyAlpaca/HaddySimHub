@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, ViewEncapsulation } from '@angular/core';
 import { NgClass, DecimalPipe, CommonModule } from '@angular/common';
 import { WaypointComponent } from './waypoint.component';
-import { TimespanPipe, NumberNlPipe, NumberFlexDigitPipe, DataType, GearPipe } from 'src/app/shared';
+import { TimespanPipe, NumberNlPipe, NumberFlexDigitPipe, GearPipe } from 'src/app/shared';
 
 export interface TruckData {
   sourceCity: string;
@@ -84,6 +84,5 @@ export interface TruckData {
   ],
 })
 export class TruckDisplayComponent {
-  public readonly DataType = DataType;
   public data = input.required<TruckData>({});
 }
