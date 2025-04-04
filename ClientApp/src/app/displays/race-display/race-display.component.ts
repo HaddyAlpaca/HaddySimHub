@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, effect
 import { CommonModule } from '@angular/common';
 import { TrackPosition, TrackPositionsComponent } from './track-positions.component';
 import { OpponentDeltaComponent } from './opponent-delta.component';
-import { DataElementComponent, DataType, DeltaTimePipe, LapTimePipe, SpeedometerComponent } from 'src/app/shared';
+import { DeltaTimePipe, LapTimePipe, SpeedometerComponent } from 'src/app/shared';
 import { TelemetryTraceComponent } from './telemetry-trace.component';
 
 export interface RaceData {
@@ -58,13 +58,11 @@ export interface RaceData {
     LapTimePipe,
     TrackPositionsComponent,
     SpeedometerComponent,
-    DataElementComponent,
     OpponentDeltaComponent,
     TelemetryTraceComponent,
   ],
 })
 export class RaceDisplayComponent {
-  public readonly DataType = DataType;
   public data = input.required<RaceData>({});
 
   private _lastGapBehind = 0;

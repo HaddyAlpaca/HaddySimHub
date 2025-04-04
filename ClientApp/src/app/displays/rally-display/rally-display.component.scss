@@ -1,48 +1,14 @@
 app-rally-display {
-  app-data-element {
-    label {
-      text-transform: uppercase;
-      font-size: 1.5vw;
-      text-align: right;
-      color: gold;
-    }
-  }
-
-  app-data-group {
-    h1 {
-      text-transform: uppercase;
-      font-size: 1.5vw;
-      text-align: left;
-    }
-  }
-
-  app-speedometer {
-    * {
-      color: white;
-    }
-
-    label {
-      text-transform: uppercase;
-      text-align: center;
-      width: 100%;
-      font-size: 2vw;
-    }
-
-    .rpm, .speed {
-      font-size: 4vw;
-    }
-
-    .gear {
-      text-align: center;
-      font-size: 10vw;
-    }
-  }
+  padding-top: 40px;
 
   .container {
     max-width: unset;
     color: white;
     font-size: 3vw;
     text-align: right;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
   }
 
   .group-border {
@@ -50,5 +16,42 @@ app-rally-display {
     padding: 10px 20px 10px 20px;
     border-radius: 20px;
     height: 100%;
+
+    &.border-blue {
+      border-color: rgba(0, 0, 255, 0.555);
+    }
+  
+    &.border-yellow {
+      border-color: yellow;
+    }
+
+    label {
+      text-transform: uppercase;
+      font-size: 1.5vw;
+      text-align: right;
+      color: gold;
+    }
+
+    app-speedometer {
+      * {
+        color: white;
+      }
+  
+      > label {
+        text-transform: uppercase;
+        text-align: center;
+        width: 100%;
+        font-size: 2vw;
+      }
+  
+      .rpm, .speed {
+        font-size: 4vw;
+      }
+  
+      .gear {
+        text-align: center;
+        font-size: 10vw;
+      }
+    }
   }
 }

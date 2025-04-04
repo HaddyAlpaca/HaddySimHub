@@ -1,7 +1,5 @@
 export { ClockComponent } from './clock/clock.component';
 export { ConnectionStatusComponent } from './connection-status/connection-status.component';
-export { DataElementComponent, DataType } from './data-element/data-element.component';
-export { DataGroupComponent } from './data-group/data-group.component';
 export { DeltaTimePipe } from './delta-time/delta-time.pipe';
 export { LapTimePipe } from './laptime/laptime.pipe';
 export { NumberFlexDigitPipe } from './number-flex-digit/number-flex-digit.pipe';

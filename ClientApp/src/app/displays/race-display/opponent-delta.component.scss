@@ -17,6 +17,14 @@
     font-size: 2vw;
 }
 
+.driver-class {
+    border-radius: 5px;
+    background-color: green;
+    padding: 0px 5px 0px 5px;
+    margin-left: 20px;
+    font-size: 2vw;
+}
+
 .driver-pill {
     border-radius: 10px;
     padding: 10px;
@@ -27,4 +35,9 @@
         background-color: white;
         color: black;
     }
+}
+
+label {
+    position: relative;
+    top: -15px;
 }
