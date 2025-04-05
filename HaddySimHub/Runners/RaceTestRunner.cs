@@ -16,6 +16,7 @@ internal class RaceTestRunner : IRunner
             brakePct = (int)((Math.Sin(time) + 1) * 50);
             throttlePct = 100 - brakePct;
 
+            int flag = 0;
             var update = new DisplayUpdate
             {
                 Type = DisplayType.RaceDashboard,
@@ -58,7 +59,7 @@ internal class RaceTestRunner : IRunner
                     TrackPositions = GenerateRandomTrackPositions(),
                     BrakePct = brakePct,
                     ThrottlePct = throttlePct,
-                    Flag = new Random().Next(0, 8) switch
+                    Flag = flag switch
                     {
                         1 => "yellow",
                         2 => "red",
@@ -73,6 +74,9 @@ internal class RaceTestRunner : IRunner
                 }
             };
             await GameDataHub.SendDisplayUpdate(update);
+            
+            flag = flag == 8 ? 0 : flag + 1;
+
             await Task.Delay(TimeSpan.FromSeconds(.5), cancellationToken);
         }
     }
