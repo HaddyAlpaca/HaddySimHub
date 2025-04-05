@@ -6,17 +6,16 @@ internal class RaceTestRunner : IRunner
 {
     public async Task RunAsync(CancellationToken cancellationToken)
     {
-        int brakePct = 0;
-        int throttlePct = 100;
+        int flag = 0;
+
         while (!cancellationToken.IsCancellationRequested)
         {
             // Simulate throttle and brake input
             // The brake and throttle should be opsite of each other and be a sinusoid wave
             double time = DateTime.Now.TimeOfDay.TotalSeconds;
-            brakePct = (int)((Math.Sin(time) + 1) * 50);
-            throttlePct = 100 - brakePct;
+            int brakePct = (int)((Math.Sin(time) + 1) * 50);
+            int throttlePct = 100 - brakePct;
 
-            int flag = 0;
             var update = new DisplayUpdate
             {
                 Type = DisplayType.RaceDashboard,
