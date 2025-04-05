@@ -58,10 +58,16 @@ internal class RaceTestRunner : IRunner
                     TrackPositions = GenerateRandomTrackPositions(),
                     BrakePct = brakePct,
                     ThrottlePct = throttlePct,
-                    Flag = new Random().Next(0, 2) switch
+                    Flag = new Random().Next(0, 8) switch
                     {
                         1 => "yellow",
                         2 => "red",
+                        3 => "black",
+                        4 => "white",
+                        5 => "blue",
+                        6 => "red-yellow",
+                        7 => "black-orange",
+                        8 => "checkered",
                         _ => "green",
                     },
                 }

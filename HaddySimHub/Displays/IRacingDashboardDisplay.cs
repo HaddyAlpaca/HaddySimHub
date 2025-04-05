@@ -169,14 +169,14 @@ internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDi
         return sessionFlags switch
         {
             SessionFlags.white => "white",
-            SessionFlags.green => "green",
-            SessionFlags.yellow => "yellow",
+            SessionFlags.green or SessionFlags.greenHeld => "green",
+            SessionFlags.yellow or SessionFlags.yellowWaving or SessionFlags.caution or SessionFlags.cautionWaving => "yellow",
             SessionFlags.red => "red",
             SessionFlags.blue => "blue",
-            SessionFlags.yellowWaving => "yellow",
-            SessionFlags.greenHeld => "green",
             SessionFlags.black => "black",
             SessionFlags.repair => "black-orange",
+            SessionFlags.debris => "red-yellow",
+            SessionFlags.checkered => "checkered",
             _ => "green",
         };
     }
