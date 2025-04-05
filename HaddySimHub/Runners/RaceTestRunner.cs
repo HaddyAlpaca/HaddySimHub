@@ -10,19 +10,11 @@ internal class RaceTestRunner : IRunner
         int throttlePct = 100;
         while (!cancellationToken.IsCancellationRequested)
         {
-            // Oscillation between 0 and 100 for brake and throttle
-            // When 0 is reached increase by 1 until 100 is reached
-            // Oscillate brakePct and throttlePct between 0 and 100
-            if (brakePct < 100 && throttlePct > 0)
-            {
-                brakePct++;
-                throttlePct--;
-            }
-            else if (brakePct > 0 && throttlePct < 100)
-            {
-                brakePct--;
-                throttlePct++;
-            }
+            // Simulate throttle and brake input
+            // The brake and throttle should be opsite of each other and be a sinusoid wave
+            double time = DateTime.Now.TimeOfDay.TotalSeconds;
+            brakePct = (int)((Math.Sin(time) + 1) * 50);
+            throttlePct = 100 - brakePct;
 
             var update = new DisplayUpdate
             {
