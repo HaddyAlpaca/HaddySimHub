@@ -169,12 +169,8 @@ internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDi
         return sessionFlags switch
         {
             SessionFlags.white => "white",
-            SessionFlags.green => "green",
-            SessionFlags.greenHeld => "green",
-            SessionFlags.yellow => "yellow",
-            SessionFlags.yellowWaving => "yellow",
-            SessionFlags.caution => "yellow",
-            SessionFlags.cautionWaving => "yellow",
+            SessionFlags.green or SessionFlags.greenHeld => "green",
+            SessionFlags.yellow or SessionFlags.yellowWaving or SessionFlags.caution or SessionFlags.cautionWaving => "yellow",
             SessionFlags.red => "red",
             SessionFlags.blue => "blue",
             SessionFlags.black => "black",
