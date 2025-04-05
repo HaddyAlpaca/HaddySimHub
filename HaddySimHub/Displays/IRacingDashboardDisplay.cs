@@ -166,7 +166,7 @@ internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDi
 
     private static string GetFlag(SessionFlags sessionFlags)
     {
-        return sessionFlags switch
+        var flag = sessionFlags switch
         {
             SessionFlags.white => "white",
             SessionFlags.green or SessionFlags.greenHeld => "green",
@@ -177,7 +177,15 @@ internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDi
             SessionFlags.repair => "black-orange",
             SessionFlags.debris => "red-yellow",
             SessionFlags.checkered => "checkered",
-            _ => "green",
+            _ => null,
         };
+
+        if (flag is null)
+        {
+            Logger.Error($"Unknown flag: {sessionFlags}");
+            flag = "green";
+        }
+
+        return flag;
     }
 }
