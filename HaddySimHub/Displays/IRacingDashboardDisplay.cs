@@ -74,9 +74,8 @@ internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDi
 
             // Build a log message
             var logMessage = new StringBuilder();
-            logMessage.AppendLine($"*** Car {carIdx} telemetry data ***");
+            logMessage.AppendLine($"*** Player {carIdx} telemetry data ***");
             logMessage.AppendLine($"Lap: {carIdxLap}");
-            logMessage.AppendLine($"LapDistPct: {telemetry.CarIdxLapDistPct[carIdx]} (Corrected: {carIdxLapDistPct})");
             logMessage.AppendLine($"Distance: {telemetry.CarIdxDistance}");
             logMessage.AppendLine($"TotalDistance: {carIdxLap + carIdxLapDistPct}");
             logMessage.AppendLine($"Username: {driver.UserName}");
@@ -86,9 +85,17 @@ internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDi
             logMessage.AppendLine($"License level {driver.LicLevel}");
             logMessage.AppendLine($"License sublevel {driver.LicSubLevel}");
             logMessage.AppendLine($"IRating: {driver.IRating}");
-            logMessage.AppendLine($"In pit: {telemetry.CarIdxOnPitRoad}");
-            logMessage.AppendLine($"Est time: {telemetry.CarIdxEstTime}");
-            Logger.Debug(logMessage.ToString());
+            logMessage.AppendLine($"In pit: {telemetry.CarIdxOnPitRoad[carIdx]}");
+            logMessage.AppendLine($"Est time: {telemetry.CarIdxEstTime[carIdx]}");
+
+            foreach (var car in telemetry.Cars)
+            {
+                logMessage.AppendLine($"Car {car.CarIdx} - {car.Details.UserName} - {telemetry.CarIdxEstTime[car.CarIdx]}");
+            }
+
+            // Overwrite the console output
+            Console.SetCursorPosition(0, 0);
+            Console.Write(logMessage.ToString().PadRight(Console.WindowWidth * Console.WindowHeight));
         }
 
         // Update track positions
