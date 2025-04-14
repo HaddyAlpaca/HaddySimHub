@@ -57,7 +57,7 @@ internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDi
 
             if (!telemetry.HasData(carIdx))
             {
-                Logger.Error($"Car {carIdx} does not have telemetry data.");
+                Logger.Debug($"Car {carIdx} does not have telemetry data.");
                 continue;
             }
 
@@ -82,15 +82,13 @@ internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDi
             logMessage.AppendLine($"CarNumber: {driver.CarNumber}");
             logMessage.AppendLine($"License color {driver.LicColor}");
             logMessage.AppendLine($"License string {driver.LicString}");
-            logMessage.AppendLine($"License level {driver.LicLevel}");
-            logMessage.AppendLine($"License sublevel {driver.LicSubLevel}");
             logMessage.AppendLine($"IRating: {driver.IRating}");
             logMessage.AppendLine($"In pit: {telemetry.CarIdxOnPitRoad[carIdx]}");
             logMessage.AppendLine($"Est time: {telemetry.CarIdxEstTime[carIdx]}");
 
             foreach (var car in telemetry.Cars)
             {
-                logMessage.AppendLine($"Car {car.CarIdx} - {car.Details.UserName} - {telemetry.CarIdxEstTime[car.CarIdx]}");
+                logMessage.AppendLine($"Car {car.CarIdx} - {car.Details.UserName} - Est.Time: {telemetry.CarIdxEstTime[car.CarIdx]}");
             }
 
             // Overwrite the console output
@@ -189,7 +187,7 @@ internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDi
 
         if (flag is null)
         {
-            Logger.Error($"Unknown flag: {sessionFlags}");
+            Logger.Debug($"Unknown flag: {sessionFlags}");
             flag = "green";
         }
 
