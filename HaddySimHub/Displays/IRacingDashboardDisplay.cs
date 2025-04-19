@@ -75,7 +75,6 @@ internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDi
             // Build a log message
             var logMessage = new StringBuilder();
             logMessage.AppendLine($"*** Player {carIdx} telemetry data ***");
-            logMessage.AppendLine($"CarNumber: {driver.CarNumber}");
             logMessage.AppendLine($"License color {driver.LicColor}");
             logMessage.AppendLine($"License string {driver.LicString}");
             logMessage.AppendLine($"IRating: {driver.IRating}");
