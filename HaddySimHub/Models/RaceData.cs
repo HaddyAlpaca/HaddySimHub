@@ -92,36 +92,6 @@ public sealed record RaceData
     public float BestLapTimeDelta { get; init; }
 
     /// <summary>
-    /// Gets driver behind.
-    /// </summary>
-    public string DriverBehindName { get; init; } = string.Empty;
-
-    public string DriverBehindLicense { get; init; } = string.Empty;
-
-    public string DriverBehindLicenseColor { get; init; } = string.Empty;
-
-    public string DriverBehindCarNumber { get; init; } = string.Empty;
-
-    public long DriverBehindIRating { get; init; }
-
-    public float DriverBehindDelta { get; init; }
-
-    /// <summary>
-    /// Gets driver ahead.
-    /// </summary>
-    public string DriverAheadName { get; init; } = string.Empty;
-
-    public string DriverAheadLicense { get; init; } = string.Empty;
-
-    public string DriverAheadLicenseColor { get; init; } = string.Empty;
-
-    public string DriverAheadCarNumber { get; init; } = string.Empty;
-
-    public long DriverAheadIRating { get; init; }
-
-    public float DriverAheadDelta { get; init; }
-
-    /// <summary>
     /// Gets clutch percentage.
     /// </summary>
     public int ClutchPct { get; init; }
@@ -157,7 +127,7 @@ public sealed record RaceData
     public string Flag { get; init; } = string.Empty;
 
     /// <summary>
-    /// Gets track postitions for all cars.
+    /// Gets timing information for all cars.
     /// </summary>
-    public TrackPosition[] TrackPositions { get; init; } = [];
+    public TimingEntry[] Timing { get; init; } = [];
 }
