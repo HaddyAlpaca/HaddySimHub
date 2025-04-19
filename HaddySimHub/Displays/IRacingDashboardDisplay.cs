@@ -153,13 +153,6 @@ internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDi
             TrackPositions = trackPositions,
         };
 
-        StringBuilder sb = new();
-        sb.AppendLine("Track positions");
-        foreach(var p in trackPositions)
-        {
-            Logger.Debug($"{p.LapDistPct}: {p.Status}");
-        }
-
         return new DisplayUpdate{ Type = DisplayType.RaceDashboard, Data = displayUpdate };
     }
 
