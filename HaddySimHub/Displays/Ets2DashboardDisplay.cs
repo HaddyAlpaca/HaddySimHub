@@ -31,7 +31,7 @@ internal sealed class Ets2DashboardDisplay(Func<DisplayUpdate, Task> updateDispl
     protected override DisplayUpdate ConvertToDisplayUpdate(SCSTelemetry data)
     {
         float fuelAverageConsumption = (float)Math.Round(data.TruckValues.CurrentValues.DashboardValues.FuelValue.AverageConsumption * 100, 1);
-        if (fuelAverageConsumption > 0 || data.ControlValues.GameValues.Throttle == 0)
+        if (fuelAverageConsumption > 0)
         {
             this._fuelAverageConsumption = fuelAverageConsumption;
         }
