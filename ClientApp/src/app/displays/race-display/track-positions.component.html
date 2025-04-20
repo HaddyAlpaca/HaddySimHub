@@ -5,14 +5,11 @@
     <div 
       class="track-item" 
       [ngClass]="{
-        'player': position.status === TrackPositionStatus.IsPlayer,
-        'pace-car': position.status === TrackPositionStatus.IsPaceCar,
-        'lap-ahead': position.status === TrackPositionStatus.LapAhead,
-        'lap-behind': position.status === TrackPositionStatus.LapBehind,
-        'same-lap': position.status === TrackPositionStatus.SameLap,
-        'in-pits': position.status === TrackPositionStatus.InPits,
+        'player': position.isPlayer,
+        'safety-car': position.isSafetyCar,
+        'in-pits': position.isInPits,
       }" 
-      [style.left.%]="position.lapDistPct">
+      [style.left.%]="position.distancePct">
     </div>
   }
 </div>

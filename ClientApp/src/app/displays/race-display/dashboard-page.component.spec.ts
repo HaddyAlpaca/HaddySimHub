@@ -1,13 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RaceData, RaceDisplayComponent } from './race-display.component';
+import { DashboardPageComponent } from './dashboard-page.component';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { RaceDisplayComponentHarness } from './race-display.component.harness';
+import { DashboardPageComponentHarness } from './dashboard-page.component.harness';
 import { Component, provideExperimentalZonelessChangeDetection, signal } from '@angular/core';
+import { RaceData } from './race-data';
 
-describe('Race display component tests', () => {
-  let fixture: ComponentFixture<RaceDisplayTestComponent>;
-  let component: RaceDisplayTestComponent;
-  let harness: RaceDisplayComponentHarness;
+describe('Dashboard page component tests', () => {
+  let fixture: ComponentFixture<DashboardPageTestComponent>;
+  let component: DashboardPageTestComponent;
+  let harness: DashboardPageComponentHarness;
   let raceData: RaceData;
 
   beforeEach(async () => {
@@ -17,9 +18,9 @@ describe('Race display component tests', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(RaceDisplayTestComponent);
+    fixture = TestBed.createComponent(DashboardPageTestComponent);
     component = fixture.componentInstance;
-    harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, RaceDisplayComponentHarness);
+    harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, DashboardPageComponentHarness);
     raceData = {} as RaceData;
   });
 
@@ -222,9 +223,9 @@ describe('Race display component tests', () => {
 });
 
 @Component({
-  template: '<app-race-display [data]="data()" />',
-  imports: [RaceDisplayComponent],
+  template: '<app-dashboard-page [data]="data()" />',
+  imports: [DashboardPageComponent],
 })
-export class RaceDisplayTestComponent {
+export class DashboardPageTestComponent {
   public data = signal<RaceData>({} as RaceData);
 }

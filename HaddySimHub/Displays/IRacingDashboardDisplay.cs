@@ -90,30 +90,6 @@ internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDi
             Console.Write(logMessage.ToString().PadRight(Console.WindowWidth * Console.WindowHeight));
         }
 
-        // Update track positions
-        var playerCar = telemetry.Cars.First(c => c.CarIdx == telemetry.PlayerCarIdx);
-        var trackPositions = telemetry.Cars
-            .Where(c => !c.HasRetired && (!c.Details.IsPaceCar || c.Details.IsOnPitRoad))
-            .Select(c => new TrackPosition
-            {
-                LapDistPct = c.DistancePercentage,
-                Status =
-                    c.CarIdx == telemetry.PlayerCarIdx ? TrackPositionStatus.IsPlayer :
-                    c.Details.IsPaceCar ? TrackPositionStatus.IsPaceCar :
-                    c.Details.IsOnPitRoad ? TrackPositionStatus.InPits :
-                    telemetry.Session.IsRace && playerCar.TotalDistance - c.TotalDistance > .8 ? TrackPositionStatus.LapBehind :
-                    telemetry.Session.IsRace && c.TotalDistance - playerCar.TotalDistance > .8 ? TrackPositionStatus.LapAhead :
-                    TrackPositionStatus.SameLap,
-            }).ToArray();
-
-        Car? carBehind = null;
-        Car? carAhead = null;
-        if (session.IsRace)
-        {
-            carBehind = telemetry.RaceCars.FirstOrDefault(c => c.Position == telemetry.PlayerCarPosition + 1);
-            carAhead = telemetry.RaceCars.FirstOrDefault(c => c.Position == telemetry.PlayerCarPosition - 1);
-        }
-
         var displayUpdate = new RaceData
         {
             SessionType = session.SessionType,
@@ -134,23 +110,14 @@ internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDi
             Gear = telemetry.Gear,
             Rpm = (int)telemetry.RPM,
             Speed = (int)Math.Round(telemetry.Speed * 3.6),
+            BrakePct = (int)Math.Round(telemetry.Brake * 100, 0),
+            ThrottlePct = (int)Math.Round(telemetry.Throttle * 100, 0),
             BrakeBias = telemetry.DcBrakeBias,
             FuelRemaining = telemetry.FuelLevel,
             AirTemp = telemetry.AirTemp,
             TrackTemp = telemetry.TrackTemp,
             Flag = GetFlag(telemetry.SessionFlags),
             PitLimiterOn = telemetry.EngineWarnings.HasFlag(EngineWarnings.PitSpeedLimiter),
-            DriverAheadName = carAhead?.Details.UserName ?? string.Empty,
-            DriverAheadLicenseColor = carAhead?.Details.Driver.LicColor.Replace("0x", "#") ?? string.Empty,
-            DriverAheadCarNumber = carAhead?.Details.CarNumberDisplay ?? string.Empty,
-            DriverAheadIRating = carAhead?.Details.Driver.IRating ?? 0,
-            DriverAheadLicense = carAhead?.Details.Driver.LicString ?? string.Empty,
-            DriverBehindName = carBehind?.Details.UserName ?? string.Empty,
-            DriverBehindLicenseColor = carBehind?.Details.Driver.LicColor.Replace("0x", "#") ?? string.Empty,
-            DriverBehindCarNumber = carBehind?.Details.CarNumberDisplay ?? string.Empty,
-            DriverBehindIRating = carBehind?.Details.Driver.IRating ?? 0,
-            DriverBehindLicense = carBehind?.Details.Driver.LicString ?? string.Empty,
-            TrackPositions = trackPositions,
         };
 
         return new DisplayUpdate{ Type = DisplayType.RaceDashboard, Data = displayUpdate };

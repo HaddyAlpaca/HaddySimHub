@@ -1,19 +1,6 @@
 import { NgClass } from '@angular/common';
 import { Component, input } from '@angular/core';
-
-export enum TrackPositionStatus {
-  IsPlayer,
-  IsPaceCar,
-  SameLap,
-  LapAhead,
-  LapBehind,
-  InPits,
-}
-
-export interface TrackPosition {
-  lapDistPct: number;
-  status: TrackPositionStatus;
-}
+import { TimingEntry } from './race-data';
 
 @Component({
   selector: 'app-track-positions',
@@ -22,7 +9,5 @@ export interface TrackPosition {
   imports: [NgClass],
 })
 export class TrackPositionsComponent {
-  public positions = input<TrackPosition[]>([]);
-
-  public readonly TrackPositionStatus = TrackPositionStatus;
+  public positions = input<TimingEntry[]>([]);
 }
