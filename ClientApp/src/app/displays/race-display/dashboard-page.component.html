@@ -94,13 +94,13 @@
       <app-opponent-delta
         id="driverBehindInfo"
         caption="Driver behind"
-        [driverInfo]="driverBehindInfo()" />
+        [driverInfo]="driverBehind()" />
     </div>
     <div class="col-6">
       <app-opponent-delta
         id="driverAheadInfo"
         caption="Driver ahead"
-        [driverInfo]="driverAheadInfo()" />
+        [driverInfo]="driverAhead()" />
     </div>
   </div>
   <app-track-positions [positions]="data().trackPositions" />

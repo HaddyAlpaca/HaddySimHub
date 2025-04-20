@@ -23,11 +23,11 @@ describe('TrackPositionsComponent tests', () => {
   it('locates the track position elements correctly', async () => {
     component.positions = [
       {
-        distancePct: 0,
+        lapCompletedPct: 0,
         isInPits: true,
       } as TimingEntry,
       {
-        distancePct: 10,
+        lapCompletedPct: 10,
         isPlayer: true,
       } as TimingEntry,
     ];

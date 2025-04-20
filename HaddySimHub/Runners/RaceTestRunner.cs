@@ -80,8 +80,8 @@ internal class RaceTestRunner : IRunner
                 License = $"A 1.{i}",
                 LicenseColor = "#ff0000",
                 IRating = 1000 + i * 500,
-                LapsCompleted = lapsCompleted,
-                DistancePct = (float)new Random().NextDouble() * 100,
+                Laps = lapsCompleted,
+                LapCompletedPct = (float)new Random().NextDouble() * 100,
             });
         }
 
@@ -94,8 +94,8 @@ internal class RaceTestRunner : IRunner
             License = "A 1.2k",
             LicenseColor = "#00ff00",
             IRating = 1200,
-            LapsCompleted = lapsCompleted,
-            DistancePct = (float)new Random().NextDouble() * 100,
+            Laps = lapsCompleted,
+            LapCompletedPct = (float)new Random().NextDouble() * 100,
             IsPlayer = true,
         });
 
@@ -107,8 +107,8 @@ internal class RaceTestRunner : IRunner
             License = "D 1.3k",
             LicenseColor = "#0000ff",
             IRating = 1300,
-            LapsCompleted = lapsCompleted + 1,
-            DistancePct = (float)new Random().NextDouble() * 100,
+            Laps = lapsCompleted + 1,
+            LapCompletedPct = (float)new Random().NextDouble() * 100,
         });
 
         // Add a safety car
@@ -116,8 +116,8 @@ internal class RaceTestRunner : IRunner
         {
             DriverName = "Safety Car",
             CarNumber = "0",
-            LapsCompleted = lapsCompleted,
-            DistancePct = (float)new Random().NextDouble() * 100,
+            Laps = lapsCompleted,
+            LapCompletedPct = (float)new Random().NextDouble() * 100,
             IsSafetyCar = true,
         });
 
@@ -129,8 +129,8 @@ internal class RaceTestRunner : IRunner
             License = "C 1.4k",
             LicenseColor = "#ffff00",
             IRating = 1400,
-            LapsCompleted = lapsCompleted,
-            DistancePct = 0,
+            Laps = lapsCompleted,
+            LapCompletedPct = 0,
             IsInPits = true,
         });
 

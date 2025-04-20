@@ -37,8 +37,8 @@ export interface RaceData {
     license: string;
     licenseColor: string;
     iRating: number;
-    lapsCompleted: number;
-    distancePct: number;
+    laps: number;
+    lapCompletedPct: number;
     isPlayer: boolean;
     isSafetyCar: boolean;
     isInPits: boolean;

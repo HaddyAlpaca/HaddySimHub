@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, effect, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, effect, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TrackPositionsComponent } from './track-positions.component';
 import { OpponentDeltaComponent } from './opponent-delta.component';
 import { DeltaTimePipe, LapTimePipe, SpeedometerComponent } from 'src/app/shared';
 import { TelemetryTraceComponent } from './telemetry-trace.component';
-import { RaceData } from './race-data';
+import { RaceData, TimingEntry } from './race-data';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -25,9 +25,28 @@ import { RaceData } from './race-data';
 export class DashboardPageComponent {
   public data = input.required<RaceData>({});
 
-  public driverBehindInfo = computed(() => ({
-  }));
+  private readonly _driverBehind = signal<TimingEntry | null>(null)
+  public readonly driverBehind = this._driverBehind.asReadonly();
 
-  public driverAheadInfo = computed(() => ({
-  }));
+  private readonly _driverAhead = signal<TimingEntry | null>(null)
+  public readonly driverAhead = this._driverAhead.asReadonly();
+
+  public constructor() {
+    effect(() => {
+      const entries = this.data().timingEntries?.sort((a, b) => a.position - b.position);
+
+      if (!entries) {
+        this._driverBehind.set(null);
+        this._driverAhead.set(null);
+        return;
+      }
+
+      const playerIndex = entries.findIndex(e => e.isPlayer);
+      const driverAhead = playerIndex > 0 ? entries[playerIndex - 1] : null;
+      const driverBehind = playerIndex < entries.length - 1 ? entries[playerIndex + 1] : null;
+
+      this._driverBehind.set(driverBehind);
+      this._driverAhead.set(driverAhead);
+    });
+  }
 }
