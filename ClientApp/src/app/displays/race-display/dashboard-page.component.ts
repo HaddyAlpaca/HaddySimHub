@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, effect, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, effect, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TrackPositionsComponent } from './track-positions.component';
 import { OpponentDeltaComponent } from './opponent-delta.component';
@@ -25,10 +25,10 @@ import { RaceData, TimingEntry } from './race-data';
 export class DashboardPageComponent {
   public data = input.required<RaceData>({});
 
-  private readonly _driverBehind = signal<TimingEntry | null>(null)
+  private readonly _driverBehind = signal<TimingEntry | null>(null);
   public readonly driverBehind = this._driverBehind.asReadonly();
 
-  private readonly _driverAhead = signal<TimingEntry | null>(null)
+  private readonly _driverAhead = signal<TimingEntry | null>(null);
   public readonly driverAhead = this._driverAhead.asReadonly();
 
   public constructor() {

@@ -177,9 +177,9 @@ describe('Dashboard page component tests', () => {
           { position: 3, driverName: 'David Coulthard', isPlayer: false } as TimingEntry,
         ]});
 
-        expect(await harness.getElementText('#driverAheadInfo .driver-name')).toEqual('Enrique Bernoldi');
-        // expect(await harness.getElementText('#driverAheadInfo .delta-time')).toEqual('1.200');
-        expect(await harness.getElementText('#driverBehindInfo .driver-name')).toEqual('David Coulthard');
+      expect(await harness.getElementText('#driverAheadInfo .driver-name')).toEqual('Enrique Bernoldi');
+      // expect(await harness.getElementText('#driverAheadInfo .delta-time')).toEqual('1.200');
+      expect(await harness.getElementText('#driverBehindInfo .driver-name')).toEqual('David Coulthard');
       // expect(await harness.getElementText('#driverBehindInfo .delta-time')).toEqual('1.200');
     });
   });
