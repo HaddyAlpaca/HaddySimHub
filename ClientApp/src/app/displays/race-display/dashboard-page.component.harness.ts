@@ -1,8 +1,8 @@
 import { ComponentHarness } from '@angular/cdk/testing';
 import { SpeedometerComponentHarness } from 'src/app/shared/speedometer/speedometer.component.harness';
 
-export class RaceDisplayComponentHarness extends ComponentHarness {
-  public static hostSelector = 'app-race-display';
+export class DashboardPageComponentHarness extends ComponentHarness {
+  public static hostSelector = 'app-dashboard-page';
 
   public async getSpeedoHarness(): Promise<SpeedometerComponentHarness> {
     const harness = await this.locatorFor(SpeedometerComponentHarness)();

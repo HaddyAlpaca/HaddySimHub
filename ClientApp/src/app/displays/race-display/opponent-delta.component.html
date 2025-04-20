@@ -1,11 +1,11 @@
-<div class="opponent-delta group-border border-blue"  [class.hidden]="!driverInfo().name">
+<div class="opponent-delta group-border border-blue"  [class.hidden]="!driverInfo()">
   <label>{{caption()}}</label>
   <div>
     <div class="name-class-row">
-      <div class="driver-name">{{driverInfo().name}}</div>
-      <div class="driver-pill driver-safety-rating" [style.background-color]="driverInfo().licenseColor">{{driverInfo().license}}</div>
-      <div class="driver-pill driver-irating">{{driverInfo().rating | irating}}</div>
-      <div class="delta-time">{{driverInfo().delta| deltatime: false}}</div>
+      <div class="driver-name">{{driverInfo()?.driverName}}</div>
+      <div class="driver-pill driver-safety-rating" [style.background-color]="driverInfo()?.licenseColor">{{driverInfo()?.license}}</div>
+      <div class="driver-pill driver-irating">{{driverInfo()?.rating ?? 0 | irating}}</div>
+      <!-- <div class="delta-time">{{driverInfo().delta ?? 0 | deltatime: false}}</div> -->
     </div>
   </div>
 </div>

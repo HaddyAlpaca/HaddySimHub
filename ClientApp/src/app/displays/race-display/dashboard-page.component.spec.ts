@@ -1,13 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RaceData, RaceDisplayComponent } from './race-display.component';
+import { DashboardPageComponent } from './dashboard-page.component';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { RaceDisplayComponentHarness } from './race-display.component.harness';
+import { DashboardPageComponentHarness } from './dashboard-page.component.harness';
 import { Component, provideExperimentalZonelessChangeDetection, signal } from '@angular/core';
+import { RaceData, TimingEntry } from './race-data';
 
-describe('Race display component tests', () => {
-  let fixture: ComponentFixture<RaceDisplayTestComponent>;
-  let component: RaceDisplayTestComponent;
-  let harness: RaceDisplayComponentHarness;
+describe('Dashboard page component tests', () => {
+  let fixture: ComponentFixture<DashboardPageTestComponent>;
+  let component: DashboardPageTestComponent;
+  let harness: DashboardPageComponentHarness;
   let raceData: RaceData;
 
   beforeEach(async () => {
@@ -17,9 +18,9 @@ describe('Race display component tests', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(RaceDisplayTestComponent);
+    fixture = TestBed.createComponent(DashboardPageTestComponent);
     component = fixture.componentInstance;
-    harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, RaceDisplayComponentHarness);
+    harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, DashboardPageComponentHarness);
     raceData = {} as RaceData;
   });
 
@@ -167,21 +168,19 @@ describe('Race display component tests', () => {
     });
   });
 
-  describe('Driver behind tests', () => {
+  describe('Driver ahead and behind tests', () => {
     it('Driver name and delta are displayed', async () => {
-      patchData({ driverBehindName: 'David Coulthard', driverBehindDelta: 1.2 });
-
-      expect(await harness.getElementText('#driverBehindInfo .driver-name')).toEqual('David Coulthard');
-      expect(await harness.getElementText('#driverBehindInfo .delta-time')).toEqual('1.200');
-    });
-  });
-
-  describe('Driver ahead tests', () => {
-    it('Driver name and delta are displayed', async () => {
-      patchData({ driverAheadName: 'Enrique Bernoldi', driverAheadDelta: 1.2 });
+      patchData({
+        timingEntries: [
+          { position: 1, driverName: 'Enrique Bernoldi', isPlayer: false } as TimingEntry,
+          { position: 2, driverName: 'Niki Lauda', isPlayer: true } as TimingEntry,
+          { position: 3, driverName: 'David Coulthard', isPlayer: false } as TimingEntry,
+        ]});
 
       expect(await harness.getElementText('#driverAheadInfo .driver-name')).toEqual('Enrique Bernoldi');
-      expect(await harness.getElementText('#driverAheadInfo .delta-time')).toEqual('1.200');
+      // expect(await harness.getElementText('#driverAheadInfo .delta-time')).toEqual('1.200');
+      expect(await harness.getElementText('#driverBehindInfo .driver-name')).toEqual('David Coulthard');
+      // expect(await harness.getElementText('#driverBehindInfo .delta-time')).toEqual('1.200');
     });
   });
 
@@ -222,9 +221,9 @@ describe('Race display component tests', () => {
 });
 
 @Component({
-  template: '<app-race-display [data]="data()" />',
-  imports: [RaceDisplayComponent],
+  template: '<app-dashboard-page [data]="data()" />',
+  imports: [DashboardPageComponent],
 })
-export class RaceDisplayTestComponent {
+export class DashboardPageTestComponent {
   public data = signal<RaceData>({} as RaceData);
 }

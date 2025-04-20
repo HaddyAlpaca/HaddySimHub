@@ -1,13 +1,6 @@
 import { Component, input } from '@angular/core';
 import { DeltaTimePipe, IRatingPipe } from 'src/app/shared';
-
-export interface DriverInfo {
-  name: string;
-  license: string;
-  licenseColor: string;
-  rating: number;
-  delta: number;
-}
+import { TimingEntry } from './race-data';
 
 @Component({
   selector: 'app-opponent-delta',
@@ -20,5 +13,5 @@ export interface DriverInfo {
 })
 export class OpponentDeltaComponent {
   public caption = input.required<string>();
-  public driverInfo = input.required<DriverInfo>();
+  public driverInfo = input.required<TimingEntry | null>();
 }

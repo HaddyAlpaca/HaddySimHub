@@ -28,18 +28,6 @@ internal class RaceTestRunner : IRunner
                     AirTemp = new Random().Next(10, 50),
                     SessionType = "Practice",
                     IsLimitedTime = false,
-                    DriverBehindName = "Driver Behind",
-                    DriverBehindIRating = 1234,
-                    DriverBehindCarNumber = "23",
-                    DriverBehindLicense = "C",
-                    DriverBehindLicenseColor = "#FF0000",
-                    DriverBehindDelta = new Random().Next(1, 10),
-                    DriverAheadName = "Driver Ahead",
-                    DriverAheadIRating = 5678,
-                    DriverAheadCarNumber = "45",
-                    DriverAheadLicense = "A",
-                    DriverAheadLicenseColor = "#00FF00",
-                    DriverAheadDelta = new Random().Next(-10, -1),
                     BestLapTime = new Random().Next(60, 120),
                     BestLapTimeDelta = new Random().Next(-10, 10),
                     LastLapTime = new Random().Next(60, 120),
@@ -55,7 +43,7 @@ internal class RaceTestRunner : IRunner
                     MaxIncidents = 17,
                     Position = new Random().Next(1, 20),
                     TotalLaps = new Random().Next(10, 20),
-                    TrackPositions = GenerateRandomTrackPositions(),
+                    TimingEntries = GenerateTimingEntries(),
                     BrakePct = brakePct,
                     ThrottlePct = throttlePct,
                     Flag = flag switch
@@ -79,48 +67,73 @@ internal class RaceTestRunner : IRunner
             await Task.Delay(TimeSpan.FromSeconds(.5), cancellationToken);
         }
     }
-    private static TrackPosition[] GenerateRandomTrackPositions()
+    private static TimingEntry[] GenerateTimingEntries()
     {
-        var trackPositions = new List<TrackPosition>();
-
+        var entries = new List<TimingEntry>();
+        int lapsCompleted = 5;
         for (int i = 0; i < 5; i++)
         {
-            trackPositions.Add(new TrackPosition
+            entries.Add(new TimingEntry
             {
-                LapDistPct = (float)new Random().NextDouble() * 100,
-                Status = TrackPositionStatus.SameLap,
+                DriverName = $"Driver {i + 1}",
+                CarNumber = $"{i + 1}",
+                License = $"A 1.{i}",
+                LicenseColor = "#ff0000",
+                IRating = 1000 + i * 500,
+                Laps = lapsCompleted,
+                LapCompletedPct = (float)new Random().NextDouble() * 100,
             });
         }
 
 
         // Add player
-        trackPositions.Add(new TrackPosition
+        entries.Add(new TimingEntry
         {
-            LapDistPct = (float)new Random().NextDouble() * 100,
-            Status = TrackPositionStatus.IsPlayer,
+            DriverName = "Player",
+            CarNumber = "80",
+            License = "A 1.2k",
+            LicenseColor = "#00ff00",
+            IRating = 1200,
+            Laps = lapsCompleted,
+            LapCompletedPct = (float)new Random().NextDouble() * 100,
+            IsPlayer = true,
         });
 
         // Add a driver that is a lap ahead
-        trackPositions.Add(new TrackPosition
+        entries.Add(new TimingEntry
         {
-            LapDistPct = (float)new Random().NextDouble() * 100,
-            Status = TrackPositionStatus.LapAhead,
+            DriverName = "Driver 6",
+            CarNumber = "6",
+            License = "D 1.3k",
+            LicenseColor = "#0000ff",
+            IRating = 1300,
+            Laps = lapsCompleted + 1,
+            LapCompletedPct = (float)new Random().NextDouble() * 100,
         });
 
-        // Add a pace car
-        trackPositions.Add(new TrackPosition
+        // Add a safety car
+        entries.Add(new TimingEntry
         {
-            LapDistPct = (float)new Random().NextDouble() * 100,
-            Status = TrackPositionStatus.IsPaceCar,
+            DriverName = "Safety Car",
+            CarNumber = "0",
+            Laps = lapsCompleted,
+            LapCompletedPct = (float)new Random().NextDouble() * 100,
+            IsSafetyCar = true,
         });
 
         // Add a car that is in the pits
-        trackPositions.Add(new TrackPosition
+        entries.Add(new TimingEntry
         {
-            LapDistPct = 0,
-            Status = TrackPositionStatus.InPits,
+            DriverName = "Driver 7",
+            CarNumber = "7",
+            License = "C 1.4k",
+            LicenseColor = "#ffff00",
+            IRating = 1400,
+            Laps = lapsCompleted,
+            LapCompletedPct = 0,
+            IsInPits = true,
         });
 
-        return [.. trackPositions];
+        return [.. entries];
     }
 }
