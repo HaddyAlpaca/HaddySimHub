@@ -1,5 +1,13 @@
 @switch(data().pageNumber) {
-    @case 0 {
+    @case (0) {
         <app-dashboard-page [data]="data()" />
+    }
+
+    @case (1) {
+        <app-relative-page [timingEntries]="data().timingEntries" />
+    }
+
+    @default {
+        <div class="alert alert-danger">Unknown page number: {{data().pageNumber}}</div>
     }
 }
