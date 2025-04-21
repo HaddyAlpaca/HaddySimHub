@@ -70,6 +70,7 @@ namespace HaddySimHub.Displays.IRacing
             {
                 entries.Add(new TimingEntry
                 {
+                    Position = i + 1,
                     DriverName = $"Driver {i + 1}",
                     CarNumber = $"{i + 1}",
                     License = $"A 1.{i}",
@@ -84,6 +85,7 @@ namespace HaddySimHub.Displays.IRacing
             // Add player
             entries.Add(new TimingEntry
             {
+                Position = 8,
                 DriverName = "Player",
                 CarNumber = "80",
                 License = "A 1.2k",
@@ -97,6 +99,7 @@ namespace HaddySimHub.Displays.IRacing
             // Add a driver that is a lap ahead
             entries.Add(new TimingEntry
             {
+                Position = 7,
                 DriverName = "Driver 6",
                 CarNumber = "6",
                 License = "D 1.3k",
@@ -119,6 +122,7 @@ namespace HaddySimHub.Displays.IRacing
             // Add a car that is in the pits
             entries.Add(new TimingEntry
             {
+                Position = 9,
                 DriverName = "Driver 7",
                 CarNumber = "7",
                 License = "C 1.4k",
