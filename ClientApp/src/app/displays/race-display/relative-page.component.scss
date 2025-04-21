@@ -1,0 +1,49 @@
+table {
+    width: 100%;
+    background-color: black;
+    color: #ffffff;
+    font-family: 'Courier New', Courier, monospace;
+    border-collapse: collapse;
+    table-layout: fixed;
+    text-align: center;
+  
+    th, td {
+      padding: 4px;
+      border: none;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 0.85rem;
+    }
+  
+    thead {
+      th {
+        background-color: #222;
+        color: #fff600; // bright yellow
+        font-weight: bold;
+      }
+    }
+  
+    tbody {
+      tr {
+        &:nth-child(even) {
+          background-color: #111;
+        }
+  
+        &.best-lap {
+          color: #ff00ff; // magenta for best lap
+        }
+  
+        &.personal-best {
+          color: #00ff00; // green for personal best
+        }
+  
+        td {
+          &.driver-name {
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  }
+  
