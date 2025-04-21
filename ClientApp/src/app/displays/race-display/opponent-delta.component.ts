@@ -7,7 +7,7 @@ import { TimingEntry } from './race-data';
   templateUrl: './opponent-delta.component.html',
   styleUrl: './opponent-delta.component.scss',
   imports: [
-    DeltaTimePipe,
+    // DeltaTimePipe,
     IRatingPipe,
   ],
 })
