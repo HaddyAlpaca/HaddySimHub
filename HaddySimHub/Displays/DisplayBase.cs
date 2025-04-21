@@ -4,8 +4,8 @@ namespace HaddySimHub.Displays;
 
 internal abstract class DisplayBase<T> : IDisplay
 {
-    protected int _pageNumber = 1;
-    protected int _pageCount = 1;
+    protected int _page = 1;
+    protected virtual int PageCount { get; } = 1;
     public abstract string Description { get; }
     public abstract bool IsActive { get; }
     public abstract void Start();
@@ -13,19 +13,14 @@ internal abstract class DisplayBase<T> : IDisplay
 
     public void NextPage()
     {
-        if (this._pageNumber >= this._pageCount || this._pageNumber <= 0)
-        {
-            this._pageNumber = 1;
-        }
-        else
-        {
-            this._pageNumber++;
-        }
+        this._page = (this._page >= this.PageCount || this._page <= 0) ? 1 : this._page + 1;
+        Console.WriteLine($"{Description} page {this._page} of {this.PageCount}");
     }
 
     protected async Task SendUpdate(T data)
     {
         var update = this.ConvertToDisplayUpdate(data);
+        update.Page = this._page;
         await GameDataHub.SendDisplayUpdate(update);
     }
 

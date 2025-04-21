@@ -5,7 +5,7 @@ namespace HaddySimHub.Displays.IRacing
     internal class TestDisplay(string name) : TestDisplayBase(name)
     {
         private int _flag = 0;
-
+        protected override int PageCount => 2;
         protected override DisplayUpdate GenerateDisplayUpdate()
         {
             // Simulate throttle and brake input

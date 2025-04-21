@@ -13,4 +13,5 @@ import { RelativePageComponent } from './relative-page.component';
 })
 export class RaceDisplayComponent {
   public data = input.required<RaceData>({});
+  public page = input<number>(0);
 }

@@ -1,9 +1,9 @@
-@switch(data().pageNumber) {
-    @case (0) {
+@switch(page()) {
+    @case (1) {
         <app-dashboard-page [data]="data()" />
     }
 
-    @case (1) {
+    @case (2) {
         <app-relative-page [timingEntries]="data().timingEntries" />
     }
 

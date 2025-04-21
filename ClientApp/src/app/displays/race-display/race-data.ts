@@ -27,7 +27,6 @@ export interface RaceData {
   timingEntries: TimingEntry[];
   brakePct: number;
   throttlePct: number;
-  pageNumber: number;
 }
 
 export interface TimingEntry {

@@ -9,7 +9,7 @@
   @if (truckData) {
     <app-truck-display [data]="truckData" />
   } @else if(raceData) {
-    <app-race-display [data]="raceData" />
+    <app-race-display [data]="raceData" [page]="page()" />
   } @else if(rallyData) {
     <app-rally-display [data]="rallyData" />
   } @else {

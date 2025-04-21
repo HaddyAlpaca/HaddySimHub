@@ -9,6 +9,7 @@ internal sealed class Display() : DisplayBase<DataSample>()
 {
     private int[]? _lastLaps;
     private int? _sessionNum;
+    protected override int PageCount => 2;
 
     public override void Start()
     {

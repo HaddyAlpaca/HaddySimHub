@@ -60,6 +60,11 @@ public class Program
 
                         Console.WriteLine(string.IsNullOrEmpty(TestId) ? "Test mode disabled." : $"Test mode:'{TestId}'.");
                     }
+
+                    if (key.Modifiers == ConsoleModifiers.Control && key.Key == ConsoleKey.PageUp)
+                    {
+                        _displaysRunner?.CurrentDisplay?.NextPage();
+                    }
                 }
                 Task.Delay(100).Wait();
             }
