@@ -3,25 +3,26 @@ using HaddySimHub.Shared;
 using SCSSdkClient;
 using SCSSdkClient.Object;
 
-namespace HaddySimHub.Displays;
+namespace HaddySimHub.Displays.ETS;
 
-internal sealed class Ets2DashboardDisplay(Func<DisplayUpdate, Task> updateDisplay) : DisplayBase<SCSTelemetry>(updateDisplay)
+internal sealed class Display() : DisplayBase<SCSTelemetry>()
 {
     private SCSSdkTelemetry? telemetry;
     private float _fuelAverageConsumption = 0f;
 
-    public override void Start() {
-        this.telemetry = new ();
-        this.telemetry.Data += (SCSTelemetry data, bool newTimestamp) =>
+    public override void Start()
+    {
+        telemetry = new();
+        telemetry.Data += async (data, newTimestamp) =>
         {
-            this._updateDisplay(this.ConvertToDisplayUpdate(data));
+            await this.SendUpdate(data);
         };
     }
 
     public override void Stop()
     {
-        this.telemetry?.Dispose();
-        this.telemetry = null;
+        telemetry?.Dispose();
+        telemetry = null;
     }
 
     public override string Description => "Euro Truck Simulator 2";
@@ -33,7 +34,7 @@ internal sealed class Ets2DashboardDisplay(Func<DisplayUpdate, Task> updateDispl
         float fuelAverageConsumption = (float)Math.Round(data.TruckValues.CurrentValues.DashboardValues.FuelValue.AverageConsumption * 100, 1);
         if (fuelAverageConsumption > 0)
         {
-            this._fuelAverageConsumption = fuelAverageConsumption;
+            _fuelAverageConsumption = fuelAverageConsumption;
         }
 
         var displayData = new TruckData()
@@ -92,7 +93,7 @@ internal sealed class Ets2DashboardDisplay(Func<DisplayUpdate, Task> updateDispl
             BlinkerRightOn = data.TruckValues.CurrentValues.LightsValues.BlinkerRightOn,
             WipersOn = data.TruckValues.CurrentValues.DashboardValues.Wipers,
             GameTime = data.CommonValues.GameTime.Value,
-            FuelAverageConsumption = this._fuelAverageConsumption,
+            FuelAverageConsumption = _fuelAverageConsumption,
             Throttle = Convert.ToInt32(Math.Round(data.ControlValues.GameValues.Throttle * 100)),
             DifferentialLock = data.TruckValues.CurrentValues.DifferentialLock,
             OilPressure = data.TruckValues.CurrentValues.DashboardValues.OilPressure,

@@ -26,6 +26,7 @@ enum DisplayType {
 interface DisplayUpdate {
   type: DisplayType;
   data: TruckData | RaceData | RallyData | undefined;
+  page: number;
 }
 
 @Injectable({
@@ -45,6 +46,9 @@ export class GameDataService {
 
   private _rallyData = signal<RallyData | null>(null);
   public readonly rallyData = this._rallyData.asReadonly();
+
+  private _page = signal<number>(1);
+  public readonly page = this._page.asReadonly();
 
   public constructor() {
     const connectionOptions: IHttpConnectionOptions = {
@@ -99,6 +103,7 @@ export class GameDataService {
       this._truckData.set(truckData);
       this._raceData.set(raceData);
       this._rallyData.set(rallyData);
+      this._page.set(update.page);
     });
   }
 

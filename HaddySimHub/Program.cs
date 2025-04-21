@@ -3,11 +3,13 @@ using HaddySimHub;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using HaddySimHub.Runners;
 using Logger = HaddySimHub.Logger;
 
 public class Program
 {
+    private static DisplaysRunner? _displaysRunner;
+    public static string TestId { get; private set; } = string.Empty;
+
     public static async Task Main(string[] args)
     {
         VerifySingleInstance();
@@ -28,11 +30,51 @@ public class Program
             Logger.Info("Ctrl+C pressed. Exiting application...");
         };
 
+        Console.TreatControlCAsInput = true;
+        
+        var keyInputTask = Task.Run(() =>
+        {
+            while (!token.IsCancellationRequested)
+            {
+                if (Console.KeyAvailable)
+                {
+                    var key = Console.ReadKey(intercept: true);
+                    if (key.Modifiers == ConsoleModifiers.Control && key.Key == ConsoleKey.T)
+                    {
+                        if (string.IsNullOrEmpty(TestId))
+                        {
+                            TestId = "race";
+                        }
+                        else if (TestId == "race")
+                        {
+                            TestId = "rally";
+                        }
+                        else if (TestId == "rally")
+                        {
+                            TestId = "truck";
+                        }
+                        else
+                        {
+                            TestId = string.Empty;
+                        }
+
+                        Console.WriteLine(string.IsNullOrEmpty(TestId) ? "Test mode disabled." : $"Test mode:'{TestId}'.");
+                    }
+
+                    if (key.Modifiers == ConsoleModifiers.Control && key.Key == ConsoleKey.PageUp)
+                    {
+                        _displaysRunner?.CurrentDisplay?.NextPage();
+                    }
+                }
+                Task.Delay(100).Wait();
+            }
+        });
+
         WebApplication webServer = CreateWebServer();
 
         Task webServerTask = RunWebServerAsync(webServer, token);
         Task processTask = RunProcessAsync(args, token);
-        await Task.WhenAll(webServerTask, processTask);
+        await Task.WhenAll(webServerTask, processTask, keyInputTask);
 
         cancellationTokenSource.Cancel();
     }
@@ -90,29 +132,8 @@ public class Program
     {
         try
         {
-            string? testRunnerArg = args.FirstOrDefault(arg => arg.StartsWith("--test-runner:", StringComparison.OrdinalIgnoreCase));
-            string? testRunnerName = testRunnerArg?.Split(':')?.Last();
-            IRunner? runner = testRunnerName?.ToLower() switch
-            {
-                "truck" => new TruckTestRunner(),
-                "race" => new RaceTestRunner(),
-                "rally" => new RallyTestRunner(),
-                _ => testRunnerArg is null ? new DisplaysRunner() : null,
-            };
-
-            if (runner is null)
-            {
-                Logger.Error(testRunnerName is null 
-                    ? $"Argument '{testRunnerArg}' is invalid. Expected format: '--test-runner:<name>'."
-                    : $"Value '{testRunnerName}' for argument '--test-runner:' is invalid.");
-
-                Exit(1);
-                return;
-            }
-
-            Logger.Info($"Starting process runner: {runner.GetType().Name}");
-
-            await runner.RunAsync(token);
+            _displaysRunner = new DisplaysRunner();
+            await _displaysRunner.RunAsync(token);
         }
         catch (OperationCanceledException)
         {

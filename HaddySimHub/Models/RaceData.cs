@@ -130,11 +130,6 @@ public sealed record RaceData
     /// Gets timing information for all cars.
     /// </summary>
     public TimingEntry[] TimingEntries { get; init; } = [];
-
-    /// <summary>
-    /// Gets the page number to show in the frontend.
-    /// </summary>
-    public short PageNumber { get; init; } = 0;
 }
 
 public record TimingEntry

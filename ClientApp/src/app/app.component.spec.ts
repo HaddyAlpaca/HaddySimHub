@@ -11,6 +11,7 @@ class MockGameDataService {
   public raceData = signal<RaceData | null>(null);
   public rallyData = signal<RallyData | null>(null);
   public connectionStatus = signal<ConnectionInfo>({ status: ConnectionStatus.Disconnected });
+  public page = signal(1);
 }
 
 describe('AppComponent tests', () => {

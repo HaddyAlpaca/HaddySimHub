@@ -3,20 +3,21 @@ using HaddySimHub.Models;
 using HaddySimHub.Shared;
 using iRacingSDK;
 
-namespace HaddySimHub.Displays;
+namespace HaddySimHub.Displays.IRacing;
 
-internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDisplay) : DisplayBase<DataSample>(updateDisplay)
+internal sealed class Display() : DisplayBase<DataSample>()
 {
     private int[]? _lastLaps;
     private int? _sessionNum;
+    protected override int PageCount => 2;
 
     public override void Start()
     {
-        iRacing.NewData += (data) => 
+        iRacing.NewData += async (data) => 
         {
             try
             {
-                this._updateDisplay(this.ConvertToDisplayUpdate(data));
+                await this.SendUpdate(data);
             }
             catch (Exception ex)
             {
@@ -43,12 +44,12 @@ internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDi
         var sessionData = data.SessionData;
         var session = sessionData.SessionInfo.Sessions.First(s => s.SessionNum == telemetry.SessionNum);
 
-        this._lastLaps ??= (int[])telemetry.CarIdxLap.Clone();
+        _lastLaps ??= (int[])telemetry.CarIdxLap.Clone();
 
-        if (this._sessionNum != telemetry.SessionNum)
+        if (_sessionNum != telemetry.SessionNum)
         {
-            this._sessionNum = telemetry.SessionNum;
-            this._lastLaps = (int[])telemetry.CarIdxLap.Clone();
+            _sessionNum = telemetry.SessionNum;
+            _lastLaps = (int[])telemetry.CarIdxLap.Clone();
         }
 
         foreach (var driver in sessionData.DriverInfo.CompetingDrivers)
@@ -63,14 +64,14 @@ internal sealed class IRacingDashboardDisplay(Func<DisplayUpdate, Task> updateDi
 
             var carIdxLap = telemetry.CarIdxLap[carIdx];
             var carIdxLapDistPct = telemetry.CarIdxLapDistPct[carIdx];
-            if (carIdxLap > this._lastLaps[carIdx] && carIdxLapDistPct > 0.80f)
+            if (carIdxLap > _lastLaps[carIdx] && carIdxLapDistPct > 0.80f)
             {
                 // The car has passed the start/finish line and the percentage is in the 80% range.
                 // Set the percentage to 0% to avoid the bug in iRacing data stream.
                 carIdxLapDistPct = 0;
             }
 
-            this._lastLaps[carIdx] = carIdxLap;
+            _lastLaps[carIdx] = carIdxLap;
 
             // Build a log message
             var logMessage = new StringBuilder();

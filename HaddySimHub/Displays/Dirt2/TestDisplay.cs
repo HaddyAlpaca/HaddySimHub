@@ -1,14 +1,12 @@
-using HaddySimHub.Models;
+﻿using HaddySimHub.Models;
 
-namespace HaddySimHub.Runners;
-
-internal class RallyTestRunner : IRunner
+namespace HaddySimHub.Displays.Dirt2
 {
-    public async Task RunAsync(CancellationToken cancellationToken)
+    internal class TestDisplay(string name) : TestDisplayBase(name)
     {
-        while (!cancellationToken.IsCancellationRequested)
+        protected override DisplayUpdate GenerateDisplayUpdate()
         {
-            var update = new DisplayUpdate
+            return new DisplayUpdate
             {
                 Type = DisplayType.RallyDashboard,
                 Data = new RallyData
@@ -23,8 +21,6 @@ internal class RallyTestRunner : IRunner
                     Sector2Time = new Random().Next(0, 100),
                 }
             };
-            await GameDataHub.SendDisplayUpdate(update);
-            await Task.Delay(TimeSpan.FromSeconds(2), cancellationToken);
         }
     }
 }
