@@ -1,20 +1,24 @@
 ﻿using HaddySimHub.Displays;
-using HaddySimHub.Displays.Dirt2;
 using HaddySimHub.Models;
 using System.Text;
 
-namespace HaddySimHub.Runners;
+namespace HaddySimHub;
 
-internal class DisplaysRunner() : IRunner
+internal class DisplaysRunner()
 {
     private readonly DisplayUpdate _idleDisplayUpdate = new() { Type = DisplayType.None };
     private readonly IEnumerable<IDisplay> _displays =
         [
-            new Dirt2DashboardDisplay(GameDataHub.SendDisplayUpdate),
-            new IRacingDashboardDisplay(GameDataHub.SendDisplayUpdate),
-            new Ets2DashboardDisplay(GameDataHub.SendDisplayUpdate),
+            new Displays.Dirt2.Display(),
+            new Displays.Dirt2.TestDisplay("rally"),
+            new Displays.IRacing.Display(),
+            new Displays.IRacing.TestDisplay("race"),
+            new Displays.ETS.Display(),
+            new Displays.ETS.TestDisplay("truck"),
         ];
 
+
+    public IDisplay? CurrentDisplay { get; private set; }
 
     public async Task RunAsync(CancellationToken cancellationToken)
     {
@@ -62,6 +66,7 @@ internal class DisplaysRunner() : IRunner
                 }
             });
             prevActiveDisplays = activeDisplays;
+            this.CurrentDisplay = activeDisplays.FirstOrDefault();
         }
 
         await Task.Delay(TimeSpan.FromSeconds(2), cancellationToken);

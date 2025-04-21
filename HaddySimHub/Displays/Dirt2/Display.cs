@@ -6,7 +6,7 @@ using HaddySimHub.Shared;
 
 namespace HaddySimHub.Displays.Dirt2;
 
-internal sealed class Dirt2DashboardDisplay(Func<DisplayUpdate, Task> updateDisplay) : DisplayBase<Packet>(updateDisplay)
+internal sealed class Display() : DisplayBase<Packet>()
 {
     private const int PORT = 20777;
     private IPEndPoint _endPoint = new(IPAddress.Any, PORT);
@@ -31,7 +31,7 @@ internal sealed class Dirt2DashboardDisplay(Func<DisplayUpdate, Task> updateDisp
         _client = null;
     }
 
-    private void ReceiveCallback(IAsyncResult result)
+    private async void ReceiveCallback(IAsyncResult result)
     {
         if (_client is null || _endPoint is null)
         {
@@ -52,7 +52,7 @@ internal sealed class Dirt2DashboardDisplay(Func<DisplayUpdate, Task> updateDisp
         {
             // Get the header to retrieve the packet ID.
             var packet = Marshal.PtrToStructure<Packet>(handle.AddrOfPinnedObject());
-            _updateDisplay(ConvertToDisplayUpdate(packet));
+            await this.SendUpdate(packet);
         }
         finally
         {

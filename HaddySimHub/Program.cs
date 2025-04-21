@@ -3,11 +3,13 @@ using HaddySimHub;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using HaddySimHub.Runners;
 using Logger = HaddySimHub.Logger;
 
 public class Program
 {
+    private static DisplaysRunner? _displaysRunner;
+    public static string TestId { get; private set; } = string.Empty;
+
     public static async Task Main(string[] args)
     {
         VerifySingleInstance();
@@ -17,6 +19,9 @@ public class Program
         {
             await CheckForUpdates();
         }
+
+        string? testRunnerArg = args.FirstOrDefault(arg => arg.StartsWith("--test:", StringComparison.OrdinalIgnoreCase));
+        Program.TestId = testRunnerArg?.Split(':')?.Last() ?? string.Empty;
 
         using CancellationTokenSource cancellationTokenSource = new();
         CancellationToken token = cancellationTokenSource.Token;
@@ -90,29 +95,8 @@ public class Program
     {
         try
         {
-            string? testRunnerArg = args.FirstOrDefault(arg => arg.StartsWith("--test-runner:", StringComparison.OrdinalIgnoreCase));
-            string? testRunnerName = testRunnerArg?.Split(':')?.Last();
-            IRunner? runner = testRunnerName?.ToLower() switch
-            {
-                "truck" => new TruckTestRunner(),
-                "race" => new RaceTestRunner(),
-                "rally" => new RallyTestRunner(),
-                _ => testRunnerArg is null ? new DisplaysRunner() : null,
-            };
-
-            if (runner is null)
-            {
-                Logger.Error(testRunnerName is null 
-                    ? $"Argument '{testRunnerArg}' is invalid. Expected format: '--test-runner:<name>'."
-                    : $"Value '{testRunnerName}' for argument '--test-runner:' is invalid.");
-
-                Exit(1);
-                return;
-            }
-
-            Logger.Info($"Starting process runner: {runner.GetType().Name}");
-
-            await runner.RunAsync(token);
+            _displaysRunner = new DisplaysRunner();
+            await _displaysRunner.RunAsync(token);
         }
         catch (OperationCanceledException)
         {

@@ -1,14 +1,12 @@
-using HaddySimHub.Models;
+﻿using HaddySimHub.Models;
 
-namespace HaddySimHub.Runners;
-
-internal class RaceTestRunner : IRunner
+namespace HaddySimHub.Displays.IRacing
 {
-    public async Task RunAsync(CancellationToken cancellationToken)
+    internal class TestDisplay(string name) : TestDisplayBase(name)
     {
-        int flag = 0;
+        private int _flag = 0;
 
-        while (!cancellationToken.IsCancellationRequested)
+        protected override DisplayUpdate GenerateDisplayUpdate()
         {
             // Simulate throttle and brake input
             // The brake and throttle should be opsite of each other and be a sinusoid wave
@@ -16,7 +14,9 @@ internal class RaceTestRunner : IRunner
             int brakePct = (int)((Math.Sin(time) + 1) * 50);
             int throttlePct = 100 - brakePct;
 
-            var update = new DisplayUpdate
+            this._flag = this._flag == 8 ? 0 : this._flag + 1;
+
+            return new DisplayUpdate
             {
                 Type = DisplayType.RaceDashboard,
                 Data = new RaceData
@@ -46,7 +46,7 @@ internal class RaceTestRunner : IRunner
                     TimingEntries = GenerateTimingEntries(),
                     BrakePct = brakePct,
                     ThrottlePct = throttlePct,
-                    Flag = flag switch
+                    Flag = this._flag switch
                     {
                         1 => "yellow",
                         2 => "red",
@@ -60,80 +60,76 @@ internal class RaceTestRunner : IRunner
                     },
                 }
             };
-            await GameDataHub.SendDisplayUpdate(update);
-            
-            flag = flag == 8 ? 0 : flag + 1;
-
-            await Task.Delay(TimeSpan.FromSeconds(.5), cancellationToken);
         }
-    }
-    private static TimingEntry[] GenerateTimingEntries()
-    {
-        var entries = new List<TimingEntry>();
-        int lapsCompleted = 5;
-        for (int i = 0; i < 5; i++)
+
+        private static TimingEntry[] GenerateTimingEntries()
         {
+            var entries = new List<TimingEntry>();
+            int lapsCompleted = 5;
+            for (int i = 0; i < 5; i++)
+            {
+                entries.Add(new TimingEntry
+                {
+                    DriverName = $"Driver {i + 1}",
+                    CarNumber = $"{i + 1}",
+                    License = $"A 1.{i}",
+                    LicenseColor = "#ff0000",
+                    IRating = 1000 + i * 500,
+                    Laps = lapsCompleted,
+                    LapCompletedPct = (float)new Random().NextDouble() * 100,
+                });
+            }
+
+
+            // Add player
             entries.Add(new TimingEntry
             {
-                DriverName = $"Driver {i + 1}",
-                CarNumber = $"{i + 1}",
-                License = $"A 1.{i}",
-                LicenseColor = "#ff0000",
-                IRating = 1000 + i * 500,
+                DriverName = "Player",
+                CarNumber = "80",
+                License = "A 1.2k",
+                LicenseColor = "#00ff00",
+                IRating = 1200,
                 Laps = lapsCompleted,
                 LapCompletedPct = (float)new Random().NextDouble() * 100,
+                IsPlayer = true,
             });
+
+            // Add a driver that is a lap ahead
+            entries.Add(new TimingEntry
+            {
+                DriverName = "Driver 6",
+                CarNumber = "6",
+                License = "D 1.3k",
+                LicenseColor = "#0000ff",
+                IRating = 1300,
+                Laps = lapsCompleted + 1,
+                LapCompletedPct = (float)new Random().NextDouble() * 100,
+            });
+
+            // Add a safety car
+            entries.Add(new TimingEntry
+            {
+                DriverName = "Safety Car",
+                CarNumber = "0",
+                Laps = lapsCompleted,
+                LapCompletedPct = (float)new Random().NextDouble() * 100,
+                IsSafetyCar = true,
+            });
+
+            // Add a car that is in the pits
+            entries.Add(new TimingEntry
+            {
+                DriverName = "Driver 7",
+                CarNumber = "7",
+                License = "C 1.4k",
+                LicenseColor = "#ffff00",
+                IRating = 1400,
+                Laps = lapsCompleted,
+                LapCompletedPct = 0,
+                IsInPits = true,
+            });
+
+            return [.. entries];
         }
-
-
-        // Add player
-        entries.Add(new TimingEntry
-        {
-            DriverName = "Player",
-            CarNumber = "80",
-            License = "A 1.2k",
-            LicenseColor = "#00ff00",
-            IRating = 1200,
-            Laps = lapsCompleted,
-            LapCompletedPct = (float)new Random().NextDouble() * 100,
-            IsPlayer = true,
-        });
-
-        // Add a driver that is a lap ahead
-        entries.Add(new TimingEntry
-        {
-            DriverName = "Driver 6",
-            CarNumber = "6",
-            License = "D 1.3k",
-            LicenseColor = "#0000ff",
-            IRating = 1300,
-            Laps = lapsCompleted + 1,
-            LapCompletedPct = (float)new Random().NextDouble() * 100,
-        });
-
-        // Add a safety car
-        entries.Add(new TimingEntry
-        {
-            DriverName = "Safety Car",
-            CarNumber = "0",
-            Laps = lapsCompleted,
-            LapCompletedPct = (float)new Random().NextDouble() * 100,
-            IsSafetyCar = true,
-        });
-
-        // Add a car that is in the pits
-        entries.Add(new TimingEntry
-        {
-            DriverName = "Driver 7",
-            CarNumber = "7",
-            License = "C 1.4k",
-            LicenseColor = "#ffff00",
-            IRating = 1400,
-            Laps = lapsCompleted,
-            LapCompletedPct = 0,
-            IsInPits = true,
-        });
-
-        return [.. entries];
     }
 }
