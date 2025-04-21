@@ -20,9 +20,6 @@ public class Program
             await CheckForUpdates();
         }
 
-        string? testRunnerArg = args.FirstOrDefault(arg => arg.StartsWith("--test:", StringComparison.OrdinalIgnoreCase));
-        Program.TestId = testRunnerArg?.Split(':')?.Last() ?? string.Empty;
-
         using CancellationTokenSource cancellationTokenSource = new();
         CancellationToken token = cancellationTokenSource.Token;
 
@@ -33,11 +30,46 @@ public class Program
             Logger.Info("Ctrl+C pressed. Exiting application...");
         };
 
+        Console.TreatControlCAsInput = true;
+        
+        var keyInputTask = Task.Run(() =>
+        {
+            while (!token.IsCancellationRequested)
+            {
+                if (Console.KeyAvailable)
+                {
+                    var key = Console.ReadKey(intercept: true);
+                    if (key.Modifiers == ConsoleModifiers.Control && key.Key == ConsoleKey.T)
+                    {
+                        if (string.IsNullOrEmpty(TestId))
+                        {
+                            TestId = "race";
+                        }
+                        else if (TestId == "race")
+                        {
+                            TestId = "rally";
+                        }
+                        else if (TestId == "rally")
+                        {
+                            TestId = "truck";
+                        }
+                        else
+                        {
+                            TestId = string.Empty;
+                        }
+
+                        Console.WriteLine(string.IsNullOrEmpty(TestId) ? "Test mode disabled." : $"Test mode:'{TestId}'.");
+                    }
+                }
+                Task.Delay(100).Wait();
+            }
+        });
+
         WebApplication webServer = CreateWebServer();
 
         Task webServerTask = RunWebServerAsync(webServer, token);
         Task processTask = RunProcessAsync(args, token);
-        await Task.WhenAll(webServerTask, processTask);
+        await Task.WhenAll(webServerTask, processTask, keyInputTask);
 
         cancellationTokenSource.Cancel();
     }
