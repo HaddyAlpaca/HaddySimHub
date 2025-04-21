@@ -7,5 +7,5 @@ import { TimingEntry } from './race-data';
   styleUrl: 'relative-page.component.scss',
 })
 export class RelativePageComponent {
-    public timingEntries = input.required<TimingEntry[]>();
+  public timingEntries = input.required<TimingEntry[]>();
 }

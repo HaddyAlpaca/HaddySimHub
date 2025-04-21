@@ -9,7 +9,7 @@ import { RelativePageComponent } from './relative-page.component';
   imports: [
     DashboardPageComponent,
     RelativePageComponent,
-  ]
+  ],
 })
 export class RaceDisplayComponent {
   public data = input.required<RaceData>({});
