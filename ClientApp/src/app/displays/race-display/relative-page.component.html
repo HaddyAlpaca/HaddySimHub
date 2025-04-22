@@ -12,8 +12,8 @@
             <tr>
                 <td>{{entry.position}}</td>
                 <td>{{entry.driverName}}</td>
-                <td>{{entry.license}}</td>
-                <td>{{entry.iRating}}</td>
+                <td><span class="pill" [style.background-color]="entry.licenseColor">{{entry.license}}</span></td>
+                <td><span class="pill">{{entry.iRating | irating}}</span></td>
             </tr>
         }
     </tbody>
