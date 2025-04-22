@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { TimingEntry } from './race-data';
 import { IRatingPipe } from 'src/app/shared';
 
@@ -10,4 +10,5 @@ import { IRatingPipe } from 'src/app/shared';
 })
 export class RelativePageComponent {
   public timingEntries = input.required<TimingEntry[]>();
+  public sortedEntries = computed(() => this.timingEntries().sort((a, b) => a.position - b.position));
 }
