@@ -33,6 +33,10 @@
     font-size: 2vw;
     width: 80px;
 
+    &.driver-safety-rating {
+        color: black;
+    }
+
     &.driver-irating {
         background-color: white;
         color: black;
