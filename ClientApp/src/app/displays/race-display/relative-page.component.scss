@@ -12,6 +12,10 @@ table {
       overflow: hidden;
       text-overflow: ellipsis;
       font-size: 2rem;
+
+      > span.pill {
+        border-radius: 20px;
+      }
     }
   
     thead {
