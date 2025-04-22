@@ -20,6 +20,18 @@ table {
         width: 130px;
         text-align: center;
         color: black;
+
+        &.player {
+          color: seagreen;
+        }
+
+        &.safety-car {
+          color: yellow;
+        }
+
+        &.in-pits {
+          color: sandybrown;
+        }
       }
     }
   

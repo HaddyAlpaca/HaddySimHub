@@ -9,7 +9,7 @@
     </thead>
     <tbody>
         @for (entry of sortedEntries(); track $index) {
-            <tr>
+            <tr [class.player]="entry.isPlayer" [class.safety-car]="entry.isSafetyCar" [class.in-pits]="entry.isInPits">
                 <td>{{entry.position}}</td>
                 <td>{{entry.driverName}}</td>
                 <td><span class="pill" [style.background-color]="entry.licenseColor">{{entry.license}}</span></td>
