@@ -52,6 +52,7 @@ internal sealed class Display() : DisplayBase<DataSample>()
             _lastLaps = (int[])telemetry.CarIdxLap.Clone();
         }
 
+        Console.Clear();
         foreach (var driver in sessionData.DriverInfo.CompetingDrivers)
         {
             var carIdx = (int)driver.CarIdx;
@@ -73,22 +74,13 @@ internal sealed class Display() : DisplayBase<DataSample>()
 
             _lastLaps[carIdx] = carIdxLap;
 
-            // Build a log message
-            var logMessage = new StringBuilder();
-            logMessage.AppendLine($"*** Player {carIdx} telemetry data ***");
-            logMessage.AppendLine($"License color {driver.LicColor}");
-            logMessage.AppendLine($"License string {driver.LicString}");
-            logMessage.AppendLine($"IRating: {driver.IRating}");
-            logMessage.AppendLine($"In pit: {telemetry.CarIdxOnPitRoad[carIdx]}");
-
             foreach (var car in telemetry.Cars)
             {
-                logMessage.AppendLine($"Car {car.CarIdx} - {car.Details.UserName} - Est.Time: {telemetry.CarIdxEstTime[car.CarIdx]}");
+                if (!telemetry.CarIdxOnPitRoad[carIdx])
+                {
+                    Console.WriteLine($"{car.Details.UserName} - {driver.LicString} - {driver.IRating} - {telemetry.CarIdxEstTime[car.CarIdx]}");
+                }
             }
-
-            // Overwrite the console output
-            Console.SetCursorPosition(0, 0);
-            Console.Write(logMessage.ToString().PadRight(Console.WindowWidth * Console.WindowHeight));
         }
 
         var displayUpdate = new RaceData
