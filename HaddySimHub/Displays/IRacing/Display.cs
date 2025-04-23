@@ -74,12 +74,9 @@ internal sealed class Display() : DisplayBase<DataSample>()
 
             _lastLaps[carIdx] = carIdxLap;
 
-            foreach (var car in telemetry.Cars)
+            if (!telemetry.CarIdxOnPitRoad[carIdx])
             {
-                if (!telemetry.CarIdxOnPitRoad[carIdx])
-                {
-                    Console.WriteLine($"{car.Details.UserName} - {driver.LicString} - {driver.IRating} - {telemetry.CarIdxEstTime[car.CarIdx]}");
-                }
+                Console.WriteLine($"#{driver.CarNumber} {driver.UserName} - {driver.LicString} - {driver.IRating} - {carIdxLapDistPct}% - {telemetry.CarIdxEstTime[carIdx] - telemetry.CarIdxEstTime[telemetry.PlayerCarIdx]}");
             }
         }
 
