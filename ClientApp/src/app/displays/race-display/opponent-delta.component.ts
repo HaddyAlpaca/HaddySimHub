@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { DeltaTimePipe, IRatingPipe } from 'src/app/shared';
+import { DeltaTimePipe } from 'src/app/shared';
 import { TimingEntry } from './race-data';
 
 @Component({
