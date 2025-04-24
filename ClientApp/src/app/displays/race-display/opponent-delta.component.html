@@ -4,7 +4,7 @@
     <div class="name-class-row">
       <div class="driver-name">{{driverInfo()?.driverName}}</div>
       <div class="driver-pill driver-safety-rating" [style.background-color]="driverInfo()?.licenseColor">{{driverInfo()?.license}} {{driverInfo()?.iRating ?? 0}}</div>
-      <div class="delta-time">{{driverInfo()?.relativeTime ?? 0 | deltatime}}</div>
+      <div class="delta-time">{{driverInfo()?.timeRelativeToPlayer ?? 0 | deltatime}}</div>
     </div>
   </div>
 </div>
