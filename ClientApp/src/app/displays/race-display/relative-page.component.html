@@ -4,7 +4,7 @@
             <th>Pos</th>
             <th>Driver Name</th>
             <th>License</th>
-            <th>iRating</th>
+            <th>Relative</th>
         </tr>
     </thead>
     <tbody>
@@ -12,8 +12,8 @@
             <tr [class.player]="entry.isPlayer" [class.safety-car]="entry.isSafetyCar" [class.in-pits]="entry.isInPits">
                 <td>{{entry.position}}</td>
                 <td>{{entry.driverName}}</td>
-                <td><span class="pill" [style.background-color]="entry.licenseColor">{{entry.license}}</span></td>
-                <td>{{entry.iRating | irating}}</td>
+                <td><span class="pill" [style.background-color]="entry.licenseColor">{{entry.license}} {{entry.iRating}}</span></td>
+                <td>{{entry.timeRelativeToPlayer | deltatime}}</td>
             </tr>
         }
     </tbody>
