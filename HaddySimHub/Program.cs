@@ -28,9 +28,8 @@ public class Program
             eventArgs.Cancel = true;
             cancellationTokenSource.Cancel();
             Logger.Info("Ctrl+C pressed. Exiting application...");
+            Environment.Exit(0);
         };
-
-        Console.TreatControlCAsInput = true;
         
         var keyInputTask = Task.Run(() =>
         {
@@ -73,7 +72,7 @@ public class Program
         WebApplication webServer = CreateWebServer();
 
         Task webServerTask = RunWebServerAsync(webServer, token);
-        Task processTask = RunProcessAsync(args, token);
+        Task processTask = RunProcessAsync(token);
         await Task.WhenAll(webServerTask, processTask, keyInputTask);
 
         cancellationTokenSource.Cancel();
@@ -128,7 +127,7 @@ public class Program
         }
     }
 
-    private static async Task RunProcessAsync(string[] args, CancellationToken token)
+    private static async Task RunProcessAsync(CancellationToken token)
     {
         try
         {
@@ -179,11 +178,5 @@ public class Program
         {
             Logger.Error($"Error checking for updates: {ex.Message}\n\n{ex.StackTrace}");
         }
-    }
-
-    private static void Exit(int exitCode)
-    {
-        Logger.Info($"Exiting with code {exitCode}.");
-        Environment.Exit(exitCode);
     }
 }

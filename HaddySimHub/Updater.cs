@@ -44,7 +44,15 @@ namespace HaddySimHub
 
             Directory.CreateDirectory(tempFolder);
 
-            foreach (var file in Directory.GetFiles(Path.Combine(AppContext.BaseDirectory, "Updater"), "HaddySimHub*.*"))
+            string updaterFolder = Path.Combine(AppContext.BaseDirectory, "Updater");
+
+            if (!Directory.Exists(updaterFolder))
+            {
+                Logger.Error("Updater folder not found. Please update manually.");
+                return;
+            }
+
+            foreach (var file in Directory.GetFiles(updaterFolder, "HaddySimHub*.*"))
             {
                 string destFile = Path.Combine(tempFolder, Path.GetFileName(file));
                 try
