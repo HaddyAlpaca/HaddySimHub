@@ -52,7 +52,8 @@ internal sealed class Display() : DisplayBase<DataSample>()
             _lastLaps = (int[])telemetry.CarIdxLap.Clone();
         }
 
-        Console.Clear();
+        var timingEntries = new List<TimingEntry>();
+
         foreach (var driver in sessionData.DriverInfo.CompetingDrivers)
         {
             var carIdx = (int)driver.CarIdx;
@@ -74,10 +75,31 @@ internal sealed class Display() : DisplayBase<DataSample>()
 
             _lastLaps[carIdx] = carIdxLap;
 
-            if (!telemetry.CarIdxOnPitRoad[carIdx])
+            var entry = new TimingEntry
             {
-                Console.WriteLine($"#{driver.CarNumber} {driver.UserName} - {driver.LicString} - {driver.IRating} - {carIdxLapDistPct}% - {telemetry.CarIdxEstTime[carIdx] - telemetry.CarIdxEstTime[telemetry.PlayerCarIdx]}");
-            }
+                CarNumber = driver.CarNumber,
+                DriverName = driver.UserName,
+                Position = telemetry.CarIdxPosition[carIdx],
+                Laps = carIdxLap,
+                LapCompletedPct = carIdxLapDistPct,
+                License = driver.LicString,
+                LicenseColor = driver.LicColor,
+                IRating = driver.IRating,
+                IsInPits = telemetry.CarIdxOnPitRoad[carIdx],
+                IsPlayer = carIdx == telemetry.PlayerCarIdx,
+                IsSafetyCar = carIdx == 0,
+                TimeRelativeToPlayer = (float)Math.Round(telemetry.CarIdxEstTime[carIdx] - telemetry.CarIdxEstTime[telemetry.PlayerCarIdx], 3),
+            };
+
+            timingEntries.Add(entry);
+        }
+
+        Console.Clear();
+        var orderedEntries = timingEntries.OrderByDescending(e => e.TimeRelativeToPlayer).ToArray();
+
+        foreach(var entry in orderedEntries)
+        {
+            Console.WriteLine($"#{entry.CarNumber} {entry.DriverName} - {entry.License} - {entry.IRating} - {entry.Laps} - {entry.LapCompletedPct}% - {entry.TimeRelativeToPlayer}");
         }
 
         var displayUpdate = new RaceData
@@ -108,6 +130,7 @@ internal sealed class Display() : DisplayBase<DataSample>()
             TrackTemp = telemetry.TrackTemp,
             Flag = GetFlag(telemetry.SessionFlags),
             PitLimiterOn = telemetry.EngineWarnings.HasFlag(EngineWarnings.PitSpeedLimiter),
+            TimingEntries = orderedEntries,
         };
 
         return new DisplayUpdate{ Type = DisplayType.RaceDashboard, Data = displayUpdate };

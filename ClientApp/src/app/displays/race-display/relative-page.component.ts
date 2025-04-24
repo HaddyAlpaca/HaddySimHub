@@ -1,12 +1,12 @@
 import { Component, computed, input } from '@angular/core';
 import { TimingEntry } from './race-data';
-import { IRatingPipe } from 'src/app/shared';
+import { DeltaTimePipe } from 'src/app/shared';
 
 @Component({
   selector: 'app-relative-page',
   templateUrl: 'relative-page.component.html',
   styleUrl: 'relative-page.component.scss',
-  imports: [IRatingPipe],
+  imports: [DeltaTimePipe],
 })
 export class RelativePageComponent {
   public timingEntries = input.required<TimingEntry[]>();

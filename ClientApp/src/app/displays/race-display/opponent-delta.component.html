@@ -3,9 +3,8 @@
   <div>
     <div class="name-class-row">
       <div class="driver-name">{{driverInfo()?.driverName}}</div>
-      <div class="driver-pill driver-safety-rating" [style.background-color]="driverInfo()?.licenseColor">{{driverInfo()?.license}}</div>
-      <div class="driver-pill driver-irating">{{driverInfo()?.iRating ?? 0 | irating}}</div>
-      <!-- <div class="delta-time">{{driverInfo().delta ?? 0 | deltatime: false}}</div> -->
+      <div class="driver-pill driver-safety-rating" [style.background-color]="driverInfo()?.licenseColor">{{driverInfo()?.license}} {{driverInfo()?.iRating ?? 0}}</div>
+      <div class="delta-time">{{driverInfo()?.relativeTime ?? 0 | deltatime}}</div>
     </div>
   </div>
 </div>

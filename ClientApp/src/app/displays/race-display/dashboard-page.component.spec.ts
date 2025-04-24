@@ -172,15 +172,15 @@ describe('Dashboard page component tests', () => {
     it('Driver name and delta are displayed', async () => {
       patchData({
         timingEntries: [
-          { position: 1, driverName: 'Enrique Bernoldi', isPlayer: false } as TimingEntry,
-          { position: 2, driverName: 'Niki Lauda', isPlayer: true } as TimingEntry,
-          { position: 3, driverName: 'David Coulthard', isPlayer: false } as TimingEntry,
+          { position: 1, driverName: 'Enrique Bernoldi', isPlayer: false, timeRelativeToPlayer: 1.2 } as TimingEntry,
+          { position: 2, driverName: 'Niki Lauda', isPlayer: true, timeRelativeToPlayer: 0 } as TimingEntry,
+          { position: 3, driverName: 'David Coulthard', isPlayer: false, timeRelativeToPlayer: -2.5 } as TimingEntry,
         ]});
 
       expect(await harness.getElementText('#driverAheadInfo .driver-name')).toEqual('Enrique Bernoldi');
-      // expect(await harness.getElementText('#driverAheadInfo .delta-time')).toEqual('1.200');
+      expect(await harness.getElementText('#driverAheadInfo .delta-time')).toEqual('+1.200');
       expect(await harness.getElementText('#driverBehindInfo .driver-name')).toEqual('David Coulthard');
-      // expect(await harness.getElementText('#driverBehindInfo .delta-time')).toEqual('1.200');
+      expect(await harness.getElementText('#driverBehindInfo .delta-time')).toEqual('-2.500');
     });
   });
 
