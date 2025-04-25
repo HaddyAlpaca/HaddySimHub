@@ -81,7 +81,7 @@ internal sealed class Display() : DisplayBase<DataSample>()
                 DriverName = driver.UserName,
                 Position = telemetry.CarIdxPosition[carIdx],
                 Laps = carIdxLap,
-                LapCompletedPct = (int)Math.Round(carIdxLapDistPct, 0),
+                LapCompletedPct = (int)Math.Round(carIdxLapDistPct * 100, 0),
                 License = driver.LicString,
                 LicenseColor = driver.LicColor,
                 IRating = driver.IRating,
