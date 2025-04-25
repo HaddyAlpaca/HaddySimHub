@@ -2,7 +2,7 @@ app-race-display {
   .container {
     max-width: unset;
     color: white;
-    font-size: 3vw;
+    font-size: 2.5vw;
     text-align: right;
   }
 
@@ -15,16 +15,16 @@ app-race-display {
       text-transform: uppercase;
       text-align: center;
       width: 100%;
-      font-size: 2vw;
+      font-size: 1.5vw;
     }
 
     .rpm, .speed {
-      font-size: 3vw;
+      font-size: 2.5vw;
     }
 
     .gear {
       text-align: center;
-      font-size: 8vw;
+      font-size: 6vw;
     }
   }
 
@@ -34,7 +34,7 @@ app-race-display {
 
   label {
     text-transform: uppercase;
-    font-size: 1.5vw;
+    font-size: 1vw;
     text-align: right;
     color: gold;
   }

@@ -77,7 +77,7 @@ namespace HaddySimHub.Displays.IRacing
                     LicenseColor = "#ff0000",
                     IRating = 1000 + i * 500,
                     Laps = lapsCompleted,
-                    LapCompletedPct = (float)new Random().NextDouble() * 100,
+                    LapCompletedPct = (int)Math.Round(new Random().NextDouble() * 100, 0),
                 });
             }
 
@@ -92,7 +92,7 @@ namespace HaddySimHub.Displays.IRacing
                 LicenseColor = "#00ff00",
                 IRating = 1200,
                 Laps = lapsCompleted,
-                LapCompletedPct = (float)new Random().NextDouble() * 100,
+                LapCompletedPct = (int)Math.Round(new Random().NextDouble() * 100, 0),
                 IsPlayer = true,
             });
 
@@ -106,7 +106,7 @@ namespace HaddySimHub.Displays.IRacing
                 LicenseColor = "#0000ff",
                 IRating = 1300,
                 Laps = lapsCompleted + 1,
-                LapCompletedPct = (float)new Random().NextDouble() * 100,
+                LapCompletedPct = (int)Math.Round(new Random().NextDouble() * 100, 0),
             });
 
             // Add a safety car
@@ -115,7 +115,7 @@ namespace HaddySimHub.Displays.IRacing
                 DriverName = "Safety Car",
                 CarNumber = "0",
                 Laps = lapsCompleted,
-                LapCompletedPct = (float)new Random().NextDouble() * 100,
+                LapCompletedPct = (int)Math.Round(new Random().NextDouble() * 100, 0),
                 IsSafetyCar = true,
             });
 

@@ -81,7 +81,7 @@ internal sealed class Display() : DisplayBase<DataSample>()
                 DriverName = driver.UserName,
                 Position = telemetry.CarIdxPosition[carIdx],
                 Laps = carIdxLap,
-                LapCompletedPct = carIdxLapDistPct,
+                LapCompletedPct = (int)Math.Round(carIdxLapDistPct * 100, 0),
                 License = driver.LicString,
                 LicenseColor = driver.LicColor,
                 IRating = driver.IRating,
@@ -99,7 +99,7 @@ internal sealed class Display() : DisplayBase<DataSample>()
 
         foreach(var entry in orderedEntries)
         {
-            Console.WriteLine($"#{entry.CarNumber} {entry.DriverName} - {entry.License} - {entry.IRating} - {entry.Laps} - {entry.LapCompletedPct}% - {entry.TimeRelativeToPlayer}");
+            Console.WriteLine($"#{entry.CarNumber} {entry.DriverName} - {entry.License} - {entry.LicenseColor} - {entry.IRating} - {entry.Laps} - {entry.LapCompletedPct}% - {entry.TimeRelativeToPlayer}");
         }
 
         var displayUpdate = new RaceData
