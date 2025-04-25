@@ -17,20 +17,20 @@ table {
         border-radius: 20px;
         padding: 0 20px;
         display: inline-block;
-        width: 130px;
+        width: 200px;
         text-align: center;
         color: black;
 
         &.player {
-          color: seagreen;
-        }
-
-        &.safety-car {
           color: yellow;
         }
 
+        &.safety-car {
+          color: blueviolet;
+        }
+
         &.in-pits {
-          color: sandybrown;
+          color: slategray;
         }
       }
     }
