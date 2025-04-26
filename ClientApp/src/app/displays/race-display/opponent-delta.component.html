@@ -1,7 +1,7 @@
-<div class="opponent-delta group-border border-blue"  [class.hidden]="!driverInfo()">
+<div class="opponent-delta group-border border-blue">
   <label>{{caption()}}</label>
   <div>
-    <div class="name-class-row">
+    <div class="name-class-row" [class.hidden]="!driverInfo()">
       <div class="driver-name">{{driverInfo()?.driverName}}</div>
       <div class="driver-pill driver-safety-rating" [style.background-color]="driverInfo()?.licenseColor">{{driverInfo()?.license}} {{driverInfo()?.iRating ?? 0}}</div>
       <div class="delta-time">{{driverInfo()?.timeRelativeToPlayer ?? 0 | deltatime}}</div>
