@@ -2,6 +2,7 @@ using System.Text;
 using HaddySimHub.Models;
 using HaddySimHub.Shared;
 using iRacingSDK;
+using static SCSSdkClient.Object.SCSTelemetry.Control;
 
 namespace HaddySimHub.Displays.IRacing;
 
@@ -57,13 +58,6 @@ internal sealed class Display() : DisplayBase<DataSample>()
         foreach (var driver in sessionData.DriverInfo.CompetingDrivers)
         {
             var carIdx = (int)driver.CarIdx;
-
-            if (!telemetry.HasData(carIdx))
-            {
-                Logger.Debug($"Car {carIdx} does not have telemetry data.");
-                continue;
-            }
-
             var carIdxLap = telemetry.CarIdxLap[carIdx];
             var carIdxLapDistPct = telemetry.CarIdxLapDistPct[carIdx];
             if (carIdxLap > _lastLaps[carIdx] && carIdxLapDistPct > 0.80f)
@@ -75,6 +69,27 @@ internal sealed class Display() : DisplayBase<DataSample>()
 
             _lastLaps[carIdx] = carIdxLap;
 
+            // Set the license color
+            // Rookie = Red
+            // D = Orange
+            // C = Yellow
+            // B = Green
+            // A = Blue
+            // Pro = Purple
+            var licenseColor = driver.LicString switch
+            {
+                "R" => "red",
+                "D" => "orange",
+                "C" => "yellow",
+                "B" => "green",
+                "A" => "blue",
+                "P" => "purple",
+                _ => "white"
+            };
+
+            // The license string is in the format R 02.0 remove the zero after the space
+            var licenseString = System.Text.RegularExpressions.Regex.Replace(driver.LicString, @"(?<=\s)0", "");
+
             var entry = new TimingEntry
             {
                 CarNumber = driver.CarNumber,
@@ -83,7 +98,7 @@ internal sealed class Display() : DisplayBase<DataSample>()
                 Laps = carIdxLap,
                 LapCompletedPct = (int)Math.Round(carIdxLapDistPct * 100, 0),
                 License = driver.LicString,
-                LicenseColor = driver.LicColor,
+                LicenseColor = licenseColor,
                 IRating = driver.IRating,
                 IsInPits = telemetry.CarIdxOnPitRoad[carIdx],
                 IsPlayer = carIdx == telemetry.PlayerCarIdx,

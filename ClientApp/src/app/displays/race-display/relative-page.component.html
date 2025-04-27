@@ -5,6 +5,7 @@
             <th>Car</th>
             <th>Driver Name</th>
             <th>License</th>
+            <th>iRating</th>
             <th>Relative</th>
         </tr>
     </thead>
@@ -14,7 +15,8 @@
                 <td>{{entry.position ? entry.position : '-'}}</td>
                 <td>#{{entry.carNumber}}</td>
                 <td>{{entry.driverName}}</td>
-                <td><span class="pill" [style.background-color]="entry.licenseColor">{{entry.license}} {{entry.iRating}}</span></td>
+                <td><span class="pill" [style.background-color]="entry.licenseColor">{{entry.license}}</span></td>
+                <td><span class="pill irating">{{entry.iRating}}</span></td>
                 <td>{{entry.timeRelativeToPlayer | deltatime}}</td>
             </tr>
         }
