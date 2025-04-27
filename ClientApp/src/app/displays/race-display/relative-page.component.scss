@@ -13,24 +13,28 @@ table {
       text-overflow: ellipsis;
       font-size: 2rem;
 
+      &.player {
+        color: yellow;
+      }
+
+      &.safety-car {
+        color: blueviolet;
+      }
+
+      &.in-pits {
+        color: slategray;
+      }
+
       > span.pill {
         border-radius: 20px;
         padding: 0 20px;
         display: inline-block;
-        width: 200px;
+        width: 100px;
         text-align: center;
         color: black;
 
-        &.player {
-          color: yellow;
-        }
-
-        &.safety-car {
-          color: blueviolet;
-        }
-
-        &.in-pits {
-          color: slategray;
+        &.irating {
+          background-color: white;
         }
       }
     }

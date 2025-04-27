@@ -10,5 +10,15 @@ import { DeltaTimePipe } from 'src/app/shared';
 })
 export class RelativePageComponent {
   public timingEntries = input.required<TimingEntry[]>();
-  public sortedEntries = computed(() => this.timingEntries().sort((a, b) => b.timeRelativeToPlayer - a.timeRelativeToPlayer));
+  public sortedEntries = computed(() => {
+    const entries = this.timingEntries().sort((a, b) => b.timeRelativeToPlayer - a.timeRelativeToPlayer);
+
+    const playerIndex = entries.findIndex(e => e.isPlayer);
+    if (playerIndex < 0) {
+      return entries;
+    }
+
+    const startIndex = Math.max(0, playerIndex - 5);
+    return entries.slice(startIndex, entries.length);
+  });
 }
