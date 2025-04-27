@@ -103,7 +103,7 @@ internal sealed class Display() : DisplayBase<DataSample>()
                 IsInPits = telemetry.CarIdxOnPitRoad[carIdx],
                 IsPlayer = carIdx == telemetry.PlayerCarIdx,
                 IsSafetyCar = carIdx == 0,
-                TimeRelativeToPlayer = (float)Math.Round(telemetry.CarIdxEstTime[carIdx] - telemetry.CarIdxEstTime[telemetry.PlayerCarIdx], 3),
+                TimeRelativeToPlayer = (float)Math.Round(telemetry.CarIdxEstTime[carIdx] - telemetry.CarIdxEstTime[telemetry.PlayerCarIdx], 1),
             };
 
             timingEntries.Add(entry);
