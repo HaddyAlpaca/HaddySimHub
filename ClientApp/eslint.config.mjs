@@ -25,9 +25,6 @@ import jsDocPlugin from 'eslint-plugin-jsdoc';
 import preferArrowPlugin from 'eslint-plugin-prefer-arrow';
 import pluginRxjs from 'eslint-plugin-rxjs';
 import pluginAngularRxjs from 'eslint-plugin-rxjs-angular';
-import appPlugin from 'eslint-plugin-app';
-
-const noJasmineTestFilter = process.env.LINT_CONFIG === 'production' ? 'error' : 'off';
 
 export default tseslint.config(
     {
@@ -61,7 +58,6 @@ export default tseslint.config(
             'prefer-arrow': fixupPluginRules(preferArrowPlugin),
             'rxjs': fixupPluginRules(pluginRxjs),
             'rxjs-angular': fixupPluginRules(pluginAngularRxjs),
-            'app': appPlugin,
         },
         languageOptions: {
             globals: {
@@ -101,6 +97,7 @@ export default tseslint.config(
             ],
             '@angular-eslint/no-conflicting-lifecycle': 'error',
             '@angular-eslint/use-lifecycle-interface': 'error',
+            '@angular-eslint/prefer-on-push-component-change-detection': 'error',
 
             // @stylistic/ts
             '@stylistic/ts/semi': ['error', 'always'],
@@ -181,11 +178,6 @@ export default tseslint.config(
                 { 'ignoreStatic': true }
             ],
             '@typescript-eslint/unified-signatures': 'error',
-
-            // custom
-            'app/no-jasmine-test-filter': noJasmineTestFilter,
-            'app/jasmine-clear-describe': 'error',
-            'app/no-component-constructor-subscribe': 'error',
 
             // eslint-plugin-deprecation
             'deprecation/deprecation': 'error',
@@ -331,6 +323,7 @@ export default tseslint.config(
         rules: {
             '@typescript-eslint/no-non-null-assertion': 'off',
             '@typescript-eslint/unbound-method': 'off',
+            '@angular-eslint/prefer-on-push-component-change-detection': 'off',
         }
     }
 );

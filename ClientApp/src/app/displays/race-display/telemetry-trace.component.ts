@@ -1,9 +1,10 @@
-import { Component, AfterViewInit, ViewChild, ElementRef, input, effect } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, input, effect, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-telemetry-trace',
   templateUrl: './telemetry-trace.component.html',
   styleUrl: './telemetry-trace.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TelemetryTraceComponent implements AfterViewInit {
   @ViewChild('canvas', { static: false })

@@ -1,10 +1,11 @@
-import { Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { ConnectionInfo, ConnectionStatus } from 'src/app/game-data.service';
 
 @Component({
   selector: 'app-connection-status',
   templateUrl: './connection-status.component.html',
   styleUrl: './connection-status.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConnectionStatusComponent {
   public status = input<ConnectionInfo>({ status: ConnectionStatus.Disconnected });

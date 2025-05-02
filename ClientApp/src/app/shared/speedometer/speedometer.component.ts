@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, input } from '@angular/core';
 import { GearPipe } from '../gear/gear.pipe';
 
 @Component({
@@ -6,6 +6,7 @@ import { GearPipe } from '../gear/gear.pipe';
   templateUrl: './speedometer.component.html',
   encapsulation: ViewEncapsulation.None,
   imports: [GearPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SpeedometerComponent {
   public speed = input.required<number>();

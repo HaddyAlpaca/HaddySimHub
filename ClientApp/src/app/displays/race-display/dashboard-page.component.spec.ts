@@ -180,11 +180,11 @@ describe('Dashboard page component tests', () => {
       expect(await harness.getElementText('#driverAheadInfo .driver-name')).toEqual('Enrique Bernoldi');
       expect(await harness.elementHasClass('#driverAheadInfo .driver-name', 'lap-behind')).toBeFalse();
       expect(await harness.elementHasClass('#driverAheadInfo .driver-name', 'lap-ahead')).toBeFalse();
-      expect(await harness.getElementText('#driverAheadInfo .delta-time')).toEqual('+1.200');
+      expect(await harness.getElementText('#driverAheadInfo .delta-time')).toEqual('+1.2');
       expect(await harness.getElementText('#driverBehindInfo .driver-name')).toEqual('David Coulthard');
       expect(await harness.elementHasClass('#driverBehindInfo .driver-name', 'lap-behind')).toBeFalse();
       expect(await harness.elementHasClass('#driverBehindInfo .driver-name', 'lap-ahead')).toBeFalse();
-      expect(await harness.getElementText('#driverBehindInfo .delta-time')).toEqual('-2.500');
+      expect(await harness.getElementText('#driverBehindInfo .delta-time')).toEqual('-2.5');
     });
 
     it('Should format drivers a lap ahead and behind names correctly', async () => {

@@ -1,4 +1,4 @@
-import { Component, input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, ViewEncapsulation } from '@angular/core';
 import { SpeedometerComponent, LapTimePipe } from 'src/app/shared';
 
 export interface RallyData {
@@ -33,6 +33,7 @@ export interface RallyData {
     SpeedometerComponent,
     LapTimePipe,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RallyDisplayComponent {
   public data = input.required<RallyData>({});

@@ -12,12 +12,12 @@
     <tbody>
         @for (entry of sortedEntries(); track $index) {
             <tr [class.player]="entry.isPlayer" [class.safety-car]="entry.isSafetyCar" [class.in-pits]="entry.isInPits" [class.lap-ahead]="entry.isLapAhead" [class.lap-behind]="entry.isLapBehind">
-                <td>{{entry.position ? entry.position : '-'}}</td>
-                <td>#{{entry.carNumber}}</td>
+                <td>{{entry.position ? entry.position : ''}}</td>
+                <td>{{entry.carNumber ? '#' + entry.carNumber : ''}}</td>
                 <td>{{entry.driverName}}</td>
                 <td><span class="pill" [style.background-color]="entry.licenseColor">{{entry.license}}</span></td>
-                <td><span class="pill irating">{{entry.iRating}}</span></td>
-                <td>{{entry.timeRelativeToPlayer | deltatime}}</td>
+                <td><span class="pill irating">{{entry.iRating ? entry.iRating : ''}}</span></td>
+                <td>{{entry.timeToPlayer | deltatime}}</td>
             </tr>
         }
     </tbody>
