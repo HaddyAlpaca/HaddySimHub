@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { DeltaTimePipe } from 'src/app/shared';
 import { TimingEntry } from './race-data';
 
@@ -12,4 +12,11 @@ import { TimingEntry } from './race-data';
 export class OpponentDeltaComponent {
   public caption = input.required<string>();
   public driverInfo = input.required<TimingEntry | null>();
+  public deltaTime = computed(() => {
+    const driverInfo = this.driverInfo();
+    if (!driverInfo) {
+      return 0;
+    }
+    return Math.round(driverInfo.timeToPlayer * 10) / 10;
+  });
 }
