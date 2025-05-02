@@ -13,12 +13,20 @@
 }
 
 .driver-name {
-    color: yellowgreen;
+    color: white;
     font-size: 1.5vw;
     text-align: left;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+
+    &.lap-ahead {
+        color: red;
+    }
+
+    &.lap-behind {
+        color: blue;
+    }
 }
 
 .driver-class {

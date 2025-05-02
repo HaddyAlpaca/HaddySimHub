@@ -41,5 +41,7 @@ export interface TimingEntry {
   isPlayer: boolean;
   isSafetyCar: boolean;
   isInPits: boolean;
-  timeRelativeToPlayer: number;
+  timeToPlayer: number;
+  isLapAhead: boolean;
+  isLapBehind: boolean;
 }

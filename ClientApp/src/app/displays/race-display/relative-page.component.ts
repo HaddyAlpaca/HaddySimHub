@@ -11,7 +11,7 @@ import { DeltaTimePipe } from 'src/app/shared';
 export class RelativePageComponent {
   public timingEntries = input.required<TimingEntry[]>();
   public sortedEntries = computed(() => {
-    const entries = this.timingEntries().sort((a, b) => b.timeRelativeToPlayer - a.timeRelativeToPlayer);
+    const entries = this.timingEntries().sort((a, b) => b.timeToPlayer - a.timeToPlayer);
 
     const playerIndex = entries.findIndex(e => e.isPlayer);
     if (playerIndex < 0) {

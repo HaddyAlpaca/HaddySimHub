@@ -11,7 +11,7 @@
     </thead>
     <tbody>
         @for (entry of sortedEntries(); track $index) {
-            <tr [class.player]="entry.isPlayer" [class.safety-car]="entry.isSafetyCar" [class.in-pits]="entry.isInPits">
+            <tr [class.player]="entry.isPlayer" [class.safety-car]="entry.isSafetyCar" [class.in-pits]="entry.isInPits" [class.lap-ahead]="entry.isLapAhead" [class.lap-behind]="entry.isLapBehind">
                 <td>{{entry.position ? entry.position : '-'}}</td>
                 <td>#{{entry.carNumber}}</td>
                 <td>{{entry.driverName}}</td>

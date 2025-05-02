@@ -145,5 +145,7 @@ public record TimingEntry
     public bool IsPlayer { get; init; }
     public bool IsSafetyCar { get; init; }
     public bool IsInPits { get; init; }
-    public float TimeRelativeToPlayer { get; init; }
+    public float TimeToPlayer { get; init; }
+    public bool IsLapAhead { get; set; }
+    public bool IsLapBehind { get; set; }
 }

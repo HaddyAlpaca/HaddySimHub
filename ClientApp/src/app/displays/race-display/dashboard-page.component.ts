@@ -33,7 +33,7 @@ export class DashboardPageComponent {
 
   public constructor() {
     effect(() => {
-      const entries = this.data().timingEntries?.sort((a, b) => b.timeRelativeToPlayer - a.timeRelativeToPlayer);
+      const entries = this.data().timingEntries?.sort((a, b) => b.timeToPlayer - a.timeToPlayer);
 
       if (!entries) {
         this._driverBehind.set(null);

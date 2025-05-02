@@ -103,18 +103,32 @@ internal sealed class Display() : DisplayBase<DataSample>()
                 IsInPits = telemetry.CarIdxOnPitRoad[carIdx],
                 IsPlayer = carIdx == telemetry.PlayerCarIdx,
                 IsSafetyCar = carIdx == 0,
-                TimeRelativeToPlayer = (float)Math.Round(telemetry.CarIdxEstTime[carIdx] - telemetry.CarIdxEstTime[telemetry.PlayerCarIdx], 1),
+                TimeToPlayer = (float)Math.Round(telemetry.CarIdxEstTime[carIdx] - telemetry.CarIdxEstTime[telemetry.PlayerCarIdx], 1),
             };
 
             timingEntries.Add(entry);
         }
 
+        if (session.IsRace)
+        {
+            var playerEntry = timingEntries.FirstOrDefault(e => e.IsPlayer);
+
+            if (playerEntry != null)
+            {
+                timingEntries.Where(e => !e.IsSafetyCar && !e.IsPlayer).ForEach(e =>
+                {
+                    e.IsLapAhead = (e.Laps + e.LapCompletedPct) - (playerEntry.Laps + playerEntry.LapCompletedPct) > .8;
+                    e.IsLapBehind = (playerEntry.Laps + playerEntry.LapCompletedPct) - (e.Laps + e.LapCompletedPct) > .8;
+                });
+            }
+        }
+
         Console.Clear();
-        var orderedEntries = timingEntries.OrderByDescending(e => e.TimeRelativeToPlayer).ToArray();
+        var orderedEntries = timingEntries.OrderByDescending(e => e.TimeToPlayer).ToArray();
 
         foreach(var entry in orderedEntries)
         {
-            Console.WriteLine($"#{entry.CarNumber} {entry.DriverName} - {entry.License} - {entry.LicenseColor} - {entry.IRating} - {entry.Laps} - {entry.LapCompletedPct}% - {entry.TimeRelativeToPlayer}");
+            Console.WriteLine($"#{entry.CarNumber} {entry.DriverName} - {entry.License} - {entry.LicenseColor} - {entry.IRating} - {entry.Laps} - {entry.LapCompletedPct}% - {entry.TimeToPlayer}");
         }
 
         var displayUpdate = new RaceData
