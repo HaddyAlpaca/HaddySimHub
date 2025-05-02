@@ -14,8 +14,8 @@ export class RelativePageComponent {
   public sortedEntries = computed(() => {
     const entries = this.timingEntries()
       .map(entry => ({
-      ...entry,
-      timeToPlayer: Math.round(entry.timeToPlayer * 10) / 10
+        ...entry,
+        timeToPlayer: Math.round(entry.timeToPlayer * 10) / 10,
       }))
       .sort((a, b) => b.timeToPlayer - a.timeToPlayer);
 
