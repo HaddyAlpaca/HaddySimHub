@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RaceData } from './race-data';
 import { DashboardPageComponent } from './dashboard-page.component';
 import { RelativePageComponent } from './relative-page.component';
@@ -10,6 +10,7 @@ import { RelativePageComponent } from './relative-page.component';
     DashboardPageComponent,
     RelativePageComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RaceDisplayComponent {
   public data = input.required<RaceData>({});

@@ -4,7 +4,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'deltatime',
 })
 export class DeltaTimePipe implements PipeTransform {
-  private readonly _numberFormat = new Intl.NumberFormat('en-US', { minimumFractionDigits: 3 });
+  private readonly _numberFormat = new Intl.NumberFormat('en-US', { minimumFractionDigits: 1 });
 
   public transform(value: number | undefined, showSign = true): string {
     if (!value) {

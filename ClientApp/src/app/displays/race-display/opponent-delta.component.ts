@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { DeltaTimePipe } from 'src/app/shared';
 import { TimingEntry } from './race-data';
 
@@ -7,6 +7,7 @@ import { TimingEntry } from './race-data';
   templateUrl: './opponent-delta.component.html',
   styleUrl: './opponent-delta.component.scss',
   imports: [DeltaTimePipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OpponentDeltaComponent {
   public caption = input.required<string>();

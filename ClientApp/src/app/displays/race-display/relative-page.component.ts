@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { TimingEntry } from './race-data';
 import { DeltaTimePipe } from 'src/app/shared';
 
@@ -7,11 +7,12 @@ import { DeltaTimePipe } from 'src/app/shared';
   templateUrl: 'relative-page.component.html',
   styleUrl: 'relative-page.component.scss',
   imports: [DeltaTimePipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RelativePageComponent {
   public timingEntries = input.required<TimingEntry[]>();
   public sortedEntries = computed(() => {
-    const entries = this.timingEntries().sort((a, b) => b.timeRelativeToPlayer - a.timeRelativeToPlayer);
+    const entries = this.timingEntries().sort((a, b) => b.timeToPlayer - a.timeToPlayer);
 
     const playerIndex = entries.findIndex(e => e.isPlayer);
     if (playerIndex < 0) {
@@ -19,6 +20,6 @@ export class RelativePageComponent {
     }
 
     const startIndex = Math.max(0, playerIndex - 5);
-    return entries.slice(startIndex, entries.length);
+    return entries.slice(startIndex, Math.max(entries.length, 10));
   });
 }
