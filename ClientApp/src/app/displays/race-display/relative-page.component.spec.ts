@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RelativePageComponent } from './relative-page.component';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { RelativePageComponentHarness, RowData } from './relative-page.component.harness';
+import { RelativePageComponentHarness } from './relative-page.component.harness';
 import { Component, provideExperimentalZonelessChangeDetection } from '@angular/core';
 import { TimingEntry } from './race-data';
 
