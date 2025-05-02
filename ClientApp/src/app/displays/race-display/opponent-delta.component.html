@@ -5,7 +5,7 @@
       <div class="driver-name" [class.lap-ahead]="driverInfo()?.isLapAhead" [class.lap-behind]="driverInfo()?.isLapBehind">{{driverInfo()?.driverName}}</div>
       <div class="driver-pill driver-safety-rating" [style.background-color]="driverInfo()?.licenseColor">{{driverInfo()?.license}}</div>
       <div class="driver-pill driver-irating">{{driverInfo()?.iRating ?? 0}}</div>
-      <div class="delta-time">{{driverInfo()?.timeToPlayer ?? 0 | deltatime:1}}</div>
+      <div class="delta-time">{{ deltaTime() | deltatime:1}}</div>
     </div>
   </div>
 </div>
