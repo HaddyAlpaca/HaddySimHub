@@ -45,6 +45,10 @@ table {
           background-color: white;
         }
       }
+
+      &.delta-time {
+        text-align: right;
+      }
     }
   
     thead {
