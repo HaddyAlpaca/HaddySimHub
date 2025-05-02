@@ -78,6 +78,7 @@ namespace HaddySimHub.Displays.IRacing
                     IRating = 1000 + i * 500,
                     Laps = lapsCompleted,
                     LapCompletedPct = (int)Math.Round(new Random().NextDouble() * 100, 0),
+                    TimeToPlayer = (float)(new Random().NextDouble() * 10),
                 });
             }
 
@@ -106,7 +107,9 @@ namespace HaddySimHub.Displays.IRacing
                 LicenseColor = "#0000ff",
                 IRating = 1300,
                 Laps = lapsCompleted + 1,
+                IsLapAhead = true,
                 LapCompletedPct = (int)Math.Round(new Random().NextDouble() * 100, 0),
+                TimeToPlayer = 45,
             });
 
             // Add a safety car
