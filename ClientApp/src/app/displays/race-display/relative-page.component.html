@@ -17,7 +17,7 @@
                 <td>{{entry.driverName}}</td>
                 <td><span class="pill" [style.background-color]="entry.licenseColor">{{entry.license}}</span></td>
                 <td><span class="pill irating">{{entry.iRating ? entry.iRating : ''}}</span></td>
-                <td>{{entry.timeToPlayer | deltatime}}</td>
+                <td>{{entry.timeToPlayer | deltatime:1 }}</td>
             </tr>
         }
     </tbody>
