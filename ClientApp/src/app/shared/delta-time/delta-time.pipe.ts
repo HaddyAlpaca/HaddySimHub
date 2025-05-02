@@ -9,7 +9,7 @@ export class DeltaTimePipe implements PipeTransform {
       return '';
     }
 
-    const numberFormat = new Intl.NumberFormat('en-US', { minimumFractionDigits: fractionDigits })
+    const numberFormat = new Intl.NumberFormat('en-US', { minimumFractionDigits: fractionDigits });
 
     return (value >= 0 ? '+' : '') + numberFormat.format(value);
   }
