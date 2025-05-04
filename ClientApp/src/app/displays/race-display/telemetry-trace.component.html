@@ -1,8 +1,9 @@
-<div>
+<div class="chart-container">
     <canvas
       baseChart
       [data]="chartData()"
       [options]="chartOptions"
-      [type]="chartType">
+      [type]="chartType"
+      [view]="[480, 270]">
     </canvas>
 </div>
