@@ -10,31 +10,6 @@ if (environment.production) {
   enableProdMode();
 }
 
-// import {
-//   LineController,
-//   LineElement,
-//   PointElement,
-//   LinearScale,
-//   TimeScale,
-//   Title,
-//   CategoryScale,
-//   Legend,
-//   Tooltip,
-//   Chart,
-// } from 'chart.js';
-
-// Chart.register(
-//   LineController,
-//   LineElement,
-//   PointElement,
-//   LinearScale,
-//   TimeScale,
-//   Title,
-//   CategoryScale,
-//   Legend,
-//   Tooltip
-// );
-
 bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(BrowserModule),

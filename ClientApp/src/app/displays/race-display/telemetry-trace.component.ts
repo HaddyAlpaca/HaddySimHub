@@ -1,12 +1,13 @@
-import { Component, input, signal } from '@angular/core';
-import { ChartConfiguration, ChartType } from 'chart.js';
+import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
+import { ChartConfiguration } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
   selector: 'app-telemetry-trace',
   templateUrl: './telemetry-trace.component.html',
   styleUrl: './telemetry-trace.component.scss',
-  imports: [BaseChartDirective]
+  imports: [BaseChartDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TelemetryTraceComponent {
   public maxPoints = input(100);
@@ -14,7 +15,7 @@ export class TelemetryTraceComponent {
   private _labels = signal<number[]>([]);
   private _brakeData = signal<number[]>([]);
   private _throttleData = signal<number[]>([]);
-  public readonly chartType: 'line' = 'line';
+  public readonly chartType = 'line';
 
   public readonly chartData = signal<ChartConfiguration<'line'>['data']>({
     labels: this._labels(),
@@ -47,7 +48,7 @@ export class TelemetryTraceComponent {
         grid: {
           drawTicks: false,
         },
-      },   
+      },
       y: {
         min: 0,
         max: 100,
@@ -63,7 +64,7 @@ export class TelemetryTraceComponent {
     },
   };
 
-  public addData(throttle: number, brake: number) {
+  public addData(throttle: number, brake: number): void {
     const time = new Date().getMilliseconds();
 
     const labels = [...this._labels(), time];
