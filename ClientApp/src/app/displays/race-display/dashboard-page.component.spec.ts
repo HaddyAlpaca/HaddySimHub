@@ -4,6 +4,7 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { DashboardPageComponentHarness } from './dashboard-page.component.harness';
 import { Component, provideExperimentalZonelessChangeDetection, signal } from '@angular/core';
 import { RaceData, TimingEntry } from './race-data';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 describe('Dashboard page component tests', () => {
   let fixture: ComponentFixture<DashboardPageTestComponent>;
@@ -15,6 +16,7 @@ describe('Dashboard page component tests', () => {
     await TestBed.configureTestingModule({
       providers: [
         provideExperimentalZonelessChangeDetection(),
+        provideCharts(withDefaultRegisterables()),
       ],
     }).compileComponents();
 
