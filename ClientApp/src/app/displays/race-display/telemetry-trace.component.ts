@@ -54,6 +54,7 @@ export class TelemetryTraceComponent {
         max: 100,
         ticks: {
           callback: (val) => `${val}%`,
+          stepSize: 25,
         },
       },
     },
