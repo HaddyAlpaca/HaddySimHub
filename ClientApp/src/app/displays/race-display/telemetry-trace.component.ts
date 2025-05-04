@@ -39,6 +39,7 @@ export class TelemetryTraceComponent {
 
   public readonly chartOptions: ChartConfiguration<'line'>['options'] = {
     responsive: true,
+    maintainAspectRatio: false,
     animation: false,
     scales: {
       x: {
@@ -53,8 +54,10 @@ export class TelemetryTraceComponent {
         min: 0,
         max: 100,
         ticks: {
-          callback: (val) => `${val}%`,
-          stepSize: 25,
+          display: false,
+        },
+        grid: {
+          drawTicks: false,
         },
       },
     },
