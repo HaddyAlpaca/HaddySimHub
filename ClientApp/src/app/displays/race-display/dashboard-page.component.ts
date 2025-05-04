@@ -51,11 +51,11 @@ export class DashboardPageComponent {
       this._driverAhead.set(driverAhead);
     });
 
-    effect(() => {
-      const telemetryTrace = this._telemetryTrace();
-      if (telemetryTrace) {
-        telemetryTrace.addData(this.data().throttlePct, this.data().brakePct);
-      }
-    });
+    // effect(() => {
+    //   const telemetryTrace = this._telemetryTrace();
+    //   if (telemetryTrace) {
+    //     telemetryTrace.addData(this.data().throttlePct, this.data().brakePct);
+    //   }
+    // });
   }
 }
