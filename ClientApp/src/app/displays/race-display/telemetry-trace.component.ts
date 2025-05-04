@@ -89,4 +89,12 @@ export class TelemetryTraceComponent {
       ],
     });
   }
+
+  constructor() {
+    setInterval(() => {
+      const brake = Math.floor(Math.random() * 101);
+      const throttle = Math.floor(Math.random() * 101);
+      this.addData(throttle, brake);
+    }, 60);
+  }
 }
