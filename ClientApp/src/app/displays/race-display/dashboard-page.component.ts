@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, effect, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, effect, input, signal, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TrackPositionsComponent } from './track-positions.component';
 import { OpponentDeltaComponent } from './opponent-delta.component';
@@ -31,6 +31,8 @@ export class DashboardPageComponent {
   private readonly _driverAhead = signal<TimingEntry | null>(null);
   public readonly driverAhead = this._driverAhead.asReadonly();
 
+  private readonly _telemetryTrace = viewChild(TelemetryTraceComponent);
+
   public constructor() {
     effect(() => {
       const entries = this.data().timingEntries?.sort((a, b) => b.timeToPlayer - a.timeToPlayer);
@@ -47,6 +49,13 @@ export class DashboardPageComponent {
 
       this._driverBehind.set(driverBehind);
       this._driverAhead.set(driverAhead);
+    });
+
+    effect(() => {
+      const telemetryTrace = this._telemetryTrace();
+      if (telemetryTrace) {
+        telemetryTrace.addData(this.data().throttlePct, this.data().brakePct);
+      }
     });
   }
 }
