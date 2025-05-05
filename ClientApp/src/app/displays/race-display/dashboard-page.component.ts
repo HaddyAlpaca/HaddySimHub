@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, effect, input, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, effect, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TrackPositionsComponent } from './track-positions.component';
 import { OpponentDeltaComponent } from './opponent-delta.component';
