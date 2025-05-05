@@ -104,10 +104,7 @@
     </div>
   </div>
   <app-track-positions [positions]="data().timingEntries" />
-
-  @if (data().brakePct || data().throttlePct) {
-    <app-telemetry-trace />
-  }
+  <app-telemetry-trace [telemetrySample]="telemetrySample()" />
 </div>
 
 @if (data().pitLimiterOn) {
