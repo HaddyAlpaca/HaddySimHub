@@ -5,6 +5,7 @@ import { AppComponentHarness } from './app.component.harness';
 import { ConnectionInfo, ConnectionStatus, GameDataService } from './game-data.service';
 import { provideExperimentalZonelessChangeDetection, signal } from '@angular/core';
 import { TruckData, RaceData, RallyData } from './displays';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 class MockGameDataService {
   public truckData = signal<TruckData | null>(null);
@@ -23,6 +24,7 @@ describe('AppComponent tests', () => {
 
     await TestBed.configureTestingModule({
       providers: [
+        provideCharts(withDefaultRegisterables()),
         provideExperimentalZonelessChangeDetection(),
         { provide: GameDataService, useValue: mockGameDataService },
       ],
