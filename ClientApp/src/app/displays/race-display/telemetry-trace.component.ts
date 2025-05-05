@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, Input, input, signal } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 
-export interface TelemetryTraceComponentInputs {
+export interface TelemetrySample {
   brakePct: number;
   throttlePct: number;
 }
@@ -16,6 +16,15 @@ export interface TelemetryTraceComponentInputs {
 })
 export class TelemetryTraceComponent {
   public maxPoints = input(100);
+
+  @Input()
+  public set telemetrySample(sample: TelemetrySample) {
+    if (sample.brakePct === undefined || sample.throttlePct === undefined) {
+      return;
+    }
+
+    this.addData(sample.throttlePct, sample.brakePct);
+  }
 
   private _labels = signal<number[]>([]);
   private _brakeData = signal<number[]>([]);
@@ -74,7 +83,7 @@ export class TelemetryTraceComponent {
     },
   };
 
-  public addData(throttle: number, brake: number): void {
+  private addData(throttle: number, brake: number): void {
     const time = new Date().getMilliseconds();
 
     const labels = [...this._labels(), time];
@@ -98,13 +107,5 @@ export class TelemetryTraceComponent {
         { ...this.chartData().datasets[1], data: throttleData },
       ],
     });
-  }
-
-  public constructor() {
-    setInterval(() => {
-      const brake = Math.floor(Math.random() * 101);
-      const throttle = Math.floor(Math.random() * 101);
-      this.addData(throttle, brake);
-    }, 60);
   }
 }

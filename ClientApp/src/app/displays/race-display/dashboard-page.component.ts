@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, effect, input, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, effect, input, signal, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TrackPositionsComponent } from './track-positions.component';
 import { OpponentDeltaComponent } from './opponent-delta.component';
 import { DeltaTimePipe, LapTimePipe, SpeedometerComponent } from 'src/app/shared';
-import { TelemetryTraceComponent } from './telemetry-trace.component';
+import { TelemetrySample, TelemetryTraceComponent } from './telemetry-trace.component';
 import { RaceData, TimingEntry } from './race-data';
 
 @Component({
@@ -31,7 +31,10 @@ export class DashboardPageComponent {
   private readonly _driverAhead = signal<TimingEntry | null>(null);
   public readonly driverAhead = this._driverAhead.asReadonly();
 
-  private readonly _telemetryTrace = viewChild(TelemetryTraceComponent);
+  public readonly telemetrySample = computed(() => {
+    const sample = { brakePct: this.data().brakePct, throttlePct: this.data().throttlePct } as TelemetrySample;
+    return sample;
+  });
 
   public constructor() {
     effect(() => {
@@ -50,12 +53,5 @@ export class DashboardPageComponent {
       this._driverBehind.set(driverBehind);
       this._driverAhead.set(driverAhead);
     });
-
-    // effect(() => {
-    //   const telemetryTrace = this._telemetryTrace();
-    //   if (telemetryTrace) {
-    //     telemetryTrace.addData(this.data().throttlePct, this.data().brakePct);
-    //   }
-    // });
   }
 }
