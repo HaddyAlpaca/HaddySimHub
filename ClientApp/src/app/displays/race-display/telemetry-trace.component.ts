@@ -2,6 +2,11 @@ import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core
 import { ChartConfiguration } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 
+export interface TelemetryTraceComponentInputs {
+  brakePct: number;
+  throttlePct: number;
+}
+
 @Component({
   selector: 'app-telemetry-trace',
   templateUrl: './telemetry-trace.component.html',
@@ -56,11 +61,15 @@ export class TelemetryTraceComponent {
           callback: (val) => `${val}%`,
           stepSize: 25,
         },
+        grid: {
+          color: 'gray',
+          drawTicks: false,
+        }
       },
     },
     plugins: {
       legend: {
-        display: false, // 👈 disables legend (no labels shown)
+        display: false,
       },
     },
   };
