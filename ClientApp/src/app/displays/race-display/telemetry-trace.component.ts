@@ -62,9 +62,6 @@ export class TelemetryTraceComponent {
           display: false,
         },
         grid: {
-          drawTicks: false,
-        },
-        grid: {
           color: 'gray',
           drawTicks: false,
         },
