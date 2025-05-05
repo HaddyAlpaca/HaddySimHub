@@ -174,7 +174,7 @@ internal sealed class Display() : DisplayBase<DataSample>()
             SessionFlags.yellow or SessionFlags.yellowWaving or SessionFlags.caution or SessionFlags.cautionWaving => "yellow",
             SessionFlags.red => "red",
             SessionFlags.blue => "blue",
-            SessionFlags.black => "black",
+            SessionFlags.black or SessionFlags.disqualify => "black",
             SessionFlags.repair => "black-orange",
             SessionFlags.debris => "red-yellow",
             SessionFlags.checkered => "checkered",
@@ -183,7 +183,17 @@ internal sealed class Display() : DisplayBase<DataSample>()
 
         if (flag is null)
         {
-            Logger.Debug($"Unknown flag: {sessionFlags}");
+            // Ignore some flags, handle them as green
+            if (sessionFlags.HasFlag(SessionFlags.servicible))
+            {
+                sessionFlags &= ~SessionFlags.servicible;
+                flag = "green";
+            }
+        }
+
+        if (flag is null)
+        {
+            Logger.Error($"Unknown flag: {sessionFlags}");
             flag = "green";
         }
 
