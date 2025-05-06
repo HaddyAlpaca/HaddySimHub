@@ -189,6 +189,18 @@ internal sealed class Display() : DisplayBase<DataSample>()
                 sessionFlags &= ~SessionFlags.servicible;
                 flag = "green";
             }
+
+            if (sessionFlags.HasFlag(SessionFlags.tenToGo))
+            {
+                sessionFlags &= ~SessionFlags.tenToGo;
+                flag = "green";
+            }
+
+            if (sessionFlags.HasFlag(SessionFlags.fiveToGo))
+            {
+                sessionFlags &= ~SessionFlags.fiveToGo;
+                flag = "green";
+            }
         }
 
         if (flag is null)
