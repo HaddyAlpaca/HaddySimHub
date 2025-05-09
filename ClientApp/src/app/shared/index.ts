@@ -7,4 +7,3 @@ export { NumberNlPipe } from './number-nl/number-nl.pipe';
 export { SpeedometerComponent } from './speedometer/speedometer.component';
 export { TimespanPipe } from './timespan/timespan.pipe';
 export { IRatingPipe } from './irating/irating.pipe';
-export { GearPipe } from './gear/gear.pipe';

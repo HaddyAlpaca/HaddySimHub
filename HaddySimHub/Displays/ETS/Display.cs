@@ -1,3 +1,4 @@
+using System.Data.Common;
 using HaddySimHub.Models;
 using HaddySimHub.Shared;
 using SCSSdkClient;
@@ -48,6 +49,28 @@ internal sealed class Display() : DisplayBase<SCSTelemetry>()
         Console.WriteLine($"SelectorCount: {data.TruckValues.ConstantsValues.MotorValues.SelectorCount}");
         Console.WriteLine($"SlotHandlePosition: {data.TruckValues.ConstantsValues.MotorValues.SlotHandlePosition}");
 
+        string gear = string.Empty;
+        int selectedGear = data.TruckValues.CurrentValues.MotorValues.GearValues.Selected;
+        if (selectedGear == 0)
+        {
+            gear = "N";
+        }
+        else if (selectedGear < 0)
+        {
+            gear = "R" + Math.Abs(selectedGear).ToString();
+        }
+        else if (selectedGear > 0)
+        {
+            if (data.TruckValues.ConstantsValues.MotorValues.ForwardGearCount == 14)
+            {
+                gear = selectedGear == 1 ? "C1" : (selectedGear - 2).ToString();
+            }
+            else
+            {
+                gear = selectedGear.ToString();
+            }
+        }
+
         var displayData = new TruckData()
         {
             // Navigation info
@@ -82,7 +105,7 @@ internal sealed class Display() : DisplayBase<SCSTelemetry>()
             NumberOfTrailersAttached = data.TrailerValues.Length,
 
             // Dashboard
-            Gear = (short)data.TruckValues.CurrentValues.DashboardValues.GearDashboards,
+            Gear = gear,
             Rpm = (int)data.TruckValues.CurrentValues.DashboardValues.RPM,
             RpmMax = (int)data.TruckValues.ConstantsValues.MotorValues.EngineRpmMax,
             Speed = (short)Math.Max(data.TruckValues.CurrentValues.DashboardValues.Speed.Kph, 0),
@@ -116,6 +139,7 @@ internal sealed class Display() : DisplayBase<SCSTelemetry>()
             BatteryVoltage = data.TruckValues.CurrentValues.DashboardValues.BatteryVoltage,
             RetarderLevel = data.TruckValues.CurrentValues.MotorValues.BrakeValues.RetarderLevel,
             RetarderStepCount = data.TruckValues.ConstantsValues.MotorValues.RetarderStepCount,
+            MaxRpm = (int)data.TruckValues.ConstantsValues.MotorValues.EngineRpmMax,
         };
 
         return new DisplayUpdate { Type = DisplayType.TruckDashboard, Data = displayData };

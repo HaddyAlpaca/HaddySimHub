@@ -27,15 +27,15 @@ describe('TruckDisplayComponent', () => {
 
   it('Gears should be displayed', async () => {
     //Reverse 1
-    patchData({ gear: -1 });
+    patchData({ gear: 'R1' });
     expect(await harness.getElementText('.gear')).toEqual('R1');
 
     //Neutral
-    patchData({ gear: 0 });
+    patchData({ gear: 'N' });
     expect(await harness.getElementText('.gear')).toEqual('N');
 
     //Forward
-    patchData({ gear: 7 });
+    patchData({ gear: '7' });
     expect(await harness.getElementText('.gear')).toEqual('7');
   });
 

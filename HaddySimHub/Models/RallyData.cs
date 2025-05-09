@@ -7,7 +7,7 @@ public sealed record RallyData
     /// </summary>
     public int Speed { get; init; }
 
-    public int Gear { get; init; }
+    public required string Gear { get; init; }
 
     public int Rpm { get; init; }
 

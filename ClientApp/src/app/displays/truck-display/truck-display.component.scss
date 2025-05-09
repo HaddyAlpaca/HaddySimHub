@@ -24,6 +24,10 @@ app-truck-display {
     font-size: 3.5vw;
   }
 
+  .max-rpm {
+    color: red;
+  }
+
   .dashboard-lights {
     display: flex;
     flex-direction: row;

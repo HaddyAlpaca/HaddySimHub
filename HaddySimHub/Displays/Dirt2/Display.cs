@@ -67,7 +67,7 @@ internal sealed class Display() : DisplayBase<Packet>()
             Speed = Convert.ToInt32(data.speed_ms * 3.6),
             Rpm = Convert.ToInt32(data.rpm * 10),
             MaxRpm = Convert.ToInt32(data.max_rpm),
-            Gear = Convert.ToInt32(data.gear),
+            Gear = data.gear == 0 ? "N" : data.gear < 0 ? "R" : data.gear.ToString(),
             Clutch = Convert.ToInt32(data.clutch * 100),
             Brake = Convert.ToInt32(data.brakes * 100),
             Throttle = Convert.ToInt32(data.throttle * 100),
