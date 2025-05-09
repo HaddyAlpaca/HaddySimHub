@@ -22,7 +22,7 @@ namespace HaddySimHub.Displays.IRacing
                 Data = new RaceData
                 {
                     Speed = (short)DateTime.Now.Second,
-                    Gear = (short)new Random().Next(-1, 7),
+                    Gear = new Random().Next(1, 6).ToString(),
                     Rpm = (short)new Random().Next(0, 10000),
                     TrackTemp = new Random().Next(10, 50),
                     AirTemp = new Random().Next(10, 50),

@@ -7,7 +7,7 @@ export interface RaceData {
   sessionTimeRemaining: number;
   position: number;
   speed: number;
-  gear: number;
+  gear: string;
   rpm: number;
   trackTemp: number;
   airTemp: number;

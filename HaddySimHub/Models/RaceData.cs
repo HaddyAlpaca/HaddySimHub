@@ -37,9 +37,9 @@ public sealed record RaceData
     public int Speed { get; init; }
 
     /// <summary>
-    /// Gets gear (-2 = N/A, -1 = Reverse, 0 = Neutral, >= 1 Forward gears).
+    /// Gets gear.
     /// </summary>
-    public int Gear { get; init; }
+    public required string Gear { get; init; }
 
     /// <summary>
     /// Gets engine revs.

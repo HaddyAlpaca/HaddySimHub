@@ -15,7 +15,7 @@ namespace HaddySimHub.Displays.ETS
                 Data = new TruckData
                 {
                     Speed = (short)DateTime.Now.Second,
-                    Gear = (short)new Random().Next(-3, 13),
+                    Gear = new Random().Next(1, 12).ToString(),
                     SpeedLimit = (short)new Random().Next(0, 90),
                     ParkingBrakeOn = this._parkingBrakeOn,
                     RetarderLevel = (uint)new Random().Next(0, 5),

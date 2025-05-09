@@ -1,9 +1,5 @@
 <label>RPM</label>
 <div class="rpm text-center">{{rpm()}}</div>
-@if (multiReverse()) {
-  <div class="gear">{{gear() | gear: true}}</div>
-} @else {
-  <div class="gear">{{gear() | gear}}</div>
-}
+<div class="gear">{{gear()}}</div>
 <div class="speed text-center">{{speed()}}</div>
 <label>Km/h</label>

@@ -148,7 +148,7 @@ internal sealed class Display() : DisplayBase<DataSample>()
             LastLapTimeDelta = telemetry.LapLastLapTime <= 0 ? 0 : telemetry.LapDeltaToSessionLastlLap,
             BestLapTime = Math.Max(telemetry.LapBestLapTime, 0),
             BestLapTimeDelta = telemetry.LapBestLapTime <= 0 ? 0 : telemetry.LapDeltaToSessionBestLap,
-            Gear = telemetry.Gear,
+            Gear = telemetry.Gear == -1 ? "R" : telemetry.Gear == 0 ? "N" : telemetry.Gear.ToString(),
             Rpm = (int)telemetry.RPM,
             Speed = (int)Math.Round(telemetry.Speed * 3.6),
             BrakePct = (int)Math.Round(telemetry.Brake * 100, 0),

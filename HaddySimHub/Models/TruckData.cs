@@ -126,7 +126,7 @@ public sealed record TruckData
     /// <summary>
     /// Gets selected gear.
     /// </summary>
-    public short Gear { get; init; }
+    public required string Gear { get; init; }
 
     /// <summary>
     /// Gets a value indicating whether cruise control is active.
@@ -219,4 +219,5 @@ public sealed record TruckData
     public bool WaterTempWarningOn { get; init; }
     public uint RetarderLevel { get; init; }
     public uint RetarderStepCount { get; init; }
+    public int MaxRpm { get; init; }
 }

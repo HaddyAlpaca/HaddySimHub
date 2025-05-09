@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, ViewEncapsulation } from '@angular/core';
 import { NgClass, DecimalPipe, CommonModule } from '@angular/common';
 import { WaypointComponent } from './waypoint.component';
-import { TimespanPipe, NumberNlPipe, NumberFlexDigitPipe, GearPipe } from 'src/app/shared';
+import { TimespanPipe, NumberNlPipe, NumberFlexDigitPipe } from 'src/app/shared';
 
 export interface TruckData {
   sourceCity: string;
@@ -64,6 +64,7 @@ export interface TruckData {
   waterTempWarningOn: boolean;
   retarderLevel: number;
   retarderStepCount: number;
+  maxRpm: number;
 }
 
 @Component({
@@ -79,7 +80,6 @@ export interface TruckData {
     NumberNlPipe,
     CommonModule,
     WaypointComponent,
-    GearPipe,
     NumberFlexDigitPipe,
   ],
 })
