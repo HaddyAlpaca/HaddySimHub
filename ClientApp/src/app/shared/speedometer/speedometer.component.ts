@@ -9,5 +9,8 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation, input } from '@a
 export class SpeedometerComponent {
   public speed = input.required<number>();
   public rpm = input.required<number>();
+  public rpmGreen = input<number>();
+  public rpmRed = input<number>();
+  public rpmMax = input<number>();
   public gear = input.required<string>();
 }
