@@ -28,6 +28,10 @@ app-truck-display {
     color: red;
   }
 
+  .max-rpm-warning {
+    color: orange;
+  }
+
   .dashboard-lights {
     display: flex;
     flex-direction: row;
