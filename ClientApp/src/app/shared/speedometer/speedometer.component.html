@@ -1,8 +1,8 @@
 <label>RPM</label>
 <div class="rpm text-center"
-    [class.rpm-green]="rpmGreen() && rpmRed() && rpm() >= rpmGreen() && rpm() < rpmRed()"
-    [class.rpm-red]="rpmRed() && rpm() >= rpmRed()"
-    [class.rpm-max]="rpm() >= rpmMax()">{{rpm()}}</div>
+    [class.rpm-green]="rpmGreen() > 0 && rpmRed() > rpmGreen() && rpm() >= rpmGreen() && rpm() < rpmRed()"
+    [class.rpm-red]="rpmRed() > 0 && rpm() >= rpmRed()"
+    [class.rpm-max]="rpmMax()> 0 && rpm() >= rpmMax()">{{rpm()}}</div>
 <div class="gear">{{gear()}}</div>
 <div class="speed text-center">{{speed()}}</div>
 <label>Km/h</label>
