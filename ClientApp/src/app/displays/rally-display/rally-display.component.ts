@@ -3,7 +3,7 @@ import { SpeedometerComponent, LapTimePipe } from 'src/app/shared';
 
 export interface RallyData {
   speed: number;
-  gear: number;
+  gear: string;
   rpm: number;
   maxRpm: number;
   distanceTravelled: number;
