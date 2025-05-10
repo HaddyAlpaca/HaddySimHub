@@ -219,5 +219,4 @@ public sealed record TruckData
     public bool WaterTempWarningOn { get; init; }
     public uint RetarderLevel { get; init; }
     public uint RetarderStepCount { get; init; }
-    public int MaxRpm { get; init; }
 }
