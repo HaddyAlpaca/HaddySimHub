@@ -150,6 +150,9 @@ internal sealed class Display() : DisplayBase<DataSample>()
             BestLapTimeDelta = telemetry.LapBestLapTime <= 0 ? 0 : telemetry.LapDeltaToSessionBestLap,
             Gear = telemetry.Gear == -1 ? "R" : telemetry.Gear == 0 ? "N" : telemetry.Gear.ToString(),
             Rpm = (int)telemetry.RPM,
+            RpmGreen = 6300, // Based on F4 manual: 1 green
+            RpmRed = 6800, // Based on F4 manual: 1 red
+            RpmMax = 7000, // Based on F4 manual: all flashing
             Speed = (int)Math.Round(telemetry.Speed * 3.6),
             BrakePct = (int)Math.Round(telemetry.Brake * 100, 0),
             ThrottlePct = (int)Math.Round(telemetry.Throttle * 100, 0),
