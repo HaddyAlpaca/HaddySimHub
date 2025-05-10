@@ -139,7 +139,6 @@ internal sealed class Display() : DisplayBase<SCSTelemetry>()
             BatteryVoltage = data.TruckValues.CurrentValues.DashboardValues.BatteryVoltage,
             RetarderLevel = data.TruckValues.CurrentValues.MotorValues.BrakeValues.RetarderLevel,
             RetarderStepCount = data.TruckValues.ConstantsValues.MotorValues.RetarderStepCount,
-            MaxRpm = (int)data.TruckValues.ConstantsValues.MotorValues.EngineRpmMax,
         };
 
         return new DisplayUpdate { Type = DisplayType.TruckDashboard, Data = displayData };

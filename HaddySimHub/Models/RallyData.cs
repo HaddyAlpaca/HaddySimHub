@@ -11,7 +11,7 @@ public sealed record RallyData
 
     public int Rpm { get; init; }
 
-    public int MaxRpm { get; init; }
+    public int RpmMax { get; init; }
 
     public int Clutch { get; init; }
 
