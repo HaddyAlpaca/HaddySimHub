@@ -64,7 +64,6 @@ export interface TruckData {
   waterTempWarningOn: boolean;
   retarderLevel: number;
   retarderStepCount: number;
-  maxRpm: number;
 }
 
 @Component({

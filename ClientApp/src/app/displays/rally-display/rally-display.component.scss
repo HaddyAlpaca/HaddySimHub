@@ -47,11 +47,25 @@ app-rally-display {
       .rpm, .speed {
         font-size: 4vw;
       }
+
+      .rpm-red {
+        color: red;
+      }
+
+      .rpm-max {
+        animation: text-blinker 1s linear infinite;
+      }
   
       .gear {
         text-align: center;
         font-size: 10vw;
       }
+    }
+  }
+
+  @keyframes text-blinker {
+    50% {
+      color: transparent;
     }
   }
 }

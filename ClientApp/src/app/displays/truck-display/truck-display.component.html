@@ -177,7 +177,7 @@
         <label class="unit text-center">Gear</label>
         <div class="gear text-center">{{data().gear}}</div>
         <label class="unit text-center">RPM</label>
-        <div class="rpm-value text-center" [class.max-rpm]="data().maxRpm > 0 && data().rpm >= data().maxRpm">{{data().rpm}}</div>
+        <div class="rpm-value text-center" [class.rpm-max]="data().rpmMax > 0 && data().rpm >= data().rpmMax">{{data().rpm}}</div>
       </div>
     </div>
     <div class="col-6" style="padding-right: 10px;">
