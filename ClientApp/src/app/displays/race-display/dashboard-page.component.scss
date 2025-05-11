@@ -31,7 +31,7 @@ app-race-display {
     }
 
     .rpm-max {
-      animation: text-blinker 1s linear infinite;
+      animation: text-blinker .5s step-end infinite;
     }
 
     .gear {
@@ -108,7 +108,7 @@ app-race-display {
     color: black;
     padding: 5px 45px 5px 45px;
     border-radius: 15px;
-    animation: text-blinker 2s linear infinite;
+    animation: text-blinker 2s step-end infinite;
   }
 
   .flag {

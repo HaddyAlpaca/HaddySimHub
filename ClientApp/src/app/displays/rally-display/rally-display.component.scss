@@ -53,7 +53,7 @@ app-rally-display {
       }
 
       .rpm-max {
-        animation: text-blinker 1s linear infinite;
+        animation: text-blinker .5s step-end infinite;
       }
   
       .gear {
