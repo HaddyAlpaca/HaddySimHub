@@ -26,10 +26,12 @@ app-truck-display {
 
   .rpm-max {
     color: red;
+    transform: scale(1.2);
   }
 
   .rpm-max-warning {
     color: orange;
+    transform: scale(1.2);
   }
 
   .dashboard-lights {
