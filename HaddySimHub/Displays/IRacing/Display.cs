@@ -87,6 +87,12 @@ internal sealed class Display() : DisplayBase<DataSample>()
                 _ => "white"
             };
 
+            if (carIdx == telemetry.PlayerCarIdx)
+            {
+                Console.WriteLine($"CarScreenName: {driver.CarScreenName}");
+                Console.WriteLine($"CarScreenNameShort: {driver.CarScreenNameShort}");
+            }
+
             // The license string is in the format R 02.0 remove the zero after the space
             var licenseString = System.Text.RegularExpressions.Regex.Replace(driver.LicString, @"(?<=\s)0", "");
 
