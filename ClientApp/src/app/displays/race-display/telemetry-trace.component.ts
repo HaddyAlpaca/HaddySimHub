@@ -15,7 +15,8 @@ export interface TelemetrySample {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TelemetryTraceComponent {
-  public maxPoints = input(10000);
+  private readonly _maxFrames = 10_000;
+  private _frame = 0;
 
   @Input()
   public set telemetrySample(sample: TelemetrySample) {
@@ -84,13 +85,12 @@ export class TelemetryTraceComponent {
   };
 
   private addData(throttle: number, brake: number): void {
-    const time = new Date().getMilliseconds();
-
-    const labels = [...this._labels(), time];
+    const frame = this._frame++;
+    const labels = [...this._labels(), frame];
     const brakeData = [...this._brakeData(), brake];
     const throttleData = [...this._throttleData(), throttle];
 
-    if (labels.length > this.maxPoints()) {
+    if (labels.length > this._maxFrames) {
       labels.shift();
       brakeData.shift();
       throttleData.shift();
