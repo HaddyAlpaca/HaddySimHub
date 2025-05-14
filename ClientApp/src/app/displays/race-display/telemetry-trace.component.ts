@@ -15,7 +15,7 @@ export interface TelemetrySample {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TelemetryTraceComponent {
-  public maxPoints = input(100);
+  public maxPoints = input(10000);
 
   @Input()
   public set telemetrySample(sample: TelemetrySample) {
