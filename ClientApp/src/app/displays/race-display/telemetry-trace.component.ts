@@ -30,9 +30,9 @@ export class TelemetryTraceComponent {
   private readonly _labels = signal<number[]>([]);
   private readonly _brakeData = signal<number[]>([]);
   private readonly _throttleData = signal<number[]>([]);
-  public readonly chartType = 'line';
+  protected readonly chartType = 'line';
 
-  public readonly chartData = signal<ChartConfiguration<'line'>['data']>({
+  protected readonly chartData = signal<ChartConfiguration<'line'>['data']>({
     labels: this._labels(),
     datasets: [
       {
@@ -52,7 +52,7 @@ export class TelemetryTraceComponent {
     ],
   });
 
-  public readonly chartOptions: ChartConfiguration<'line'>['options'] = {
+  protected readonly chartOptions: ChartConfiguration<'line'>['options'] = {
     responsive: true,
     maintainAspectRatio: false,
     animation: false,

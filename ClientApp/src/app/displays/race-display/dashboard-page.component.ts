@@ -27,12 +27,12 @@ export class DashboardPageComponent {
   public data = input.required<RaceData>({});
 
   private readonly _driverBehind = signal<TimingEntry | null>(null);
-  public readonly driverBehind = this._driverBehind.asReadonly();
+  protected readonly driverBehind = this._driverBehind.asReadonly();
 
   private readonly _driverAhead = signal<TimingEntry | null>(null);
-  public readonly driverAhead = this._driverAhead.asReadonly();
+  protected readonly driverAhead = this._driverAhead.asReadonly();
 
-  public readonly telemetrySample = computed(() => {
+  protected readonly telemetrySample = computed(() => {
     const sample = { brakePct: this.data().brakePct, throttlePct: this.data().throttlePct } as TelemetrySample;
     return sample;
   });

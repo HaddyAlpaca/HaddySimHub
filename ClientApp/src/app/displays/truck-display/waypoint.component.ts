@@ -8,7 +8,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 export class WaypointComponent {
   public city = input<string>();
   public company = input<string>();
-  public description = computed(() => {
+  protected description = computed(() => {
     if (this.city() && this.company()) {
       return `${this.city()} (${this.company()})`;
     } else if(this.city()) {
