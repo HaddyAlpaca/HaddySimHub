@@ -10,7 +10,7 @@ import { ConnectionInfo, ConnectionStatus } from 'src/app/game-data.service';
 export class ConnectionStatusComponent {
   public status = input<ConnectionInfo>({ status: ConnectionStatus.Disconnected });
 
-  public connectionStatusDescription = computed(() => {
+  protected connectionStatusDescription = computed(() => {
     const statusDescriptions: Record<ConnectionStatus, string> = {
       [ConnectionStatus.Disconnected]: 'Disconnected',
       [ConnectionStatus.Connecting]: 'Connecting...',
@@ -21,7 +21,7 @@ export class ConnectionStatusComponent {
     return statusDescriptions[this.status().status] || 'Unknown';
   });
 
-  public connectionMessage = computed(() => this.status().message);
+  protected connectionMessage = computed(() => this.status().message);
 
-  public reloadSeconds = computed(() => this.status().reloadSeconds);
+  protected reloadSeconds = computed(() => this.status().reloadSeconds);
 }

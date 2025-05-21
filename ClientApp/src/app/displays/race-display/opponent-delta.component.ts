@@ -12,7 +12,7 @@ import { TimingEntry } from './race-data';
 export class OpponentDeltaComponent {
   public caption = input.required<string>();
   public driverInfo = input.required<TimingEntry | null>();
-  public deltaTime = computed(() => {
+  protected deltaTime = computed(() => {
     const driverInfo = this.driverInfo();
     if (!driverInfo) {
       return 0;

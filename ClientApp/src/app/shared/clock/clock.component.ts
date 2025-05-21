@@ -11,5 +11,5 @@ import { CommonModule } from '@angular/common';
 export class ClockComponent {
   private readonly _clockService = inject(ClockService);
 
-  public currentTime = this._clockService.currentTime;
+  protected currentTime = this._clockService.currentTime;
 }

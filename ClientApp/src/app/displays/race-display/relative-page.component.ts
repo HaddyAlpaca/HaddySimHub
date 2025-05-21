@@ -11,7 +11,7 @@ import { DeltaTimePipe } from 'src/app/shared';
 })
 export class RelativePageComponent {
   public timingEntries = input.required<TimingEntry[]>();
-  public sortedEntries = computed(() => {
+  protected sortedEntries = computed(() => {
     const entries = this.timingEntries()
       .map(entry => ({
         ...entry,
