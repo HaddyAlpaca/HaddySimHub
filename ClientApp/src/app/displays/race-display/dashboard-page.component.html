@@ -25,7 +25,7 @@
           </div>
           <div class="col-6">
             <label>Delta</label>
-            <div id="lastLapTimeDelta" [ngClass]="{'text-green': data().lastLapTimeDelta < 0, 'text-red': data().lastLapTimeDelta > 0}">{{data().lastLapTimeDelta | deltatime}}</div>
+            <div id="lastLapTimeDelta" [class.text-green]="data().lastLapTimeDelta < 0" [class.text-red]="data().lastLapTimeDelta > 0">{{data().lastLapTimeDelta | deltatime}}</div>
           </div>
         </div>
         <div class="row">
@@ -35,7 +35,7 @@
           </div>
           <div class="col-6">
             <label>Delta</label>
-            <div id="bestLapTimeDelta" [ngClass]="{'text-green': data().bestLapTimeDelta < 0, 'text-red': data().bestLapTimeDelta > 0}">{{data().bestLapTimeDelta | deltatime}}</div>
+            <div id="bestLapTimeDelta" [class.text-green]="data().bestLapTimeDelta < 0" [class.text-red]="data().bestLapTimeDelta > 0">{{data().bestLapTimeDelta | deltatime}}</div>
           </div>
         </div>
       </div>

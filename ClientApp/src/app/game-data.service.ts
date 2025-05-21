@@ -33,7 +33,7 @@ interface DisplayUpdate {
   providedIn: 'root',
 })
 export class GameDataService {
-  private _hubConnection: HubConnection;
+  private readonly _hubConnection: HubConnection;
 
   private readonly _connectionStatus = signal<ConnectionInfo>({ status: ConnectionStatus.Disconnected });
   public readonly connectionStatus = this._connectionStatus.asReadonly();
@@ -41,13 +41,13 @@ export class GameDataService {
   private readonly _truckData = signal<TruckData | null>(null);
   public readonly truckData = this._truckData.asReadonly();
 
-  private _raceData = signal<RaceData | null>(null);
+  private readonly _raceData = signal<RaceData | null>(null);
   public readonly raceData = this._raceData.asReadonly();
 
-  private _rallyData = signal<RallyData | null>(null);
+  private readonly _rallyData = signal<RallyData | null>(null);
   public readonly rallyData = this._rallyData.asReadonly();
 
-  private _page = signal<number>(1);
+  private readonly _page = signal<number>(1);
   public readonly page = this._page.asReadonly();
 
   public constructor() {
