@@ -178,6 +178,7 @@ export default tseslint.config(
                 { 'ignoreStatic': true }
             ],
             '@typescript-eslint/unified-signatures': 'error',
+            '@typescript-eslint/prefer-readonly': 'error',
 
             // eslint-plugin-deprecation
             'deprecation/deprecation': 'error',

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, ViewEncapsulation } from '@angular/core';
-import { NgClass, DecimalPipe, CommonModule } from '@angular/common';
+import { DecimalPipe, CommonModule } from '@angular/common';
 import { WaypointComponent } from './waypoint.component';
 import { TimespanPipe, NumberNlPipe, NumberFlexDigitPipe } from 'src/app/shared';
 
@@ -73,7 +73,6 @@ export interface TruckData {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgClass,
     DecimalPipe,
     TimespanPipe,
     NumberNlPipe,

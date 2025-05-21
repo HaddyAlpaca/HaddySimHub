@@ -184,36 +184,36 @@
       <div class="card gauge">
         <label class="unit text-center">Km/h</label>
         <div class="gear text-center">{{data().speed}}</div>
-        <div class="speed-limit" [ngClass]="{'over-speed-limit': data().speedLimit && data().speed > data().speedLimit}">{{data().speedLimit ? data().speedLimit : '--'}}</div>
+        <div class="speed-limit" [class.over-speed-limit]="data().speedLimit && data().speed > data().speedLimit">{{data().speedLimit ? data().speedLimit : '--'}}</div>
       </div>
     </div>
   </div>
   <div class="row">
     <div class="col-6">
         <div class="card dashboard-lights">
-          <img class="dashboard-light" id="parking-lights" src="/assets/images/parking-lights.svg" [ngClass]="{'filter-green': data().parkingLightsOn}">
-          <img class="dashboard-light" id="low-beam" src="/assets/images/low-beam.svg" [ngClass]="{'filter-green': data().lowBeamOn}">
-          <img class="dashboard-light" id="high-beam" src="/assets/images/high-beam.svg"  [ngClass]="{'filter-blue': data().highBeamOn}">
-          <img class="dashboard-light" id="indicator-left" src="/assets/images/arrow-left.svg" [ngClass]="{'filter-green': data().blinkerLeftOn}">
-          <img class="dashboard-light" id="hazard-lights" src="/assets/images/hazard.svg" [ngClass]="{'filter-orange': data().hazardLightsOn}">
-          <img class="dashboard-light" id="indicator-right" src="/assets/images/arrow-right.svg" [ngClass]="{'filter-green': data().blinkerRightOn}">
-          <img class="dashboard-light" id="brake-warning" src="/assets/images/brake-warning.svg" [ngClass]="{'filter-red': data().parkingBrakeOn}">
-          <img class="dashboard-light" id="wipers" src="/assets/images/wipers.svg" [ngClass]="{'filter-blue': data().wipersOn}">
-          <img class="dashboard-light" id="differentialLock" src="/assets/images/diff-lock.svg" [ngClass]="{'filter-orange': data().differentialLock}">
+          <img class="dashboard-light" id="parking-lights" src="/assets/images/parking-lights.svg" [class.filter-green]="data().parkingLightsOn">
+          <img class="dashboard-light" id="low-beam" src="/assets/images/low-beam.svg" [class.filter-green]="data().lowBeamOn">
+          <img class="dashboard-light" id="high-beam" src="/assets/images/high-beam.svg"  [class.filter-blue]="data().highBeamOn">
+          <img class="dashboard-light" id="indicator-left" src="/assets/images/arrow-left.svg" [class.filter-green]="data().blinkerLeftOn">
+          <img class="dashboard-light" id="hazard-lights" src="/assets/images/hazard.svg" [class.filter-orange]="data().hazardLightsOn">
+          <img class="dashboard-light" id="indicator-right" src="/assets/images/arrow-right.svg" [class.filter-green]="data().blinkerRightOn">
+          <img class="dashboard-light" id="brake-warning" src="/assets/images/brake-warning.svg" [class.filter-red]="data().parkingBrakeOn">
+          <img class="dashboard-light" id="wipers" src="/assets/images/wipers.svg" [class.filter-blue]="data().wipersOn">
+          <img class="dashboard-light" id="differentialLock" src="/assets/images/diff-lock.svg" [class.filter-orange]="data().differentialLock">
         </div>
     </div>
     <div class="col-6">
       <div class="card dashboard-lights">
-        <div class="icon-text-control" [ngClass]="{'hidden': !data().cruiseControlOn}">
+        <div class="icon-text-control" [class.hidden]="!data().cruiseControlOn">
           <img class="dashboard-light" src="/assets/images/cruise-control.png">
           <div>{{data().cruiseControlSpeed}} km/h</div>
         </div>
         <div class="icon-text-control" id="fuel">
-          <img class="dashboard-light" src="/assets/images/fuel.svg" [ngClass]="{'filter-orange': data().fuelWarningOn}">
+          <img class="dashboard-light" src="/assets/images/fuel.svg" [class.filter-orange]="data().fuelWarningOn">
           <div>{{data().fuelDistance | numberFlexDigit}} km ({{data().fuelAmount | numberFlexDigit}} l)</div>
         </div>
         <div class="icon-text-control"  id="adBlue">
-          <img class="dashboard-light" src="/assets/images/adblue.svg" [ngClass]="{'filter-orange': data().adBlueWarningOn}">
+          <img class="dashboard-light" src="/assets/images/adblue.svg" [class.filter-orange]="data().adBlueWarningOn">
           <div>{{data().adBlueAmount  | numberFlexDigit}} l</div>
         </div>
       </div>
@@ -223,15 +223,15 @@
     <div class="col-6">
         <div class="card dashboard-lights">
           <div class="icon-text-control" id="batteryVoltage">
-            <img class="dashboard-light" src="/assets/images/battery.svg" [ngClass]="{'filter-red': data().batteryVoltageWarningOn}">
+            <img class="dashboard-light" src="/assets/images/battery.svg" [class.filter-red]="data().batteryVoltageWarningOn">
             <div>{{data().batteryVoltage | number: '1.1-1'}} V</div>
           </div>
           <div class="icon-text-control" id="waterTemp">
-            <img class="dashboard-light" src="/assets/images/engine-coolant.svg" [ngClass]="{'filter-red': data().waterTempWarningOn }">
+            <img class="dashboard-light" src="/assets/images/engine-coolant.svg" [class.filter-red]="data().waterTempWarningOn">
             <div>{{data().waterTemp | number: '1.1-1'}} &deg;C</div>
           </div>
           <div class="icon-text-control" id="oilPressure">
-            <img class="dashboard-light" src="/assets/images/oil-can.svg" [ngClass]="{'filter-red': data().oilPressureWarningOn}">
+            <img class="dashboard-light" src="/assets/images/oil-can.svg" [class.filter-red]="data().oilPressureWarningOn">
             <div>{{data().oilPressure | number: '1.1-1'}} PSI</div>
           </div>
           <div class="icon-text-control" id="oilTemp">
@@ -242,8 +242,8 @@
     </div>
     <div class="col-6">
       <div class="card dashboard-lights">
-        <div class="icon-text-control" [ngClass]="{'hidden': !data().retarderStepCount}">
-          <img class="dashboard-light" src="/assets/images/retarder.svg" [ngClass]="{'filter-orange': data().retarderLevel}">
+        <div class="icon-text-control" [class.hidden]="!data().retarderStepCount">
+          <img class="dashboard-light" src="/assets/images/retarder.svg" [class.filter-orange]="data().retarderLevel">
           <div>{{data().retarderLevel}}/{{data().retarderStepCount}}</div>
         </div>
         <div class="icon-text-control" id="acceleration">

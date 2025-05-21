@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClockComponent {
-  private _clockService = inject(ClockService);
+  private readonly _clockService = inject(ClockService);
 
   public currentTime = this._clockService.currentTime;
 }

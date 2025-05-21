@@ -3,12 +3,10 @@
 
   @for(position of positions(); track $index) {
     <div 
-      class="track-item" 
-      [ngClass]="{
-        'player': position.isPlayer,
-        'safety-car': position.isSafetyCar,
-        'in-pits': position.isInPits,
-      }" 
+      class="track-item"
+      [class.player]="position.isPlayer"
+      [class.safety-car]="position.isSafetyCar"
+      [class.in-pits]="position.isInPits" 
       [style.left.%]="position.lapCompletedPct">
     </div>
   }

@@ -27,9 +27,9 @@ export class TelemetryTraceComponent {
     this.addData(sample.throttlePct, sample.brakePct);
   }
 
-  private _labels = signal<number[]>([]);
-  private _brakeData = signal<number[]>([]);
-  private _throttleData = signal<number[]>([]);
+  private readonly _labels = signal<number[]>([]);
+  private readonly _brakeData = signal<number[]>([]);
+  private readonly _throttleData = signal<number[]>([]);
   public readonly chartType = 'line';
 
   public readonly chartData = signal<ChartConfiguration<'line'>['data']>({
