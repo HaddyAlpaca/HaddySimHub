@@ -303,6 +303,8 @@ export default tseslint.config(
              * recommended set provided by the @angular-eslint project would go here.
              */
             '@angular-eslint/template/prefer-control-flow': 'error',
+            '@angular-eslint/template/prefer-self-closing-tags': 'error',
+            '@angular-eslint/template/attributes-order': 'error',
         },
     },
 
