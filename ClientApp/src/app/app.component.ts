@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { GameDataService } from 'src/app/game-data.service';
 import { ClockComponent, ConnectionStatusComponent } from './shared';
 import { RaceDisplayComponent, RallyDisplayComponent, TruckDisplayComponent } from './displays';
@@ -9,7 +8,6 @@ import { RaceDisplayComponent, RallyDisplayComponent, TruckDisplayComponent } fr
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   imports: [
-    CommonModule,
     TruckDisplayComponent,
     RaceDisplayComponent,
     RallyDisplayComponent,
