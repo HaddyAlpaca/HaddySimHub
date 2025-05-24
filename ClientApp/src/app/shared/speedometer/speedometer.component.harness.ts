@@ -15,11 +15,25 @@ export class SpeedometerComponentHarness extends ComponentHarness {
     return this.getText('.gear');
   }
 
+  public async hasRpmGreen(): Promise<boolean> {
+    const elm = await this.locatorFor('.rpm')();
+    return await elm.hasClass('rpm-green');
+  }
+
+  public async hasRpmRed(): Promise<boolean> {
+    const elm = await this.locatorFor('.rpm')();
+    return await elm.hasClass('rpm-red');
+  }
+
+  public async hasRpmMax(): Promise<boolean> {
+    const elm = await this.locatorFor('.rpm')();
+    return await elm.hasClass('rpm-max');
+  }
+
   private async getText(selector: string): Promise<string> {
     const elm = await this.locatorFor(selector)();
     const text = await elm.text();
 
     return text;
   }
-
 }
