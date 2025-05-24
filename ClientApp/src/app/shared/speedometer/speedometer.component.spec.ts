@@ -30,7 +30,7 @@ describe('SpeedometerComponent tests', () => {
   it('should display the RPM in green when within the green range', async () => {
     component.rpm = 2000;
     component.rpmGreen = 1500;
-    
+
     const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, SpeedometerComponentHarness);
     expect(await harness.hasRpmGreen()).toBeTrue();
     expect(await harness.hasRpmRed()).toBeFalse();

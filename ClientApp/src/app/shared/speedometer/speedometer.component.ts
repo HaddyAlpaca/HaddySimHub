@@ -37,13 +37,13 @@ export class SpeedometerComponent {
 
   protected readonly showRpmRed = computed(() => {
     const rpmRed = this.rpmRed();
-    
+
     if (rpmRed <= 0) {
       return false;
     }
-    
+
     return this.rpm() >= rpmRed;
-  }); 
+  });
 
   protected readonly showRpmMax = computed(() => {
     const rpmMax = this.rpmMax();
