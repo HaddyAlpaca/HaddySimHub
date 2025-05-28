@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, effect, input, signal } from '@angular/core';
-import { DecimalPipe, NgClass } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { TrackPositionsComponent } from './track-positions.component';
 import { OpponentDeltaComponent } from './opponent-delta.component';
 import { DeltaTimePipe, LapTimePipe, SpeedometerComponent } from 'src/app/shared';
@@ -13,7 +13,6 @@ import { RaceData, TimingEntry } from './race-data';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [
-    NgClass,
     DecimalPipe,
     DeltaTimePipe,
     LapTimePipe,

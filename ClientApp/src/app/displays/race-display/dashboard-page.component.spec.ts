@@ -234,6 +234,13 @@ describe('Dashboard page component tests', () => {
     });
   });
 
+  describe('Flag tests', () => {
+    it('Flag class is set based on data', async () => {
+      patchData({ flag: 'flag-green' });
+      expect(await harness.getFlagClass()).toEqual('flag flag-green');
+    });
+  });
+
   const patchData = (value: Record<string, unknown>): void => {
     component.data.set({
       ...raceData,
