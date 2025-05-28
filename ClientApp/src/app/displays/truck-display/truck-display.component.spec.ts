@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TruckData, TruckDisplayComponent } from './truck-display.component';
 import { TruckDashComponentHarness } from './truck-display.component.harness';
-import { Component, provideExperimentalZonelessChangeDetection, signal } from '@angular/core';
+import { Component, provideZonelessChangeDetection, signal } from '@angular/core';
 
 describe('TruckDisplayComponent', () => {
   let fixture: ComponentFixture<TruckDisplayTestComponent>;
@@ -13,7 +13,7 @@ describe('TruckDisplayComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       providers: [
-        provideExperimentalZonelessChangeDetection(),
+        provideZonelessChangeDetection(),
       ],
     }).compileComponents();
 

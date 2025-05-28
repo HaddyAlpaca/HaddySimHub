@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TrackPositionsComponent } from './track-positions.component';
 import { TrackPositionsComponentHarness } from './track-positions.component.harness';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { Component, provideExperimentalZonelessChangeDetection } from '@angular/core';
+import { Component, provideZonelessChangeDetection } from '@angular/core';
 import { TimingEntry } from './race-data';
 
 describe('TrackPositionsComponent tests', () => {
@@ -12,7 +12,7 @@ describe('TrackPositionsComponent tests', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       providers: [
-        provideExperimentalZonelessChangeDetection(),
+        provideZonelessChangeDetection(),
       ],
     }).compileComponents();
 

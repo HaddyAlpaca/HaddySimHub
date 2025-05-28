@@ -9,7 +9,7 @@
     "resolveJsonModule": true,
     "sourceMap": true,
     "declaration": false,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,

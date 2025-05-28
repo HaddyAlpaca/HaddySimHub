@@ -3,7 +3,7 @@ import { AppComponent } from './app.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponentHarness } from './app.component.harness';
 import { ConnectionInfo, ConnectionStatus, GameDataService } from './game-data.service';
-import { provideExperimentalZonelessChangeDetection, signal } from '@angular/core';
+import { provideZonelessChangeDetection, signal } from '@angular/core';
 import { TruckData, RaceData, RallyData } from './displays';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
@@ -25,7 +25,7 @@ describe('AppComponent tests', () => {
     await TestBed.configureTestingModule({
       providers: [
         provideCharts(withDefaultRegisterables()),
-        provideExperimentalZonelessChangeDetection(),
+        provideZonelessChangeDetection(),
         { provide: GameDataService, useValue: mockGameDataService },
       ],
     }).compileComponents();

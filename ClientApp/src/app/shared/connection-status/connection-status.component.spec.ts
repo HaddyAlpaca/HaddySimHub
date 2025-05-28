@@ -3,7 +3,7 @@ import { ConnectionStatus } from 'src/app/game-data.service';
 import { ConnectionStatusComponent } from './connection-status.component';
 import { ConnectionStatusComponentHarness } from './connection-status.component.harness';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { Component, provideExperimentalZonelessChangeDetection } from '@angular/core';
+import { Component, provideZonelessChangeDetection } from '@angular/core';
 
 describe('ConnectionStatusComponent tests', () => {
   let fixture: ComponentFixture<ConnectionStatusTestComponent>;
@@ -12,7 +12,7 @@ describe('ConnectionStatusComponent tests', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       providers: [
-        provideExperimentalZonelessChangeDetection(),
+        provideZonelessChangeDetection(),
       ],
     }).compileComponents();
 
