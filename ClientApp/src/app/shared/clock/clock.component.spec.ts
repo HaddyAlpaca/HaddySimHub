@@ -3,7 +3,7 @@ import { ClockComponent } from './clock.component';
 import { ClockService } from './clock.service';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { ClockComponentHarness } from './clock.component.harness';
-import { provideExperimentalZonelessChangeDetection } from '@angular/core';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('ClockComponent tests', () => {
   let fixture: ComponentFixture<ClockComponent>;
@@ -15,7 +15,7 @@ describe('ClockComponent tests', () => {
 
     await TestBed.configureTestingModule({
       providers: [
-        provideExperimentalZonelessChangeDetection(),
+        provideZonelessChangeDetection(),
         { provide: ClockService, useValue: mockClockService },
       ],
     }).compileComponents();

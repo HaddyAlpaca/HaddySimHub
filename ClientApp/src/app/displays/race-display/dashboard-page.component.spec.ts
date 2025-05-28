@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DashboardPageComponent } from './dashboard-page.component';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { DashboardPageComponentHarness } from './dashboard-page.component.harness';
-import { Component, provideExperimentalZonelessChangeDetection, signal } from '@angular/core';
+import { Component, provideZonelessChangeDetection, signal } from '@angular/core';
 import { RaceData, TimingEntry } from './race-data';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
@@ -15,7 +15,7 @@ describe('Dashboard page component tests', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       providers: [
-        provideExperimentalZonelessChangeDetection(),
+        provideZonelessChangeDetection(),
         provideCharts(withDefaultRegisterables()),
       ],
     }).compileComponents();
@@ -231,6 +231,13 @@ describe('Dashboard page component tests', () => {
       patchData({ incidents: 3, maxIncidents: 17 });
 
       expect(await harness.getElementText('#incidents')).toEqual('3/17');
+    });
+  });
+
+  describe('Flag tests', () => {
+    it('Flag class is set based on data', async () => {
+      patchData({ flag: 'flag-green' });
+      expect(await harness.getFlagClass()).toEqual('flag flag-green');
     });
   });
 

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RelativePageComponent } from './relative-page.component';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { RelativePageComponentHarness } from './relative-page.component.harness';
-import { Component, provideExperimentalZonelessChangeDetection } from '@angular/core';
+import { Component, provideZonelessChangeDetection } from '@angular/core';
 import { TimingEntry } from './race-data';
 
 describe('RelativePageComponent tests', () => {
@@ -12,7 +12,7 @@ describe('RelativePageComponent tests', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       providers: [
-        provideExperimentalZonelessChangeDetection(),
+        provideZonelessChangeDetection(),
       ],
     }).compileComponents();
 

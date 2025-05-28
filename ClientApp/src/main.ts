@@ -1,4 +1,4 @@
-import { enableProdMode, importProvidersFrom, provideExperimentalZonelessChangeDetection } from '@angular/core';
+import { enableProdMode, importProvidersFrom, provideZonelessChangeDetection } from '@angular/core';
 import { environment } from './environments/environment';
 import { AppComponent } from './app/app.component';
 import { withInterceptorsFromDi, provideHttpClient } from '@angular/common/http';
@@ -15,7 +15,7 @@ bootstrapApplication(AppComponent, {
     importProvidersFrom(BrowserModule),
     provideHttpClient(withInterceptorsFromDi()),
     provideAnimationsAsync(),
-    provideExperimentalZonelessChangeDetection(),
+    provideZonelessChangeDetection(),
     provideCharts(withDefaultRegisterables()),
   ],
 })

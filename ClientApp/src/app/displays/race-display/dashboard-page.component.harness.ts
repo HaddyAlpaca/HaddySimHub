@@ -26,4 +26,10 @@ export class DashboardPageComponentHarness extends ComponentHarness {
     const elm = await this.locatorForOptional(selector)();
     return !!elm;
   }
+
+  public async getFlagClass(): Promise<string | null> {
+    const elm = await this.locatorFor('#flag')();
+    const classes = await elm.getAttribute('class');
+    return classes;
+  }
 }
