@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { RaceData } from './race-data';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { DashboardPageComponent } from './dashboard-page.component';
 import { RelativePageComponent } from './relative-page.component';
+import { SignalRService } from 'src/app/signalr.service';
 
 @Component({
   selector: 'app-race-display',
@@ -13,6 +13,6 @@ import { RelativePageComponent } from './relative-page.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RaceDisplayComponent {
-  public data = input.required<RaceData>({});
-  public page = input<number>(0);
+  private readonly _signalRService = inject(SignalRService);
+  protected readonly page = computed(() => this._signalRService.displayData()?.page ?? 1);
 }

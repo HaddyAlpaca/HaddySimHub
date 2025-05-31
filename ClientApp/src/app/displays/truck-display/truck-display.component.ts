@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, ViewEncapsulation } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { WaypointComponent } from './waypoint.component';
 import { TimespanPipe, NumberNlPipe, NumberFlexDigitPipe } from 'src/app/shared';
+import { SignalRService } from 'src/app/signalr.service';
 
 export interface TruckData {
   sourceCity: string;
@@ -81,5 +82,6 @@ export interface TruckData {
   ],
 })
 export class TruckDisplayComponent {
-  public data = input.required<TruckData>({});
+  private readonly _signalRService = inject(SignalRService);
+  protected readonly data = computed(() => this._signalRService.displayData()?.data as TruckData ?? {} as TruckData);
 }

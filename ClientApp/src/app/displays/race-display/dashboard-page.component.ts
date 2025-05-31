@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, effect, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, effect, inject, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { TrackPositionsComponent } from './track-positions.component';
 import { OpponentDeltaComponent } from './opponent-delta.component';
 import { DeltaTimePipe, LapTimePipe, SpeedometerComponent } from 'src/app/shared';
 import { TelemetrySample, TelemetryTraceComponent } from './telemetry-trace.component';
 import { RaceData, TimingEntry } from './race-data';
+import { SignalRService } from 'src/app/signalr.service';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -23,7 +24,8 @@ import { RaceData, TimingEntry } from './race-data';
   ],
 })
 export class DashboardPageComponent {
-  public data = input.required<RaceData>({});
+  private readonly _signalRService = inject(SignalRService);
+  protected readonly data = computed(() => this._signalRService.displayData()?.data as RaceData ?? {} as RaceData);
 
   private readonly _driverBehind = signal<TimingEntry | null>(null);
   protected readonly driverBehind = this._driverBehind.asReadonly();
@@ -38,7 +40,12 @@ export class DashboardPageComponent {
 
   public constructor() {
     effect(() => {
-      const entries = this.data().timingEntries?.sort((a, b) => b.timeToPlayer - a.timeToPlayer);
+      const data = this.data();
+      if (!data) {
+        return;
+      }
+
+      const entries = (data.timingEntries ?? []).sort((a, b) => b.timeToPlayer - a.timeToPlayer);
 
       if (!entries) {
         this._driverBehind.set(null);

@@ -16,14 +16,14 @@ export enum ConnectionStatus {
   Connected,
 }
 
-enum DisplayType {
+export enum DisplayType {
   None,
   TruckDashboard,
   RaceDashboard,
   RallyDashboard,
 }
 
-interface DisplayUpdate {
+export interface DisplayUpdate {
   type: DisplayType;
   data: TruckData | RaceData | RallyData | undefined;
   page: number;
@@ -32,23 +32,14 @@ interface DisplayUpdate {
 @Injectable({
   providedIn: 'root',
 })
-export class GameDataService {
+export class SignalRService {
   private readonly _hubConnection: HubConnection;
 
   private readonly _connectionStatus = signal<ConnectionInfo>({ status: ConnectionStatus.Disconnected });
   public readonly connectionStatus = this._connectionStatus.asReadonly();
 
-  private readonly _truckData = signal<TruckData | null>(null);
-  public readonly truckData = this._truckData.asReadonly();
-
-  private readonly _raceData = signal<RaceData | null>(null);
-  public readonly raceData = this._raceData.asReadonly();
-
-  private readonly _rallyData = signal<RallyData | null>(null);
-  public readonly rallyData = this._rallyData.asReadonly();
-
-  private readonly _page = signal<number>(1);
-  public readonly page = this._page.asReadonly();
+  private readonly _displayData = signal({} as DisplayUpdate);
+  public readonly displayData = this._displayData.asReadonly();
 
   public constructor() {
     const connectionOptions: IHttpConnectionOptions = {
@@ -80,30 +71,7 @@ export class GameDataService {
 
     //Monitor emmited data
     this._hubConnection.on('displayUpdate', (update: DisplayUpdate) => {
-      let truckData = null;
-      let raceData = null;
-      let rallyData = null;
-
-      if (update?.data) {
-        switch(update.type) {
-          case DisplayType.TruckDashboard:
-            truckData = update.data as TruckData;
-            break;
-
-          case DisplayType.RaceDashboard:
-            raceData = update.data as RaceData;
-            break;
-
-          case DisplayType.RallyDashboard:
-            rallyData = update.data as RallyData;
-            break;
-        }
-      }
-
-      this._truckData.set(truckData);
-      this._raceData.set(raceData);
-      this._rallyData.set(rallyData);
-      this._page.set(update.page);
+      this._displayData.set(update);
     });
   }
 

@@ -2,26 +2,26 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TruckData, TruckDisplayComponent } from './truck-display.component';
 import { TruckDashComponentHarness } from './truck-display.component.harness';
-import { Component, provideZonelessChangeDetection, signal } from '@angular/core';
+import { provideZonelessChangeDetection } from '@angular/core';
+import { MockSignalRService } from 'src/testing/mock-signalr.service';
+import { DisplayType, SignalRService } from 'src/app/signalr.service';
 
 describe('TruckDisplayComponent', () => {
-  let fixture: ComponentFixture<TruckDisplayTestComponent>;
-  let component: TruckDisplayTestComponent;
-  let data: TruckData;
+  let fixture: ComponentFixture<TruckDisplayComponent>;
   let harness: TruckDashComponentHarness;
+  let mockSignalRService: MockSignalRService;
 
   beforeEach(async () => {
+    mockSignalRService = new MockSignalRService();
+
     await TestBed.configureTestingModule({
       providers: [
         provideZonelessChangeDetection(),
+        { provide: SignalRService, useValue: mockSignalRService },
       ],
     }).compileComponents();
 
-    //Set default values for the truck data
-    data = {} as TruckData;
-
-    fixture = TestBed.createComponent(TruckDisplayTestComponent);
-    component = fixture.componentInstance;
+    fixture = TestBed.createComponent(TruckDisplayComponent);
     harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, TruckDashComponentHarness);
   });
 
@@ -90,17 +90,10 @@ describe('TruckDisplayComponent', () => {
   });
 
   const patchData = (value: Record<string, unknown>): void => {
-    component.data.set({
-      ...data,
-      ...value,
+    mockSignalRService.displayData.set({
+      type: DisplayType.TruckDashboard,
+      data: value as unknown as TruckData,
+      page: 1,
     });
   };
 });
-
-@Component({
-  template: '<app-truck-display [data]="data()" />',
-  imports: [TruckDisplayComponent],
-})
-export class TruckDisplayTestComponent {
-  public data = signal<TruckData>({} as TruckData);
-}

@@ -1,60 +1,53 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ConnectionStatus } from 'src/app/game-data.service';
 import { ConnectionStatusComponent } from './connection-status.component';
 import { ConnectionStatusComponentHarness } from './connection-status.component.harness';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { Component, provideZonelessChangeDetection } from '@angular/core';
+import { provideZonelessChangeDetection } from '@angular/core';
+import { MockSignalRService } from 'src/testing/mock-signalr.service';
+import { ConnectionStatus, SignalRService } from 'src/app/signalr.service';
 
 describe('ConnectionStatusComponent tests', () => {
-  let fixture: ComponentFixture<ConnectionStatusTestComponent>;
-  let component: ConnectionStatusTestComponent;
+  let fixture: ComponentFixture<ConnectionStatusComponent>;
+  let mockSignalRService: MockSignalRService;
 
   beforeEach(async () => {
+    mockSignalRService = new MockSignalRService();
+
     await TestBed.configureTestingModule({
       providers: [
         provideZonelessChangeDetection(),
+        { provide: SignalRService, useValue: mockSignalRService },
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ConnectionStatusTestComponent);
-    component = fixture.componentInstance;
+    fixture = TestBed.createComponent(ConnectionStatusComponent);
   });
 
   it('Disconnected state is displayed', async () => {
-    component.status = { status: ConnectionStatus.Disconnected };
     const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, ConnectionStatusComponentHarness);
+    mockSignalRService.connectionStatus.set({ status: ConnectionStatus.Disconnected });
 
     expect(await harness.getConnectionStatusText()).toEqual('Disconnected');
   });
 
   it('Connecting state is displayed', async () => {
-    component.status = { status: ConnectionStatus.Connecting };
     const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, ConnectionStatusComponentHarness);
+    mockSignalRService.connectionStatus.set({ status: ConnectionStatus.Connecting });
 
     expect(await harness.getConnectionStatusText()).toEqual('Connecting...');
   });
 
   it('Connection error state is displayed', async () => {
-    component.status = { status: ConnectionStatus.ConnectionError };
     const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, ConnectionStatusComponentHarness);
+    mockSignalRService.connectionStatus.set({ status: ConnectionStatus.ConnectionError });
 
     expect(await harness.getConnectionStatusText()).toEqual('Error connecting');
   });
 
   it('Connected state is displayed', async () => {
-    component.status = { status: ConnectionStatus.Connected };
     const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, ConnectionStatusComponentHarness);
+    mockSignalRService.connectionStatus.set({ status: ConnectionStatus.Connected });
 
     expect(await harness.getConnectionStatusText()).toEqual('Connected, waiting for game...');
   });
-
-
 });
-
-@Component({
-  template: '<app-connection-status [status]="status" />',
-  imports: [ConnectionStatusComponent],
-})
-export class ConnectionStatusTestComponent {
-  public status = { status: ConnectionStatus.Disconnected };
-}

@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, ViewEncapsulation } from '@angular/core';
 import { SpeedometerComponent, LapTimePipe } from 'src/app/shared';
+import { SignalRService } from 'src/app/signalr.service';
 
 export interface RallyData {
   speed: number;
@@ -36,5 +37,6 @@ export interface RallyData {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RallyDisplayComponent {
-  public data = input.required<RallyData>({});
+  private readonly _signalRService = inject(SignalRService);
+  protected readonly data = computed(() => this._signalRService.displayData()?.data as RallyData ?? {} as RallyData);
 }

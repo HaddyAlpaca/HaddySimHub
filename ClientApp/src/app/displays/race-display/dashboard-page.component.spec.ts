@@ -2,28 +2,30 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DashboardPageComponent } from './dashboard-page.component';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { DashboardPageComponentHarness } from './dashboard-page.component.harness';
-import { Component, provideZonelessChangeDetection, signal } from '@angular/core';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { RaceData, TimingEntry } from './race-data';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { MockSignalRService } from 'src/testing/mock-signalr.service';
+import { DisplayType, SignalRService } from 'src/app/signalr.service';
 
 describe('Dashboard page component tests', () => {
-  let fixture: ComponentFixture<DashboardPageTestComponent>;
-  let component: DashboardPageTestComponent;
+  let fixture: ComponentFixture<DashboardPageComponent>;
   let harness: DashboardPageComponentHarness;
-  let raceData: RaceData;
+  let mockSignalRService: MockSignalRService;
 
   beforeEach(async () => {
+    mockSignalRService = new MockSignalRService();
+
     await TestBed.configureTestingModule({
       providers: [
         provideZonelessChangeDetection(),
         provideCharts(withDefaultRegisterables()),
+        { provide: SignalRService, useValue: mockSignalRService },
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DashboardPageTestComponent);
-    component = fixture.componentInstance;
+    fixture = TestBed.createComponent(DashboardPageComponent);
     harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, DashboardPageComponentHarness);
-    raceData = {} as RaceData;
   });
 
   describe('Laps remaining tests', () => {
@@ -242,17 +244,10 @@ describe('Dashboard page component tests', () => {
   });
 
   const patchData = (value: Record<string, unknown>): void => {
-    component.data.set({
-      ...raceData,
-      ...value,
+    mockSignalRService.displayData.set({
+      type: DisplayType.RaceDashboard,
+      data: value as unknown as RaceData,
+      page: 1,
     });
   };
 });
-
-@Component({
-  template: '<app-dashboard-page [data]="data()" />',
-  imports: [DashboardPageComponent],
-})
-export class DashboardPageTestComponent {
-  public data = signal<RaceData>({} as RaceData);
-}

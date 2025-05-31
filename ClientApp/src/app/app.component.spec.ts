@@ -2,39 +2,33 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { AppComponent } from './app.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponentHarness } from './app.component.harness';
-import { ConnectionInfo, ConnectionStatus, GameDataService } from './game-data.service';
-import { provideZonelessChangeDetection, signal } from '@angular/core';
-import { TruckData, RaceData, RallyData } from './displays';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
-
-class MockGameDataService {
-  public truckData = signal<TruckData | null>(null);
-  public raceData = signal<RaceData | null>(null);
-  public rallyData = signal<RallyData | null>(null);
-  public connectionStatus = signal<ConnectionInfo>({ status: ConnectionStatus.Disconnected });
-  public page = signal(1);
-}
+import { MockSignalRService } from 'src/testing/mock-signalr.service';
+import { DisplayType, DisplayUpdate, SignalRService } from './signalr.service';
+import { RaceData, RallyData, TruckData } from './displays';
 
 describe('AppComponent tests', () => {
   let fixture: ComponentFixture<AppComponent>;
-  let mockGameDataService: MockGameDataService;
+  let mockSignalRService: MockSignalRService;
 
   beforeEach(async () => {
-    mockGameDataService = new MockGameDataService();
+    mockSignalRService = new MockSignalRService();
 
     await TestBed.configureTestingModule({
       providers: [
         provideCharts(withDefaultRegisterables()),
         provideZonelessChangeDetection(),
-        { provide: GameDataService, useValue: mockGameDataService },
+        { provide: SignalRService, useValue: mockSignalRService },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);
   });
 
-  it('should show the connection status when all data is null', async () => {
+  it('should show the connection status when display type is None', async () => {
     const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, AppComponentHarness);
+    mockSignalRService.displayData.set({ type: DisplayType.None, data: undefined, page: 1 } as DisplayUpdate);
 
     expect(await harness.isTruckDisplayVisible()).toBeFalse();
     expect(await harness.isRaceDisplayVisible()).toBeFalse();
@@ -43,9 +37,8 @@ describe('AppComponent tests', () => {
   });
 
   it('should show the truck display when truck data is available', async () => {
-    mockGameDataService.truckData.set({} as TruckData);
-
     const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, AppComponentHarness);
+    mockSignalRService.displayData.set({ type: DisplayType.TruckDashboard, data: {} as TruckData, page: 1 } as DisplayUpdate);
 
     expect(await harness.isTruckDisplayVisible()).toBeTrue();
     expect(await harness.isRaceDisplayVisible()).toBeFalse();
@@ -54,9 +47,8 @@ describe('AppComponent tests', () => {
   });
 
   it('should show the race display when race data is available', async () => {
-    mockGameDataService.raceData.set({} as RaceData);
-
     const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, AppComponentHarness);
+    mockSignalRService.displayData.set({ type: DisplayType.RaceDashboard, data: {} as RaceData, page: 1 } as DisplayUpdate);
 
     expect(await harness.isTruckDisplayVisible()).toBeFalse();
     expect(await harness.isRaceDisplayVisible()).toBeTrue();
@@ -65,9 +57,8 @@ describe('AppComponent tests', () => {
   });
 
   it('should show the rally display when rally data is available', async () => {
-    mockGameDataService.rallyData.set({} as RallyData);
-
     const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, AppComponentHarness);
+    mockSignalRService.displayData.set({ type: DisplayType.RallyDashboard, data: {} as RallyData, page: 1 } as DisplayUpdate);
 
     expect(await harness.isTruckDisplayVisible()).toBeFalse();
     expect(await harness.isRaceDisplayVisible()).toBeFalse();
