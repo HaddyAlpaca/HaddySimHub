@@ -2,17 +2,18 @@
   <app-clock />
 </div>
 <div class="display">
-  @let truckData = gameDataService.truckData();
-  @let raceData = gameDataService.raceData();
-  @let rallyData = gameDataService.rallyData();
-
-  @if (truckData) {
-    <app-truck-display [data]="truckData" />
-  } @else if(raceData) {
-    <app-race-display [data]="raceData" [page]="gameDataService.page()" />
-  } @else if(rallyData) {
-    <app-rally-display [data]="rallyData" />
-  } @else {
-    <app-connection-status [status]="gameDataService.connectionStatus()" />
+  @switch (type()) {
+    @case (DisplayType.TruckDashboard) {
+      <app-truck-display />
+    }
+    @case (DisplayType.RaceDashboard) {
+      <app-race-display />
+    }
+    @case (DisplayType.RallyDashboard) {
+      <app-rally-display />
+    }
+    @default {
+      <app-connection-status />
+    }
   }
 </div>

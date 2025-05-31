@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { TimingEntry } from './race-data';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { DeltaTimePipe } from 'src/app/shared';
+import { SignalRService } from 'src/app/signalr.service';
+import { RaceData } from './race-data';
 
 @Component({
   selector: 'app-relative-page',
@@ -10,8 +11,10 @@ import { DeltaTimePipe } from 'src/app/shared';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RelativePageComponent {
-  public timingEntries = input.required<TimingEntry[]>();
-  protected sortedEntries = computed(() => {
+  private readonly _signalRService = inject(SignalRService);
+  protected readonly timingEntries = computed(() => (this._signalRService.displayData()?.data as RaceData).timingEntries || []);
+
+  protected readonly sortedEntries = computed(() => {
     const entries = this.timingEntries()
       .map(entry => ({
         ...entry,
