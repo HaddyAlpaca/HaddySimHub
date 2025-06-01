@@ -25,7 +25,7 @@ import { SignalRService } from 'src/app/signalr.service';
 })
 export class DashboardPageComponent {
   private readonly _signalRService = inject(SignalRService);
-  protected readonly data = computed(() => this._signalRService.displayData()?.data as RaceData ?? {} as RaceData);
+  protected readonly data = computed(() => (this._signalRService.displayData()?.data ?? {}) as RaceData);
 
   private readonly _driverBehind = signal<TimingEntry | null>(null);
   protected readonly driverBehind = this._driverBehind.asReadonly();

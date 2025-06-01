@@ -83,5 +83,5 @@ export interface TruckData {
 })
 export class TruckDisplayComponent {
   private readonly _signalRService = inject(SignalRService);
-  protected readonly data = computed(() => this._signalRService.displayData()?.data as TruckData ?? {} as TruckData);
+  protected readonly data = computed(() => (this._signalRService.displayData()?.data ?? {}) as TruckData);
 }
