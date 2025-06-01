@@ -38,5 +38,5 @@ export interface RallyData {
 })
 export class RallyDisplayComponent {
   private readonly _signalRService = inject(SignalRService);
-  protected readonly data = computed(() => this._signalRService.displayData()?.data as RallyData ?? {} as RallyData);
+  protected readonly data = computed(() => (this._signalRService.displayData()?.data ?? {}) as RallyData);
 }
