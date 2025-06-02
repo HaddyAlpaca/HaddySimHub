@@ -1,0 +1,33 @@
+.rpm-lights {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    
+    .light {
+        width: 3.5vh;
+        height: 3.5vh;
+        border-radius: 50%;
+        border: 1px solid #000;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        display: inline-block;
+        margin: 0 5px;
+        background-color: gray;
+
+        &.flash {
+            animation: rpm-flash .3s infinite;
+        }
+    }
+}
+
+@keyframes rpm-flash {
+    0% {
+        background-color: red;
+    }
+    50% {
+        background-color: black;
+    }
+    100% {
+        background-color: red;
+    }
+}

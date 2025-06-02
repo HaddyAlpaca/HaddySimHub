@@ -6,6 +6,7 @@ import { DeltaTimePipe, LapTimePipe, SpeedometerComponent } from 'src/app/shared
 import { TelemetrySample, TelemetryTraceComponent } from './telemetry-trace.component';
 import { RaceData, TimingEntry } from './race-data';
 import { SignalRService } from 'src/app/signalr.service';
+import { RpmLightsComponent } from 'src/app/shared/rpm-lights/rpm-lights.component';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -21,6 +22,7 @@ import { SignalRService } from 'src/app/signalr.service';
     SpeedometerComponent,
     OpponentDeltaComponent,
     TelemetryTraceComponent,
+    RpmLightsComponent,
   ],
 })
 export class DashboardPageComponent {

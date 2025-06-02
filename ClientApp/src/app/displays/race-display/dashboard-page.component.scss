@@ -22,19 +22,6 @@ app-race-display {
       font-size: 2.5vw;
     }
 
-    .rpm-green {
-      color: green;
-    }
-
-    .rpm-red {
-      color: red;
-      transform: scale(1.1);
-    }
-
-    .rpm-max {
-      animation: text-blinker .5s step-end infinite;
-    }
-
     .gear {
       text-align: center;
       font-size: 6vw;

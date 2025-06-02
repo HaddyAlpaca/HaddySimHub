@@ -9,8 +9,7 @@ export interface RaceData {
   speed: number;
   gear: string;
   rpm: number;
-  rpmGreen: number;
-  rpmRed: number;
+  rpmLights: { rpm: number; color: string }[];
   rpmMax: number;
   trackTemp: number;
   airTemp: number;

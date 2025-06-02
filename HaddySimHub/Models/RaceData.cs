@@ -22,9 +22,7 @@ public sealed record RaceData
 
     public int Rpm { get; init; }
 
-    public int RpmGreen { get; init; }
-
-    public int RpmRed { get; init; }
+    public required RpmLight[] RpmLights { get; init; }
 
     public int RpmMax { get; init; }
 
