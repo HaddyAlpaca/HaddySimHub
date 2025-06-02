@@ -11,6 +11,11 @@ app-rally-display {
     gap: 16px;
   }
 
+  .speedometer {
+    display: flex;
+    flex-direction: column;
+  }
+
   .group-border {
     border: white 4px solid;
     padding: 10px 20px 10px 20px;
@@ -32,16 +37,7 @@ app-rally-display {
       color: gold;
     }
 
-    .speedometer {
-      display: flex;
-      flex-direction: column;
-    }
-
     app-speedometer {
-      * {
-        color: white;
-      }
-  
       > label {
         text-transform: uppercase;
         text-align: center;
