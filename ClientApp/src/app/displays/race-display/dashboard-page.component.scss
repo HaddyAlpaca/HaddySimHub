@@ -6,6 +6,11 @@ app-race-display {
     text-align: right;
   }
 
+  .speedometer {
+    display: flex;
+    flex-direction: column;
+  }
+
   app-speedometer {
     * {
       color: white;

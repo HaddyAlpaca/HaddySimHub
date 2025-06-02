@@ -32,6 +32,11 @@ app-rally-display {
       color: gold;
     }
 
+    .speedometer {
+      display: flex;
+      flex-direction: column;
+    }
+
     app-speedometer {
       * {
         color: white;
