@@ -7,7 +7,8 @@
     <div>{{data().distanceTravelled}} m</div>
   </div>
   <div class="group-border border-yellow">
-    <app-speedometer [rpm]="data().rpm" [rpmRed]="data().rpmMax" [rpmMax]="data().rpmMax" [gear]="data().gear" [speed]="data().speed" />
+    <app-rpm-lights [rpm]="data().rpm" [rpmMax]="data().rpmMax" [biDirectional]="true" [lights]="data().lights"  />
+    <app-speedometer [rpm]="data().rpm" [gear]="data().gear" [speed]="data().speed" />
   </div>
   <div class="group-border border-blue">
     <label>Sector 1</label>

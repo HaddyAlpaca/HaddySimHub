@@ -42,7 +42,8 @@
     </div>
     <div class="col-4 center-column">
       <div class=" group-border border-yellow">
-        <app-speedometer [rpm]="data().rpm" [rpmGreen]="data().rpmGreen" [rpmRed]="data().rpmRed" [rpmMax]="data().rpmMax" [gear]="data().gear" [speed]="data().speed" />
+        <app-rpm-lights [rpm]="data().rpm" [rpmMax]="data().rpmMax" [biDirectional]="true" [lights]="data().lights"  />
+        <app-speedometer [rpm]="data().rpm" [gear]="data().gear" [speed]="data().speed" />
       </div>
       <div class="group-border border-blue">
         <div id="flag" [class]="`flag ${data().flag}`"></div>

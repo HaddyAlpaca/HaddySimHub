@@ -1,0 +1,11 @@
+<div class="rpm-lights">
+    @for(light of lights(); let i = $index; track light) {
+        <app-rpm-light [index]="i" />
+    }
+    
+    @if (biDirectional()) {
+        @for(light of lights()?.slice().reverse(); let i = $index; track light) {
+            <app-rpm-light [index]="lights().length - (1 + i)" />
+        }
+    }
+</div>
