@@ -1,9 +1,10 @@
-import { Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
 @Component({
   selector: 'app-gauge',
   templateUrl: './gauge.component.html',
-  styleUrl: './gauge.component.scss'
+  styleUrl: './gauge.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GaugeComponent {
   public value = input.required<number>();
