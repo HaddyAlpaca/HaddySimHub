@@ -3,6 +3,7 @@ import { DecimalPipe } from '@angular/common';
 import { WaypointComponent } from './waypoint.component';
 import { TimespanPipe, NumberNlPipe, NumberFlexDigitPipe } from 'src/app/shared';
 import { SignalRService } from 'src/app/signalr.service';
+import { GaugeComponent } from 'src/app/shared/gauge/gauge.component';
 
 export interface TruckData {
   sourceCity: string;
@@ -79,6 +80,7 @@ export interface TruckData {
     NumberNlPipe,
     WaypointComponent,
     NumberFlexDigitPipe,
+    GaugeComponent,
   ],
 })
 export class TruckDisplayComponent {
