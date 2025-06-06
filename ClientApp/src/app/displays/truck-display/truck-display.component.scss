@@ -3,13 +3,22 @@ app-truck-display {
   font-family: Poppins, sans-serif;
   color: white;
 
+  app-gauge {
+    padding-top: 20px;
+    overflow: hidden;
+  }
+
   .gauge {
     align-content: center;
+    justify-content: center;
+    height: 430px !important;
   }
 
   .gear {
     text-align: center;
     font-size: 8vw;
+    line-height: 1;
+    padding-top: 65px;
   }
 
   .text-center {
@@ -17,16 +26,16 @@ app-truck-display {
   }
 
   .unit {
-    font-size: 2vw;
+    font-size: 1.3vw;
+    color: gray;
+    line-height: 1;
+    margin-bottom: 50px;
   }
 
   .rpm-value {
-    font-size: 3.5vw;
-  }
-
-  .rpm-max {
-    color: red;
-    transform: scale(1.1);
+    font-size: 2vw;
+    line-height: 1;
+    padding-bottom: 13px;
   }
 
   .dashboard-lights {
