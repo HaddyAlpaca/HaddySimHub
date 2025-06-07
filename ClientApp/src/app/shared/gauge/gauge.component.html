@@ -1,4 +1,4 @@
-<div class="ring">
+<div class="ring" [class.max-rpm]="value() >= max()">
     <div class="needle" [style.--needle-deg]="degrees()"></div>
     <div class="content">
         <ng-content />
