@@ -15,19 +15,13 @@
         background-color: gray;
 
         &.flash {
-            animation: rpm-flash .3s infinite;
+            animation: rpm-flash 1s infinite;
         }
     }
 }
 
 @keyframes rpm-flash {
-    0% {
-        background-color: red;
-    }
     50% {
-        background-color: black;
-    }
-    100% {
-        background-color: red;
+      color: black;
     }
 }
