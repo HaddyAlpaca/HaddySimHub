@@ -177,8 +177,8 @@
         <app-gauge [value]="data().rpm" [max]="data().rpmMax">
           <div class="gear text-center">{{data().gear}}</div>
           <label class="unit text-center">Gear</label>
-          <div class="rpm-value text-center">{{data().rpm}}</div>
-          <label class="unit text-center">RPM</label>
+            <div class="rpm-value text-center">{{ (data().rpm / 1000) | number:'1.1-1' }}</div>
+          <label class="unit text-center">x 1000 RPM</label>
         </app-gauge>
       </div>
     </div>
