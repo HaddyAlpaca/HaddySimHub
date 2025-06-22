@@ -27,6 +27,13 @@ export class TelemetryTraceComponent {
     this.addData(sample.throttlePct, sample.brakePct);
   }
 
+  public constructor() {
+    // Initialize the chart with max frames
+    this._labels.set(Array.from({ length: this._maxFrames }, (_, i) => i));
+    this._brakeData.set(Array.from({ length: this._maxFrames }, (_, i) => 0));
+    this._throttleData.set(Array.from({ length: this._maxFrames }, (_, i) => 0));
+  }
+
   private readonly _labels = signal<number[]>([]);
   private readonly _brakeData = signal<number[]>([]);
   private readonly _throttleData = signal<number[]>([]);
