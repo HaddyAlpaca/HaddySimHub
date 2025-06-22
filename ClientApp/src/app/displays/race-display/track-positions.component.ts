@@ -8,5 +8,5 @@ import { TimingEntry } from './race-data';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TrackPositionsComponent {
-  public positions = input<TimingEntry[]>([]);
+  public readonly positions = input<TimingEntry[]>([]);
 }

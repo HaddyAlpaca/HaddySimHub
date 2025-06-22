@@ -7,7 +7,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation, input } from '@a
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SpeedometerComponent {
-  public speed = input.required<number>();
-  public rpm = input.required<number>();
-  public gear = input.required<string>();
+  public readonly speed = input.required<number>();
+  public readonly rpm = input.required<number>();
+  public readonly gear = input.required<string>();
 }

@@ -7,8 +7,8 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GaugeComponent {
-  public value = input.required<number>();
-  public max = input.required<number>();
+  public readonly value = input.required<number>();
+  public readonly max = input.required<number>();
   public readonly degrees = computed(() => {
     const value = this.value();
     const max = this.max();

@@ -1,9 +1,25 @@
 app-race-display {
-  .container {
-    max-width: unset;
+  .dashboard-container {
+    display: grid;
+    grid-template-rows: auto auto auto 1fr;
+    gap: 12px;
     color: white;
     font-size: 2.5vw;
-    text-align: right;
+  }
+
+  .dashboard-row {
+    display: grid;
+    gap: 12px;
+    width: calc(100% - 12px);
+    margin-left: 6px;;
+
+    &.cols-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  
+    &.cols-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
 
   .speedometer {
@@ -31,10 +47,6 @@ app-race-display {
       text-align: center;
       font-size: 6vw;
     }
-  }
-
-  .row {
-    margin-top: 10px;
   }
 
   label {
@@ -175,5 +187,15 @@ app-race-display {
     50% {
       color: transparent;
     }
+  }
+
+  app-track-positions {
+    width: calc(100% - 12px);
+    margin-left: 6px;;
+  }
+
+  app-telemetry-trace {
+    width: calc(100% - 12px);
+    margin-left: 6px;;
   }
 }

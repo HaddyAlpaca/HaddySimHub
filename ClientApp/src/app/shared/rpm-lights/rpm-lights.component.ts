@@ -7,9 +7,9 @@ import { ChangeDetectionStrategy, Component, effect, input, signal, viewChildren
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RpmLightComponent {
-  public index = input.required<number>();
-  public color = signal('black');
-  public flash = signal(false);
+  public readonly index = input.required<number>();
+  public readonly color = signal('black');
+  public readonly flash = signal(false);
 }
 
 @Component({
@@ -23,10 +23,10 @@ export class RpmLightComponent {
 export class RpmLightsComponent {
   private readonly _lightComponents = viewChildren(RpmLightComponent);
 
-  public lights = input.required<{ rpm: number; color: string }[]>();
-  public rpm = input.required<number>();
-  public rpmMax = input.required<number>();
-  public biDirectional = input<boolean>(false);
+  public readonly lights = input.required<{ rpm: number; color: string }[]>();
+  public readonly rpm = input.required<number>();
+  public readonly rpmMax = input.required<number>();
+  public readonly biDirectional = input<boolean>(false);
 
   public constructor() {
     effect(() => {
