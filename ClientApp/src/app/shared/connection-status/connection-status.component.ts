@@ -10,7 +10,7 @@ import { ConnectionStatus, SignalRService } from 'src/app/signalr.service';
 export class ConnectionStatusComponent {
   private readonly _signalRService = inject(SignalRService);
 
-  protected connectionStatusDescription = computed(() => {
+  protected readonly connectionStatusDescription = computed(() => {
     const statusDescriptions: Record<ConnectionStatus, string> = {
       [ConnectionStatus.Disconnected]: 'Disconnected',
       [ConnectionStatus.Connecting]: 'Connecting...',
@@ -21,7 +21,7 @@ export class ConnectionStatusComponent {
     return statusDescriptions[this._signalRService.connectionStatus().status] || 'Unknown';
   });
 
-  protected connectionMessage = computed(() => this._signalRService.connectionStatus().message);
+  protected readonly connectionMessage = computed(() => this._signalRService.connectionStatus().message);
 
-  protected reloadSeconds = computed(() => this._signalRService.connectionStatus().reloadSeconds);
+  protected readonly reloadSeconds = computed(() => this._signalRService.connectionStatus().reloadSeconds);
 }

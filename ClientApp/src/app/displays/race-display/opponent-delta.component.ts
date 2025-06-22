@@ -10,9 +10,9 @@ import { TimingEntry } from './race-data';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OpponentDeltaComponent {
-  public caption = input.required<string>();
-  public driverInfo = input.required<TimingEntry | null>();
-  protected deltaTime = computed(() => {
+  public readonly caption = input.required<string>();
+  public readonly driverInfo = input.required<TimingEntry | null>();
+  protected readonly deltaTime = computed(() => {
     const driverInfo = this.driverInfo();
     if (!driverInfo) {
       return 0;

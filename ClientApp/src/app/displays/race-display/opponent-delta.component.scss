@@ -1,6 +1,6 @@
 .name-class-row {
     display: grid;
-    grid-template-columns: 2fr auto auto 1fr;
+    grid-template-columns: auto 1fr;
     align-items: center;
 }
 
@@ -14,7 +14,6 @@
 
 .driver-name {
     color: white;
-    font-size: 1.5vw;
     text-align: left;
     white-space: nowrap;
     overflow: hidden;
@@ -27,6 +26,10 @@
     &.lap-behind {
         color: blue;
     }
+}
+
+.delta-time {
+    text-align: right;
 }
 
 .driver-class {

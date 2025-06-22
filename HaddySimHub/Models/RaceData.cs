@@ -76,7 +76,7 @@ public record TimingEntry
     public string LicenseColor { get; init; } = string.Empty;
     public long IRating { get; init; }
     public int Laps { get; init; }
-    public int LapCompletedPct { get; init; }
+    public double LapCompletedPct { get; init; }
     public bool IsPlayer { get; init; }
     public bool IsSafetyCar { get; init; }
     public bool IsInPits { get; init; }

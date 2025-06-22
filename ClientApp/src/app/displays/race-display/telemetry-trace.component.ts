@@ -15,7 +15,7 @@ export interface TelemetrySample {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TelemetryTraceComponent {
-  private readonly _maxFrames = 10_000;
+  private readonly _maxFrames = 2_000;
   private _frame = 0;
 
   @Input()
