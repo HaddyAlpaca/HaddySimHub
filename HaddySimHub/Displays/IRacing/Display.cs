@@ -169,6 +169,11 @@ internal sealed class Display() : DisplayBase<DataSample>()
             TimingEntries = orderedEntries,
         };
 
+        if (displayUpdate.Rpm == 0)
+        {
+            Console.WriteLine("RPM is 0, likely not in a car or telemetry data is not available.");
+        }
+
         return new DisplayUpdate { Type = DisplayType.RaceDashboard, Data = displayUpdate };
     }
 
