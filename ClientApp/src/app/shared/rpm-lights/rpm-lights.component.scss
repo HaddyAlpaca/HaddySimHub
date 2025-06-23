@@ -21,7 +21,10 @@
 }
 
 @keyframes rpm-flash {
+    0%, 100% {
+        background-color: inherit;
+    }
     50% {
-      color: black;
+      background-color: black;
     }
 }
