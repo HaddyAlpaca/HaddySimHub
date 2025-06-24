@@ -128,13 +128,13 @@ internal sealed class Display() : DisplayBase<DataSample>()
             }
         }
 
-        Console.Clear();
+        // Console.Clear();
         var orderedEntries = timingEntries.OrderByDescending(e => e.TimeToPlayer).ToArray();
 
-        foreach (var entry in orderedEntries)
-        {
-            Console.WriteLine($"#{entry.CarNumber} {entry.DriverName} - {entry.License} - {entry.LicenseColor} - {entry.IRating} - {entry.Laps} - {entry.LapCompletedPct}% - {entry.TimeToPlayer}");
-        }
+        // foreach (var entry in orderedEntries)
+        // {
+        //     Console.WriteLine($"#{entry.CarNumber} {entry.DriverName} - {entry.License} - {entry.LicenseColor} - {entry.IRating} - {entry.Laps} - {entry.LapCompletedPct}% - {entry.TimeToPlayer}");
+        // }
 
         var displayUpdate = new RaceData
         {
