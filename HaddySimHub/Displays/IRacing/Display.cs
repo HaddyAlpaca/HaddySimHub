@@ -53,7 +53,7 @@ internal sealed class Display() : DisplayBase<DataSample>()
         }
 
         var timingEntries = new List<TimingEntry>();
-
+        string CarScreenName = string.Empty;
         foreach (var driver in sessionData.DriverInfo.CompetingDrivers)
         {
             var carIdx = (int)driver.CarIdx;
@@ -88,8 +88,7 @@ internal sealed class Display() : DisplayBase<DataSample>()
 
             if (carIdx == telemetry.PlayerCarIdx)
             {
-                Console.WriteLine($"CarScreenName: {driver.CarScreenName}");
-                Console.WriteLine($"CarScreenNameShort: {driver.CarScreenNameShort}");
+                CarScreenName = driver.CarScreenName;
             }
 
             // The license string is in the format R 02.0 remove the zero after the space
@@ -128,13 +127,7 @@ internal sealed class Display() : DisplayBase<DataSample>()
             }
         }
 
-        // Console.Clear();
         var orderedEntries = timingEntries.OrderByDescending(e => e.TimeToPlayer).ToArray();
-
-        // foreach (var entry in orderedEntries)
-        // {
-        //     Console.WriteLine($"#{entry.CarNumber} {entry.DriverName} - {entry.License} - {entry.LicenseColor} - {entry.IRating} - {entry.Laps} - {entry.LapCompletedPct}% - {entry.TimeToPlayer}");
-        // }
 
         var displayUpdate = new RaceData
         {
@@ -155,7 +148,7 @@ internal sealed class Display() : DisplayBase<DataSample>()
             BestLapTimeDelta = telemetry.LapBestLapTime <= 0 ? 0 : telemetry.LapDeltaToSessionBestLap,
             Gear = telemetry.Gear == -1 ? "R" : telemetry.Gear == 0 ? "N" : telemetry.Gear.ToString(),
             Rpm = (int)telemetry.RPM,
-            RpmLights = [.. GenerateRpmLights()],
+            RpmLights = [.. GenerateRpmLights(CarScreenName)],
             RpmMax = 7000,
             Speed = (int)Math.Round(telemetry.Speed * 3.6),
             BrakePct = (int)Math.Round(telemetry.Brake * 100, 0),
@@ -168,11 +161,6 @@ internal sealed class Display() : DisplayBase<DataSample>()
             PitLimiterOn = telemetry.EngineWarnings.HasFlag(EngineWarnings.PitSpeedLimiter),
             TimingEntries = orderedEntries,
         };
-
-        if (displayUpdate.Rpm == 0)
-        {
-            Console.WriteLine("RPM is 0, likely not in a car or telemetry data is not available.");
-        }
 
         return new DisplayUpdate { Type = DisplayType.RaceDashboard, Data = displayUpdate };
     }
@@ -224,17 +212,21 @@ internal sealed class Display() : DisplayBase<DataSample>()
         return flag;
     }
 
-    public static RpmLight[] GenerateRpmLights()
+    public static RpmLight[] GenerateRpmLights(string carName)
     {
-        // Based on iRacing's F4 car RPM lights (https://s100.iracing.com/wp-content/uploads/2023/10/FIA-F4-Manual-V2.pdf)
-        return
-        [
-            new RpmLight { Rpm = 6300, Color = "Green" },
-            new RpmLight { Rpm = 6500, Color = "Green" },
-            new RpmLight { Rpm = 6600, Color = "Green" },
-            new RpmLight { Rpm = 6700, Color = "Green" },
-            new RpmLight { Rpm = 6800, Color = "Red" },
-            new RpmLight { Rpm = 6900, Color = "Red" }
-        ];
+        if (carName == "FIA F4")
+        {
+            return
+            [
+                new RpmLight { Rpm = 6300, Color = "Green" },
+                new RpmLight { Rpm = 6500, Color = "Green" },
+                new RpmLight { Rpm = 6600, Color = "Green" },
+                new RpmLight { Rpm = 6700, Color = "Green" },
+                new RpmLight { Rpm = 6800, Color = "Red" },
+                new RpmLight { Rpm = 6900, Color = "Red" }
+            ];
+        }
+
+        return [];
     }
 }

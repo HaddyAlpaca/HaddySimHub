@@ -24,7 +24,7 @@ namespace HaddySimHub.Displays.IRacing
                     Speed = (short)DateTime.Now.Second,
                     Gear = new Random().Next(1, 6).ToString(),
                     Rpm = (short)new Random().Next(0, 10000),
-                    RpmLights = [.. Display.GenerateRpmLights()],
+                    RpmLights = [.. Display.GenerateRpmLights("FIA F4")],
                     RpmMax = 7000,
                     TrackTemp = new Random().Next(10, 50),
                     AirTemp = new Random().Next(10, 50),

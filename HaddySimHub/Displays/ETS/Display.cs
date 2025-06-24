@@ -38,17 +38,6 @@ internal sealed class Display() : DisplayBase<SCSTelemetry>()
             _fuelAverageConsumption = fuelAverageConsumption;
         }
 
-        Console.Clear();
-        Console.WriteLine($"HShifterSlot: {data.TruckValues.CurrentValues.MotorValues.GearValues.HShifterSlot}");
-        Console.WriteLine($"Selected: {data.TruckValues.CurrentValues.MotorValues.GearValues.Selected}");
-        Console.WriteLine($"SlotGear: {data.TruckValues.ConstantsValues.MotorValues.SlotGear}");
-        Console.WriteLine($"ShifterTypeValue: {data.TruckValues.ConstantsValues.MotorValues.ShifterTypeValue}");
-        Console.WriteLine($"EngineRpmMax: {data.TruckValues.ConstantsValues.MotorValues.EngineRpmMax}");
-        Console.WriteLine($"ForwardGearCount: {data.TruckValues.ConstantsValues.MotorValues.ForwardGearCount}");
-        Console.WriteLine($"ReverseGearCount: {data.TruckValues.ConstantsValues.MotorValues.ReverseGearCount}");
-        Console.WriteLine($"SelectorCount: {data.TruckValues.ConstantsValues.MotorValues.SelectorCount}");
-        Console.WriteLine($"SlotHandlePosition: {data.TruckValues.ConstantsValues.MotorValues.SlotHandlePosition}");
-
         string gear = string.Empty;
         int selectedGear = data.TruckValues.CurrentValues.MotorValues.GearValues.Selected;
         if (selectedGear == 0)
