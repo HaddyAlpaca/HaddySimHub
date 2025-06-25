@@ -98,7 +98,6 @@ export default tseslint.config(
             '@angular-eslint/no-conflicting-lifecycle': 'error',
             '@angular-eslint/use-lifecycle-interface': 'error',
             '@angular-eslint/prefer-on-push-component-change-detection': 'error',
-            '@angular-eslint/prefer-signals': 'error',
 
             // @stylistic/ts
             '@stylistic/ts/semi': ['error', 'always'],

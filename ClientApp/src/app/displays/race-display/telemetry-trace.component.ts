@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 
@@ -18,23 +18,20 @@ export class TelemetryTraceComponent {
   private readonly _maxFrames = 2_000;
   private _frame = 0;
 
-  public readonly telemetrySample = input<TelemetrySample>();
+  @Input()
+  public set telemetrySample(sample: TelemetrySample) {
+    if (sample.brakePct === undefined || sample.throttlePct === undefined) {
+      return;
+    }
+
+    this.addData(sample.throttlePct, sample.brakePct);
+  }
 
   public constructor() {
     // Initialize the chart with max frames
     this._labels.set(Array.from({ length: this._maxFrames }, (_, i) => i));
     this._brakeData.set(Array.from({ length: this._maxFrames }, (_, _i) => 0));
     this._throttleData.set(Array.from({ length: this._maxFrames }, (_, _i) => 0));
-
-    effect(() => {
-      const sample = this.telemetrySample();
-
-      if (sample?.brakePct === undefined || sample?.throttlePct === undefined) {
-        return;
-      }
-
-      this.addData(sample.throttlePct, sample.brakePct);
-    });
   }
 
   private readonly _labels = signal<number[]>([]);
