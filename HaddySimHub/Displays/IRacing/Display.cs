@@ -149,7 +149,7 @@ internal sealed class Display() : DisplayBase<DataSample>()
             Gear = telemetry.Gear == -1 ? "R" : telemetry.Gear == 0 ? "N" : telemetry.Gear.ToString(),
             Rpm = (int)telemetry.RPM,
             RpmLights = [.. GenerateRpmLights(CarScreenName)],
-            RpmMax = 7000,
+            RpmMax = GetRpmMax(CarScreenName),
             Speed = (int)Math.Round(telemetry.Speed * 3.6),
             BrakePct = (int)Math.Round(telemetry.Brake * 100, 0),
             ThrottlePct = (int)Math.Round(telemetry.Throttle * 100, 0),
@@ -214,19 +214,26 @@ internal sealed class Display() : DisplayBase<DataSample>()
 
     public static RpmLight[] GenerateRpmLights(string carName)
     {
-        if (carName == "FIA F4")
+        return carName switch
         {
-            return
-            [
+            "FIA F4" => [
                 new RpmLight { Rpm = 6300, Color = "Green" },
                 new RpmLight { Rpm = 6500, Color = "Green" },
                 new RpmLight { Rpm = 6600, Color = "Green" },
                 new RpmLight { Rpm = 6700, Color = "Green" },
                 new RpmLight { Rpm = 6800, Color = "Red" },
                 new RpmLight { Rpm = 6900, Color = "Red" }
-            ];
-        }
+            ],
+            _ => []
+        };
+    }
 
-        return [];
+    public int GetRpmMax(string carName)
+    {
+        return carName switch
+        {
+            "FIA F4" => 7000,
+            _ => 0, // Default value for other cars
+        };
     }
 }
