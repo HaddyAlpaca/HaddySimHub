@@ -6,6 +6,7 @@ namespace HaddySimHub.Displays.IRacing;
 
 internal sealed class Display() : DisplayBase<DataSample>()
 {
+    private static readonly HashSet<SessionFlags> loggedUnknownFlags = [];
     private int[]? _lastLaps;
     private int? _sessionNum;
     protected override int PageCount => 2;
@@ -205,7 +206,12 @@ internal sealed class Display() : DisplayBase<DataSample>()
 
         if (flag is null)
         {
-            Logger.Error($"Unknown flag: {sessionFlags}");
+            // Only log unknown flags once per unique value
+            if (!loggedUnknownFlags.Contains(sessionFlags))
+            {
+                Logger.Error($"Unknown flag: {sessionFlags}");
+                loggedUnknownFlags.Add(sessionFlags);
+            }
             flag = "green";
         }
 
