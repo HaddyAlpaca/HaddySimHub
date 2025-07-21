@@ -58,7 +58,7 @@ describe('AppComponent tests', () => {
 
   it('should show the rally display when rally data is available', async () => {
     const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, AppComponentHarness);
-    mockSignalRService.displayData.set({ type: DisplayType.RallyDashboard, data: {} as RallyData, page: 1 } as DisplayUpdate);
+    mockSignalRService.displayData.set({ type: DisplayType.RallyDashboard, data: { rpmLights: []} as unknown as RallyData, page: 1 } as DisplayUpdate);
 
     expect(await harness.isTruckDisplayVisible()).toBeFalse();
     expect(await harness.isRaceDisplayVisible()).toBeFalse();
