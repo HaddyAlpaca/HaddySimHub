@@ -98,7 +98,7 @@ internal sealed class Display() : DisplayBase<DataSample>()
             var entry = new TimingEntry
             {
                 CarNumber = driver.CarNumber,
-                DriverName = driver.UserName,
+                DriverName = System.Text.Encoding.UTF8.GetString(System.Text.Encoding.UTF8.GetBytes(driver.UserName)),
                 Position = telemetry.CarIdxPosition[carIdx],
                 Laps = carIdxLap,
                 LapCompletedPct = carIdxLapDistPct * 100,
@@ -122,8 +122,10 @@ internal sealed class Display() : DisplayBase<DataSample>()
             {
                 timingEntries.Where(e => !e.IsSafetyCar && !e.IsPlayer).ForEach(e =>
                 {
-                    e.IsLapAhead = (e.Laps + e.LapCompletedPct) - (playerEntry.Laps + playerEntry.LapCompletedPct) > .8;
-                    e.IsLapBehind = (playerEntry.Laps + playerEntry.LapCompletedPct) - (e.Laps + e.LapCompletedPct) > .8;
+                    var lapDiff = e.Laps - playerEntry.Laps;
+                    var positionInLap = e.LapCompletedPct - playerEntry.LapCompletedPct;
+                    e.IsLapAhead = lapDiff > 0 || (lapDiff == 0 && positionInLap > 80);
+                    e.IsLapBehind = lapDiff < 0 || (lapDiff == 0 && positionInLap < -80);
                 });
             }
         }
