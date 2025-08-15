@@ -18,9 +18,8 @@ describe('LaptimePipe', () => {
     expect(pipe.transform(seconds)).toBe('02:05.009');
   });
 
-  it('Check formatting of laptime 61:15.123', () => {
+  it('Check formatting of laptime 01:01:15.123', () => {
     const seconds = 61 * 60 + 15.123;
-    expect(pipe.transform(seconds)).toBe('61:15.123');
+    expect(pipe.transform(seconds)).toBe('01:01:15.123');
   });
-
 });
