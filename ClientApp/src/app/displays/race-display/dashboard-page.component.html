@@ -11,9 +11,15 @@
           <div id="track-temp">{{data().trackTemp |number:'1.1-1':'en-US'}} &deg;C</div>
         </div>
       </div>
-      <div class="data-item">
-        <label>SOF</label>
-        <div>{{data().strengthOfField ? data().strengthOfField : '---' }}</div>
+      <div class="dashboard-row cols-2">
+        <div class="data-item">
+          <label>SOF</label>
+          <div>{{data().strengthOfField ? data().strengthOfField : '---' }}</div>
+        </div>
+        <div class="data-item">
+          <label>Time remaining</label>
+          <div>{{data().sessionTimeRemaining | time}}</div>
+        </div>
       </div>
       <div class="dashboard-row cols-2">
         <div class="data-item">
