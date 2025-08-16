@@ -7,6 +7,7 @@ import { TelemetrySample, TelemetryTraceComponent } from './telemetry-trace.comp
 import { RaceData, TimingEntry } from './race-data';
 import { SignalRService } from 'src/app/signalr.service';
 import { RpmLightsComponent } from 'src/app/shared/rpm-lights/rpm-lights.component';
+import { TimePipe } from 'src/app/shared/time/time.pipe';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -18,6 +19,7 @@ import { RpmLightsComponent } from 'src/app/shared/rpm-lights/rpm-lights.compone
     DecimalPipe,
     DeltaTimePipe,
     LapTimePipe,
+    TimePipe,
     TrackPositionsComponent,
     SpeedometerComponent,
     OpponentDeltaComponent,
