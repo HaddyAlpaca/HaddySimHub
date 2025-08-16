@@ -204,6 +204,12 @@ internal sealed class Display() : DisplayBase<DataSample>()
                 sessionFlags &= ~SessionFlags.fiveToGo;
                 flag = "green";
             }
+
+            if (sessionFlags.HasFlag(SessionFlags.oneLapToGreen))
+            {
+                sessionFlags &= ~SessionFlags.oneLapToGreen;
+                flag = "green";
+            }
         }
 
         if (flag is null)
