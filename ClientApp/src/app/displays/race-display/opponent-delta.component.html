@@ -2,7 +2,10 @@
   <label>{{caption()}}</label>
   <div>
     <div class="name-class-row" [class.hidden]="!driverInfo()">
-      <div class="driver-name" [class.lap-ahead]="driverInfo()?.isLapAhead" [class.lap-behind]="driverInfo()?.isLapBehind">{{driverInfo()?.driverName}}</div>
+      <div class="driver-name"
+        [class.lap-ahead]="driverInfo()?.isLapAhead"
+        [class.lap-behind]="driverInfo()?.isLapBehind"
+        [class.in-pits]="driverInfo()?.isInPits">{{driverInfo()?.driverName}}</div>
       <div class="delta-time">{{ deltaTime() | deltatime:1}}</div>
     </div>
   </div>
