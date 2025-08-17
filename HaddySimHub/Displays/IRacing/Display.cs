@@ -170,50 +170,68 @@ internal sealed class Display() : DisplayBase<DataSample>()
 
     private static string GetFlag(SessionFlags sessionFlags)
     {
-        var flag = sessionFlags switch
+        // Map known flags to colors
+        var flagMappings = new Dictionary<SessionFlags, string>
         {
-            SessionFlags.white => "white",
-            SessionFlags.green or SessionFlags.greenHeld => "green",
-            SessionFlags.yellow or SessionFlags.yellowWaving or SessionFlags.caution or SessionFlags.cautionWaving => "yellow",
-            SessionFlags.red => "red",
-            SessionFlags.blue => "blue",
-            SessionFlags.black or SessionFlags.disqualify => "black",
-            SessionFlags.repair => "black-orange",
-            SessionFlags.debris => "red-yellow",
-            SessionFlags.checkered => "checkered",
-            _ => null,
+            { SessionFlags.white, "white" },
+            { SessionFlags.green, "green" },
+            { SessionFlags.greenHeld, "green" },
+            { SessionFlags.yellow, "yellow" },
+            { SessionFlags.yellowWaving, "yellow" },
+            { SessionFlags.caution, "yellow" },
+            { SessionFlags.cautionWaving, "yellow" },
+            { SessionFlags.red, "red" },
+            { SessionFlags.blue, "blue" },
+            { SessionFlags.black, "black" },
+            { SessionFlags.disqualify, "black" },
+            { SessionFlags.repair, "black-orange" },
+            { SessionFlags.debris, "red-yellow" },
+            { SessionFlags.checkered, "checkered" }
+        };
+
+        string? flag = null;
+        foreach (var kvp in flagMappings)
+        {
+            if (sessionFlags.HasFlag(kvp.Key))
+            {
+            flag = kvp.Value;
+            break;
+            }
+        }
+
+        // Handle ignored flags generically
+        var ignoredFlags = new[]
+        {
+            SessionFlags.servicible,
+            SessionFlags.tenToGo,
+            SessionFlags.fiveToGo,
+            SessionFlags.oneLapToGreen,
+            SessionFlags.startHidden,
         };
 
         if (flag is null)
         {
-            // Ignore some flags, handle them as green
-            if (sessionFlags.HasFlag(SessionFlags.servicible))
+            foreach (var ignored in ignoredFlags)
             {
-                sessionFlags &= ~SessionFlags.servicible;
-                flag = "green";
-            }
-
-            if (sessionFlags.HasFlag(SessionFlags.tenToGo))
-            {
-                sessionFlags &= ~SessionFlags.tenToGo;
-                flag = "green";
-            }
-
-            if (sessionFlags.HasFlag(SessionFlags.fiveToGo))
-            {
-                sessionFlags &= ~SessionFlags.fiveToGo;
-                flag = "green";
-            }
-
-            if (sessionFlags.HasFlag(SessionFlags.oneLapToGreen))
-            {
-                sessionFlags &= ~SessionFlags.oneLapToGreen;
-                flag = "green";
+                if (sessionFlags.HasFlag(ignored))
+                {
+                    sessionFlags &= ~ignored;
+                    flag = "green";
+                    break;
+                }
             }
         }
 
         if (flag is null)
         {
+            // Only log unknown flags once per unique value
+            if (!loggedUnknownFlags.Contains(sessionFlags))
+            {
+                Logger.Error($"Unknown flag: {sessionFlags}");
+                loggedUnknownFlags.Add(sessionFlags);
+            }
+            flag = "green";
+        }
             // Only log unknown flags once per unique value
             if (!loggedUnknownFlags.Contains(sessionFlags))
             {
