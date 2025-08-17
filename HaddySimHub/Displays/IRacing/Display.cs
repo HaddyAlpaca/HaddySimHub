@@ -194,8 +194,8 @@ internal sealed class Display() : DisplayBase<DataSample>()
         {
             if (sessionFlags.HasFlag(kvp.Key))
             {
-            flag = kvp.Value;
-            break;
+                flag = kvp.Value;
+                break;
             }
         }
 
@@ -207,6 +207,12 @@ internal sealed class Display() : DisplayBase<DataSample>()
             SessionFlags.fiveToGo,
             SessionFlags.oneLapToGreen,
             SessionFlags.startHidden,
+            SessionFlags.startReady,
+            SessionFlags.startSet,
+            SessionFlags.startGo,
+            SessionFlags.randomWaving,
+            SessionFlags.furled,
+            SessionFlags.crossed,
         };
 
         if (flag is null)
@@ -224,14 +230,6 @@ internal sealed class Display() : DisplayBase<DataSample>()
 
         if (flag is null)
         {
-            // Only log unknown flags once per unique value
-            if (!loggedUnknownFlags.Contains(sessionFlags))
-            {
-                Logger.Error($"Unknown flag: {sessionFlags}");
-                loggedUnknownFlags.Add(sessionFlags);
-            }
-            flag = "green";
-        }
             // Only log unknown flags once per unique value
             if (!loggedUnknownFlags.Contains(sessionFlags))
             {
