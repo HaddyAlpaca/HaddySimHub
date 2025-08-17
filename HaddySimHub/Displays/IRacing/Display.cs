@@ -124,8 +124,15 @@ internal sealed class Display() : DisplayBase<DataSample>()
                 {
                     var lapDiff = e.Laps - playerEntry.Laps;
                     var positionInLap = e.LapCompletedPct - playerEntry.LapCompletedPct;
-                    e.IsLapAhead = lapDiff > 0 || (lapDiff == 0 && positionInLap > 80);
-                    e.IsLapBehind = lapDiff < 0 || (lapDiff == 0 && positionInLap < -80);
+                    
+                    // Calculate total position including laps
+                    var totalPosition = (lapDiff * 100) + positionInLap;
+                    
+                    // Car is ahead if total position is positive
+                    e.IsLapAhead = totalPosition > 0;
+                    
+                    // Car is behind if total position is negative
+                    e.IsLapBehind = totalPosition < 0;
                 });
             }
         }
