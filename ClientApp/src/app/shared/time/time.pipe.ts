@@ -15,6 +15,10 @@ export class TimePipe implements PipeTransform {
     const paddedMinutes = minutes.toString().padStart(2, '0');
     const paddedSeconds = secs.toString().padStart(2, '0');
 
+    if (seconds === 168 * 3600) {
+      return '--:--:--';
+    }
+
     if (hours === 0) {
       return `${sign}${paddedMinutes}:${paddedSeconds}`;
     }
