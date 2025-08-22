@@ -107,7 +107,7 @@ internal sealed class Display() : DisplayBase<DataSample>()
                 IRating = driver.IRating,
                 IsInPits = telemetry.CarIdxOnPitRoad[carIdx],
                 IsPlayer = carIdx == telemetry.PlayerCarIdx,
-                IsSafetyCar = driver.UserName.ToLower() == "Pace Car",
+                IsSafetyCar = driver.UserName.Equals("Pace Car", StringComparison.CurrentCultureIgnoreCase),
                 TimeToPlayer = (float)Math.Round(telemetry.CarIdxEstTime[carIdx] - telemetry.CarIdxEstTime[telemetry.PlayerCarIdx], 1),
             };
 
@@ -138,6 +138,17 @@ internal sealed class Display() : DisplayBase<DataSample>()
         }
 
         var orderedEntries = timingEntries.OrderByDescending(e => e.TimeToPlayer).ToArray();
+
+        var qualifyingSession = sessionData.SessionInfo.Sessions.FirstOrDefault(s => s.SessionType.Contains("Qualify"));
+        long startingPosition = 0;
+        if (qualifyingSession?.ResultsPositions != null)
+        {
+            var playerQualifyingResult = qualifyingSession.ResultsPositions.FirstOrDefault(r => r.CarIdx == telemetry.PlayerCarIdx);
+            if (playerQualifyingResult != null)
+            {
+                startingPosition = playerQualifyingResult.Position;
+            }
+        }
 
         var displayUpdate = new RaceData
         {
