@@ -46,4 +46,5 @@ export interface TimingEntry {
   timeToPlayer: number;
   isLapAhead: boolean;
   isLapBehind: boolean;
+  totalPosition: number;
 }

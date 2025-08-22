@@ -57,13 +57,18 @@
           <div id="fuelRemaining">{{data().fuelRemaining |number:'1.1-1':'en-US'}} L</div>
         </div>
       </div>
-      <div class="data-item">
-        <label>Incidents</label>
-        @if (data().maxIncidents === 999) {
-          <div id="incidents">{{data().incidents}}</div>
-        } @else {
-          <div id="incidents">{{data().incidents}}/{{data().maxIncidents}}</div>
-        }
+      <div class="dashboard-row cols-2">
+        <div class="data-item">
+          <label>Incidents</label>
+          @if (data().maxIncidents === 999) {
+            <div id="incidents">{{data().incidents}}</div>
+          } @else {
+            <div id="incidents">{{data().incidents}}/{{data().maxIncidents}}</div>
+          }
+        </div>
+        <div class="data-item">
+          <label>Session Type</label>
+          <div>{{data().sessionType}}</div>
       </div>
       <div class="data-item">
         <label>Lap</label>
