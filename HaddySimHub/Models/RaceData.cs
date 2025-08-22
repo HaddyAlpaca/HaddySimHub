@@ -83,4 +83,5 @@ public record TimingEntry
     public float TimeToPlayer { get; init; }
     public bool IsLapAhead { get; set; }
     public bool IsLapBehind { get; set; }
+    public double TotalPosition { get; set; }
 }

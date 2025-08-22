@@ -1,12 +1,16 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { DeltaTimePipe } from 'src/app/shared';
 import { TimingEntry } from './race-data';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-opponent-delta',
   templateUrl: './opponent-delta.component.html',
   styleUrl: './opponent-delta.component.scss',
-  imports: [DeltaTimePipe],
+  imports: [
+    DeltaTimePipe,
+    DecimalPipe,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OpponentDeltaComponent {

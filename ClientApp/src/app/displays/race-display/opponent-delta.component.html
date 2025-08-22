@@ -5,7 +5,7 @@
       <div class="driver-name"
         [class.lap-ahead]="driverInfo()?.isLapAhead"
         [class.lap-behind]="driverInfo()?.isLapBehind"
-        [class.in-pits]="driverInfo()?.isInPits">{{driverInfo()?.driverName}}</div>
+        [class.in-pits]="driverInfo()?.isInPits">{{driverInfo()?.totalPosition | number:'1.1-1' }} {{driverInfo()?.driverName}}</div>
       <div class="delta-time">{{ deltaTime() | deltatime:1}}</div>
     </div>
   </div>

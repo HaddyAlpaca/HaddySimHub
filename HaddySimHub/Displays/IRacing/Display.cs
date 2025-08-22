@@ -124,15 +124,15 @@ internal sealed class Display() : DisplayBase<DataSample>()
                 {
                     var lapDiff = e.Laps - playerEntry.Laps;
                     var positionInLap = e.LapCompletedPct - playerEntry.LapCompletedPct;
-                    
+
                     // Calculate total position including laps
-                    var totalPosition = (lapDiff * 100) + positionInLap;
-                    
+                    e.TotalPosition = (lapDiff * 100) + positionInLap;
+
                     // Car is ahead if total position is positive
-                    e.IsLapAhead = totalPosition > 0;
-                    
+                    e.IsLapAhead = e.TotalPosition > 0;
+
                     // Car is behind if total position is negative
-                    e.IsLapBehind = totalPosition < 0;
+                    e.IsLapBehind = e.TotalPosition < 0;
                 });
             }
         }
