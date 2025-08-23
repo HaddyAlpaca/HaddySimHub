@@ -55,6 +55,7 @@ internal sealed class Display() : DisplayBase<DataSample>()
 
         var timingEntries = new List<TimingEntry>();
         string CarScreenName = string.Empty;
+        var playerInfo = sessionData.DriverInfo.CompetingDrivers.FirstOrDefault(d => d.CarIdx == telemetry.PlayerCarIdx);
         foreach (var driver in sessionData.DriverInfo.CompetingDrivers)
         {
             var carIdx = (int)driver.CarIdx;
@@ -107,38 +108,47 @@ internal sealed class Display() : DisplayBase<DataSample>()
                 IRating = driver.IRating,
                 IsInPits = telemetry.CarIdxOnPitRoad[carIdx],
                 IsPlayer = carIdx == telemetry.PlayerCarIdx,
-                IsSafetyCar = driver.UserName.ToLower() == "Pace Car",
+                IsSafetyCar = driver.UserName.Equals("Pace Car", StringComparison.CurrentCultureIgnoreCase),
                 TimeToPlayer = (float)Math.Round(telemetry.CarIdxEstTime[carIdx] - telemetry.CarIdxEstTime[telemetry.PlayerCarIdx], 1),
             };
 
             timingEntries.Add(entry);
         }
 
-        if (session.IsRace)
+        var playerEntry = timingEntries.FirstOrDefault(e => e.IsPlayer);
+
+        if (playerEntry != null)
         {
-            var playerEntry = timingEntries.FirstOrDefault(e => e.IsPlayer);
-
-            if (playerEntry != null)
+            timingEntries.Where(e => !e.IsSafetyCar && !e.IsPlayer).ForEach(e =>
             {
-                timingEntries.Where(e => !e.IsSafetyCar && !e.IsPlayer).ForEach(e =>
-                {
-                    var lapDiff = e.Laps - playerEntry.Laps;
-                    var positionInLap = e.LapCompletedPct - playerEntry.LapCompletedPct;
+                var lapDiff = e.Laps - playerEntry.Laps;
+                var positionInLap = e.LapCompletedPct - playerEntry.LapCompletedPct;
 
-                    // Calculate total position including laps
-                    e.TotalPosition = (lapDiff * 100) + positionInLap;
+                // Calculate total position including laps
+                e.TotalPosition = (lapDiff * 100) + positionInLap;
 
-                    // Car is ahead if total position is positive
-                    e.IsLapAhead = e.TotalPosition > 0;
+                // Car is ahead if total position is positive
+                e.IsLapAhead = e.TotalPosition > 0;
 
-                    // Car is behind if total position is negative
-                    e.IsLapBehind = e.TotalPosition < 0;
-                });
-            }
+                // Car is behind if total position is negative
+                e.IsLapBehind = e.TotalPosition < 0;
+            });
         }
 
         var orderedEntries = timingEntries.OrderByDescending(e => e.TimeToPlayer).ToArray();
 
+        var qualifyingSession = sessionData.SessionInfo.Sessions.FirstOrDefault(s => s.SessionType.Contains("Qualify"));
+        long startingPosition = 0;
+        if (qualifyingSession?.ResultsPositions != null)
+        {
+            var playerQualifyingResult = qualifyingSession.ResultsPositions.FirstOrDefault(r => r.CarIdx == telemetry.PlayerCarIdx);
+            if (playerQualifyingResult != null)
+            {
+                startingPosition = playerQualifyingResult.Position;
+            }
+        }
+
+        var (iRatingdDelta, expectedPos) = IRatingCalculator.CalculateDelta(playerEntry!, timingEntries);
         var displayUpdate = new RaceData
         {
             SessionType = session.SessionType,
@@ -170,6 +180,9 @@ internal sealed class Display() : DisplayBase<DataSample>()
             Flag = GetFlag(telemetry.SessionFlags),
             PitLimiterOn = telemetry.EngineWarnings.HasFlag(EngineWarnings.PitSpeedLimiter),
             TimingEntries = orderedEntries,
+            ExpectedPosition = expectedPos,
+            IRatingChange = iRatingdDelta,
+            CarNumber = playerInfo?.CarNumber ?? string.Empty,
         };
 
         return new DisplayUpdate { Type = DisplayType.RaceDashboard, Data = displayUpdate };

@@ -70,17 +70,29 @@
           <label>Session Type</label>
           <div>{{data().sessionType}}</div>
       </div>
-      <div class="data-item">
-        <label>Lap</label>
-        @if (data().totalLaps > 0) {
-          <div id="laps">{{data().currentLap}}/{{data().totalLaps}}</div>
-        } @else {
-          <div id="laps">{{data().currentLap}}</div>
-        }
+      <div class="dashboard-row cols-2">
+        <div class="data-item">
+          <label>Lap</label>
+          @if (data().totalLaps > 0) {
+            <div id="laps">{{data().currentLap}}/{{data().totalLaps}}</div>
+          } @else {
+            <div id="laps">{{data().currentLap}}</div>
+          }
+        </div>
+        <div class="data-item">
+          <label>IRating Delta</label>
+          <div>{{data().iRatingChange}}</div>
+        </div>
       </div>
-      <div class="data-item">
-        <label>Position</label>
-        <div id="position">{{data().position}}</div>
+      <div class="dashboard-row cols-2">
+        <div class="data-item">
+          <label>Position</label>
+          <div id="position">{{data().position}}</div>
+        </div>
+        <div class="data-item">
+          <label>Expected/Car#</label>
+          <div>{{data().expectedPosition}}/{{data().carNumber}}</div>
+        </div>
       </div>
     </div>
   </div>
