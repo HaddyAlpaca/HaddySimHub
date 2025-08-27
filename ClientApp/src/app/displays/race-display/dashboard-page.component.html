@@ -81,7 +81,7 @@
         </div>
         <div class="data-item">
           <label>IRating Delta</label>
-          <div>{{data().iRatingChange}}</div>
+          <div>{{data().iRatingChange |number:'1.1-1':'en-US'}}</div>
         </div>
       </div>
       <div class="dashboard-row cols-2">
@@ -91,7 +91,7 @@
         </div>
         <div class="data-item">
           <label>Expected/Car#</label>
-          <div>{{data().expectedPosition}}/{{data().carNumber}}</div>
+          <div>{{data().expectedPosition |number:'1.1-1':'en-US'}}/{{data().carNumber}}</div>
         </div>
       </div>
     </div>
