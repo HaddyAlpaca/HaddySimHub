@@ -56,7 +56,6 @@ internal sealed class Display() : DisplayBase<DataSample>()
         var timingEntries = new List<TimingEntry>();
         string CarScreenName = string.Empty;
         var playerInfo = sessionData.DriverInfo.CompetingDrivers.FirstOrDefault(d => d.CarIdx == telemetry.PlayerCarIdx);
-
         if (!session.SessionType.Contains("Lone Qualify"))
         {
             foreach (var driver in sessionData.DriverInfo.CompetingDrivers)
@@ -137,11 +136,10 @@ internal sealed class Display() : DisplayBase<DataSample>()
                     e.IsLapBehind = e.TotalPosition < 0;
                 });
             }
-
-            var orderedEntries = timingEntries.OrderByDescending(e => e.TimeToPlayer).ToArray();
         }
 
-        var qualifyingSession = session.SessionType.Contains("Qualify");
+        var orderedEntries = timingEntries.OrderByDescending(e => e.TimeToPlayer).ToArray();
+        var qualifyingSession = sessionData.SessionInfo.Sessions.FirstOrDefault(s => s.SessionType.Contains("Qualify"));
         long startingPosition = 0;
         if (qualifyingSession?.ResultsPositions != null)
         {
@@ -152,7 +150,6 @@ internal sealed class Display() : DisplayBase<DataSample>()
             }
         }
 
-        var (iRatingdDelta, expectedPos) = IRatingCalculator.CalculateDelta(playerEntry!, timingEntries);
         var displayUpdate = new RaceData
         {
             SessionType = session.SessionType,
@@ -184,8 +181,6 @@ internal sealed class Display() : DisplayBase<DataSample>()
             Flag = GetFlag(telemetry.SessionFlags),
             PitLimiterOn = telemetry.EngineWarnings.HasFlag(EngineWarnings.PitSpeedLimiter),
             TimingEntries = orderedEntries,
-            ExpectedPosition = expectedPos,
-            IRatingChange = iRatingdDelta,
             CarNumber = playerInfo?.CarNumber ?? string.Empty,
         };
 

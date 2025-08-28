@@ -66,10 +66,6 @@ public sealed record RaceData
 
     public TimingEntry[] TimingEntries { get; init; } = [];
 
-    public required double ExpectedPosition { get; init; }
-
-    public required double IRatingChange { get; init; }
-
     public required string CarNumber { get; init; }
 }
 

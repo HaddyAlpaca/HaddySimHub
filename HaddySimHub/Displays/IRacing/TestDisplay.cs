@@ -61,8 +61,6 @@ namespace HaddySimHub.Displays.IRacing
                         _ => "green",
                     },
                     CarNumber = "80",
-                    ExpectedPosition = 2,
-                    IRatingChange = new Random().Next(-50, 50),
                 }
             };
         }
