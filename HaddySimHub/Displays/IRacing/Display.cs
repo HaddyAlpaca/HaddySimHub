@@ -56,87 +56,89 @@ internal sealed class Display() : DisplayBase<DataSample>()
         var timingEntries = new List<TimingEntry>();
         string CarScreenName = string.Empty;
         var playerInfo = sessionData.DriverInfo.CompetingDrivers.FirstOrDefault(d => d.CarIdx == telemetry.PlayerCarIdx);
-        foreach (var driver in sessionData.DriverInfo.CompetingDrivers)
+        if (!session.SessionType.Contains("Lone Qualify"))
         {
-            var carIdx = (int)driver.CarIdx;
-            var carIdxLap = telemetry.CarIdxLap[carIdx];
-            var carIdxLapDistPct = telemetry.CarIdxLapDistPct[carIdx];
-            if (carIdxLap > _lastLaps[carIdx] && carIdxLapDistPct > 0.80f)
+            foreach (var driver in sessionData.DriverInfo.CompetingDrivers)
+                {
+                    var carIdx = (int)driver.CarIdx;
+                    var carIdxLap = telemetry.CarIdxLap[carIdx];
+                    var carIdxLapDistPct = telemetry.CarIdxLapDistPct[carIdx];
+                    if (carIdxLap > _lastLaps[carIdx] && carIdxLapDistPct > 0.80f)
+                    {
+                        // The car has passed the start/finish line and the percentage is in the 80% range.
+                        // Set the percentage to 0% to avoid the bug in iRacing data stream.
+                        carIdxLapDistPct = 0;
+                    }
+
+                    _lastLaps[carIdx] = carIdxLap;
+
+                    // Set the license color
+                    // Rookie = Red
+                    // D = Orange
+                    // C = Yellow
+                    // B = Green
+                    // A = Blue
+                    // Pro = Purple
+                    var licenseColor = driver.LicString switch
+                    {
+                        "R" => "red",
+                        "D" => "orange",
+                        "C" => "yellow",
+                        "B" => "green",
+                        "A" => "blue",
+                        "P" => "purple",
+                        _ => "white"
+                    };
+
+                    if (carIdx == telemetry.PlayerCarIdx)
+                    {
+                        CarScreenName = driver.CarScreenName;
+                    }
+
+                    // The license string is in the format R 02.0 remove the zero after the space
+                    var licenseString = System.Text.RegularExpressions.Regex.Replace(driver.LicString, @"(?<=\s)0", "");
+
+                    var entry = new TimingEntry
+                    {
+                        CarNumber = driver.CarNumber,
+                        DriverName = System.Text.Encoding.UTF8.GetString(System.Text.Encoding.UTF8.GetBytes(driver.UserName)),
+                        Position = telemetry.CarIdxPosition[carIdx],
+                        Laps = carIdxLap,
+                        LapCompletedPct = carIdxLapDistPct * 100,
+                        License = driver.LicString,
+                        LicenseColor = licenseColor,
+                        IRating = driver.IRating,
+                        IsInPits = telemetry.CarIdxOnPitRoad[carIdx],
+                        IsPlayer = carIdx == telemetry.PlayerCarIdx,
+                        IsSafetyCar = driver.UserName.Equals("Pace Car", StringComparison.CurrentCultureIgnoreCase),
+                        TimeToPlayer = (float)Math.Round(telemetry.CarIdxEstTime[carIdx] - telemetry.CarIdxEstTime[telemetry.PlayerCarIdx], 1),
+                    };
+
+                    timingEntries.Add(entry);
+                }
+
+            var playerEntry = timingEntries.FirstOrDefault(e => e.IsPlayer);
+
+            if (playerEntry != null)
             {
-                // The car has passed the start/finish line and the percentage is in the 80% range.
-                // Set the percentage to 0% to avoid the bug in iRacing data stream.
-                carIdxLapDistPct = 0;
+                timingEntries.Where(e => !e.IsSafetyCar && !e.IsPlayer).ForEach(e =>
+                {
+                    var lapDiff = e.Laps - playerEntry.Laps;
+                    var positionInLap = e.LapCompletedPct - playerEntry.LapCompletedPct;
+
+                    // Calculate total position including laps
+                    e.TotalPosition = (lapDiff * 100) + positionInLap;
+
+                    // Car is ahead if total position is positive
+                    e.IsLapAhead = e.TotalPosition > 0;
+
+                    // Car is behind if total position is negative
+                    e.IsLapBehind = e.TotalPosition < 0;
+                });
             }
-
-            _lastLaps[carIdx] = carIdxLap;
-
-            // Set the license color
-            // Rookie = Red
-            // D = Orange
-            // C = Yellow
-            // B = Green
-            // A = Blue
-            // Pro = Purple
-            var licenseColor = driver.LicString switch
-            {
-                "R" => "red",
-                "D" => "orange",
-                "C" => "yellow",
-                "B" => "green",
-                "A" => "blue",
-                "P" => "purple",
-                _ => "white"
-            };
-
-            if (carIdx == telemetry.PlayerCarIdx)
-            {
-                CarScreenName = driver.CarScreenName;
-            }
-
-            // The license string is in the format R 02.0 remove the zero after the space
-            var licenseString = System.Text.RegularExpressions.Regex.Replace(driver.LicString, @"(?<=\s)0", "");
-
-            var entry = new TimingEntry
-            {
-                CarNumber = driver.CarNumber,
-                DriverName = System.Text.Encoding.UTF8.GetString(System.Text.Encoding.UTF8.GetBytes(driver.UserName)),
-                Position = telemetry.CarIdxPosition[carIdx],
-                Laps = carIdxLap,
-                LapCompletedPct = carIdxLapDistPct * 100,
-                License = driver.LicString,
-                LicenseColor = licenseColor,
-                IRating = driver.IRating,
-                IsInPits = telemetry.CarIdxOnPitRoad[carIdx],
-                IsPlayer = carIdx == telemetry.PlayerCarIdx,
-                IsSafetyCar = driver.UserName.Equals("Pace Car", StringComparison.CurrentCultureIgnoreCase),
-                TimeToPlayer = (float)Math.Round(telemetry.CarIdxEstTime[carIdx] - telemetry.CarIdxEstTime[telemetry.PlayerCarIdx], 1),
-            };
-
-            timingEntries.Add(entry);
-        }
-
-        var playerEntry = timingEntries.FirstOrDefault(e => e.IsPlayer);
-
-        if (playerEntry != null)
-        {
-            timingEntries.Where(e => !e.IsSafetyCar && !e.IsPlayer).ForEach(e =>
-            {
-                var lapDiff = e.Laps - playerEntry.Laps;
-                var positionInLap = e.LapCompletedPct - playerEntry.LapCompletedPct;
-
-                // Calculate total position including laps
-                e.TotalPosition = (lapDiff * 100) + positionInLap;
-
-                // Car is ahead if total position is positive
-                e.IsLapAhead = e.TotalPosition > 0;
-
-                // Car is behind if total position is negative
-                e.IsLapBehind = e.TotalPosition < 0;
-            });
         }
 
         var orderedEntries = timingEntries.OrderByDescending(e => e.TimeToPlayer).ToArray();
-
         var qualifyingSession = sessionData.SessionInfo.Sessions.FirstOrDefault(s => s.SessionType.Contains("Qualify"));
         long startingPosition = 0;
         if (qualifyingSession?.ResultsPositions != null)
@@ -148,7 +150,6 @@ internal sealed class Display() : DisplayBase<DataSample>()
             }
         }
 
-        var (iRatingdDelta, expectedPos) = IRatingCalculator.CalculateDelta(playerEntry!, timingEntries);
         var displayUpdate = new RaceData
         {
             SessionType = session.SessionType,
@@ -180,8 +181,6 @@ internal sealed class Display() : DisplayBase<DataSample>()
             Flag = GetFlag(telemetry.SessionFlags),
             PitLimiterOn = telemetry.EngineWarnings.HasFlag(EngineWarnings.PitSpeedLimiter),
             TimingEntries = orderedEntries,
-            ExpectedPosition = expectedPos,
-            IRatingChange = iRatingdDelta,
             CarNumber = playerInfo?.CarNumber ?? string.Empty,
         };
 
