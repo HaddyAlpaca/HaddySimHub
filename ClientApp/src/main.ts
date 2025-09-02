@@ -3,7 +3,6 @@ import { environment } from './environments/environment';
 import { AppComponent } from './app/app.component';
 import { withInterceptorsFromDi, provideHttpClient } from '@angular/common/http';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 if (environment.production) {
@@ -14,7 +13,6 @@ bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(BrowserModule),
     provideHttpClient(withInterceptorsFromDi()),
-    provideAnimationsAsync(),
     provideZonelessChangeDetection(),
     provideCharts(withDefaultRegisterables()),
   ],
