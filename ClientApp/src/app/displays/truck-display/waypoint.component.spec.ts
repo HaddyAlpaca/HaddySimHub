@@ -1,12 +1,13 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { Component, provideZonelessChangeDetection } from '@angular/core';
+import { inputBinding, provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { WaypointComponentHarness } from './waypoint.component.harness';
 import { WaypointComponent } from './waypoint.component';
 
 describe('WaypointComponent tests', () => {
-  let fixture: ComponentFixture<WaypointTestHostComponent>;
-  let component: WaypointTestHostComponent;
+  let fixture: ComponentFixture<WaypointComponent>;
+  let city: string;
+  let company: string;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -15,38 +16,36 @@ describe('WaypointComponent tests', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(WaypointTestHostComponent);
-    component = fixture.componentInstance;
+    city = '';
+    company = '';
+
+    fixture = TestBed.createComponent(WaypointComponent, {
+      bindings: [
+        inputBinding('city', () => city),
+        inputBinding('company', () => company),
+      ],
+    });
   });
 
   it('When city is not set a placeholder is shown', async () => {
-    component.city = '';
+    city = '';
 
     const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, WaypointComponentHarness);
     expect(await harness.getDescription()).toEqual('-');
   });
 
   it('City is displayed when company is not set', async () => {
-    component.city = 'Berlin';
+    city = 'Berlin';
 
     const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, WaypointComponentHarness);
     expect(await harness.getDescription()).toEqual('Berlin');
   });
 
   it('City and company are displayed both are set', async () => {
-    component.city = 'Berlin';
-    component.company = 'Company B';
+    city = 'Berlin';
+    company = 'Company B';
 
     const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, WaypointComponentHarness);
     expect(await harness.getDescription()).toEqual('Berlin (Company B)');
   });
 });
-
-@Component({
-  template: `<app-waypoint [city]="city" [company]="company" />`,
-  imports: [WaypointComponent],
-})
-class WaypointTestHostComponent {
-  public city = '';
-  public company = '';
-}

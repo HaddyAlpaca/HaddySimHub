@@ -2,12 +2,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TrackPositionsComponent } from './track-positions.component';
 import { TrackPositionsComponentHarness } from './track-positions.component.harness';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { Component, provideZonelessChangeDetection } from '@angular/core';
+import { inputBinding, provideZonelessChangeDetection } from '@angular/core';
 import { TimingEntry } from './race-data';
 
 describe('TrackPositionsComponent tests', () => {
-  let fixture: ComponentFixture<TrackPositionsTestHostComponent>;
-  let component: TrackPositionsTestHostComponent;
+  let fixture: ComponentFixture<TrackPositionsComponent>;
+  let positions: TimingEntry[];
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -16,12 +16,17 @@ describe('TrackPositionsComponent tests', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(TrackPositionsTestHostComponent);
-    component = fixture.componentInstance;
+    positions = [];
+
+    fixture = TestBed.createComponent(TrackPositionsComponent, {
+      bindings: [
+        inputBinding('positions', () => positions),
+      ],
+    });
   });
 
   it('locates the track position elements correctly', async () => {
-    component.positions = [
+    positions = [
       {
         lapCompletedPct: 0,
         isInPits: true,
@@ -38,11 +43,3 @@ describe('TrackPositionsComponent tests', () => {
     expect(items).toEqual([{ style: 'left: 0%;' }, { style: 'left: 10%;' }]);
   });
 });
-
-@Component({
-  template: '<app-track-positions [positions]="positions" />',
-  imports: [TrackPositionsComponent],
-})
-class TrackPositionsTestHostComponent {
-  public positions: TimingEntry[] = [];
-}
