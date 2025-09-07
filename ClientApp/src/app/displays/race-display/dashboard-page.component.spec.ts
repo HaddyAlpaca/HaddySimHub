@@ -200,11 +200,11 @@ describe('Dashboard page component tests', () => {
         ]});
 
       expect(await harness.getElementText('#driverAheadInfo .driver-name')).toEqual('Enrique Bernoldi');
-      expect(await harness.elementHasClass('#driverAheadInfo .driver-name', 'lap-behind')).toBeTrue();
-      expect(await harness.elementHasClass('#driverAheadInfo .driver-name', 'lap-ahead')).toBeFalse();
+      expect(await harness.elementHasClass('#driverAheadInfo .name-class-row', 'lap-behind')).toBeTrue();
+      expect(await harness.elementHasClass('#driverAheadInfo .name-class-row', 'lap-ahead')).toBeFalse();
       expect(await harness.getElementText('#driverBehindInfo .driver-name')).toEqual('David Coulthard');
-      expect(await harness.elementHasClass('#driverBehindInfo .driver-name', 'lap-behind')).toBeFalse();
-      expect(await harness.elementHasClass('#driverBehindInfo .driver-name', 'lap-ahead')).toBeTrue();
+      expect(await harness.elementHasClass('#driverBehindInfo .name-class-row', 'lap-behind')).toBeFalse();
+      expect(await harness.elementHasClass('#driverBehindInfo .name-class-row', 'lap-ahead')).toBeTrue();
     });
   });
 
