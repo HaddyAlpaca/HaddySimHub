@@ -2,6 +2,18 @@
     display: grid;
     grid-template-columns: auto 1fr;
     align-items: center;
+
+    &.lap-ahead {
+        color: red;
+    }
+
+    &.lap-behind {
+        color: blue;
+    }
+
+    &.in-pits {
+        color: gray;
+    }
 }
 
 .opponent-delta {
@@ -18,18 +30,6 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-
-    &.lap-ahead {
-        color: red;
-    }
-
-    &.lap-behind {
-        color: blue;
-    }
-
-    &.in-pits {
-        color: gray;
-    }
 }
 
 .delta-time {
