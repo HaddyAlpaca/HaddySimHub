@@ -1,18 +1,34 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { DashboardPageComponent } from './dashboard-page.component';
-import { RelativePageComponent } from './relative-page.component';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, inject } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
+import { DeltaTimePipe, LapTimePipe, SpeedometerComponent } from 'src/app/shared';
+import { TelemetrySample, TelemetryTraceComponent } from './telemetry-trace.component';
+import { RaceData } from './race-data';
 import { SignalRService } from 'src/app/signalr.service';
+import { RpmLightsComponent } from 'src/app/shared/rpm-lights/rpm-lights.component';
+import { TimePipe } from 'src/app/shared/time/time.pipe';
 
 @Component({
   selector: 'app-race-display',
-  templateUrl: './race-display.component.html',
-  imports: [
-    DashboardPageComponent,
-    RelativePageComponent,
-  ],
+  templateUrl: 'race-display.component.html',
+  styleUrl: 'race-display.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  imports: [
+    DecimalPipe,
+    DeltaTimePipe,
+    LapTimePipe,
+    TimePipe,
+    SpeedometerComponent,
+    TelemetryTraceComponent,
+    RpmLightsComponent,
+  ],
 })
 export class RaceDisplayComponent {
   private readonly _signalRService = inject(SignalRService);
-  protected readonly page = computed(() => this._signalRService.displayData()?.page ?? 1);
+  protected readonly data = computed(() => (this._signalRService.displayData()?.data ?? {}) as RaceData);
+
+  protected readonly telemetrySample = computed(() => {
+    const sample = { brakePct: this.data().brakePct, throttlePct: this.data().throttlePct } as TelemetrySample;
+    return sample;
+  });
 }

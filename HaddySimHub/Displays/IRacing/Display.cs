@@ -6,10 +6,10 @@ namespace HaddySimHub.Displays.IRacing;
 
 internal sealed class Display() : DisplayBase<DataSample>()
 {
-    private static readonly HashSet<SessionFlags> loggedUnknownFlags = [];
     private int[]? _lastLaps;
     private int? _sessionNum;
-    protected override int PageCount => 2;
+    private float _lastLapStartFuel;
+    private List<float> _fuelUsageHistory = new();
 
     public override void Start()
     {
@@ -51,94 +51,25 @@ internal sealed class Display() : DisplayBase<DataSample>()
         {
             _sessionNum = telemetry.SessionNum;
             _lastLaps = (int[])telemetry.CarIdxLap.Clone();
+            _lastLapStartFuel = telemetry.FuelLevel;
+            _fuelUsageHistory.Clear();
         }
 
-        var timingEntries = new List<TimingEntry>();
+        // Check if we completed a lap
+        if (_lastLaps != null && telemetry.CarIdxLap[telemetry.PlayerCarIdx] > _lastLaps[telemetry.PlayerCarIdx])
+        {
+            // Calculate fuel used in the last lap
+            float fuelUsed = _lastLapStartFuel - telemetry.FuelLevel;
+            if (fuelUsed > 0) // Only add valid fuel usage
+            {
+                _fuelUsageHistory.Add(fuelUsed);
+            }
+            _lastLapStartFuel = telemetry.FuelLevel;
+        }
+
         string CarScreenName = string.Empty;
         var playerInfo = sessionData.DriverInfo.CompetingDrivers.FirstOrDefault(d => d.CarIdx == telemetry.PlayerCarIdx);
-        if (!session.SessionType.Contains("Lone Qualify"))
-        {
-            foreach (var driver in sessionData.DriverInfo.CompetingDrivers)
-                {
-                    var carIdx = (int)driver.CarIdx;
-                    var carIdxLap = telemetry.CarIdxLap[carIdx];
-                    var carIdxLapDistPct = telemetry.CarIdxLapDistPct[carIdx];
-                    if (carIdxLap > _lastLaps[carIdx] && carIdxLapDistPct > 0.80f)
-                    {
-                        // The car has passed the start/finish line and the percentage is in the 80% range.
-                        // Set the percentage to 0% to avoid the bug in iRacing data stream.
-                        carIdxLapDistPct = 0;
-                    }
 
-                    _lastLaps[carIdx] = carIdxLap;
-
-                    // Set the license color
-                    // Rookie = Red
-                    // D = Orange
-                    // C = Yellow
-                    // B = Green
-                    // A = Blue
-                    // Pro = Purple
-                    var licenseColor = driver.LicString switch
-                    {
-                        "R" => "red",
-                        "D" => "orange",
-                        "C" => "yellow",
-                        "B" => "green",
-                        "A" => "blue",
-                        "P" => "purple",
-                        _ => "white"
-                    };
-
-                    if (carIdx == telemetry.PlayerCarIdx)
-                    {
-                        CarScreenName = driver.CarScreenName;
-                    }
-
-                    // The license string is in the format R 02.0 remove the zero after the space
-                    var licenseString = System.Text.RegularExpressions.Regex.Replace(driver.LicString, @"(?<=\s)0", "");
-
-                    var entry = new TimingEntry
-                    {
-                        CarNumber = driver.CarNumber,
-                        DriverName = System.Text.Encoding.UTF8.GetString(System.Text.Encoding.UTF8.GetBytes(driver.UserName)),
-                        Position = telemetry.CarIdxPosition[carIdx],
-                        Laps = carIdxLap,
-                        LapCompletedPct = carIdxLapDistPct * 100,
-                        License = driver.LicString,
-                        LicenseColor = licenseColor,
-                        IRating = driver.IRating,
-                        IsInPits = telemetry.CarIdxOnPitRoad[carIdx],
-                        IsPlayer = carIdx == telemetry.PlayerCarIdx,
-                        IsSafetyCar = driver.UserName.Equals("Pace Car", StringComparison.CurrentCultureIgnoreCase),
-                        TimeToPlayer = (float)Math.Round(telemetry.CarIdxEstTime[carIdx] - telemetry.CarIdxEstTime[telemetry.PlayerCarIdx], 1),
-                    };
-
-                    timingEntries.Add(entry);
-                }
-
-            var playerEntry = timingEntries.FirstOrDefault(e => e.IsPlayer);
-
-            if (playerEntry != null)
-            {
-                timingEntries.Where(e => !e.IsSafetyCar && !e.IsPlayer).ForEach(e =>
-                {
-                    var lapDiff = e.Laps - playerEntry.Laps;
-                    var positionInLap = e.LapCompletedPct - playerEntry.LapCompletedPct;
-
-                    // Calculate total position including laps
-                    e.TotalPosition = (lapDiff * 100) + positionInLap;
-
-                    // Car is ahead if total position is positive
-                    e.IsLapAhead = e.TotalPosition > 0;
-
-                    // Car is behind if total position is negative
-                    e.IsLapBehind = e.TotalPosition < 0;
-                });
-            }
-        }
-
-        var orderedEntries = timingEntries.OrderByDescending(e => e.TimeToPlayer).ToArray();
         var qualifyingSession = sessionData.SessionInfo.Sessions.FirstOrDefault(s => s.SessionType.Contains("Qualify"));
         long startingPosition = 0;
         if (qualifyingSession?.ResultsPositions != null)
@@ -176,89 +107,16 @@ internal sealed class Display() : DisplayBase<DataSample>()
             ThrottlePct = (int)Math.Round(telemetry.Throttle * 100, 0),
             BrakeBias = telemetry.DcBrakeBias,
             FuelRemaining = telemetry.FuelLevel,
+            FuelLastLap = _fuelUsageHistory.Count > 0 ? _fuelUsageHistory[^1] : 0,
+            FuelAvgLap = _fuelUsageHistory.Count > 0 ? _fuelUsageHistory.Average() : 0,
+            FuelEstLaps = _fuelUsageHistory.Count > 0 ? (int)(telemetry.FuelLevel / _fuelUsageHistory.Average()) : 0,
             AirTemp = telemetry.AirTemp,
             TrackTemp = telemetry.TrackTemp,
-            Flag = GetFlag(telemetry.SessionFlags),
             PitLimiterOn = telemetry.EngineWarnings.HasFlag(EngineWarnings.PitSpeedLimiter),
-            TimingEntries = orderedEntries,
             CarNumber = playerInfo?.CarNumber ?? string.Empty,
         };
 
         return new DisplayUpdate { Type = DisplayType.RaceDashboard, Data = displayUpdate };
-    }
-
-    private static string GetFlag(SessionFlags sessionFlags)
-    {
-        // Map known flags to colors
-        var flagMappings = new Dictionary<SessionFlags, string>
-        {
-            { SessionFlags.white, "white" },
-            { SessionFlags.green, "green" },
-            { SessionFlags.greenHeld, "green" },
-            { SessionFlags.yellow, "yellow" },
-            { SessionFlags.yellowWaving, "yellow" },
-            { SessionFlags.caution, "yellow" },
-            { SessionFlags.cautionWaving, "yellow" },
-            { SessionFlags.red, "red" },
-            { SessionFlags.blue, "blue" },
-            { SessionFlags.black, "black" },
-            { SessionFlags.disqualify, "black" },
-            { SessionFlags.repair, "black-orange" },
-            { SessionFlags.debris, "red-yellow" },
-            { SessionFlags.checkered, "checkered" }
-        };
-
-        string? flag = null;
-        foreach (var kvp in flagMappings)
-        {
-            if (sessionFlags.HasFlag(kvp.Key))
-            {
-                flag = kvp.Value;
-                break;
-            }
-        }
-
-        // Handle ignored flags generically
-        var ignoredFlags = new[]
-        {
-            SessionFlags.servicible,
-            SessionFlags.tenToGo,
-            SessionFlags.fiveToGo,
-            SessionFlags.oneLapToGreen,
-            SessionFlags.startHidden,
-            SessionFlags.startReady,
-            SessionFlags.startSet,
-            SessionFlags.startGo,
-            SessionFlags.randomWaving,
-            SessionFlags.furled,
-            SessionFlags.crossed,
-        };
-
-        if (flag is null)
-        {
-            foreach (var ignored in ignoredFlags)
-            {
-                if (sessionFlags.HasFlag(ignored))
-                {
-                    sessionFlags &= ~ignored;
-                    flag = "green";
-                    break;
-                }
-            }
-        }
-
-        if (flag is null)
-        {
-            // Only log unknown flags once per unique value
-            if (!loggedUnknownFlags.Contains(sessionFlags))
-            {
-                Logger.Error($"Unknown flag: {sessionFlags}");
-                loggedUnknownFlags.Add(sessionFlags);
-            }
-            flag = "green";
-        }
-
-        return flag;
     }
 
     public static RpmLight[] GenerateRpmLights(string carName)
@@ -277,7 +135,7 @@ internal sealed class Display() : DisplayBase<DataSample>()
         };
     }
 
-    public int GetRpmMax(string carName)
+    public static int GetRpmMax(string carName)
     {
         return carName switch
         {

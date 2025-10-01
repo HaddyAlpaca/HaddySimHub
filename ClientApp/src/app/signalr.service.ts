@@ -26,7 +26,6 @@ export enum DisplayType {
 export interface DisplayUpdate {
   type: DisplayType;
   data: TruckData | RaceData | RallyData | undefined;
-  page: number;
 }
 
 @Injectable({

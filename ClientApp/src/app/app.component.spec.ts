@@ -28,7 +28,7 @@ describe('AppComponent tests', () => {
 
   it('should show the connection status when display type is None', async () => {
     const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, AppComponentHarness);
-    mockSignalRService.displayData.set({ type: DisplayType.None, data: undefined, page: 1 } as DisplayUpdate);
+    mockSignalRService.displayData.set({ type: DisplayType.None, data: undefined } as DisplayUpdate);
 
     expect(await harness.isTruckDisplayVisible()).toBeFalse();
     expect(await harness.isRaceDisplayVisible()).toBeFalse();
@@ -38,7 +38,7 @@ describe('AppComponent tests', () => {
 
   it('should show the truck display when truck data is available', async () => {
     const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, AppComponentHarness);
-    mockSignalRService.displayData.set({ type: DisplayType.TruckDashboard, data: {} as TruckData, page: 1 } as DisplayUpdate);
+    mockSignalRService.displayData.set({ type: DisplayType.TruckDashboard, data: {} as TruckData } as DisplayUpdate);
 
     expect(await harness.isTruckDisplayVisible()).toBeTrue();
     expect(await harness.isRaceDisplayVisible()).toBeFalse();
@@ -48,7 +48,7 @@ describe('AppComponent tests', () => {
 
   it('should show the race display when race data is available', async () => {
     const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, AppComponentHarness);
-    mockSignalRService.displayData.set({ type: DisplayType.RaceDashboard, data: {} as RaceData, page: 1 } as DisplayUpdate);
+    mockSignalRService.displayData.set({ type: DisplayType.RaceDashboard, data: {} as RaceData } as DisplayUpdate);
 
     expect(await harness.isTruckDisplayVisible()).toBeFalse();
     expect(await harness.isRaceDisplayVisible()).toBeTrue();
@@ -58,7 +58,7 @@ describe('AppComponent tests', () => {
 
   it('should show the rally display when rally data is available', async () => {
     const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, AppComponentHarness);
-    mockSignalRService.displayData.set({ type: DisplayType.RallyDashboard, data: { rpmLights: []} as unknown as RallyData, page: 1 } as DisplayUpdate);
+    mockSignalRService.displayData.set({ type: DisplayType.RallyDashboard, data: { rpmLights: []} as unknown as RallyData } as DisplayUpdate);
 
     expect(await harness.isTruckDisplayVisible()).toBeFalse();
     expect(await harness.isRaceDisplayVisible()).toBeFalse();

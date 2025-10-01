@@ -14,6 +14,9 @@ export interface RaceData {
   trackTemp: number;
   airTemp: number;
   fuelRemaining: number;
+  fuelAvgLap: number;
+  fuelLastLap: number;
+  fuelEstLaps: number;
   brakeBias: number;
   strengthOfField: number;
   lastSectorNum: number;
@@ -25,27 +28,7 @@ export interface RaceData {
   pitLimiterOn: boolean;
   incidents: number;
   maxIncidents: number;
-  flag: '' | 'yellow' | 'green' | 'blue' | 'white' | 'finish' | 'black' | 'black-orange' | 'red';
-  timingEntries: TimingEntry[];
   brakePct: number;
   throttlePct: number;
   carNumber: string;
-}
-
-export interface TimingEntry {
-  position: number;
-  driverName: string;
-  carNumber: number;
-  license: string;
-  licenseColor: string;
-  iRating: number;
-  laps: number;
-  lapCompletedPct: number;
-  isPlayer: boolean;
-  isSafetyCar: boolean;
-  isInPits: boolean;
-  timeToPlayer: number;
-  isLapAhead: boolean;
-  isLapBehind: boolean;
-  totalPosition: number;
 }
