@@ -3,6 +3,16 @@
     <div class="group-border border-blue">
       <div class="dashboard-row cols-2">
         <div class="data-item">
+          <label>Session Type</label>
+          <div>{{data().sessionType}}</div>
+        </div>
+        <div class="data-item">
+          <label>SOF</label>
+          <div>{{data().strengthOfField ? data().strengthOfField : '---' }}</div>
+        </div>
+      </div>
+      <div class="dashboard-row cols-2">
+        <div class="data-item">
           <label>Air</label>
           <div id="air-temp">{{data().airTemp |number:'1.1-1':'en-US'}} &deg;C</div>
         </div>
@@ -13,32 +23,16 @@
       </div>
       <div class="dashboard-row cols-2">
         <div class="data-item">
-          <label>SOF</label>
-          <div>{{data().strengthOfField ? data().strengthOfField : '---' }}</div>
+        <label>Lap</label>
+            @if (data().totalLaps > 0) {
+                <div id="laps">{{data().currentLap}}/{{data().totalLaps}}</div>
+            } @else {
+                <div id="laps">{{data().currentLap}}</div>
+            }
         </div>
         <div class="data-item">
           <label>Time remaining</label>
           <div>{{data().sessionTimeRemaining | time}}</div>
-        </div>
-      </div>
-      <div class="dashboard-row cols-2">
-        <div class="data-item">
-          <label>Last laptime</label>
-          <div class="last-laptime" id="lastLapTime">{{data().lastLapTime | laptime}}</div>
-        </div>
-        <div class="data-item">
-          <label>Delta</label>
-          <div id="lastLapTimeDelta" [class.text-green]="data().lastLapTimeDelta < 0" [class.text-red]="data().lastLapTimeDelta > 0">{{data().lastLapTimeDelta | deltatime}}</div>
-        </div>
-      </div>
-      <div class="dashboard-row cols-2">
-        <div class="data-item">
-          <label>Best laptime</label>
-          <div class="best-laptime" id="bestLapTime">{{data().bestLapTime | laptime}}</div>
-        </div>
-        <div class="data-item">
-          <label>Delta</label>
-          <div id="bestLapTimeDelta" [class.text-green]="data().bestLapTimeDelta < 0" [class.text-red]="data().bestLapTimeDelta > 0">{{data().bestLapTimeDelta | deltatime}}</div>
         </div>
       </div>
     </div>
@@ -47,65 +41,86 @@
       <app-speedometer [rpm]="data().rpm" [gear]="data().gear" [speed]="data().speed" />
     </div>
     <div class="group-border border-blue">
-      <div class="dashboard-row cols-2">
-        <div class="data-item">
-          <label>Brake bias</label>
-          <div id="brakeBias">{{data().brakeBias |number:'1.1-1':'en-US'}}</div>
-        </div>
-        <div class="data-item">
-          <label>Fuel remaining</label>
-          <div id="fuelRemaining">{{data().fuelRemaining |number:'1.1-1':'en-US'}} L</div>
-        </div>
-      </div>
-      <div class="dashboard-row cols-2">
-        <div class="data-item">
-          <label>Incidents</label>
-          @if (data().maxIncidents === 999) {
-            <div id="incidents">{{data().incidents}}</div>
-          } @else {
-            <div id="incidents">{{data().incidents}}/{{data().maxIncidents}}</div>
-          }
-        </div>
-        <div class="data-item">
-          <label>Session Type</label>
-          <div>{{data().sessionType}}</div>
-        </div>
-      </div>
-      <div class="data-item">
-        <label>Lap</label>
-        @if (data().totalLaps > 0) {
-          <div id="laps">{{data().currentLap}}/{{data().totalLaps}}</div>
-        } @else {
-          <div id="laps">{{data().currentLap}}</div>
-        }
-      </div>
-      <div class="dashboard-row cols-2">
-        <div class="data-item">
-          <label>Position</label>
-          <div id="position">{{data().position}}</div>
-        </div>
+      <div class="dashboard-row">
         <div class="data-item">
           <label>Expected position</label>
           <div>{{data().carNumber}}</div>
         </div>
       </div>
+      <div class="dashboard-row cols-2">
+          <div class="data-item">
+              <label>Last laptime</label>
+              <div class="last-laptime" id="lastLapTime">{{data().lastLapTime | laptime}}</div>
+          </div>
+          <div class="data-item">
+              <label>Delta</label>
+              <div id="lastLapTimeDelta" [class.text-green]="data().lastLapTimeDelta < 0" [class.text-red]="data().lastLapTimeDelta > 0">{{data().lastLapTimeDelta | deltatime}}</div>
+          </div>
+      </div>
+      <div class="dashboard-row cols-2">
+          <div class="data-item">
+              <label>Best laptime</label>
+              <div class="best-laptime" id="bestLapTime">{{data().bestLapTime | laptime}}</div>
+          </div>
+          <div class="data-item">
+              <label>Delta</label>
+              <div id="bestLapTimeDelta" [class.text-green]="data().bestLapTimeDelta < 0" [class.text-red]="data().bestLapTimeDelta > 0">{{data().bestLapTimeDelta | deltatime}}</div>
+          </div>
+      </div>  
     </div>
   </div>
   <div class="dashboard-row cols-3">
     <div class="group-border border-blue">
-      <label>Fuel avg lap</label>
-      <div id="fuelAvgLap">{{data().fuelAvgLap |number:'1.1-1':'en-US'}} L</div>
+        <div class="dashboard-row cols-2">
+            <div class="data-item">
+                <label>Fuel last lap</label>
+                <div id="fuelLastLap">{{data().fuelLastLap |number:'1.1-1':'en-US'}} L</div>
+            </div>
+    
+            <div class="data-item">
+                <label>Fuel avg lap</label>
+                <div id="fuelAvgLap">{{data().fuelAvgLap |number:'1.1-1':'en-US'}} L</div>
+            </div>
+        </div>
     </div>
 
     <div class="group-border border-blue">
-      <label>Fuel last lap</label>
-      <div id="fuelLastLap">{{data().fuelLastLap |number:'1.1-1':'en-US'}} L</div>
+        <div class="dashboard-row cols-2">
+            <div class="data-item">
+              <label>Fuel remaining</label>
+              <div id="fuelRemaining">{{data().fuelRemaining |number:'1.1-1':'en-US'}} L</div>
+            </div>
+    
+            <div class="data-item">
+                <label>Fuel est. laps</label>
+                <div id="fuelEstLaps">{{data().fuelEstLaps |number:'1.0-0':'en-US'}}</div>
+            </div>
+        </div>
     </div>
 
     <div class="group-border border-blue">
-      <label>Fuel est. laps</label>
-      <div id="fuelEstLaps">{{data().fuelEstLaps |number:'1.0-0':'en-US'}}</div>
+        <div class="dashboard-row cols-3">
+            <div class="data-item">
+              <label>Position</label>
+              <div id="position">{{data().position}}</div>
+            </div>
+
+            <div class="data-item">
+                <label>Incidents</label>
+                @if (data().maxIncidents === 999) {
+                    <div id="incidents">{{data().incidents}}</div>
+                } @else {
+                    <div id="incidents">{{data().incidents}}/{{data().maxIncidents}}</div>
+                }
+            </div>
+    
+            <div class="data-item">
+              <label>Brake bias</label>
+              <div id="brakeBias">{{data().brakeBias |number:'1.1-1':'en-US'}}</div>
+            </div>
+        </div>
     </div>
+
   </div>
   <app-telemetry-trace [telemetrySample]="telemetrySample()" />
 </div>
