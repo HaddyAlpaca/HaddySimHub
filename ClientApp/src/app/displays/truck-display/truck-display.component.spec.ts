@@ -93,7 +93,6 @@ describe('TruckDisplayComponent', () => {
     mockSignalRService.displayData.set({
       type: DisplayType.TruckDashboard,
       data: value as unknown as TruckData,
-      page: 1,
     });
   };
 });

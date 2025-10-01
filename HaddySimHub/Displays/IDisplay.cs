@@ -6,5 +6,4 @@ internal interface IDisplay
     bool IsActive { get; }
     void Start();
     void Stop();
-    void NextPage();
 }

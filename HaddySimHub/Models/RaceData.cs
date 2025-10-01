@@ -32,6 +32,12 @@ public sealed record RaceData
 
     public float FuelRemaining { get; init; }
 
+    public float FuelAvgLap { get; init; }
+
+    public float FuelLastLap { get; init; }
+
+    public int FuelEstLaps { get; init; }
+
     public float BrakeBias { get; init; }
 
     public float CurrentLapTime { get; init; }
@@ -62,28 +68,5 @@ public sealed record RaceData
 
     public bool PitLimiterOn { get; init; }
 
-    public string Flag { get; init; } = string.Empty;
-
-    public TimingEntry[] TimingEntries { get; init; } = [];
-
     public required string CarNumber { get; init; }
-}
-
-public record TimingEntry
-{
-    public int Position { get; init; }
-    public string DriverName { get; init; } = string.Empty;
-    public string CarNumber { get; init; } = string.Empty;
-    public string License { get; init; } = string.Empty;
-    public string LicenseColor { get; init; } = string.Empty;
-    public long IRating { get; init; }
-    public int Laps { get; init; }
-    public double LapCompletedPct { get; init; }
-    public bool IsPlayer { get; init; }
-    public bool IsSafetyCar { get; init; }
-    public bool IsInPits { get; init; }
-    public float TimeToPlayer { get; init; }
-    public bool IsLapAhead { get; set; }
-    public bool IsLapBehind { get; set; }
-    public double TotalPosition { get; set; }
 }

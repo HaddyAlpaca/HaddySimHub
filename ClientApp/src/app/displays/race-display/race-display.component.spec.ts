@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DashboardPageComponent } from './dashboard-page.component';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { DashboardPageComponentHarness } from './dashboard-page.component.harness';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { RaceData, TimingEntry } from './race-data';
+import { RaceData } from './race-data';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { MockSignalRService } from 'src/testing/mock-signalr.service';
 import { DisplayType, SignalRService } from 'src/app/signalr.service';
+import { RaceDisplayComponentHarness } from './race-display.component.harness';
+import { RaceDisplayComponent } from './race-display.component';
 
-describe('Dashboard page component tests', () => {
-  let fixture: ComponentFixture<DashboardPageComponent>;
-  let harness: DashboardPageComponentHarness;
+describe('Race display component tests', () => {
+  let fixture: ComponentFixture<RaceDisplayComponent>;
+  let harness: RaceDisplayComponentHarness;
   let mockSignalRService: MockSignalRService;
 
   beforeEach(async () => {
@@ -24,8 +24,8 @@ describe('Dashboard page component tests', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DashboardPageComponent);
-    harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, DashboardPageComponentHarness);
+    fixture = TestBed.createComponent(RaceDisplayComponent);
+    harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, RaceDisplayComponentHarness);
   });
 
   describe('Laps remaining tests', () => {
@@ -172,42 +172,6 @@ describe('Dashboard page component tests', () => {
     });
   });
 
-  describe('Driver ahead and behind tests', () => {
-    it('Driver name and delta are displayed', async () => {
-      patchData({
-        timingEntries: [
-          { position: 1, driverName: 'Enrique Bernoldi', isPlayer: false, timeToPlayer: 1.2 } as TimingEntry,
-          { position: 2, driverName: 'Niki Lauda', isPlayer: true, timeToPlayer: 0 } as TimingEntry,
-          { position: 3, driverName: 'David Coulthard', isPlayer: false, timeToPlayer: -2.5 } as TimingEntry,
-        ]});
-
-      expect(await harness.getElementText('#driverAheadInfo .driver-name')).toEqual('Enrique Bernoldi');
-      expect(await harness.elementHasClass('#driverAheadInfo .driver-name', 'lap-behind')).toBeFalse();
-      expect(await harness.elementHasClass('#driverAheadInfo .driver-name', 'lap-ahead')).toBeFalse();
-      expect(await harness.getElementText('#driverAheadInfo .delta-time')).toEqual('+1.2');
-      expect(await harness.getElementText('#driverBehindInfo .driver-name')).toEqual('David Coulthard');
-      expect(await harness.elementHasClass('#driverBehindInfo .driver-name', 'lap-behind')).toBeFalse();
-      expect(await harness.elementHasClass('#driverBehindInfo .driver-name', 'lap-ahead')).toBeFalse();
-      expect(await harness.getElementText('#driverBehindInfo .delta-time')).toEqual('-2.5');
-    });
-
-    it('Should format drivers a lap ahead and behind names correctly', async () => {
-      patchData({
-        timingEntries: [
-          { position: 1, driverName: 'Enrique Bernoldi', isLapBehind: true } as TimingEntry,
-          { position: 2, driverName: 'Niki Lauda', isPlayer: true } as TimingEntry,
-          { position: 3, driverName: 'David Coulthard', isLapAhead: true } as TimingEntry,
-        ]});
-
-      expect(await harness.getElementText('#driverAheadInfo .driver-name')).toEqual('Enrique Bernoldi');
-      expect(await harness.elementHasClass('#driverAheadInfo .name-class-row', 'lap-behind')).toBeTrue();
-      expect(await harness.elementHasClass('#driverAheadInfo .name-class-row', 'lap-ahead')).toBeFalse();
-      expect(await harness.getElementText('#driverBehindInfo .driver-name')).toEqual('David Coulthard');
-      expect(await harness.elementHasClass('#driverBehindInfo .name-class-row', 'lap-behind')).toBeFalse();
-      expect(await harness.elementHasClass('#driverBehindInfo .name-class-row', 'lap-ahead')).toBeTrue();
-    });
-  });
-
   describe('Pit limiter tests', () => {
     it('Pit limter is not shown when off', async () => {
       patchData({ pitLimiterOn: false });
@@ -236,18 +200,10 @@ describe('Dashboard page component tests', () => {
     });
   });
 
-  describe('Flag tests', () => {
-    it('Flag class is set based on data', async () => {
-      patchData({ flag: 'flag-green' });
-      expect(await harness.getFlagClass()).toEqual('flag flag-green');
-    });
-  });
-
   const patchData = (value: Record<string, unknown>): void => {
     mockSignalRService.displayData.set({
       type: DisplayType.RaceDashboard,
       data: value as unknown as RaceData,
-      page: 1,
     });
   };
 });

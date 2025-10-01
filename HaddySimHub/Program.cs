@@ -59,11 +59,6 @@ public class Program
 
                         Console.WriteLine(string.IsNullOrEmpty(TestId) ? "Test mode disabled." : $"Test mode:'{TestId}'.");
                     }
-
-                    if (key.Modifiers == ConsoleModifiers.Control && key.Key == ConsoleKey.PageUp)
-                    {
-                        _displaysRunner?.CurrentDisplay?.NextPage();
-                    }
                 }
 
                 await Task.Delay(100);
@@ -73,9 +68,8 @@ public class Program
         WebApplication webServer = CreateWebServer();
 
         Task webServerTask = RunWebServerAsync(webServer, token);
-        Task requestMonitor = MonitorFolderAsync(Path.Combine(AppContext.BaseDirectory, "Requests"), token);
         Task processTask = RunProcessAsync(token);
-        await Task.WhenAll(webServerTask, processTask, keyInputTask, requestMonitor);
+        await Task.WhenAll(webServerTask, processTask, keyInputTask);
 
         cancellationTokenSource.Cancel();
     }
@@ -179,51 +173,6 @@ public class Program
         catch (Exception ex)
         {
             Logger.Error($"Error checking for updates: {ex.Message}\n\n{ex.StackTrace}");
-        }
-    }
-
-    private static async Task MonitorFolderAsync(string folderPath, CancellationToken cancellationToken)
-    {
-        while (!cancellationToken.IsCancellationRequested)
-        {
-            if (!Directory.Exists(folderPath))
-            {
-                Directory.CreateDirectory(folderPath);
-            }
-
-            string[] files = Directory.GetFiles(folderPath);
-
-            foreach (var file in files)
-            {
-                if (cancellationToken.IsCancellationRequested)
-                    break;
-
-                try
-                {
-                    using (FileStream fs = new(file, FileMode.Open, FileAccess.Read, FileShare.None))
-                    using (StreamReader reader = new(fs))
-                    {
-                        string content = await reader.ReadToEndAsync(cancellationToken);
-                        if (content.Trim() == "PAGEUP")
-                        {
-                            Console.WriteLine("Execute next page command...");
-                            _displaysRunner?.CurrentDisplay?.NextPage();
-                        }
-                    }
-
-                    File.Delete(file);
-                }
-                catch (IOException)
-                {
-                    // File is likely in use, skip it
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing file '{file}': {ex.Message}");
-                }
-            }
-
-            await Task.Delay(500, cancellationToken);
         }
     }
 }
