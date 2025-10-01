@@ -6,10 +6,10 @@ namespace HaddySimHub.Displays.IRacing;
 
 internal sealed class Display() : DisplayBase<DataSample>()
 {
-    private int[]? _lastLaps;
+    private int _lastPlayerLap;
     private int? _sessionNum;
     private float _lastLapStartFuel;
-    private List<float> _fuelUsageHistory = new();
+    private readonly List<float> _fuelUsageHistory = [];
 
     public override void Start()
     {
@@ -45,18 +45,18 @@ internal sealed class Display() : DisplayBase<DataSample>()
         var sessionData = data.SessionData;
         var session = sessionData.SessionInfo.Sessions.First(s => s.SessionNum == telemetry.SessionNum);
 
-        _lastLaps ??= (int[])telemetry.CarIdxLap.Clone();
+        var currentPlayerLap = telemetry.CarIdxLap[telemetry.PlayerCarIdx];
 
         if (_sessionNum != telemetry.SessionNum)
         {
             _sessionNum = telemetry.SessionNum;
-            _lastLaps = (int[])telemetry.CarIdxLap.Clone();
+            _lastPlayerLap = currentPlayerLap;
             _lastLapStartFuel = telemetry.FuelLevel;
             _fuelUsageHistory.Clear();
         }
 
         // Check if we completed a lap
-        if (_lastLaps != null && telemetry.CarIdxLap[telemetry.PlayerCarIdx] > _lastLaps[telemetry.PlayerCarIdx])
+        if (currentPlayerLap > _lastPlayerLap)
         {
             // Calculate fuel used in the last lap
             float fuelUsed = _lastLapStartFuel - telemetry.FuelLevel;
@@ -65,21 +65,13 @@ internal sealed class Display() : DisplayBase<DataSample>()
                 _fuelUsageHistory.Add(fuelUsed);
             }
             _lastLapStartFuel = telemetry.FuelLevel;
+            
+            // Update the last player lap
+            _lastPlayerLap = currentPlayerLap;
         }
 
         string CarScreenName = string.Empty;
         var playerInfo = sessionData.DriverInfo.CompetingDrivers.FirstOrDefault(d => d.CarIdx == telemetry.PlayerCarIdx);
-
-        var qualifyingSession = sessionData.SessionInfo.Sessions.FirstOrDefault(s => s.SessionType.Contains("Qualify"));
-        long startingPosition = 0;
-        if (qualifyingSession?.ResultsPositions != null)
-        {
-            var playerQualifyingResult = qualifyingSession.ResultsPositions.FirstOrDefault(r => r.CarIdx == telemetry.PlayerCarIdx);
-            if (playerQualifyingResult != null)
-            {
-                startingPosition = playerQualifyingResult.Position;
-            }
-        }
 
         var displayUpdate = new RaceData
         {
