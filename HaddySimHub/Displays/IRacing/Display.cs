@@ -8,6 +8,8 @@ internal sealed class Display() : DisplayBase<DataSample>()
 {
     private int[]? _lastLaps;
     private int? _sessionNum;
+    private float _lastLapStartFuel;
+    private List<float> _fuelUsageHistory = new();
 
     public override void Start()
     {
@@ -49,6 +51,20 @@ internal sealed class Display() : DisplayBase<DataSample>()
         {
             _sessionNum = telemetry.SessionNum;
             _lastLaps = (int[])telemetry.CarIdxLap.Clone();
+            _lastLapStartFuel = telemetry.FuelLevel;
+            _fuelUsageHistory.Clear();
+        }
+
+        // Check if we completed a lap
+        if (_lastLaps != null && telemetry.CarIdxLap[telemetry.PlayerCarIdx] > _lastLaps[telemetry.PlayerCarIdx])
+        {
+            // Calculate fuel used in the last lap
+            float fuelUsed = _lastLapStartFuel - telemetry.FuelLevel;
+            if (fuelUsed > 0) // Only add valid fuel usage
+            {
+                _fuelUsageHistory.Add(fuelUsed);
+            }
+            _lastLapStartFuel = telemetry.FuelLevel;
         }
 
         string CarScreenName = string.Empty;
@@ -91,6 +107,9 @@ internal sealed class Display() : DisplayBase<DataSample>()
             ThrottlePct = (int)Math.Round(telemetry.Throttle * 100, 0),
             BrakeBias = telemetry.DcBrakeBias,
             FuelRemaining = telemetry.FuelLevel,
+            FuelLastLap = _fuelUsageHistory.Count > 0 ? _fuelUsageHistory[^1] : 0,
+            FuelAvgLap = _fuelUsageHistory.Count > 0 ? _fuelUsageHistory.Average() : 0,
+            FuelEstLaps = _fuelUsageHistory.Count > 0 ? (int)(telemetry.FuelLevel / _fuelUsageHistory.Average()) : 0,
             AirTemp = telemetry.AirTemp,
             TrackTemp = telemetry.TrackTemp,
             PitLimiterOn = telemetry.EngineWarnings.HasFlag(EngineWarnings.PitSpeedLimiter),
