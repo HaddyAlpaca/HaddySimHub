@@ -60,7 +60,8 @@ internal sealed class Display() : DisplayBase<DataSample>()
         {
             // Calculate fuel used in the last lap
             float fuelUsed = _lastLapStartFuel - telemetry.FuelLevel;
-            if (fuelUsed > 0) // Only add valid fuel usage
+            // Only add valid fuel usage (positive and not from pit stops)
+            if (fuelUsed > 0 && telemetry.FuelLevel <= _lastLapStartFuel)
             {
                 _fuelUsageHistory.Add(fuelUsed);
             }
@@ -101,7 +102,10 @@ internal sealed class Display() : DisplayBase<DataSample>()
             FuelRemaining = telemetry.FuelLevel,
             FuelLastLap = _fuelUsageHistory.Count > 0 ? _fuelUsageHistory[^1] : 0,
             FuelAvgLap = _fuelUsageHistory.Count > 0 ? _fuelUsageHistory.Average() : 0,
-            FuelEstLaps = _fuelUsageHistory.Count > 0 ? (int)(telemetry.FuelLevel / _fuelUsageHistory.Average()) : 0,
+            // Don't calculate estimated laps until we have fuel usage history
+            FuelEstLaps = _fuelUsageHistory.Count > 0 && _fuelUsageHistory.Average() > 0 
+                ? (int)(telemetry.FuelLevel / _fuelUsageHistory.Average()) 
+                : 0,
             AirTemp = telemetry.AirTemp,
             TrackTemp = telemetry.TrackTemp,
             PitLimiterOn = telemetry.EngineWarnings.HasFlag(EngineWarnings.PitSpeedLimiter),
