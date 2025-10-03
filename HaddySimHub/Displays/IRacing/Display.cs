@@ -9,7 +9,9 @@ internal sealed class Display() : DisplayBase<DataSample>()
     private int _lastPlayerLap;
     private int? _sessionNum;
     private float _lastLapStartFuel;
-    private readonly List<float> _fuelUsageHistory = [];
+    private bool _lastPlayerCarInPitStall;
+    private bool _lastOnPitRoad;
+    private readonly List<float> _fuelStintHistory = [];
 
     public override void Start()
     {
@@ -52,7 +54,19 @@ internal sealed class Display() : DisplayBase<DataSample>()
             _sessionNum = telemetry.SessionNum;
             _lastPlayerLap = currentPlayerLap;
             _lastLapStartFuel = telemetry.FuelLevel;
-            _fuelUsageHistory.Clear();
+            _fuelStintHistory.Clear();
+            // Initialize pit state tracking for the new session
+            _lastPlayerCarInPitStall = telemetry.PlayerCarInPitStall;
+            _lastOnPitRoad = telemetry.OnPitRoad;
+        }
+
+        // If we have just exited the pits (either left the pit stall or left pit road),
+        // reset fuel usage history so we start a fresh stint history.
+        if ((_lastPlayerCarInPitStall && !telemetry.PlayerCarInPitStall) || (_lastOnPitRoad && !telemetry.OnPitRoad))
+        {
+            _fuelStintHistory.Clear();
+            // Reset the lap-start fuel baseline so the next lap's fuel calc starts from current level
+            _lastLapStartFuel = telemetry.FuelLevel;
         }
 
         // Check if we completed a lap
@@ -63,13 +77,17 @@ internal sealed class Display() : DisplayBase<DataSample>()
             // Only add valid fuel usage (positive and not from pit stops)
             if (fuelUsed > 0 && telemetry.FuelLevel <= _lastLapStartFuel)
             {
-                _fuelUsageHistory.Add(fuelUsed);
+                _fuelStintHistory.Add(fuelUsed);
             }
             _lastLapStartFuel = telemetry.FuelLevel;
             
             // Update the last player lap
             _lastPlayerLap = currentPlayerLap;
         }
+
+        // Update last-known pit states for next sample
+        _lastPlayerCarInPitStall = telemetry.PlayerCarInPitStall;
+        _lastOnPitRoad = telemetry.OnPitRoad;
 
         string CarScreenName = string.Empty;
         var playerInfo = sessionData.DriverInfo.CompetingDrivers.FirstOrDefault(d => d.CarIdx == telemetry.PlayerCarIdx);
@@ -100,11 +118,11 @@ internal sealed class Display() : DisplayBase<DataSample>()
             ThrottlePct = (int)Math.Round(telemetry.Throttle * 100, 0),
             BrakeBias = telemetry.DcBrakeBias,
             FuelRemaining = telemetry.FuelLevel,
-            FuelLastLap = _fuelUsageHistory.Count > 0 ? _fuelUsageHistory[^1] : 0,
-            FuelAvgLap = _fuelUsageHistory.Count > 0 ? _fuelUsageHistory.Average() : 0,
+            FuelLastLap = _fuelStintHistory.Count > 0 ? _fuelStintHistory[^1] : 0,
+            FuelAvgLap = _fuelStintHistory.Count > 0 ? _fuelStintHistory.Average() : 0,
             // Don't calculate estimated laps until we have fuel usage history
-            FuelEstLaps = _fuelUsageHistory.Count > 0 && _fuelUsageHistory.Average() > 0 
-                ? (int)(telemetry.FuelLevel / _fuelUsageHistory.Average()) 
+            FuelEstLaps = _fuelStintHistory.Count > 0 && _fuelStintHistory.Average() > 0 
+                ? (int)(telemetry.FuelLevel / _fuelStintHistory.Average()) 
                 : 0,
             AirTemp = telemetry.AirTemp,
             TrackTemp = telemetry.TrackTemp,
