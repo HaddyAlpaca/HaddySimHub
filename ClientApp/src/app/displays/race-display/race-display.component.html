@@ -35,18 +35,18 @@
           <div>{{data().sessionTimeRemaining | time}}</div>
         </div>
       </div>
-    </div>
-    <div class=" group-border border-yellow speedometer">
-      <app-rpm-lights [rpm]="data().rpm" [rpmMax]="data().rpmMax" [biDirectional]="false" [lights]="data().rpmLights"  />
-      <app-speedometer [rpm]="data().rpm" [gear]="data().gear" [speed]="data().speed" />
-    </div>
-    <div class="group-border border-blue">
       <div class="dashboard-row">
         <div class="data-item">
           <label>Expected position</label>
           <div>{{data().carNumber}}</div>
         </div>
       </div>
+    </div>
+    <div class=" group-border border-yellow speedometer">
+      <app-rpm-lights [rpm]="data().rpm" [rpmMax]="data().rpmMax" [biDirectional]="false" [lights]="data().rpmLights" [class.hidden]="data().rpmMax <= 0"  />
+      <app-speedometer [rpm]="data().rpm" [gear]="data().gear" [speed]="data().speed" />
+    </div>
+    <div class="group-border border-blue">
       <div class="dashboard-row cols-2">
           <div class="data-item">
               <label>Last laptime</label>
