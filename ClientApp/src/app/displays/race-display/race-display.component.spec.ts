@@ -144,6 +144,22 @@ describe('Race display component tests', () => {
     expect(await harness.getElementText('#fuelRemaining')).toEqual('14.2 L');
   });
 
+  describe('Fuel estimated laps warning', () => {
+    it('Shows red when laps remaining is larger than estimated laps', async () => {
+      // totalLaps - currentLap = 5, fuelEstLaps = 3 -> remaining laps (5) > est (3)
+      patchData({ currentLap: 2, totalLaps: 7, fuelEstLaps: 3 });
+
+      expect(await harness.elementHasClass('#fuelEstLaps', 'text-red')).toBe(true);
+    });
+
+    it('Does not show red when estimated laps covers remaining laps', async () => {
+      // totalLaps - currentLap = 3, fuelEstLaps = 4 -> remaining laps (3) <= est (4)
+      patchData({ currentLap: 2, totalLaps: 5, fuelEstLaps: 4 });
+
+      expect(await harness.elementHasClass('#fuelEstLaps', 'text-red')).toBe(false);
+    });
+  });
+
   describe('Best lap delta time', () => {
     it('Delta time is displayed', async () => {
       patchData({ bestLapTimeDelta: 0.231 });
