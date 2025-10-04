@@ -91,10 +91,10 @@
               <div id="fuelRemaining">{{data().fuelRemaining |number:'1.1-1':'en-US'}} L</div>
             </div>
     
-            <div class="data-item">
-                <label>Fuel est. laps</label>
-                <div id="fuelEstLaps">{{data().fuelEstLaps |number:'1.1-1':'en-US'}}</div>
-            </div>
+      <div class="data-item">
+        <label>Fuel est. laps</label>
+        <div id="fuelEstLaps" [class.text-red]="data().totalLaps > 0 && ((data().totalLaps - data().currentLap) > data().fuelEstLaps)">{{data().fuelEstLaps |number:'1.1-1':'en-US'}}</div>
+      </div>
         </div>
     </div>
 
