@@ -122,14 +122,17 @@ internal sealed class Display() : DisplayBase<DataSample>()
             FuelAvgLap = _fuelStintHistory.Count > 0 ? _fuelStintHistory.Average() : 0,
             // Don't calculate estimated laps until we have fuel usage history
             FuelEstLaps = _fuelStintHistory.Count > 0 && _fuelStintHistory.Average() > 0 
-                ? (int)(telemetry.FuelLevel / _fuelStintHistory.Average()) 
+                ? (telemetry.FuelLevel / _fuelStintHistory.Average()) 
                 : 0,
             AirTemp = telemetry.AirTemp,
             TrackTemp = telemetry.TrackTemp,
             PitLimiterOn = telemetry.EngineWarnings.HasFlag(EngineWarnings.PitSpeedLimiter),
+            TireTempLF = new[] { telemetry.LFtempCL, telemetry.LFtempCM, telemetry.LFtempCR }.Average(),
+            TireTempRF = new[] { telemetry.RFtempCL, telemetry.RFtempCM, telemetry.RFtempCR }.Average(),
+            TireTempLR = new[] { telemetry.LRtempCL, telemetry.LRtempCM, telemetry.LRtempCR }.Average(),
+            TireTempRR = new[] { telemetry.RRtempCL, telemetry.RRtempCM, telemetry.RRtempCR }.Average(),
             CarNumber = playerInfo?.CarNumber ?? string.Empty,
         };
-
         return new DisplayUpdate { Type = DisplayType.RaceDashboard, Data = displayUpdate };
     }
 

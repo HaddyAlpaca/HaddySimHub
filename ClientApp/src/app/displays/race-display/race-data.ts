@@ -1,6 +1,6 @@
 export interface RaceData {
   sessionType: string;
-  IsLimitedTime: boolean;
+  isLimitedTime: boolean;
   isLimitedSessionLaps: boolean;
   currentLap: number;
   totalLaps: number;
@@ -13,6 +13,11 @@ export interface RaceData {
   rpmMax: number;
   trackTemp: number;
   airTemp: number;
+  // Tire temperatures (degrees Celsius)
+  tireTempLf: number;
+  tireTempRf: number;
+  tireTempLr: number;
+  tireTempRr: number;
   fuelRemaining: number;
   fuelAvgLap: number;
   fuelLastLap: number;
