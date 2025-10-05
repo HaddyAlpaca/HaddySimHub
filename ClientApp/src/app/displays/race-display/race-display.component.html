@@ -67,6 +67,26 @@
               <div id="bestLapTimeDelta" [class.text-green]="data().bestLapTimeDelta < 0" [class.text-red]="data().bestLapTimeDelta > 0">{{data().bestLapTimeDelta | deltatime}}</div>
           </div>
       </div>  
+      <div class="dashboard-row cols-2">
+          <div class="data-item">
+              <label>LF Temp</label>
+              <div>{{data().tireTempLf | number:'1.1-1':'en-US'}}</div>
+          </div>
+          <div class="data-item">
+              <label>RF Temp</label>
+              <div>{{data().tireTempRf | number:'1.1-1':'en-US'}}</div>
+          </div>
+      </div>  
+      <div class="dashboard-row cols-2">
+          <div class="data-item">
+              <label>LR Temp</label>
+              <div>{{data().tireTempLr | number:'1.1-1':'en-US'}}</div>
+          </div>
+          <div class="data-item">
+              <label>RR Temp</label>
+              <div>{{data().tireTempRr | number:'1.1-1':'en-US'}}</div>
+          </div>
+      </div>  
     </div>
   </div>
   <div class="dashboard-row cols-3">

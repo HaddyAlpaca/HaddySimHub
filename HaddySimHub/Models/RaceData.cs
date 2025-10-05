@@ -36,7 +36,7 @@ public sealed record RaceData
 
     public float FuelLastLap { get; init; }
 
-    public int FuelEstLaps { get; init; }
+    public float FuelEstLaps { get; init; }
 
     public float BrakeBias { get; init; }
 
@@ -61,6 +61,11 @@ public sealed record RaceData
     public int ThrottlePct { get; init; }
 
     public int BrakePct { get; init; }
+
+    public float TireTempLF { get; init; }
+    public float TireTempRF { get; init; }
+    public float TireTempLR { get; init; }
+    public float TireTempRR { get; init; }
 
     public long Incidents { get; init; }
 
