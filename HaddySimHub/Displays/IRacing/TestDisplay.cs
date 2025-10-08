@@ -44,6 +44,10 @@ namespace HaddySimHub.Displays.IRacing
                     BrakePct = brakePct,
                     ThrottlePct = throttlePct,
                     CarNumber = "80",
+                    TireTempLF = new Random().Next(40, 100),
+                    TireTempRF = new Random().Next(40, 100),
+                    TireTempLR = new Random().Next(40, 100),
+                    TireTempRR = new Random().Next(40, 100),
                 }
             };
         }
