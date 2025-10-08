@@ -14,10 +14,10 @@ export interface RaceData {
   trackTemp: number;
   airTemp: number;
   // Tire temperatures (degrees Celsius)
-  tireTempLf: number;
-  tireTempRf: number;
-  tireTempLr: number;
-  tireTempRr: number;
+  tireTempLF: number;
+  tireTempRF: number;
+  tireTempLR: number;
+  tireTempRR: number;
   fuelRemaining: number;
   fuelAvgLap: number;
   fuelLastLap: number;
