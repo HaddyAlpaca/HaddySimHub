@@ -62,10 +62,10 @@ public sealed record RaceData
 
     public int BrakePct { get; init; }
 
-    public float TireTempLF { get; init; }
-    public float TireTempRF { get; init; }
-    public float TireTempLR { get; init; }
-    public float TireTempRR { get; init; }
+    public required float TireTempLF { get; init; }
+    public required float TireTempRF { get; init; }
+    public required float TireTempLR { get; init; }
+    public required float TireTempRR { get; init; }
 
     public long Incidents { get; init; }
 
