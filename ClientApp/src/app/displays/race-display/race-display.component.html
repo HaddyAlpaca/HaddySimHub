@@ -35,12 +35,6 @@
           <div>{{data().sessionTimeRemaining | time}}</div>
         </div>
       </div>
-      <div class="dashboard-row">
-        <div class="data-item">
-          <label>Expected position</label>
-          <div>{{data().carNumber}}</div>
-        </div>
-      </div>
     </div>
     <div class=" group-border border-yellow speedometer">
       <app-rpm-lights [rpm]="data().rpm" [rpmMax]="data().rpmMax" [biDirectional]="false" [lights]="data().rpmLights" [class.hidden]="data().rpmMax <= 0"  />
@@ -67,26 +61,12 @@
               <div id="bestLapTimeDelta" [class.text-green]="data().bestLapTimeDelta < 0" [class.text-red]="data().bestLapTimeDelta > 0">{{data().bestLapTimeDelta | deltatime}}</div>
           </div>
       </div>  
-      <div class="dashboard-row cols-2">
-          <div class="data-item">
-              <label>LF</label>
-              <div>{{data().tireTempLF | number:'1.1-1':'en-US'}} &deg;C</div>
-          </div>
-          <div class="data-item">
-              <label>RF</label>
-              <div>{{data().tireTempRF | number:'1.1-1':'en-US'}} &deg;C</div>
-          </div>
-      </div>  
-      <div class="dashboard-row cols-2">
-          <div class="data-item">
-              <label>LR</label>
-              <div>{{data().tireTempLR | number:'1.1-1':'en-US'}} &deg;C</div>
-          </div>
-          <div class="data-item">
-              <label>RR</label>
-              <div>{{data().tireTempRR | number:'1.1-1':'en-US'}} &deg;C</div>
-          </div>
-      </div>  
+      <div class="dashboard-row">
+        <div class="data-item">
+          <label>Expected position</label>
+          <div>{{data().carNumber}}</div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="dashboard-row cols-3">
