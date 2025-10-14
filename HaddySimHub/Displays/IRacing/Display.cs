@@ -12,6 +12,8 @@ internal sealed class Display() : DisplayBase<DataSample>()
     private bool _lastPlayerCarInPitStall;
     private bool _lastOnPitRoad;
     private readonly List<float> _fuelStintHistory = [];
+    private readonly List<float> _leaderLapTimes = [];
+    private int _lastLeaderLap;
 
     public override void Start()
     {
@@ -55,6 +57,8 @@ internal sealed class Display() : DisplayBase<DataSample>()
             _lastPlayerLap = currentPlayerLap;
             _lastLapStartFuel = telemetry.FuelLevel;
             _fuelStintHistory.Clear();
+            _leaderLapTimes.Clear();
+            _lastLeaderLap = 1;
             // Initialize pit state tracking for the new session
             _lastPlayerCarInPitStall = telemetry.PlayerCarInPitStall;
             _lastOnPitRoad = telemetry.OnPitRoad;
@@ -89,8 +93,41 @@ internal sealed class Display() : DisplayBase<DataSample>()
         _lastPlayerCarInPitStall = telemetry.PlayerCarInPitStall;
         _lastOnPitRoad = telemetry.OnPitRoad;
 
+        // Track leader's lap times
+        var leaderCarIdx = telemetry.CarIdxPosition
+            .Select((position, idx) => (position, idx))
+            .OrderBy(x => x.position)
+            .FirstOrDefault().idx;
+
+        if (leaderCarIdx >= 0 && leaderCarIdx < telemetry.CarIdxLap.Length)
+        {
+            var leaderCurrentLap = telemetry.CarIdxLap[leaderCarIdx];
+            if (leaderCurrentLap > _lastLeaderLap)
+            {
+                var leaderLastLapTime = telemetry.CarIdxLastLapTime[leaderCarIdx];
+                if (leaderLastLapTime > 0)
+                {
+                    _leaderLapTimes.Add(leaderLastLapTime);
+                    // Keep only the last 5 laps for a more recent average
+                    if (_leaderLapTimes.Count > 5)
+                    {
+                        _leaderLapTimes.RemoveAt(0);
+                    }
+                }
+                _lastLeaderLap = leaderCurrentLap;
+            }
+        }
+
         string CarScreenName = string.Empty;
         var playerInfo = sessionData.DriverInfo.CompetingDrivers.FirstOrDefault(d => d.CarIdx == telemetry.PlayerCarIdx);
+
+        // Calculate estimated laps for time-limited sessions
+        int estimatedLaps = session._SessionLaps;
+        if (session.IsLimitedTime && !session.IsLimitedSessionLaps && _leaderLapTimes.Count > 0)
+        {
+            float avgLeaderLapTime = _leaderLapTimes.Average();
+            estimatedLaps = (int)Math.Ceiling(telemetry.SessionTimeRemain / avgLeaderLapTime);
+        }
 
         var displayUpdate = new RaceData
         {
@@ -99,6 +136,7 @@ internal sealed class Display() : DisplayBase<DataSample>()
             IsLimitedSessionLaps = session.IsLimitedSessionLaps,
             CurrentLap = telemetry.Lap,
             TotalLaps = session._SessionLaps,
+            EstimatedLaps = estimatedLaps,
             Incidents = Math.Max(telemetry.PlayerCarDriverIncidentCount, 0),
             MaxIncidents = Math.Max(Math.Min(sessionData!.WeekendInfo.WeekendOptions._IncidentLimit, 999), 0),
             SessionTimeRemaining = (float)telemetry.SessionTimeRemain,

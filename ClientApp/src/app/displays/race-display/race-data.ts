@@ -4,6 +4,7 @@ export interface RaceData {
   isLimitedSessionLaps: boolean;
   currentLap: number;
   totalLaps: number;
+  estimatedLaps: number;
   sessionTimeRemaining: number;
   position: number;
   speed: number;
