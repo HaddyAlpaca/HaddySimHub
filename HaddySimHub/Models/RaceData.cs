@@ -56,6 +56,8 @@ public sealed record RaceData
 
     public float BestLapTimeDelta { get; init; }
 
+    public int EstimatedLaps { get; init; }
+
     public int ClutchPct { get; init; }
 
     public int ThrottlePct { get; init; }

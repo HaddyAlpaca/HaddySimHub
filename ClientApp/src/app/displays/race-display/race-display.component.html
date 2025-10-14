@@ -24,7 +24,9 @@
       <div class="dashboard-row cols-2">
         <div class="data-item">
         <label>Lap</label>
-            @if (data().totalLaps > 0) {
+            @if (data().isLimitedTime && !data().isLimitedSessionLaps) {
+                <div id="laps">{{data().currentLap}}/~{{data().estimatedLaps}}</div>
+            } @else if (data().totalLaps > 0) {
                 <div id="laps">{{data().currentLap}}/{{data().totalLaps}}</div>
             } @else {
                 <div id="laps">{{data().currentLap}}</div>
