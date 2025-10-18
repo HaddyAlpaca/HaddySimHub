@@ -28,7 +28,11 @@ export class RaceDisplayComponent {
   protected readonly data = computed(() => (this._signalRService.displayData()?.data ?? {}) as RaceData);
 
   protected readonly telemetrySample = computed(() => {
-    const sample = { brakePct: this.data().brakePct, throttlePct: this.data().throttlePct } as TelemetrySample;
+    const sample = {
+      brakePct: this.data().brakePct,
+      throttlePct: this.data().throttlePct,
+      steeringPct: this.data().steeringPct,
+    } as TelemetrySample;
     return sample;
   });
 }
