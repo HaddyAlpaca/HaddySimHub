@@ -31,5 +31,6 @@ export interface RaceData {
   maxIncidents: number;
   brakePct: number;
   throttlePct: number;
+  steeringPct: number;
   carNumber: string;
 }

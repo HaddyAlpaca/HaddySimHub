@@ -71,4 +71,6 @@ public sealed record RaceData
     public bool PitLimiterOn { get; init; }
 
     public required string CarNumber { get; init; }
+
+    public int SteeringPct { get; init; }
 }

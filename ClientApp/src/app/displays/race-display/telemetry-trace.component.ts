@@ -5,6 +5,7 @@ import { BaseChartDirective } from 'ng2-charts';
 export interface TelemetrySample {
   brakePct: number;
   throttlePct: number;
+  steeringPct: number;
 }
 
 @Component({
@@ -20,11 +21,11 @@ export class TelemetryTraceComponent {
 
   @Input()
   public set telemetrySample(sample: TelemetrySample) {
-    if (sample.brakePct === undefined || sample.throttlePct === undefined) {
+    if (sample.brakePct === undefined || sample.throttlePct === undefined || sample.steeringPct === undefined) {
       return;
     }
 
-    this.addData(sample.throttlePct, sample.brakePct);
+    this.addData(sample.throttlePct, sample.brakePct, sample.steeringPct);
   }
 
   public constructor() {
@@ -32,11 +33,13 @@ export class TelemetryTraceComponent {
     this._labels.set(Array.from({ length: this._maxFrames }, (_, i) => i));
     this._brakeData.set(Array.from({ length: this._maxFrames }, (_, _i) => 0));
     this._throttleData.set(Array.from({ length: this._maxFrames }, (_, _i) => 0));
+    this._steeringData.set(Array.from({ length: this._maxFrames }, (_, _i) => 50));
   }
 
   private readonly _labels = signal<number[]>([]);
   private readonly _brakeData = signal<number[]>([]);
   private readonly _throttleData = signal<number[]>([]);
+  private readonly _steeringData = signal<number[]>([]);
   protected readonly chartType = 'line';
 
   protected readonly chartData = signal<ChartConfiguration<'line'>['data']>({
@@ -53,6 +56,13 @@ export class TelemetryTraceComponent {
         data: this._throttleData(),
         label: 'Throttle',
         borderColor: 'green',
+        fill: false,
+        pointRadius: 0,
+      },
+      {
+        data: this._steeringData(),
+        label: 'Steering',
+        borderColor: '#6B7A8A',
         fill: false,
         pointRadius: 0,
       },
@@ -91,11 +101,12 @@ export class TelemetryTraceComponent {
     },
   };
 
-  private addData(throttle: number, brake: number): void {
+  private addData(throttle: number, brake: number, steering: number): void {
     const frame = this._frame++;
     const labels = [...this._labels(), frame];
     const brakeData = [...this._brakeData(), brake];
     const throttleData = [...this._throttleData(), throttle];
+    const steeringData = [...this._steeringData(), steering];
 
     if (labels.length > this._maxFrames) {
       labels.shift();
@@ -112,6 +123,7 @@ export class TelemetryTraceComponent {
       datasets: [
         { ...this.chartData().datasets[0], data: brakeData },
         { ...this.chartData().datasets[1], data: throttleData },
+        { ...this.chartData().datasets[2], data: steeringData },
       ],
     });
   }

@@ -166,6 +166,8 @@ internal sealed class Display() : DisplayBase<DataSample>()
             TrackTemp = telemetry.TrackTemp,
             PitLimiterOn = telemetry.EngineWarnings.HasFlag(EngineWarnings.PitSpeedLimiter),
             CarNumber = playerInfo?.CarNumber ?? string.Empty,
+            // Convert steering angle to percentage (0-100)
+            SteeringPct = (int)Math.Round((telemetry.SteeringWheelAngle / telemetry.SteeringWheelAngleMax + 1) * 50)
         };
         return new DisplayUpdate { Type = DisplayType.RaceDashboard, Data = displayUpdate };
     }
