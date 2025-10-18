@@ -11,6 +11,10 @@ namespace HaddySimHub.Displays.IRacing
             double time = DateTime.Now.TimeOfDay.TotalSeconds;
             int brakePct = (int)((Math.Sin(time) + 1) * 50);
             int throttlePct = 100 - brakePct;
+            
+            // Simulate steering input with a different frequency and phase
+            // Using a slower frequency (0.5) and phase offset (π/4) for more natural movement
+            int steeringPct = (int)(Math.Sin(time * 0.5 + Math.PI / 4) * 100);
 
             return new DisplayUpdate
             {
@@ -43,6 +47,7 @@ namespace HaddySimHub.Displays.IRacing
                     TotalLaps = new Random().Next(10, 20),
                     BrakePct = brakePct,
                     ThrottlePct = throttlePct,
+                    SteeringPct = steeringPct,
                     CarNumber = "80",
                 }
             };
