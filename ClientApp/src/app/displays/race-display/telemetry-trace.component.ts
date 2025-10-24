@@ -112,11 +112,13 @@ export class TelemetryTraceComponent {
       labels.shift();
       brakeData.shift();
       throttleData.shift();
+      steeringData.shift();
     }
 
     this._labels.set(labels);
     this._brakeData.set(brakeData);
     this._throttleData.set(throttleData);
+    this._steeringData.set(steeringData);
 
     this.chartData.set({
       labels,
