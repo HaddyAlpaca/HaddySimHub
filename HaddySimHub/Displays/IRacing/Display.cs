@@ -169,6 +169,9 @@ internal sealed class Display() : DisplayBase<DataSample>()
             // Convert steering angle to percentage (0-100)
             SteeringPct = (int)Math.Round(((telemetry.SteeringWheelAngle / telemetry.SteeringWheelAngleMax) * 100) + 50)
         };
+        
+        Console.WriteLine($"SteeringWheelAngle: {telemetry.SteeringWheelAngle}, SteeringWheelAngleMax: {telemetry.SteeringWheelAngleMax}, SteeringPct: {displayUpdate.SteeringPct}");
+
         return new DisplayUpdate { Type = DisplayType.RaceDashboard, Data = displayUpdate };
     }
 
