@@ -160,14 +160,18 @@ internal sealed class Display() : DisplayBase<DataSample>()
             FuelAvgLap = _fuelStintHistory.Count > 0 ? _fuelStintHistory.Average() : 0,
             // Don't calculate estimated laps until we have fuel usage history
             FuelEstLaps = _fuelStintHistory.Count > 0 && _fuelStintHistory.Average() > 0 
-                ? (telemetry.FuelLevel / _fuelStintHistory.Average()) 
-                : 0,
+            ? (telemetry.FuelLevel / _fuelStintHistory.Average()) 
+            : 0,
             AirTemp = telemetry.AirTemp,
             TrackTemp = telemetry.TrackTemp,
             PitLimiterOn = telemetry.EngineWarnings.HasFlag(EngineWarnings.PitSpeedLimiter),
             CarNumber = playerInfo?.CarNumber ?? string.Empty,
-            // Convert steering angle to percentage (0-100)
-            SteeringPct = (int)Math.Round(((telemetry.SteeringWheelAngle / telemetry.SteeringWheelAngleMax) * 100) + 50)
+            // Convert steering angle to percentage (0-100).
+            // SteeringWheelAngleMax represents the full span (e.g. 12), while SteeringWheelAngle ranges from -half to +half (e.g. -6..6).
+            // Map angle [-half, +half] -> [0,100]. Handle divide-by-zero and clamp to 0-100.
+            SteeringPct = telemetry.SteeringWheelAngleMax == 0
+            ? 50
+            : Math.Max(0, Math.Min(100, (int)Math.Round(((telemetry.SteeringWheelAngle + (telemetry.SteeringWheelAngleMax / 2.0)) / telemetry.SteeringWheelAngleMax) * 100))),
         };
         
         Console.WriteLine($"SteeringWheelAngle: {telemetry.SteeringWheelAngle}, SteeringWheelAngleMax: {telemetry.SteeringWheelAngleMax}, SteeringPct: {displayUpdate.SteeringPct}");
