@@ -12,8 +12,6 @@ internal sealed class Display() : DisplayBase<DataSample>()
     private bool _lastPlayerCarInPitStall;
     private bool _lastOnPitRoad;
     private readonly List<float> _fuelStintHistory = [];
-    private readonly List<float> _leaderLapTimes = [];
-    private int _lastLeaderLap;
 
     public override void Start()
     {
@@ -57,8 +55,6 @@ internal sealed class Display() : DisplayBase<DataSample>()
             _lastPlayerLap = currentPlayerLap;
             _lastLapStartFuel = telemetry.FuelLevel;
             _fuelStintHistory.Clear();
-            _leaderLapTimes.Clear();
-            _lastLeaderLap = 1;
             // Initialize pit state tracking for the new session
             _lastPlayerCarInPitStall = telemetry.PlayerCarInPitStall;
             _lastOnPitRoad = telemetry.OnPitRoad;
@@ -92,26 +88,6 @@ internal sealed class Display() : DisplayBase<DataSample>()
         // Update last-known pit states for next sample
         _lastPlayerCarInPitStall = telemetry.PlayerCarInPitStall;
         _lastOnPitRoad = telemetry.OnPitRoad;
-
-        // Track leader's lap times
-        var leaderCarIdx = telemetry.CarIdxPosition
-            .Select((position, idx) => (position, idx))
-            .OrderBy(x => x.position)
-            .FirstOrDefault().idx;
-
-        if (leaderCarIdx >= 0 && leaderCarIdx < telemetry.CarIdxLap.Length)
-        {
-            var leaderCurrentLap = telemetry.CarIdxLap[leaderCarIdx];
-            if (leaderCurrentLap > _lastLeaderLap)
-            {
-                var leaderLastLapTime = telemetry.CarIdxLastLapTime[leaderCarIdx];
-                if (leaderLastLapTime > 0)
-                {
-                    _leaderLapTimes.Add(leaderLastLapTime);
-                }
-                _lastLeaderLap = leaderCurrentLap;
-            }
-        }
 
         string CarScreenName = string.Empty;
         var playerInfo = sessionData.DriverInfo.CompetingDrivers.FirstOrDefault(d => d.CarIdx == telemetry.PlayerCarIdx);
@@ -159,6 +135,8 @@ internal sealed class Display() : DisplayBase<DataSample>()
             ? 50
             : Math.Max(0, Math.Min(100, (int)Math.Round(((telemetry.SteeringWheelAngle + (telemetry.SteeringWheelAngleMax / 2.0)) / telemetry.SteeringWheelAngleMax) * 100))),
         };
+        
+        Console.WriteLine($"SteeringWheelAngle: {telemetry.SteeringWheelAngle}, SteeringWheelAngleMax: {telemetry.SteeringWheelAngleMax}, SteeringPct: {displayUpdate.SteeringPct}");
 
         return new DisplayUpdate { Type = DisplayType.RaceDashboard, Data = displayUpdate };
     }
