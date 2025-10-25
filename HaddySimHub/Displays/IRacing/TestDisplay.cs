@@ -6,6 +6,16 @@ namespace HaddySimHub.Displays.IRacing
     {
         protected override DisplayUpdate GenerateDisplayUpdate()
         {
+            // Simulate throttle and brake input
+            // The brake and throttle should be opsite of each other and be a sinusoid wave
+            double time = DateTime.Now.TimeOfDay.TotalSeconds;
+            int brakePct = (int)((Math.Sin(time) + 1) * 50);
+            int throttlePct = 100 - brakePct;
+            
+            // Simulate steering input with a different frequency and phase
+            // Using a slower frequency (0.5) and phase offset (π/4) for more natural movement
+            int steeringPct = (int)(Math.Sin(time * 0.5 + Math.PI / 4) * 100);
+
             return new DisplayUpdate
             {
                 Type = DisplayType.RaceDashboard,
@@ -35,9 +45,9 @@ namespace HaddySimHub.Displays.IRacing
                     MaxIncidents = 17,
                     Position = new Random().Next(1, 20),
                     TotalLaps = new Random().Next(10, 20),
-                    BrakePct = 20,
-                    ThrottlePct = 80,
-                    SteeringPct = 40,
+                    BrakePct = brakePct,
+                    ThrottlePct = throttlePct,
+                    SteeringPct = steeringPct,
                     CarNumber = "80",
                 }
             };
