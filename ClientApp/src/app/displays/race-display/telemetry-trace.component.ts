@@ -62,7 +62,7 @@ export class TelemetryTraceComponent {
       {
         data: this._steeringData(),
         label: 'Steering',
-        borderColor: '#6B7A8A',
+        borderColor: 'blue',
         fill: false,
         pointRadius: 0,
       },
