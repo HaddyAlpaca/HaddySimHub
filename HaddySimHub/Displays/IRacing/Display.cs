@@ -159,8 +159,6 @@ internal sealed class Display() : DisplayBase<DataSample>()
             ? 50
             : Math.Max(0, Math.Min(100, (int)Math.Round(((telemetry.SteeringWheelAngle + (telemetry.SteeringWheelAngleMax / 2.0)) / telemetry.SteeringWheelAngleMax) * 100))),
         };
-        
-        Console.WriteLine($"SteeringWheelAngle: {telemetry.SteeringWheelAngle}, SteeringWheelAngleMax: {telemetry.SteeringWheelAngleMax}, SteeringPct: {displayUpdate.SteeringPct}");
 
         return new DisplayUpdate { Type = DisplayType.RaceDashboard, Data = displayUpdate };
     }
