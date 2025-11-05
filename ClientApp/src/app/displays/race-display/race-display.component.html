@@ -37,11 +37,60 @@
           <div>{{data().sessionTimeRemaining | time}}</div>
         </div>
       </div>
+      <div class="dashboard-row cols-2">
+        <div class="data-item">
+          <label>Position</label>
+          <div id="position">{{data().position}}</div>
+        </div>
+
+        <div class="data-item">
+            <label>Incidents</label>
+            @if (data().maxIncidents === 999) {
+                <div id="incidents">{{data().incidents}}</div>
+            } @else {
+                <div id="incidents">{{data().incidents}}/{{data().maxIncidents}}</div>
+            }
+        </div>
+      </div>
     </div>
     <div class=" group-border border-yellow speedometer">
       <app-rpm-lights [rpm]="data().rpm" [rpmMax]="data().rpmMax" [biDirectional]="false" [lights]="data().rpmLights" [class.hidden]="data().rpmMax <= 0"  />
       <app-speedometer [rpm]="data().rpm" [gear]="data().gear" [speed]="data().speed" />
     </div>
+    <div class="group-border border-blue">
+      <div class="dashboard-row cols-2">
+          <div class="data-item">
+              <label>Fuel last lap</label>
+              <div id="fuelLastLap">{{data().fuelLastLap |number:'1.1-1':'en-US'}} L</div>
+          </div>
+  
+          <div class="data-item">
+              <label>Fuel avg lap</label>
+              <div id="fuelAvgLap">{{data().fuelAvgLap |number:'1.1-1':'en-US'}} L</div>
+          </div>
+      </div>
+
+      <div class="dashboard-row cols-2">
+        <div class="data-item">
+          <label>Fuel remaining</label>
+          <div id="fuelRemaining">{{data().fuelRemaining |number:'1.1-1':'en-US'}} L</div>
+        </div>
+    
+        <div class="data-item">
+          <label>Fuel est. laps</label>
+          <div id="fuelEstLaps" [class.text-red]="data().totalLaps > 0 && ((data().totalLaps - data().currentLap) > data().fuelEstLaps)">{{data().fuelEstLaps |number:'1.1-1':'en-US'}}</div>
+        </div>
+      </div>
+
+      <div class="dashboard-row">
+        <div class="data-item">
+          <label>Expected position</label>
+          <div>{{data().carNumber}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="dashboard-row cols-3">
     <div class="group-border border-blue">
       <div class="dashboard-row cols-2">
           <div class="data-item">
@@ -53,6 +102,18 @@
               <div id="lastLapTimeDelta" [class.text-green]="data().lastLapTimeDelta < 0" [class.text-red]="data().lastLapTimeDelta > 0">{{data().lastLapTimeDelta | deltatime}}</div>
           </div>
       </div>
+    </div>
+
+    <div class="group-border border-blue">
+        <div class="dashboard-row">    
+            <div class="data-item" id="brakeBias">
+              <label>Brake bias</label>
+              <div id="brakeBias">{{data().brakeBias |number:'1.1-1':'en-US'}}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="group-border border-blue">
       <div class="dashboard-row cols-2">
           <div class="data-item">
               <label>Best laptime</label>
@@ -63,66 +124,7 @@
               <div id="bestLapTimeDelta" [class.text-green]="data().bestLapTimeDelta < 0" [class.text-red]="data().bestLapTimeDelta > 0">{{data().bestLapTimeDelta | deltatime}}</div>
           </div>
       </div>  
-      <div class="dashboard-row">
-        <div class="data-item">
-          <label>Expected position</label>
-          <div>{{data().carNumber}}</div>
-        </div>
-      </div>
     </div>
-  </div>
-  <div class="dashboard-row cols-3">
-    <div class="group-border border-blue">
-        <div class="dashboard-row cols-2">
-            <div class="data-item">
-                <label>Fuel last lap</label>
-                <div id="fuelLastLap">{{data().fuelLastLap |number:'1.1-1':'en-US'}} L</div>
-            </div>
-    
-            <div class="data-item">
-                <label>Fuel avg lap</label>
-                <div id="fuelAvgLap">{{data().fuelAvgLap |number:'1.1-1':'en-US'}} L</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="group-border border-blue">
-        <div class="dashboard-row cols-2">
-            <div class="data-item">
-              <label>Fuel remaining</label>
-              <div id="fuelRemaining">{{data().fuelRemaining |number:'1.1-1':'en-US'}} L</div>
-            </div>
-    
-      <div class="data-item">
-        <label>Fuel est. laps</label>
-        <div id="fuelEstLaps" [class.text-red]="data().totalLaps > 0 && ((data().totalLaps - data().currentLap) > data().fuelEstLaps)">{{data().fuelEstLaps |number:'1.1-1':'en-US'}}</div>
-      </div>
-        </div>
-    </div>
-
-    <div class="group-border border-blue">
-        <div class="dashboard-row cols-3">
-            <div class="data-item">
-              <label>Position</label>
-              <div id="position">{{data().position}}</div>
-            </div>
-
-            <div class="data-item">
-                <label>Incidents</label>
-                @if (data().maxIncidents === 999) {
-                    <div id="incidents">{{data().incidents}}</div>
-                } @else {
-                    <div id="incidents">{{data().incidents}}/{{data().maxIncidents}}</div>
-                }
-            </div>
-    
-            <div class="data-item">
-              <label>Brake bias</label>
-              <div id="brakeBias">{{data().brakeBias |number:'1.1-1':'en-US'}}</div>
-            </div>
-        </div>
-    </div>
-
   </div>
   <app-telemetry-trace [telemetrySample]="telemetrySample()" />
 </div>
