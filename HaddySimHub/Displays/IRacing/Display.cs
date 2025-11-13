@@ -4,7 +4,7 @@ using iRacingSDK;
 
 namespace HaddySimHub.Displays.IRacing;
 
-internal sealed class Display() : DisplayBase<DataSample>()
+public sealed class Display() : DisplayBase<DataSample>()
 {
     private int _lastPlayerLap;
     private int? _sessionNum;

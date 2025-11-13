@@ -1,6 +1,6 @@
 ﻿namespace HaddySimHub.Displays.Dirt2;
 #pragma warning disable CS0649
-internal struct Packet
+public struct Packet
 {
     public float run_time;
     public float lap_time;

@@ -2,7 +2,7 @@ using HaddySimHub.Models;
 
 namespace HaddySimHub.Displays;
 
-internal abstract class DisplayBase<T> : IDisplay
+public abstract class DisplayBase<T> : IDisplay
 {
     public abstract string Description { get; }
     public abstract bool IsActive { get; }

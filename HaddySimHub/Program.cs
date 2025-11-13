@@ -68,7 +68,7 @@ public class Program
         WebApplication webServer = CreateWebServer();
 
         Task webServerTask = RunWebServerAsync(webServer, token);
-        Task processTask = RunProcessAsync(token);
+        Task processTask = RunProcessAsync(webServer, token);
         await Task.WhenAll(webServerTask, processTask, keyInputTask);
 
         cancellationTokenSource.Cancel();
@@ -95,6 +95,31 @@ public class Program
         });
         builder.Services.AddControllers();
         builder.Services.AddSignalR(options => options.EnableDetailedErrors = true);
+
+        // Register test display options (can be overridden from config)
+        builder.Services.Configure<HaddySimHub.Displays.TestDisplayOptions>(options =>
+        {
+            options.Ids = new List<string> { "race", "rally", "truck" };
+        });
+
+        // Register factories used by displays
+        builder.Services.AddSingleton<HaddySimHub.Displays.IUdpClientFactory, HaddySimHub.Displays.UdpClientFactory>();
+        builder.Services.AddSingleton<HaddySimHub.Displays.ISCSTelemetryFactory, HaddySimHub.Displays.SCSSdkTelemetryFactory>();
+        builder.Services.AddSingleton<HaddySimHub.Displays.IDisplayFactory, HaddySimHub.Displays.DisplayFactory>();
+
+        // Register displays and runner for DI
+        builder.Services.AddSingleton<DisplaysRunner>();
+        builder.Services.AddSingleton<HaddySimHub.Displays.Dirt2.Display>();
+        builder.Services.AddSingleton<HaddySimHub.Displays.IDisplay>(sp => sp.GetRequiredService<HaddySimHub.Displays.Dirt2.Display>());
+        builder.Services.AddSingleton<HaddySimHub.Displays.IRacing.Display>();
+        builder.Services.AddSingleton<HaddySimHub.Displays.IDisplay>(sp => sp.GetRequiredService<HaddySimHub.Displays.IRacing.Display>());
+        builder.Services.AddSingleton<HaddySimHub.Displays.ETS.Display>();
+        builder.Services.AddSingleton<HaddySimHub.Displays.IDisplay>(sp => sp.GetRequiredService<HaddySimHub.Displays.ETS.Display>());
+
+        // Register test displays via factory
+        builder.Services.AddSingleton<HaddySimHub.Displays.IDisplay>(sp => sp.GetRequiredService<HaddySimHub.Displays.IDisplayFactory>().Create("Dirt2.TestDisplay"));
+        builder.Services.AddSingleton<HaddySimHub.Displays.IDisplay>(sp => sp.GetRequiredService<HaddySimHub.Displays.IDisplayFactory>().Create("IRacing.TestDisplay"));
+        builder.Services.AddSingleton<HaddySimHub.Displays.IDisplay>(sp => sp.GetRequiredService<HaddySimHub.Displays.IDisplayFactory>().Create("ETS.TestDisplay"));
 
         var app = builder.Build();
         app.UseRouting();
@@ -123,11 +148,12 @@ public class Program
         }
     }
 
-    private static async Task RunProcessAsync(CancellationToken token)
+    private static async Task RunProcessAsync(WebApplication webServer, CancellationToken token)
     {
         try
         {
-            _displaysRunner = new DisplaysRunner();
+            var displaysRunner = webServer.Services.GetRequiredService<DisplaysRunner>();
+            _displaysRunner = displaysRunner;
             await _displaysRunner.RunAsync(token);
         }
         catch (OperationCanceledException)

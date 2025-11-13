@@ -2,7 +2,7 @@
 
 namespace HaddySimHub.Displays.Dirt2
 {
-    internal class TestDisplay(string name) : TestDisplayBase(name)
+    public class TestDisplay(string name) : TestDisplayBase(name)
     {
         protected override DisplayUpdate GenerateDisplayUpdate()
         {

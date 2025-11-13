@@ -2,10 +2,12 @@
 
 namespace HaddySimHub.Displays
 {
-    internal abstract class TestDisplayBase(string id) : DisplayBase<DisplayUpdate>
+    public abstract class TestDisplayBase(string id) : DisplayBase<DisplayUpdate>
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new();
         private CancellationToken _cancellationToken;
+        // Central shared RNG for test displays to avoid repeated allocations.
+        protected static readonly Random _random = System.Random.Shared;
 
         public override string Description => $"Test display: {id}";
         public override bool IsActive => Program.TestId == id;

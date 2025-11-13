@@ -6,17 +6,23 @@ using HaddySimHub.Shared;
 
 namespace HaddySimHub.Displays.Dirt2;
 
-internal sealed class Display() : DisplayBase<Packet>()
+public sealed class Display : DisplayBase<Packet>
 {
     private const int PORT = 20777;
     private IPEndPoint _endPoint = new(IPAddress.Any, PORT);
     private UdpClient? _client;
+    private readonly IUdpClientFactory _udpClientFactory;
+
+    public Display(IUdpClientFactory udpClientFactory)
+    {
+        _udpClientFactory = udpClientFactory ?? throw new ArgumentNullException(nameof(udpClientFactory));
+    }
 
     public override string Description => "Dirt Rally 2";
     public override bool IsActive => ProcessHelper.IsProcessRunning("dirtrally2");
     public override void Start()
     {
-        _client ??= new UdpClient(PORT);
+        _client ??= _udpClientFactory.Create(PORT);
         _client.BeginReceive(new AsyncCallback(ReceiveCallback), null);
     }
 
