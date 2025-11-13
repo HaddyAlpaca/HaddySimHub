@@ -6,14 +6,20 @@ using SCSSdkClient.Object;
 
 namespace HaddySimHub.Displays.ETS;
 
-internal sealed class Display() : DisplayBase<SCSTelemetry>()
+public sealed class Display : DisplayBase<SCSTelemetry>
 {
     private SCSSdkTelemetry? telemetry;
     private float _fuelAverageConsumption = 0f;
+    private readonly ISCSTelemetryFactory _telemetryFactory;
+
+    public Display(ISCSTelemetryFactory telemetryFactory)
+    {
+        _telemetryFactory = telemetryFactory ?? throw new ArgumentNullException(nameof(telemetryFactory));
+    }
 
     public override void Start()
     {
-        telemetry = new();
+        telemetry = _telemetryFactory.Create();
         telemetry.Data += async (data, newTimestamp) =>
         {
             await this.SendUpdate(data);

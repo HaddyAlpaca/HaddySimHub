@@ -4,19 +4,15 @@ using System.Text;
 
 namespace HaddySimHub;
 
-internal class DisplaysRunner()
+public class DisplaysRunner
 {
     private readonly DisplayUpdate _idleDisplayUpdate = new() { Type = DisplayType.None };
-    private readonly IEnumerable<IDisplay> _displays =
-        [
-            new Displays.Dirt2.Display(),
-            new Displays.Dirt2.TestDisplay("rally"),
-            new Displays.IRacing.Display(),
-            new Displays.IRacing.TestDisplay("race"),
-            new Displays.ETS.Display(),
-            new Displays.ETS.TestDisplay("truck"),
-        ];
+    private readonly IEnumerable<IDisplay> _displays;
 
+    public DisplaysRunner(IEnumerable<IDisplay> displays)
+    {
+        _displays = displays ?? Array.Empty<IDisplay>();
+    }
 
     public IDisplay? CurrentDisplay { get; private set; }
 

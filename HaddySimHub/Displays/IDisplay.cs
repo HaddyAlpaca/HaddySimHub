@@ -1,6 +1,6 @@
 namespace HaddySimHub.Displays;
 
-internal interface IDisplay
+public interface IDisplay
 {
     string Description { get; }
     bool IsActive { get; }
