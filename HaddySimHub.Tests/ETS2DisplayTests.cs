@@ -1,5 +1,9 @@
+using System.Reflection;
+using HaddySimHub.Displays;
 using HaddySimHub.Displays.ETS;
 using HaddySimHub.Models;
+using SCSSdkClient;
+using SCSSdkClient.Object;
 using Xunit;
 
 namespace HaddySimHub.Tests
@@ -9,224 +13,115 @@ namespace HaddySimHub.Tests
         #region Gear Tests
 
         [Fact]
-        public void ConvertToDisplayUpdate_CalculatesGear_WithNeutral()
+        public void ConvertToDisplayUpdate_GearNeutral()
         {
             // Arrange
-            var gear = 0;
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(selectedGear: 0, forwardGearCount: 12);
 
             // Act
-            var result = CalculateGear(gear, 12);
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.Equal("N", result);
+            Assert.NotNull(truckData);
+            Assert.Equal("N", truckData.Gear);
         }
 
         [Fact]
-        public void ConvertToDisplayUpdate_CalculatesGear_WithReverseGear()
+        public void ConvertToDisplayUpdate_GearReverse()
         {
             // Arrange
-            var gear = -1;
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(selectedGear: -1, forwardGearCount: 12);
 
             // Act
-            var result = CalculateGear(gear, 12);
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.Equal("R1", result);
+            Assert.NotNull(truckData);
+            Assert.Equal("R1", truckData.Gear);
         }
 
         [Fact]
-        public void ConvertToDisplayUpdate_CalculatesGear_WithMultipleReverseGears()
+        public void ConvertToDisplayUpdate_GearMultipleReverse()
         {
             // Arrange
-            var gear = -2;
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(selectedGear: -2, forwardGearCount: 12);
 
             // Act
-            var result = CalculateGear(gear, 12);
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.Equal("R2", result);
+            Assert.NotNull(truckData);
+            Assert.Equal("R2", truckData.Gear);
         }
 
         [Fact]
-        public void ConvertToDisplayUpdate_CalculatesGear_WithForwardGear_NonEuro()
+        public void ConvertToDisplayUpdate_GearForwardNonEuro()
         {
             // Arrange
-            var gear = 5;
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(selectedGear: 5, forwardGearCount: 8);
 
             // Act
-            var result = CalculateGear(gear, 8);
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.Equal("5", result);
+            Assert.NotNull(truckData);
+            Assert.Equal("5", truckData.Gear);
         }
 
         [Fact]
-        public void ConvertToDisplayUpdate_CalculatesGear_WithForwardGear_Euro14Gears()
+        public void ConvertToDisplayUpdate_GearEuro14Gears_C1()
         {
             // Arrange - In Euro trucks with 14 gears, gear 1 is displayed as "C1"
-            var gear = 1;
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(selectedGear: 1, forwardGearCount: 14);
 
             // Act
-            var result = CalculateGear(gear, 14);
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.Equal("C1", result);
+            Assert.NotNull(truckData);
+            Assert.Equal("C1", truckData.Gear);
         }
 
         [Fact]
-        public void ConvertToDisplayUpdate_CalculatesGear_WithForwardGear_Euro14Gears_Second()
+        public void ConvertToDisplayUpdate_GearEuro14Gears_Offset()
         {
             // Arrange - Gear 3 becomes "1" in the display (3-2=1)
-            var gear = 3;
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(selectedGear: 3, forwardGearCount: 14);
 
             // Act
-            var result = CalculateGear(gear, 14);
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.Equal("1", result);
+            Assert.NotNull(truckData);
+            Assert.Equal("1", truckData.Gear);
         }
 
         [Fact]
-        public void ConvertToDisplayUpdate_CalculatesGear_WithForwardGear_Euro14Gears_High()
+        public void ConvertToDisplayUpdate_GearEuro14Gears_High()
         {
             // Arrange - Gear 14 becomes "12" in the display (14-2=12)
-            var gear = 14;
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(selectedGear: 14, forwardGearCount: 14);
 
             // Act
-            var result = CalculateGear(gear, 14);
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.Equal("12", result);
-        }
-
-        #endregion
-
-        #region Display Property Tests
-
-        [Fact]
-        public void Display_Description_ReturnsEuroTruckSimulator2()
-        {
-            // Arrange
-            var description = "Euro Truck Simulator 2";
-
-            // Assert
-            Assert.Equal("Euro Truck Simulator 2", description);
-        }
-
-        [Fact]
-        public void Display_IsActive_ChecksForEurotrucks2Process()
-        {
-            // Arrange & Act
-            var processName = "eurotrucks2";
-
-            // Assert - just verify the process name is correct
-            Assert.Equal("eurotrucks2", processName);
-        }
-
-        #endregion
-
-        #region Damage Calculation Tests
-
-        [Fact]
-        public void ConvertToDisplayUpdate_CalculatesDamage_AsPercentage()
-        {
-            // Arrange
-            float damageValue = 0.5f; // 50% damage
-
-            // Act
-            int damagePercent = (int)System.Math.Round(damageValue * 100);
-
-            // Assert
-            Assert.Equal(50, damagePercent);
-        }
-
-        [Fact]
-        public void ConvertToDisplayUpdate_CalculatesDamage_Cabin()
-        {
-            // Arrange
-            float cabinDamage = 0.25f;
-
-            // Act
-            int damagePercent = (int)System.Math.Round(cabinDamage * 100);
-
-            // Assert
-            Assert.Equal(25, damagePercent);
-        }
-
-        [Fact]
-        public void ConvertToDisplayUpdate_CalculatesDamage_Engine()
-        {
-            // Arrange
-            float engineDamage = 0.75f;
-
-            // Act
-            int damagePercent = (int)System.Math.Round(engineDamage * 100);
-
-            // Assert
-            Assert.Equal(75, damagePercent);
-        }
-
-        [Fact]
-        public void ConvertToDisplayUpdate_CalculatesDamage_Clamped()
-        {
-            // Arrange - damage should not go negative
-            float damageValue = 0f;
-
-            // Act
-            int damagePercent = (int)System.Math.Round(damageValue * 100);
-
-            // Assert
-            Assert.Equal(0, damagePercent);
-        }
-
-        #endregion
-
-        #region Fuel Calculation Tests
-
-        [Fact]
-        public void ConvertToDisplayUpdate_CalculatesFuelAverageConsumption()
-        {
-            // Arrange
-            float consumption = 0.25f; // 0.25 l/km
-
-            // Act
-            float averageConsumption = (float)System.Math.Round(consumption * 100, 1);
-
-            // Assert
-            Assert.Equal(25.0f, averageConsumption);
-        }
-
-        [Fact]
-        public void ConvertToDisplayUpdate_CalculatesFuelAverageConsumption_WithDecimals()
-        {
-            // Arrange
-            float consumption = 0.125f; // 0.125 l/km
-
-            // Act
-            float averageConsumption = (float)System.Math.Round(consumption * 100, 1);
-
-            // Assert
-            Assert.Equal(12.5f, averageConsumption);
-        }
-
-        [Fact]
-        public void ConvertToDisplayUpdate_FuelAmount_Positive()
-        {
-            // Arrange
-            float fuelAmount = 500f; // 500 liters
-
-            // Act & Assert
-            Assert.True(fuelAmount > 0);
-        }
-
-        [Fact]
-        public void ConvertToDisplayUpdate_FuelDistance_RangeCalculated()
-        {
-            // Arrange
-            float fuelRange = 1500f; // 1500 km range
-
-            // Act & Assert
-            Assert.True(fuelRange >= 0);
+            Assert.NotNull(truckData);
+            Assert.Equal("12", truckData.Gear);
         }
 
         #endregion
@@ -234,42 +129,139 @@ namespace HaddySimHub.Tests
         #region Speed Tests
 
         [Fact]
-        public void ConvertToDisplayUpdate_Speed_IsNonNegative()
+        public void ConvertToDisplayUpdate_SpeedPositive()
         {
             // Arrange
-            double speed = 85.5;
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(speed: 85.5);
 
             // Act
-            short speedKph = (short)System.Math.Max(speed, 0);
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.Equal(85, speedKph);
+            Assert.NotNull(truckData);
+            Assert.Equal(85, truckData.Speed);
         }
 
         [Fact]
-        public void ConvertToDisplayUpdate_Speed_HandlesNegative()
+        public void ConvertToDisplayUpdate_SpeedNegativeClamped()
         {
             // Arrange
-            double speed = -10.0;
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(speed: -10.0);
 
             // Act
-            short speedKph = (short)System.Math.Max(speed, 0);
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.Equal(0, speedKph);
+            Assert.NotNull(truckData);
+            Assert.Equal(0, truckData.Speed);
         }
 
         [Fact]
-        public void ConvertToDisplayUpdate_SpeedLimit_Handled()
+        public void ConvertToDisplayUpdate_SpeedLimit()
         {
             // Arrange
-            double speedLimit = 90.0;
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(speedLimit: 90.0);
 
             // Act
-            short speedLimitKph = (short)System.Math.Max(speedLimit, 0);
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.Equal(90, speedLimitKph);
+            Assert.NotNull(truckData);
+            Assert.Equal(90, truckData.SpeedLimit);
+        }
+
+        #endregion
+
+        #region Damage Tests
+
+        [Fact]
+        public void ConvertToDisplayUpdate_DamageCabin()
+        {
+            // Arrange
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(cabinDamage: 0.25f);
+
+            // Act
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.NotNull(truckData);
+            Assert.Equal(25, truckData.DamageTruckCabin);
+        }
+
+        [Fact]
+        public void ConvertToDisplayUpdate_DamageEngine()
+        {
+            // Arrange
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(engineDamage: 0.75f);
+
+            // Act
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.NotNull(truckData);
+            Assert.Equal(75, truckData.DamageTruckEngine);
+        }
+
+        #endregion
+
+        #region Fuel Tests
+
+        [Fact]
+        public void ConvertToDisplayUpdate_FuelAverageConsumption()
+        {
+            // Arrange
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(fuelAverageConsumption: 0.25f);
+
+            // Act
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.NotNull(truckData);
+            Assert.Equal(25.0f, truckData.FuelAverageConsumption);
+        }
+
+        [Fact]
+        public void ConvertToDisplayUpdate_FuelAmount()
+        {
+            // Arrange
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(fuelAmount: 500f);
+
+            // Act
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.NotNull(truckData);
+            Assert.Equal(500f, truckData.FuelAmount);
+        }
+
+        [Fact]
+        public void ConvertToDisplayUpdate_FuelDistance()
+        {
+            // Arrange
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(fuelDistance: 1500f);
+
+            // Act
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.NotNull(truckData);
+            Assert.Equal(1500f, truckData.FuelDistance);
         }
 
         #endregion
@@ -279,101 +271,148 @@ namespace HaddySimHub.Tests
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void ConvertToDisplayUpdate_ParkingLights_Stored(bool parkingLightsOn)
+        public void ConvertToDisplayUpdate_ParkingLights(bool parkingLightsOn)
         {
-            // Act & Assert
-            Assert.IsType<bool>(parkingLightsOn);
+            // Arrange
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(parkingLights: parkingLightsOn);
+
+            // Act
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.NotNull(truckData);
+            Assert.Equal(parkingLightsOn, truckData.ParkingLightsOn);
         }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void ConvertToDisplayUpdate_LowBeam_Stored(bool lowBeamOn)
+        public void ConvertToDisplayUpdate_LowBeam(bool lowBeamOn)
         {
-            // Act & Assert
-            Assert.IsType<bool>(lowBeamOn);
+            // Arrange
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(lowBeam: lowBeamOn);
+
+            // Act
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.NotNull(truckData);
+            Assert.Equal(lowBeamOn, truckData.LowBeamOn);
         }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void ConvertToDisplayUpdate_HighBeam_Stored(bool highBeamOn)
+        public void ConvertToDisplayUpdate_HighBeam(bool highBeamOn)
         {
-            // Act & Assert
-            Assert.IsType<bool>(highBeamOn);
+            // Arrange
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(highBeam: highBeamOn);
+
+            // Act
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.NotNull(truckData);
+            Assert.Equal(highBeamOn, truckData.HighBeamOn);
         }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void ConvertToDisplayUpdate_HazardLights_Stored(bool hazardLightsOn)
+        public void ConvertToDisplayUpdate_HazardLights(bool hazardLightsOn)
         {
-            // Act & Assert
-            Assert.IsType<bool>(hazardLightsOn);
+            // Arrange
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(hazardLights: hazardLightsOn);
+
+            // Act
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.NotNull(truckData);
+            Assert.Equal(hazardLightsOn, truckData.HazardLightsOn);
         }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void ConvertToDisplayUpdate_BlinkerLeft_Stored(bool blinkerLeftOn)
+        public void ConvertToDisplayUpdate_BlinkerLeft(bool blinkerLeftOn)
         {
-            // Act & Assert
-            Assert.IsType<bool>(blinkerLeftOn);
+            // Arrange
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(blinkerLeft: blinkerLeftOn);
+
+            // Act
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.NotNull(truckData);
+            Assert.Equal(blinkerLeftOn, truckData.BlinkerLeftOn);
         }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void ConvertToDisplayUpdate_BlinkerRight_Stored(bool blinkerRightOn)
+        public void ConvertToDisplayUpdate_BlinkerRight(bool blinkerRightOn)
         {
-            // Act & Assert
-            Assert.IsType<bool>(blinkerRightOn);
+            // Arrange
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(blinkerRight: blinkerRightOn);
+
+            // Act
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.NotNull(truckData);
+            Assert.Equal(blinkerRightOn, truckData.BlinkerRightOn);
         }
 
         #endregion
 
         #region Brake Tests
 
-        [Fact]
-        public void ConvertToDisplayUpdate_ParkingBrake_Active()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ConvertToDisplayUpdate_ParkingBrake(bool parkingBrakeOn)
         {
             // Arrange
-            bool parkingBrakeOn = true;
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(parkingBrake: parkingBrakeOn);
 
-            // Act & Assert
-            Assert.True(parkingBrakeOn);
+            // Act
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.NotNull(truckData);
+            Assert.Equal(parkingBrakeOn, truckData.ParkingBrakeOn);
         }
 
         [Fact]
-        public void ConvertToDisplayUpdate_ParkingBrake_Inactive()
+        public void ConvertToDisplayUpdate_RetarderLevel()
         {
             // Arrange
-            bool parkingBrakeOn = false;
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(retarderLevel: 3, retarderStepCount: 5);
 
-            // Act & Assert
-            Assert.False(parkingBrakeOn);
-        }
+            // Act
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
 
-        [Fact]
-        public void ConvertToDisplayUpdate_RetarderLevel_Valid()
-        {
-            // Arrange
-            uint retarderLevel = 3;
-            uint retarderStepCount = 5;
-
-            // Act & Assert
-            Assert.True(retarderLevel <= retarderStepCount);
-        }
-
-        [Fact]
-        public void ConvertToDisplayUpdate_RetarderLevel_MaximumSteps()
-        {
-            // Arrange
-            uint retarderLevel = 5;
-            uint retarderStepCount = 5;
-
-            // Act & Assert
-            Assert.Equal(retarderStepCount, retarderLevel);
+            // Assert
+            Assert.NotNull(truckData);
+            Assert.Equal(3u, truckData.RetarderLevel);
+            Assert.Equal(5u, truckData.RetarderStepCount);
         }
 
         #endregion
@@ -381,86 +420,119 @@ namespace HaddySimHub.Tests
         #region Throttle Tests
 
         [Fact]
-        public void ConvertToDisplayUpdate_Throttle_CalculatedAsPercentage()
+        public void ConvertToDisplayUpdate_Throttle75Percent()
         {
             // Arrange
-            double throttle = 0.75; // 75%
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(throttle: 0.75);
 
             // Act
-            int throttlePercent = Convert.ToInt32(System.Math.Round(throttle * 100));
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.Equal(75, throttlePercent);
+            Assert.NotNull(truckData);
+            Assert.Equal(75, truckData.Throttle);
         }
 
         [Fact]
-        public void ConvertToDisplayUpdate_Throttle_MinimumValue()
+        public void ConvertToDisplayUpdate_ThrottleMinimum()
         {
             // Arrange
-            double throttle = 0.0;
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(throttle: 0.0);
 
             // Act
-            int throttlePercent = Convert.ToInt32(System.Math.Round(throttle * 100));
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.Equal(0, throttlePercent);
+            Assert.NotNull(truckData);
+            Assert.Equal(0, truckData.Throttle);
         }
 
         [Fact]
-        public void ConvertToDisplayUpdate_Throttle_MaximumValue()
+        public void ConvertToDisplayUpdate_ThrottleMaximum()
         {
             // Arrange
-            double throttle = 1.0;
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(throttle: 1.0);
 
             // Act
-            int throttlePercent = Convert.ToInt32(System.Math.Round(throttle * 100));
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.Equal(100, throttlePercent);
+            Assert.NotNull(truckData);
+            Assert.Equal(100, truckData.Throttle);
         }
 
         #endregion
 
-        #region Temperature Tests
+        #region Temperature and Pressure Tests
 
         [Fact]
-        public void ConvertToDisplayUpdate_OilTemperature_Valid()
+        public void ConvertToDisplayUpdate_OilTemperature()
         {
             // Arrange
-            float oilTemp = 85.5f;
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(oilTemp: 85.5f);
 
-            // Act & Assert
-            Assert.True(oilTemp >= 0);
+            // Act
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.NotNull(truckData);
+            Assert.Equal(85.5f, truckData.OilTemp);
         }
 
         [Fact]
-        public void ConvertToDisplayUpdate_WaterTemperature_Valid()
+        public void ConvertToDisplayUpdate_WaterTemperature()
         {
             // Arrange
-            float waterTemp = 95.0f;
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(waterTemp: 95.0f);
 
-            // Act & Assert
-            Assert.True(waterTemp >= 0);
+            // Act
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.NotNull(truckData);
+            Assert.Equal(95.0f, truckData.WaterTemp);
         }
 
         [Fact]
-        public void ConvertToDisplayUpdate_OilPressure_Valid()
+        public void ConvertToDisplayUpdate_OilPressure()
         {
             // Arrange
-            float oilPressure = 4.5f;
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(oilPressure: 4.5f);
 
-            // Act & Assert
-            Assert.True(oilPressure >= 0);
+            // Act
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.NotNull(truckData);
+            Assert.Equal(4.5f, truckData.OilPressure);
         }
 
         [Fact]
-        public void ConvertToDisplayUpdate_BatteryVoltage_Valid()
+        public void ConvertToDisplayUpdate_BatteryVoltage()
         {
             // Arrange
-            float batteryVoltage = 13.5f;
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(batteryVoltage: 13.5f);
 
-            // Act & Assert
-            Assert.True(batteryVoltage > 0);
+            // Act
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.NotNull(truckData);
+            Assert.Equal(13.5f, truckData.BatteryVoltage);
         }
 
         #endregion
@@ -470,46 +542,91 @@ namespace HaddySimHub.Tests
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void ConvertToDisplayUpdate_FuelWarning_Stored(bool fuelWarningOn)
+        public void ConvertToDisplayUpdate_FuelWarning(bool fuelWarningOn)
         {
-            // Act & Assert
-            Assert.IsType<bool>(fuelWarningOn);
+            // Arrange
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(fuelWarning: fuelWarningOn);
+
+            // Act
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.NotNull(truckData);
+            Assert.Equal(fuelWarningOn, truckData.FuelWarningOn);
         }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void ConvertToDisplayUpdate_AdBlueWarning_Stored(bool adBlueWarningOn)
+        public void ConvertToDisplayUpdate_AdBlueWarning(bool adBlueWarningOn)
         {
-            // Act & Assert
-            Assert.IsType<bool>(adBlueWarningOn);
+            // Arrange
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(adBlueWarning: adBlueWarningOn);
+
+            // Act
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.NotNull(truckData);
+            Assert.Equal(adBlueWarningOn, truckData.AdBlueWarningOn);
         }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void ConvertToDisplayUpdate_OilPressureWarning_Stored(bool oilPressureWarningOn)
+        public void ConvertToDisplayUpdate_OilPressureWarning(bool oilPressureWarningOn)
         {
-            // Act & Assert
-            Assert.IsType<bool>(oilPressureWarningOn);
+            // Arrange
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(oilPressureWarning: oilPressureWarningOn);
+
+            // Act
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.NotNull(truckData);
+            Assert.Equal(oilPressureWarningOn, truckData.OilPressureWarningOn);
         }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void ConvertToDisplayUpdate_WaterTempWarning_Stored(bool waterTempWarningOn)
+        public void ConvertToDisplayUpdate_WaterTempWarning(bool waterTempWarningOn)
         {
-            // Act & Assert
-            Assert.IsType<bool>(waterTempWarningOn);
+            // Arrange
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(waterTempWarning: waterTempWarningOn);
+
+            // Act
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.NotNull(truckData);
+            Assert.Equal(waterTempWarningOn, truckData.WaterTempWarningOn);
         }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void ConvertToDisplayUpdate_BatteryVoltageWarning_Stored(bool batteryVoltageWarningOn)
+        public void ConvertToDisplayUpdate_BatteryVoltageWarning(bool batteryVoltageWarningOn)
         {
-            // Act & Assert
-            Assert.IsType<bool>(batteryVoltageWarningOn);
+            // Arrange
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(batteryVoltageWarning: batteryVoltageWarningOn);
+
+            // Act
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.NotNull(truckData);
+            Assert.Equal(batteryVoltageWarningOn, truckData.BatteryVoltageWarningOn);
         }
 
         #endregion
@@ -517,55 +634,74 @@ namespace HaddySimHub.Tests
         #region Job Data Tests
 
         [Fact]
-        public void ConvertToDisplayUpdate_JobIncome_Valid()
+        public void ConvertToDisplayUpdate_JobIncome()
         {
             // Arrange
-            ulong jobIncome = 50000;
-
-            // Act & Assert
-            Assert.True(jobIncome >= 0);
-        }
-
-        [Fact]
-        public void ConvertToDisplayUpdate_CargoMass_Calculated()
-        {
-            // Arrange
-            double cargoMass = 12500.7;
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(jobIncome: 50000);
 
             // Act
-            int cargoMassInt = (int)System.Math.Ceiling(cargoMass);
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.Equal(12501, cargoMassInt);
+            Assert.NotNull(truckData);
+            Assert.Equal(50000u, truckData.JobIncome);
         }
 
         [Fact]
-        public void ConvertToDisplayUpdate_CargoDamage_AsPercentage()
+        public void ConvertToDisplayUpdate_CargoMass()
         {
             // Arrange
-            float cargoDamage = 0.15f;
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(cargoMass: 12500.7);
 
             // Act
-            int cargoDamagePercent = (int)System.Math.Round(cargoDamage * 100);
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.Equal(15, cargoDamagePercent);
+            Assert.NotNull(truckData);
+            Assert.Equal(12501, truckData.JobCargoMass);
         }
 
         [Fact]
-        public void ConvertToDisplayUpdate_JobCityAndCompany_Stored()
+        public void ConvertToDisplayUpdate_CargoDamage()
         {
             // Arrange
-            string sourceCity = "Berlin";
-            string sourceCompany = "Company A";
-            string destCity = "Paris";
-            string destCompany = "Company B";
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(cargoDamage: 0.15f);
 
-            // Act & Assert
-            Assert.Equal("Berlin", sourceCity);
-            Assert.Equal("Company A", sourceCompany);
-            Assert.Equal("Paris", destCity);
-            Assert.Equal("Company B", destCompany);
+            // Act
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.NotNull(truckData);
+            Assert.Equal(15, truckData.JobCargoDamage);
+        }
+
+        [Fact]
+        public void ConvertToDisplayUpdate_JobCityAndCompany()
+        {
+            // Arrange
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(
+                sourceCity: "Berlin",
+                sourceCompany: "Company A",
+                destCity: "Paris",
+                destCompany: "Company B");
+
+            // Act
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.NotNull(truckData);
+            Assert.Equal("Berlin", truckData.SourceCity);
+            Assert.Equal("Company A", truckData.SourceCompany);
+            Assert.Equal("Paris", truckData.DestinationCity);
+            Assert.Equal("Company B", truckData.DestinationCompany);
         }
 
         #endregion
@@ -573,39 +709,51 @@ namespace HaddySimHub.Tests
         #region Navigation Tests
 
         [Fact]
-        public void ConvertToDisplayUpdate_DistanceRemaining_Converted()
+        public void ConvertToDisplayUpdate_DistanceRemaining()
         {
             // Arrange
-            double navDistance = 50000; // 50000 meters
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(navDistance: 50000);
 
             // Act
-            int distanceKm = (int)System.Math.Round(System.Math.Max(navDistance, 0) / 1000);
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.Equal(50, distanceKm);
+            Assert.NotNull(truckData);
+            Assert.Equal(50, truckData.DistanceRemaining);
         }
 
         [Fact]
-        public void ConvertToDisplayUpdate_TimeRemaining_Converted()
+        public void ConvertToDisplayUpdate_TimeRemaining()
         {
             // Arrange
-            double navTime = 3600; // 3600 seconds
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(navTime: 3600);
 
             // Act
-            int timeMinutes = (int)System.Math.Round(System.Math.Max(navTime, 0) / 60);
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.Equal(60, timeMinutes);
+            Assert.NotNull(truckData);
+            Assert.Equal(60, truckData.TimeRemaining);
         }
 
         [Fact]
-        public void ConvertToDisplayUpdate_RestTimeRemaining_Valid()
+        public void ConvertToDisplayUpdate_RestTimeRemaining()
         {
             // Arrange
-            float restTime = 120.0f; // 120 minutes
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(restTimeRemaining: 120);
 
-            // Act & Assert
-            Assert.True(restTime >= 0);
+            // Act
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.NotNull(truckData);
+            Assert.Equal(120, truckData.RestTimeRemaining);
         }
 
         #endregion
@@ -615,54 +763,131 @@ namespace HaddySimHub.Tests
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void ConvertToDisplayUpdate_CruiseControl_Toggled(bool cruiseControlOn)
+        public void ConvertToDisplayUpdate_CruiseControl(bool cruiseControlOn)
         {
-            // Act & Assert
-            Assert.IsType<bool>(cruiseControlOn);
+            // Arrange
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(cruiseControl: cruiseControlOn);
+
+            // Act
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.NotNull(truckData);
+            Assert.Equal(cruiseControlOn, truckData.CruiseControlOn);
         }
 
         [Fact]
-        public void ConvertToDisplayUpdate_CruiseControlSpeed_Stored()
+        public void ConvertToDisplayUpdate_CruiseControlSpeed()
         {
             // Arrange
-            double cruiseSpeed = 85.5;
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(cruiseControlSpeed: 85.5);
 
             // Act
-            short cruiseSpeedKph = (short)cruiseSpeed;
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.Equal(85, cruiseSpeedKph);
+            Assert.NotNull(truckData);
+            Assert.Equal(85, truckData.CruiseControlSpeed);
+        }
+
+        #endregion
+
+        #region RPM Tests
+
+        [Fact]
+        public void ConvertToDisplayUpdate_RPM()
+        {
+            // Arrange
+            var display = new Display(new MockSCSTelemetryFactory());
+            var data = CreateMockTelemetry(rpm: 2500, rpmMax: 2800);
+
+            // Act
+            var update = display.ConvertToDisplayUpdate(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.NotNull(truckData);
+            Assert.Equal(2500, truckData.Rpm);
+            Assert.Equal(2800, truckData.RpmMax);
         }
 
         #endregion
 
         #region Helper Methods
 
-        private string CalculateGear(int selectedGear, int forwardGearCount)
+        private SCSTelemetry CreateMockTelemetry(
+            int selectedGear = 0,
+            int forwardGearCount = 12,
+            double speed = 0,
+            double speedLimit = 0,
+            float cabinDamage = 0,
+            float engineDamage = 0,
+            float fuelAverageConsumption = 0,
+            float fuelAmount = 0,
+            float fuelDistance = 0,
+            bool parkingLights = false,
+            bool lowBeam = false,
+            bool highBeam = false,
+            bool hazardLights = false,
+            bool blinkerLeft = false,
+            bool blinkerRight = false,
+            bool parkingBrake = false,
+            uint retarderLevel = 0,
+            uint retarderStepCount = 0,
+            double throttle = 0,
+            float oilTemp = 0,
+            float waterTemp = 0,
+            float oilPressure = 0,
+            float batteryVoltage = 0,
+            bool fuelWarning = false,
+            bool adBlueWarning = false,
+            bool oilPressureWarning = false,
+            bool waterTempWarning = false,
+            bool batteryVoltageWarning = false,
+            ulong jobIncome = 0,
+            double cargoMass = 0,
+            float cargoDamage = 0,
+            string sourceCity = "",
+            string sourceCompany = "",
+            string destCity = "",
+            string destCompany = "",
+            double navDistance = 0,
+            double navTime = 0,
+            int restTimeRemaining = 0,
+            bool cruiseControl = false,
+            double cruiseControlSpeed = 0,
+            int rpm = 0,
+            int rpmMax = 0)
         {
-            string gear = string.Empty;
-            if (selectedGear == 0)
-            {
-                gear = "N";
-            }
-            else if (selectedGear < 0)
-            {
-                gear = "R" + System.Math.Abs(selectedGear).ToString();
-            }
-            else if (selectedGear > 0)
-            {
-                if (forwardGearCount == 14)
-                {
-                    gear = selectedGear == 1 ? "C1" : (selectedGear - 2).ToString();
-                }
-                else
-                {
-                    gear = selectedGear.ToString();
-                }
-            }
-            return gear;
+            return new SCSTelemetryBuilder()
+                .WithScale(1f)
+                .WithGameTime(0)
+                .WithNextRestStop(restTimeRemaining)
+                .WithNavigation(navDistance, navTime, speedLimit)
+                .WithJob(sourceCity, sourceCompany, destCity, destCompany, jobIncome, cargoMass, cargoDamage)
+                .WithTruckConstants(forwardGearCount: forwardGearCount, engineRpmMax: rpmMax, retarderStepCount: retarderStepCount)
+                .WithDashboard(speedKph: speed, cruiseControl: cruiseControl, cruiseSpeedKph: cruiseControlSpeed, fuelAvg: fuelAverageConsumption, fuelAmount: fuelAmount, fuelRange: fuelDistance, oilPressure: oilPressure, oilTemp: oilTemp, waterTemp: waterTemp, batteryVoltage: batteryVoltage, rpm: rpm)
+                .WithWarnings(fuelWarning, adBlueWarning, oilPressureWarning, waterTempWarning, batteryVoltageWarning)
+                .WithLights(parkingLights, lowBeam, highBeam, hazardLights, blinkerLeft, blinkerRight)
+                .WithMotor(selectedGear, parkingBrake, retarderLevel)
+                .WithDamage(cabinDamage, engineDamage)
+                .WithControl(throttle)
+                .WithTrailerEmpty()
+                .Build();
         }
 
         #endregion
+    }
+
+    public class MockSCSTelemetryFactory : ISCSTelemetryFactory
+    {
+        public SCSTelemetry Create()
+        {
+            return new SCSTelemetry();
+        }
     }
 }
