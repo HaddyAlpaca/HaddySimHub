@@ -745,6 +745,35 @@ namespace HaddySimHub.Tests
 
         #region Helper Methods
 
+        private class DataSampleBuilder
+        {
+            private readonly DataSample _sample;
+            private readonly dynamic _telemetry;
+
+            public DataSampleBuilder()
+            {
+                _sample = new DataSample();
+                _telemetry = _sample.Telemetry;
+            }
+
+            public DataSampleBuilder WithGear(int gear) { _telemetry.Gear = gear; return this; }
+            public DataSampleBuilder WithSpeed(float speed) { _telemetry.Speed = speed; return this; }
+            public DataSampleBuilder WithRpm(float rpm) { _telemetry.RPM = rpm; return this; }
+            public DataSampleBuilder WithThrottle(float throttle) { _telemetry.Throttle = throttle; return this; }
+            public DataSampleBuilder WithBrake(float brake) { _telemetry.Brake = brake; return this; }
+            public DataSampleBuilder WithSteeringAngle(float angle) { _telemetry.SteeringWheelAngle = angle; return this; }
+            public DataSampleBuilder WithSteeringWheelAngleMax(float max) { _telemetry.SteeringWheelAngleMax = max; return this; }
+            public DataSampleBuilder WithFuelLevel(float fuel) { _telemetry.FuelLevel = fuel; return this; }
+            public DataSampleBuilder WithBrakeBias(float bias) { _telemetry.DcBrakeBias = bias; return this; }
+            public DataSampleBuilder WithAirTemp(float temp) { _telemetry.AirTemp = temp; return this; }
+            public DataSampleBuilder WithTrackTemp(float temp) { _telemetry.TrackTemp = temp; return this; }
+            public DataSampleBuilder WithEngineWarnings(EngineWarnings warnings) { _telemetry.EngineWarnings = warnings; return this; }
+            public DataSampleBuilder WithPosition(int pos) { _telemetry.PlayerCarPosition = pos; return this; }
+            public DataSampleBuilder WithIncidents(int inc) { _telemetry.PlayerCarDriverIncidentCount = inc; return this; }
+
+            public DataSample Build() => _sample;
+        }
+
         private DataSample CreateMockDataSample(
             int? gear = null,
             float? speed = null,
@@ -761,42 +790,22 @@ namespace HaddySimHub.Tests
             int? position = null,
             int? incidents = null)
         {
-            var mockData = new DataSample();
-
-            var telemetry = typeof(DataSample).GetProperty("Telemetry",
-                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance)?.GetValue(mockData)
-                ?? throw new InvalidOperationException("Cannot access Telemetry");
-
-            if (gear.HasValue)
-                telemetry.GetType().GetProperty("Gear")?.SetValue(telemetry, gear);
-            if (speed.HasValue)
-                telemetry.GetType().GetProperty("Speed")?.SetValue(telemetry, speed);
-            if (rpm.HasValue)
-                telemetry.GetType().GetProperty("RPM")?.SetValue(telemetry, rpm);
-            if (throttle.HasValue)
-                telemetry.GetType().GetProperty("Throttle")?.SetValue(telemetry, throttle);
-            if (brake.HasValue)
-                telemetry.GetType().GetProperty("Brake")?.SetValue(telemetry, brake);
-            if (steeringAngle.HasValue)
-                telemetry.GetType().GetProperty("SteeringWheelAngle")?.SetValue(telemetry, steeringAngle);
-            if (steeringWheelAngleMax.HasValue)
-                telemetry.GetType().GetProperty("SteeringWheelAngleMax")?.SetValue(telemetry, steeringWheelAngleMax);
-            if (fuelLevel.HasValue)
-                telemetry.GetType().GetProperty("FuelLevel")?.SetValue(telemetry, fuelLevel);
-            if (brakeBias.HasValue)
-                telemetry.GetType().GetProperty("DcBrakeBias")?.SetValue(telemetry, brakeBias);
-            if (airTemp.HasValue)
-                telemetry.GetType().GetProperty("AirTemp")?.SetValue(telemetry, airTemp);
-            if (trackTemp.HasValue)
-                telemetry.GetType().GetProperty("TrackTemp")?.SetValue(telemetry, trackTemp);
-            if (engineWarnings.HasValue)
-                telemetry.GetType().GetProperty("EngineWarnings")?.SetValue(telemetry, engineWarnings);
-            if (position.HasValue)
-                telemetry.GetType().GetProperty("PlayerCarPosition")?.SetValue(telemetry, position);
-            if (incidents.HasValue)
-                telemetry.GetType().GetProperty("PlayerCarDriverIncidentCount")?.SetValue(telemetry, incidents);
-
-            return mockData;
+            var builder = new DataSampleBuilder();
+            if (gear.HasValue) builder.WithGear(gear.Value);
+            if (speed.HasValue) builder.WithSpeed(speed.Value);
+            if (rpm.HasValue) builder.WithRpm(rpm.Value);
+            if (throttle.HasValue) builder.WithThrottle(throttle.Value);
+            if (brake.HasValue) builder.WithBrake(brake.Value);
+            if (steeringAngle.HasValue) builder.WithSteeringAngle(steeringAngle.Value);
+            if (steeringWheelAngleMax.HasValue) builder.WithSteeringWheelAngleMax(steeringWheelAngleMax.Value);
+            if (fuelLevel.HasValue) builder.WithFuelLevel(fuelLevel.Value);
+            if (brakeBias.HasValue) builder.WithBrakeBias(brakeBias.Value);
+            if (airTemp.HasValue) builder.WithAirTemp(airTemp.Value);
+            if (trackTemp.HasValue) builder.WithTrackTemp(trackTemp.Value);
+            if (engineWarnings.HasValue) builder.WithEngineWarnings(engineWarnings.Value);
+            if (position.HasValue) builder.WithPosition(position.Value);
+            if (incidents.HasValue) builder.WithIncidents(incidents.Value);
+            return builder.Build();
         }
 
         #endregion
