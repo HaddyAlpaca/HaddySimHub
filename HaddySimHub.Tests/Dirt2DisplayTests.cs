@@ -1,11 +1,34 @@
+using HaddySimHub.Displays;
 using HaddySimHub.Displays.Dirt2;
 using HaddySimHub.Models;
+using System.Net.Sockets;
 using Xunit;
 
 namespace HaddySimHub.Tests
 {
     public class Dirt2DisplayTests
     {
+        private static Packet CreatePacket(
+            float speed_ms = 0,
+            float rpm = 0,
+            float max_rpm = 0,
+            float idle_rpm = 0,
+            float gear = 0)
+        {
+            return new Packet
+            {
+                speed_ms = speed_ms,
+                rpm = rpm,
+                max_rpm = max_rpm,
+                idle_rpm = idle_rpm,
+                gear = gear
+            };
+        }
+
+        private class MockUdpClientFactory : IUdpClientFactory
+        {
+            public UdpClient Create(int port) => null!;
+        }
         #region GenerateRpmLights Tests
 
         [Fact]
@@ -140,322 +163,278 @@ namespace HaddySimHub.Tests
         #region Speed Conversion Tests
 
         [Fact]
-        public void ConvertToDisplayUpdate_ConvertsSpeedMsToKmh()
-        {
-            // Arrange
-            float speedMs = 27.78f; // approximately 100 km/h
-
-            // Act
-            int speedKmh = Convert.ToInt32(speedMs * 3.6);
-
-            // Assert
-            Assert.Equal(100, speedKmh);
-        }
+            public void ConvertToDisplayUpdate_ConvertsSpeedMsToKmh()
+            {
+                var display = new Display(new MockUdpClientFactory());
+                var packet = CreatePacket(speed_ms: 27.78f);
+                var update = display.ConvertToDisplayUpdate(packet);
+                var rally = update.Data as RallyData;
+                Assert.NotNull(rally);
+                Assert.Equal(100, rally.Speed);
+            }
 
         [Fact]
-        public void ConvertToDisplayUpdate_ConvertsZeroSpeed()
-        {
-            // Arrange
-            float speedMs = 0f;
-
-            // Act
-            int speedKmh = Convert.ToInt32(speedMs * 3.6);
-
-            // Assert
-            Assert.Equal(0, speedKmh);
-        }
+            public void ConvertToDisplayUpdate_ConvertsZeroSpeed()
+            {
+                var display = new Display(new MockUdpClientFactory());
+                var packet = CreatePacket(speed_ms: 0f);
+                var update = display.ConvertToDisplayUpdate(packet);
+                var rally = update.Data as RallyData;
+                Assert.NotNull(rally);
+                Assert.Equal(0, rally.Speed);
+            }
 
         [Fact]
-        public void ConvertToDisplayUpdate_ConvertsHighSpeed()
-        {
-            // Arrange
-            float speedMs = 50f; // 180 km/h
-
-            // Act
-            int speedKmh = Convert.ToInt32(speedMs * 3.6);
-
-            // Assert
-            Assert.Equal(180, speedKmh);
-        }
+            public void ConvertToDisplayUpdate_ConvertsHighSpeed()
+            {
+                var display = new Display(new MockUdpClientFactory());
+                var packet = CreatePacket(speed_ms: 50f);
+                var update = display.ConvertToDisplayUpdate(packet);
+                var rally = update.Data as RallyData;
+                Assert.NotNull(rally);
+                Assert.Equal(180, rally.Speed);
+            }
 
         #endregion
 
         #region RPM Calculation Tests
 
         [Fact]
-        public void ConvertToDisplayUpdate_CalculatesRpmFromRawValue()
-        {
-            // Arrange
-            float rawRpm = 500f;
-
-            // Act
-            int rpm = Convert.ToInt32(rawRpm * 10);
-
-            // Assert
-            Assert.Equal(5000, rpm);
-        }
+            public void ConvertToDisplayUpdate_CalculatesRpmFromRawValue()
+            {
+                var display = new Display(new MockUdpClientFactory());
+                var packet = CreatePacket(rpm: 500f);
+                var update = display.ConvertToDisplayUpdate(packet);
+                var rally = update.Data as RallyData;
+                Assert.NotNull(rally);
+                Assert.Equal(5000, rally.Rpm);
+            }
 
         [Fact]
-        public void ConvertToDisplayUpdate_CalculatesRpmMax()
-        {
-            // Arrange
-            float maxRpmRaw = 700f;
-
-            // Act
-            int rpmMax = Convert.ToInt32(maxRpmRaw * 10);
-
-            // Assert
-            Assert.Equal(7000, rpmMax);
-        }
+            public void ConvertToDisplayUpdate_CalculatesRpmMax()
+            {
+                var display = new Display(new MockUdpClientFactory());
+                var packet = CreatePacket(max_rpm: 700f);
+                var update = display.ConvertToDisplayUpdate(packet);
+                var rally = update.Data as RallyData;
+                Assert.NotNull(rally);
+                Assert.Equal(7000, rally.RpmMax);
+            }
 
         [Fact]
-        public void ConvertToDisplayUpdate_CalculatesIdleRpm()
-        {
-            // Arrange
-            float idleRpmRaw = 100f;
-
-            // Act
-            int idleRpm = Convert.ToInt32(idleRpmRaw * 10);
-
-            // Assert
-            Assert.Equal(1000, idleRpm);
-        }
+            public void ConvertToDisplayUpdate_CalculatesIdleRpm()
+            {
+                var display = new Display(new MockUdpClientFactory());
+                var packet = CreatePacket(idle_rpm: 100f);
+                // idle_rpm is not used in RallyData, but we can check the packet value
+                Assert.Equal(1000, packet.idle_rpm * 10);
+            }
 
         #endregion
 
         #region Gear Tests
 
         [Fact]
-        public void ConvertToDisplayUpdate_NeutralGear()
-        {
-            // Arrange
-            float gear = 0;
-
-            // Act
-            string gearStr = gear == 0 ? "N" : gear < 0 ? "R" : gear.ToString();
-
-            // Assert
-            Assert.Equal("N", gearStr);
-        }
+            public void ConvertToDisplayUpdate_NeutralGear()
+            {
+                var display = new Display(new MockUdpClientFactory());
+                var packet = CreatePacket(gear: 0f);
+                var update = display.ConvertToDisplayUpdate(packet);
+                var rally = update.Data as RallyData;
+                Assert.NotNull(rally);
+                Assert.Equal("N", rally.Gear);
+            }
 
         [Fact]
-        public void ConvertToDisplayUpdate_ReverseGear()
-        {
-            // Arrange
-            float gear = -1;
-
-            // Act
-            string gearStr = gear == 0 ? "N" : gear < 0 ? "R" : gear.ToString();
-
-            // Assert
-            Assert.Equal("R", gearStr);
-        }
+            public void ConvertToDisplayUpdate_ReverseGear()
+            {
+                var display = new Display(new MockUdpClientFactory());
+                var packet = CreatePacket(gear: -1f);
+                var update = display.ConvertToDisplayUpdate(packet);
+                var rally = update.Data as RallyData;
+                Assert.NotNull(rally);
+                Assert.Equal("R", rally.Gear);
+            }
 
         [Fact]
-        public void ConvertToDisplayUpdate_FirstGear()
-        {
-            // Arrange
-            float gear = 1;
-
-            // Act
-            string gearStr = gear == 0 ? "N" : gear < 0 ? "R" : gear.ToString();
-
-            // Assert
-            Assert.Equal("1", gearStr);
-        }
+            public void ConvertToDisplayUpdate_FirstGear()
+            {
+                var display = new Display(new MockUdpClientFactory());
+                var packet = CreatePacket(gear: 1f);
+                var update = display.ConvertToDisplayUpdate(packet);
+                var rally = update.Data as RallyData;
+                Assert.NotNull(rally);
+                Assert.Equal("1", rally.Gear);
+            }
 
         [Fact]
-        public void ConvertToDisplayUpdate_HighGear()
-        {
-            // Arrange
-            float gear = 6;
-
-            // Act
-            string gearStr = gear == 0 ? "N" : gear < 0 ? "R" : gear.ToString();
-
-            // Assert
-            Assert.Equal("6", gearStr);
-        }
+            public void ConvertToDisplayUpdate_HighGear()
+            {
+                var display = new Display(new MockUdpClientFactory());
+                var packet = CreatePacket(gear: 6f);
+                var update = display.ConvertToDisplayUpdate(packet);
+                var rally = update.Data as RallyData;
+                Assert.NotNull(rally);
+                Assert.Equal("6", rally.Gear);
+            }
 
         #endregion
 
         #region Control Input Tests
 
-        [Fact]
-        public void ConvertToDisplayUpdate_CalculatesThrottle()
-        {
-            // Arrange
-            float throttle = 0.75f; // 75%
-
-            // Act
-            int throttlePercent = Convert.ToInt32(throttle * 100);
-
-            // Assert
-            Assert.Equal(75, throttlePercent);
-        }
+            [Fact]
+            public void ConvertToDisplayUpdate_CalculatesThrottle()
+            {
+                var display = new Display(new MockUdpClientFactory());
+                var packet = CreatePacket(throttle: 0.75f);
+                var update = display.ConvertToDisplayUpdate(packet);
+                var rally = update.Data as RallyData;
+                Assert.NotNull(rally);
+                Assert.Equal(75, rally.Throttle);
+            }
 
         [Fact]
         public void ConvertToDisplayUpdate_CalculatesBrake()
         {
-            // Arrange
-            float brakes = 0.50f; // 50%
-
-            // Act
-            int brakesPercent = Convert.ToInt32(brakes * 100);
-
-            // Assert
-            Assert.Equal(50, brakesPercent);
+            var display = new Display(new MockUdpClientFactory());
+            var packet = CreatePacket(brakes: 0.50f);
+            var update = display.ConvertToDisplayUpdate(packet);
+            var rally = update.Data as RallyData;
+            Assert.NotNull(rally);
+            Assert.Equal(50, rally.Brake);
         }
 
         [Fact]
         public void ConvertToDisplayUpdate_CalculatesClutch()
         {
-            // Arrange
-            float clutch = 0.25f; // 25%
-
-            // Act
-            int clutchPercent = Convert.ToInt32(clutch * 100);
-
-            // Assert
-            Assert.Equal(25, clutchPercent);
+            var display = new Display(new MockUdpClientFactory());
+            var packet = CreatePacket(clutch: 0.25f);
+            var update = display.ConvertToDisplayUpdate(packet);
+            var rally = update.Data as RallyData;
+            Assert.NotNull(rally);
+            Assert.Equal(25, rally.Clutch);
         }
 
         [Fact]
         public void ConvertToDisplayUpdate_ThrottleFullyEngaged()
         {
-            // Arrange
-            float throttle = 1.0f; // 100%
-
-            // Act
-            int throttlePercent = Convert.ToInt32(throttle * 100);
-
-            // Assert
-            Assert.Equal(100, throttlePercent);
+            var display = new Display(new MockUdpClientFactory());
+            var packet = CreatePacket(throttle: 1.0f);
+            var update = display.ConvertToDisplayUpdate(packet);
+            var rally = update.Data as RallyData;
+            Assert.NotNull(rally);
+            Assert.Equal(100, rally.Throttle);
         }
 
         [Fact]
         public void ConvertToDisplayUpdate_BrakeNotPressed()
         {
-            // Arrange
-            float brakes = 0.0f; // 0%
-
-            // Act
-            int brakesPercent = Convert.ToInt32(brakes * 100);
-
-            // Assert
-            Assert.Equal(0, brakesPercent);
+            var display = new Display(new MockUdpClientFactory());
+            var packet = CreatePacket(brakes: 0.0f);
+            var update = display.ConvertToDisplayUpdate(packet);
+            var rally = update.Data as RallyData;
+            Assert.NotNull(rally);
+            Assert.Equal(0, rally.Brake);
         }
 
         [Fact]
         public void ConvertToDisplayUpdate_ClutchFullyEngaged()
         {
-            // Arrange
-            float clutch = 1.0f; // 100%
-
-            // Act
-            int clutchPercent = Convert.ToInt32(clutch * 100);
-
-            // Assert
-            Assert.Equal(100, clutchPercent);
+            var display = new Display(new MockUdpClientFactory());
+            var packet = CreatePacket(clutch: 1.0f);
+            var update = display.ConvertToDisplayUpdate(packet);
+            var rally = update.Data as RallyData;
+            Assert.NotNull(rally);
+            Assert.Equal(100, rally.Clutch);
         }
 
         #endregion
 
         #region Progress Tests
 
-        [Fact]
-        public void ConvertToDisplayUpdate_CalculatesProgress()
-        {
-            // Arrange
-            float progress = 0.5f; // 50% complete
-
-            // Act
-            int progressPercent = Math.Min(Convert.ToInt32(progress * 100), 100);
-
-            // Assert
-            Assert.Equal(50, progressPercent);
-        }
+            [Fact]
+            public void ConvertToDisplayUpdate_CalculatesProgress()
+            {
+                var display = new Display(new MockUdpClientFactory());
+                var packet = CreatePacket();
+                packet.progress = 0.5f;
+                var update = display.ConvertToDisplayUpdate(packet);
+                var rally = update.Data as RallyData;
+                Assert.NotNull(rally);
+                Assert.Equal(50, rally.CompletedPct);
+            }
 
         [Fact]
         public void ConvertToDisplayUpdate_ProgressClamped()
         {
-            // Arrange - sometimes progress can exceed 100% due to floating point
-            float progress = 1.05f;
-
-            // Act
-            int progressPercent = Math.Min(Convert.ToInt32(progress * 100), 100);
-
-            // Assert
-            Assert.Equal(100, progressPercent);
+            var display = new Display(new MockUdpClientFactory());
+            var packet = CreatePacket();
+            packet.progress = 1.05f;
+            var update = display.ConvertToDisplayUpdate(packet);
+            var rally = update.Data as RallyData;
+            Assert.NotNull(rally);
+            Assert.Equal(100, rally.CompletedPct);
         }
 
         [Fact]
         public void ConvertToDisplayUpdate_ProgressAtStart()
         {
-            // Arrange
-            float progress = 0.0f; // 0% complete
-
-            // Act
-            int progressPercent = Math.Min(Convert.ToInt32(progress * 100), 100);
-
-            // Assert
-            Assert.Equal(0, progressPercent);
+            var display = new Display(new MockUdpClientFactory());
+            var packet = CreatePacket();
+            packet.progress = 0.0f;
+            var update = display.ConvertToDisplayUpdate(packet);
+            var rally = update.Data as RallyData;
+            Assert.NotNull(rally);
+            Assert.Equal(0, rally.CompletedPct);
         }
 
         [Fact]
         public void ConvertToDisplayUpdate_ProgressAtEnd()
         {
-            // Arrange
-            float progress = 1.0f; // 100% complete
-
-            // Act
-            int progressPercent = Math.Min(Convert.ToInt32(progress * 100), 100);
-
-            // Assert
-            Assert.Equal(100, progressPercent);
+            var display = new Display(new MockUdpClientFactory());
+            var packet = CreatePacket();
+            packet.progress = 1.0f;
+            var update = display.ConvertToDisplayUpdate(packet);
+            var rally = update.Data as RallyData;
+            Assert.NotNull(rally);
+            Assert.Equal(100, rally.CompletedPct);
         }
 
         #endregion
 
         #region Distance Tests
 
-        [Fact]
-        public void ConvertToDisplayUpdate_CalculatesDistance()
-        {
-            // Arrange
-            float distance = 5000.5f; // meters
-
-            // Act
-            int distanceInt = Math.Max(Convert.ToInt32(distance), 0);
-
-            // Assert
-            Assert.Equal(5000, distanceInt);
-        }
+            [Fact]
+            public void ConvertToDisplayUpdate_CalculatesDistance()
+            {
+                var display = new Display(new MockUdpClientFactory());
+                var packet = CreatePacket(distance: 5000.5f);
+                var update = display.ConvertToDisplayUpdate(packet);
+                var rally = update.Data as RallyData;
+                Assert.NotNull(rally);
+                Assert.Equal(5000, rally.DistanceTravelled);
+            }
 
         [Fact]
         public void ConvertToDisplayUpdate_DistanceClamped()
         {
-            // Arrange - distance should never be negative
-            float distance = -100f;
-
-            // Act
-            int distanceInt = Math.Max(Convert.ToInt32(distance), 0);
-
-            // Assert
-            Assert.Equal(0, distanceInt);
+            var display = new Display(new MockUdpClientFactory());
+            var packet = CreatePacket(distance: -100f);
+            var update = display.ConvertToDisplayUpdate(packet);
+            var rally = update.Data as RallyData;
+            Assert.NotNull(rally);
+            Assert.Equal(0, rally.DistanceTravelled);
         }
 
         [Fact]
         public void ConvertToDisplayUpdate_DistanceZero()
         {
-            // Arrange
-            float distance = 0f;
-
-            // Act
-            int distanceInt = Math.Max(Convert.ToInt32(distance), 0);
-
-            // Assert
-            Assert.Equal(0, distanceInt);
+            var display = new Display(new MockUdpClientFactory());
+            var packet = CreatePacket(distance: 0f);
+            var update = display.ConvertToDisplayUpdate(packet);
+            var rally = update.Data as RallyData;
+            Assert.NotNull(rally);
+            Assert.Equal(0, rally.DistanceTravelled);
         }
 
         #endregion
