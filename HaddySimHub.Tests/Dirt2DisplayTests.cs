@@ -1,5 +1,7 @@
+using HaddySimHub.Displays;
 using HaddySimHub.Displays.Dirt2;
 using HaddySimHub.Models;
+using System.Net.Sockets;
 using Xunit;
 
 namespace HaddySimHub.Tests
