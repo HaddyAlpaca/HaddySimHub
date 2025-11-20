@@ -21,10 +21,6 @@
       "node_modules/@types",
       "./src/@types"
     ],
-    "lib": [
-      "ES2022",
-      "dom"
-    ],
     "useDefineForClassFields": true
   },
   "exclude": [
