@@ -133,7 +133,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display(new MockSCSTelemetryFactory());
-            var data = CreateMockTelemetry(speed: 85.5);
+            var data = CreateMockTelemetry(speed: 85.0 / 3.6);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -165,7 +165,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display(new MockSCSTelemetryFactory());
-            var data = CreateMockTelemetry(speedLimit: 90.0);
+            var data = CreateMockTelemetry(speedLimit: 90.0 / 3.6);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -783,7 +783,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display(new MockSCSTelemetryFactory());
-            var data = CreateMockTelemetry(cruiseControlSpeed: 85.5);
+            var data = CreateMockTelemetry(cruiseControlSpeed: 85 / 3.6);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -870,7 +870,7 @@ namespace HaddySimHub.Tests
                 .WithNavigation(navDistance, navTime, speedLimit)
                 .WithJob(sourceCity, sourceCompany, destCity, destCompany, jobIncome, cargoMass, cargoDamage)
                 .WithTruckConstants(forwardGearCount: forwardGearCount, engineRpmMax: rpmMax, retarderStepCount: retarderStepCount)
-                .WithDashboard(speedKph: speed, cruiseControl: cruiseControl, cruiseSpeedKph: cruiseControlSpeed, fuelAvg: fuelAverageConsumption, fuelAmount: fuelAmount, fuelRange: fuelDistance, oilPressure: oilPressure, oilTemp: oilTemp, waterTemp: waterTemp, batteryVoltage: batteryVoltage, rpm: rpm)
+                .WithDashboard(speed: speed, cruiseControl: cruiseControl, cruiseSpeed: cruiseControlSpeed, fuelAvg: fuelAverageConsumption, fuelAmount: fuelAmount, fuelRange: fuelDistance, oilPressure: oilPressure, oilTemp: oilTemp, waterTemp: waterTemp, batteryVoltage: batteryVoltage, rpm: rpm)
                 .WithWarnings(fuelWarning, adBlueWarning, oilPressureWarning, waterTempWarning, batteryVoltageWarning)
                 .WithLights(parkingLights, lowBeam, highBeam, hazardLights, blinkerLeft, blinkerRight)
                 .WithMotor(selectedGear, parkingBrake, retarderLevel)
@@ -885,9 +885,9 @@ namespace HaddySimHub.Tests
 
     public class MockSCSTelemetryFactory : ISCSTelemetryFactory
     {
-        public SCSTelemetry Create()
+        public SCSSdkTelemetry Create()
         {
-            return new SCSTelemetry();
+            return new SCSSdkTelemetry();
         }
     }
 }

@@ -43,7 +43,7 @@ namespace HaddySimHub.Displays
             this._cancellationTokenSource.Cancel();
         }
 
-        protected override DisplayUpdate ConvertToDisplayUpdate(DisplayUpdate data) => data;
+        internal override DisplayUpdate ConvertToDisplayUpdate(DisplayUpdate data) => data;
 
         protected abstract DisplayUpdate GenerateDisplayUpdate();
     }

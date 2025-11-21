@@ -1,7 +1,12 @@
+using System;
 using HaddySimHub.Displays.IRacing;
 using HaddySimHub.Models;
 using iRacingSDK;
 using Xunit;
+using static iRacingSDK.SessionData;
+using static iRacingSDK.SessionData._SessionInfo;
+using static iRacingSDK.SessionData._SessionInfo._Sessions;
+using static iRacingSDK.SessionData._WeekendInfo;
 
 namespace HaddySimHub.Tests
 {
@@ -186,7 +191,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(gear: -1);
+            var data = CreateMockDataSample(gear: -1, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -202,7 +207,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(gear: 0);
+            var data = CreateMockDataSample(gear: 0, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -218,7 +223,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(gear: 1);
+            var data = CreateMockDataSample(gear: 1, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -234,7 +239,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(gear: 6);
+            var data = CreateMockDataSample(gear: 6, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -254,7 +259,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(speed: 10.0f); // 10 m/s = 36 km/h
+            var data = CreateMockDataSample(speed: 10.0f, playerCarIdx: 0, carIdxLap: new int[64]); // 10 m/s = 36 km/h
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -270,7 +275,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(speed: 0.0f);
+            var data = CreateMockDataSample(speed: 0.0f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -286,7 +291,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(speed: 27.777f); // 27.777 * 3.6 = 99.9972 -> rounds to 100
+            var data = CreateMockDataSample(speed: 27.777f, playerCarIdx: 0, carIdxLap: new int[64]); // 27.777 * 3.6 = 99.9972 -> rounds to 100
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -306,7 +311,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(rpm: 6543.5f);
+            var data = CreateMockDataSample(rpm: 6543.5f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -322,7 +327,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(rpm: 0.0f);
+            var data = CreateMockDataSample(rpm: 0.0f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -342,7 +347,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(throttle: 0.75f); // 0.75 = 75%
+            var data = CreateMockDataSample(throttle: 0.75f, playerCarIdx: 0, carIdxLap: new int[64]); // 0.75 = 75%
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -358,7 +363,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(brake: 0.50f); // 0.50 = 50%
+            var data = CreateMockDataSample(brake: 0.50f, playerCarIdx: 0, carIdxLap: new int[64]); // 0.50 = 50%
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -374,7 +379,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(throttle: 1.0f);
+            var data = CreateMockDataSample(throttle: 1.0f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -390,7 +395,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(throttle: 0.0f);
+            var data = CreateMockDataSample(throttle: 0.0f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -410,7 +415,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(steeringAngle: 0.0f, steeringWheelAngleMax: 12.0f);
+            var data = CreateMockDataSample(steeringAngle: 0.0f, steeringWheelAngleMax: 12.0f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -426,7 +431,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(steeringAngle: -6.0f, steeringWheelAngleMax: 12.0f);
+            var data = CreateMockDataSample(steeringAngle: -6.0f, steeringWheelAngleMax: 12.0f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -442,7 +447,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(steeringAngle: 6.0f, steeringWheelAngleMax: 12.0f);
+            var data = CreateMockDataSample(steeringAngle: 6.0f, steeringWheelAngleMax: 12.0f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -458,7 +463,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(steeringAngle: -3.0f, steeringWheelAngleMax: 12.0f);
+            var data = CreateMockDataSample(steeringAngle: -3.0f, steeringWheelAngleMax: 12.0f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -474,7 +479,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(steeringAngle: 5.0f, steeringWheelAngleMax: 0.0f);
+            var data = CreateMockDataSample(steeringAngle: 5.0f, steeringWheelAngleMax: 0.0f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -490,7 +495,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(steeringAngle: -7.0f, steeringWheelAngleMax: 12.0f);
+            var data = CreateMockDataSample(steeringAngle: -7.0f, steeringWheelAngleMax: 12.0f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -506,7 +511,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(steeringAngle: 7.0f, steeringWheelAngleMax: 12.0f);
+            var data = CreateMockDataSample(steeringAngle: 7.0f, steeringWheelAngleMax: 12.0f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -552,7 +557,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample();
+            var data = CreateMockDataSample(playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -570,7 +575,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(fuelLevel: 45.5f);
+            var data = CreateMockDataSample(fuelLevel: 45.5f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -586,7 +591,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(fuelLevel: 50.0f);
+            var data = CreateMockDataSample(fuelLevel: 50.0f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -606,7 +611,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(brakeBias: 52.5f);
+            var data = CreateMockDataSample(brakeBias: 52.5f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -626,7 +631,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(airTemp: 28.5f);
+            var data = CreateMockDataSample(airTemp: 28.5f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -642,7 +647,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(trackTemp: 45.2f);
+            var data = CreateMockDataSample(trackTemp: 45.2f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -662,7 +667,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(engineWarnings: EngineWarnings.PitSpeedLimiter);
+            var data = CreateMockDataSample(engineWarnings: EngineWarnings.PitSpeedLimiter, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -678,7 +683,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(engineWarnings: EngineWarnings.None);
+            var data = CreateMockDataSample(engineWarnings: EngineWarnings.None, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -698,7 +703,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(position: 5);
+            var data = CreateMockDataSample(position: 5, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -714,7 +719,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(incidents: -5); // Negative should be clamped to 0
+            var data = CreateMockDataSample(incidents: -5, playerCarIdx: 0, carIdxLap: new int[64]); // Negative should be clamped to 0
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -730,7 +735,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var display = new Display();
-            var data = CreateMockDataSample(incidents: 3);
+            var data = CreateMockDataSample(incidents: 3, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
@@ -745,36 +750,132 @@ namespace HaddySimHub.Tests
 
         #region Helper Methods
 
+        private class TestDataSample : IDataSample
+        {
+            public bool IsConnected { get; set; }
+            public SessionData SessionData { get; set; } = new();
+            public Telemetry Telemetry { get; set; } = [];
+            public DataSample LastSample { get; set; } =  new();
+        }
+
         private class DataSampleBuilder
         {
-            private readonly DataSample _sample;
-            private readonly dynamic _telemetry;
+            private readonly IDataSample _sample;
+            private readonly Telemetry _telemetry;
 
             public DataSampleBuilder()
             {
-                _sample = new DataSample();
-                _telemetry = _sample.Telemetry;
+                _sample = new TestDataSample();
+                _telemetry = new Telemetry();
+                _sample.Telemetry = _telemetry;
+
+                // Set default values for all required telemetry data
+                _telemetry["SessionNum"] = 1;
+                _telemetry["PlayerCarIdx"] = 0; // Default to car index 0
+                _telemetry["CarIdxLap"] = new int[64];
+                _telemetry["FuelLevel"] = 0.0f;
+                _telemetry["PlayerCarInPitStall"] = false;
+                _telemetry["OnPitRoad"] = false;
+                _telemetry["Lap"] = 0;
+                _telemetry["PlayerCarDriverIncidentCount"] = 0;
+                _telemetry["SessionTimeRemain"] = 0.0;
+                _telemetry["PlayerCarPosition"] = 0;
+                _telemetry["LapCurrentLapTime"] = 0.0f;
+                _telemetry["LapLastLapTime"] = 0.0f;
+                _telemetry["LapDeltaToSessionLastlLap"] = 0.0f;
+                _telemetry["LapBestLapTime"] = 0.0f;
+                _telemetry["LapDeltaToBestLap"] = 0.0f;
+                _telemetry["Gear"] = 0;
+                _telemetry["RPM"] = 0.0f;
+                _telemetry["Speed"] = 0.0f;
+                _telemetry["Brake"] = 0.0f;
+                _telemetry["Throttle"] = 0.0f;
+                _telemetry["DcBrakeBias"] = 0.0f;
+                _telemetry["AirTemp"] = 0.0f;
+                _telemetry["TrackTemp"] = 0.0f;
+                _telemetry["EngineWarnings"] = (int)EngineWarnings.None;
+                _telemetry["SteeringWheelAngle"] = 0.0f;
+                _telemetry["SteeringWheelAngleMax"] = 0.0f;
+                
+                _sample.SessionData = new SessionData
+                {
+                    SessionInfo = new _SessionInfo
+                    {
+                        Sessions =
+                        [
+                            new _Sessions
+                            {
+                                SessionNum = 1,
+                                SessionLaps = "0",
+                                SessionTime = "unlimited",
+                                ResultsPositions = new _ResultsPositions[64],
+                            }
+                        ]
+                    },
+                    DriverInfo = new _DriverInfo
+                    {
+                         Drivers = 
+                         [
+                            new _DriverInfo._Drivers
+                            {
+                                CarIdx = 0,
+                                CarNumberRaw = 1, // Ensure this is > 0 for MaxLength
+                                UserName = "Test Driver",
+                                IRating = 1500,
+                                CarNumber = "42"
+                            }
+                         ]
+                    },
+                    WeekendInfo = new _WeekendInfo
+                    {
+                        WeekendOptions = new _WeekendOptions
+                        {
+                            IncidentLimit = "0"
+                        },
+                        TrackName = "Test Track"
+                    }
+                };
+                // Link the session data to the telemetry object
+                _telemetry.SessionData = _sample.SessionData;
             }
 
-            public DataSampleBuilder WithGear(int gear) { _telemetry.Gear = gear; return this; }
-            public DataSampleBuilder WithSpeed(float speed) { _telemetry.Speed = speed; return this; }
-            public DataSampleBuilder WithRpm(float rpm) { _telemetry.RPM = rpm; return this; }
-            public DataSampleBuilder WithThrottle(float throttle) { _telemetry.Throttle = throttle; return this; }
-            public DataSampleBuilder WithBrake(float brake) { _telemetry.Brake = brake; return this; }
-            public DataSampleBuilder WithSteeringAngle(float angle) { _telemetry.SteeringWheelAngle = angle; return this; }
-            public DataSampleBuilder WithSteeringWheelAngleMax(float max) { _telemetry.SteeringWheelAngleMax = max; return this; }
-            public DataSampleBuilder WithFuelLevel(float fuel) { _telemetry.FuelLevel = fuel; return this; }
-            public DataSampleBuilder WithBrakeBias(float bias) { _telemetry.DcBrakeBias = bias; return this; }
-            public DataSampleBuilder WithAirTemp(float temp) { _telemetry.AirTemp = temp; return this; }
-            public DataSampleBuilder WithTrackTemp(float temp) { _telemetry.TrackTemp = temp; return this; }
-            public DataSampleBuilder WithEngineWarnings(EngineWarnings warnings) { _telemetry.EngineWarnings = warnings; return this; }
-            public DataSampleBuilder WithPosition(int pos) { _telemetry.PlayerCarPosition = pos; return this; }
-            public DataSampleBuilder WithIncidents(int inc) { _telemetry.PlayerCarDriverIncidentCount = inc; return this; }
+            public DataSampleBuilder WithGear(int gear) { _telemetry["Gear"] = gear; return this; }
+            public DataSampleBuilder WithSpeed(float speed) { _telemetry["Speed"] = speed; return this; }
+            public DataSampleBuilder WithRpm(float rpm) { _telemetry["RPM"] = rpm; return this; }
+            public DataSampleBuilder WithThrottle(float throttle) { _telemetry["Throttle"] = throttle; return this; }
+            public DataSampleBuilder WithBrake(float brake) { _telemetry["Brake"] = brake; return this; }
+            public DataSampleBuilder WithSteeringAngle(float angle) { _telemetry["SteeringWheelAngle"] = angle; return this; }
+            public DataSampleBuilder WithSteeringWheelAngleMax(float max) { _telemetry["SteeringWheelAngleMax"] = max; return this; }
+            public DataSampleBuilder WithFuelLevel(float fuel) { _telemetry["FuelLevel"] = fuel; return this; }
+            public DataSampleBuilder WithBrakeBias(float bias) { _telemetry["dcBrakeBias"] = bias; return this; }
+            public DataSampleBuilder WithAirTemp(float temp) { _telemetry["AirTemp"] = temp; return this; }
+            public DataSampleBuilder WithTrackTemp(float temp) { _telemetry["TrackTemp"] = temp; return this; }
+            public DataSampleBuilder WithEngineWarnings(EngineWarnings warnings) { _telemetry["EngineWarnings"] = (Int32)warnings; return this; }
+            public DataSampleBuilder WithPosition(int pos) { _telemetry["PlayerCarPosition"] = pos; return this; }
+            public DataSampleBuilder WithIncidents(int inc) { _telemetry["PlayerCarDriverIncidentCount"] = inc; return this; }
+            public DataSampleBuilder WithPlayerCarIdx(int idx) { 
+                _telemetry["PlayerCarIdx"] = idx; 
+                _sample.SessionData.DriverInfo.Drivers[0].CarIdx = idx; // Update CarIdx in SessionData to match
+                return this; 
+            }
+            public DataSampleBuilder WithCarIdxLap(int[] carIdxLap) { _telemetry["CarIdxLap"] = carIdxLap; return this; }
+            public DataSampleBuilder WithCarNumberRaw(int carNumberRaw) {
+                // This method should update the existing driver or add a new one if necessary
+                // For simplicity, assuming we're always updating the first driver
+                _sample.SessionData.DriverInfo.Drivers[0].CarNumberRaw = carNumberRaw;
+                return this;
+            }
+            public DataSampleBuilder WithSessionNum(int sessionNum)
+            {
+                _telemetry["SessionNum"] = sessionNum;
+                _sample.SessionData.SessionInfo.Sessions[0].SessionNum = sessionNum;
+                return this;
+            }
 
-            public DataSample Build() => _sample;
+            public IDataSample Build() => _sample;
         }
 
-        private DataSample CreateMockDataSample(
+        private IDataSample CreateMockDataSample(
             int? gear = null,
             float? speed = null,
             float? rpm = null,
@@ -788,7 +889,9 @@ namespace HaddySimHub.Tests
             float? trackTemp = null,
             EngineWarnings? engineWarnings = null,
             int? position = null,
-            int? incidents = null)
+            int? incidents = null,
+            int? playerCarIdx = null,
+            int[]? carIdxLap = null)
         {
             var builder = new DataSampleBuilder();
             if (gear.HasValue) builder.WithGear(gear.Value);
@@ -805,6 +908,8 @@ namespace HaddySimHub.Tests
             if (engineWarnings.HasValue) builder.WithEngineWarnings(engineWarnings.Value);
             if (position.HasValue) builder.WithPosition(position.Value);
             if (incidents.HasValue) builder.WithIncidents(incidents.Value);
+            if (playerCarIdx.HasValue) builder.WithPlayerCarIdx(playerCarIdx.Value);
+            if (carIdxLap != null) builder.WithCarIdxLap(carIdxLap);
             return builder.Build();
         }
 

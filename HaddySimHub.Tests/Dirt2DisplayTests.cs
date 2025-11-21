@@ -13,7 +13,11 @@ namespace HaddySimHub.Tests
             float rpm = 0,
             float max_rpm = 0,
             float idle_rpm = 0,
-            float gear = 0)
+            float gear = 0,
+            float throttle = 0,
+            float brakes = 0,
+            float clutch = 0,
+            float distance = 0)
         {
             return new Packet
             {
@@ -21,7 +25,11 @@ namespace HaddySimHub.Tests
                 rpm = rpm,
                 max_rpm = max_rpm,
                 idle_rpm = idle_rpm,
-                gear = gear
+                gear = gear,
+                throttle = throttle,
+                brakes = brakes,
+                clutch = clutch,
+                distance = distance
             };
         }
 

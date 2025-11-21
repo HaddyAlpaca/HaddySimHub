@@ -15,5 +15,5 @@ public abstract class DisplayBase<T> : IDisplay
         await GameDataHub.SendDisplayUpdate(update);
     }
 
-    protected abstract DisplayUpdate ConvertToDisplayUpdate(T data);
+    internal abstract DisplayUpdate ConvertToDisplayUpdate(T data);
 }

@@ -1,4 +1,5 @@
 using SCSSdkClient.Object;
+using SCSSdkClient;
 
 namespace HaddySimHub.Tests
 {
@@ -14,7 +15,7 @@ namespace HaddySimHub.Tests
 
         public SCSTelemetryBuilder WithGameTime(ulong gameTime)
         {
-            _t.CommonValues.GameTime.Value = gameTime;
+            _t.CommonValues.GameTime.Value = (uint)gameTime;
             return this;
         }
 
@@ -24,11 +25,11 @@ namespace HaddySimHub.Tests
             return this;
         }
 
-        public SCSTelemetryBuilder WithNavigation(double distanceMeters, double timeSeconds, double speedLimitKph = 0)
+        public SCSTelemetryBuilder WithNavigation(double distanceMeters, double timeSeconds, double speedLimitMs = 0)
         {
-            _t.NavigationValues.NavigationDistance = distanceMeters;
-            _t.NavigationValues.NavigationTime = timeSeconds;
-            _t.NavigationValues.SpeedLimit.Kph = speedLimitKph;
+            _t.NavigationValues.NavigationDistance = (float)distanceMeters;
+            _t.NavigationValues.NavigationTime = (float)timeSeconds;
+            _t.NavigationValues.SpeedLimit.Value = (float)speedLimitMs;
             return this;
         }
 
@@ -39,7 +40,7 @@ namespace HaddySimHub.Tests
             _t.JobValues.CityDestination = destCity;
             _t.JobValues.CompanyDestination = destCompany;
             _t.JobValues.Income = income;
-            _t.JobValues.CargoValues.Mass = cargoMass;
+            _t.JobValues.CargoValues.Mass = (float)cargoMass;
             _t.JobValues.CargoValues.CargoDamage = cargoDamage;
             return this;
         }
@@ -48,17 +49,17 @@ namespace HaddySimHub.Tests
         {
             _t.TruckValues.ConstantsValues.Brand = brand;
             _t.TruckValues.ConstantsValues.Name = name;
-            _t.TruckValues.ConstantsValues.MotorValues.ForwardGearCount = forwardGearCount;
-            _t.TruckValues.ConstantsValues.MotorValues.EngineRpmMax = engineRpmMax;
+            _t.TruckValues.ConstantsValues.MotorValues.ForwardGearCount = (uint)forwardGearCount;
+            _t.TruckValues.ConstantsValues.MotorValues.EngineRpmMax = (uint)engineRpmMax;
             _t.TruckValues.ConstantsValues.MotorValues.RetarderStepCount = retarderStepCount;
             return this;
         }
 
-        public SCSTelemetryBuilder WithDashboard(double speedKph = 0, bool cruiseControl = false, double cruiseSpeedKph = 0, float fuelAvg = 0, float fuelAmount = 0, float fuelRange = 0, float adBlue = 0, float oilPressure = 0, float oilTemp = 0, float waterTemp = 0, float batteryVoltage = 0, int rpm = 0)
+        public SCSTelemetryBuilder WithDashboard(double speed = 0, bool cruiseControl = false, double cruiseSpeed = 0, float fuelAvg = 0, float fuelAmount = 0, float fuelRange = 0, float adBlue = 0, float oilPressure = 0, float oilTemp = 0, float waterTemp = 0, float batteryVoltage = 0, int rpm = 0)
         {
-            _t.TruckValues.CurrentValues.DashboardValues.Speed.Kph = speedKph;
+            _t.TruckValues.CurrentValues.DashboardValues.Speed.Value = (float)speed;
             _t.TruckValues.CurrentValues.DashboardValues.CruiseControl = cruiseControl;
-            _t.TruckValues.CurrentValues.DashboardValues.CruiseControlSpeed.Kph = cruiseSpeedKph;
+            _t.TruckValues.CurrentValues.DashboardValues.CruiseControlSpeed.Value = (float)cruiseSpeed;
             _t.TruckValues.CurrentValues.DashboardValues.FuelValue.AverageConsumption = fuelAvg;
             _t.TruckValues.CurrentValues.DashboardValues.FuelValue.Amount = fuelAmount;
             _t.TruckValues.CurrentValues.DashboardValues.FuelValue.Range = fuelRange;
@@ -109,13 +110,14 @@ namespace HaddySimHub.Tests
 
         public SCSTelemetryBuilder WithControl(double throttle = 0)
         {
-            _t.ControlValues.GameValues.Throttle = throttle;
+            _t.ControlValues.GameValues.Throttle = (float)throttle;
             return this;
         }
 
         public SCSTelemetryBuilder WithTrailerEmpty()
         {
-            _t.TrailerValues = Array.Empty<TrailerData>();
+            // TrailerValues setup - leave empty or initialize if available
+            _t.TrailerValues = [];
             return this;
         }
 
