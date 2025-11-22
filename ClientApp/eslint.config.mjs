@@ -19,7 +19,7 @@ import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import angulareslint from 'angular-eslint';
 
-import stylisticTsPlugin from '@stylistic/eslint-plugin-ts';
+import stylisticPlugin from '@stylistic/eslint-plugin';
 import deprecationPlugin from 'eslint-plugin-deprecation';
 import jsDocPlugin from 'eslint-plugin-jsdoc';
 import preferArrowPlugin from 'eslint-plugin-prefer-arrow';
@@ -53,7 +53,7 @@ export default tseslint.config(
         ],
         plugins: {
             'deprecation': fixupPluginRules(deprecationPlugin),
-            '@stylistic/ts': stylisticTsPlugin,
+            '@stylistic': stylisticPlugin,
             'jsdoc': fixupPluginRules(jsDocPlugin),
             'prefer-arrow': fixupPluginRules(preferArrowPlugin),
             'rxjs': fixupPluginRules(pluginRxjs),
@@ -100,14 +100,14 @@ export default tseslint.config(
             '@angular-eslint/prefer-on-push-component-change-detection': 'error',
 
             // @stylistic/ts
-            '@stylistic/ts/semi': ['error', 'always'],
-            '@stylistic/ts/comma-dangle': [
+            '@stylistic/semi': ['error', 'always'],
+            '@stylistic/comma-dangle': [
                 // matches https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/SA1413.md
                 'error',
                 'always-multiline'
             ],
-            '@stylistic/ts/indent': ['error', 2],
-            '@stylistic/ts/member-delimiter-style': [
+            '@stylistic/indent': ['error', 2],
+            '@stylistic/member-delimiter-style': [
                 'error',
                 {
                     'multiline': {
@@ -120,12 +120,12 @@ export default tseslint.config(
                     }
                 }
             ],
-            '@stylistic/ts/quotes': [
+            '@stylistic/quotes': [
                 'error',
                 'single',
-                { 'allowTemplateLiterals': true }
+                { 'allowTemplateLiterals': 'always' }
             ],
-            '@stylistic/ts/type-annotation-spacing': 'error',
+            '@stylistic/type-annotation-spacing': 'error',
 
             // @typescript-eslint
             '@typescript-eslint/await-thenable': 'error',
