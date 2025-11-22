@@ -4,7 +4,7 @@ using iRacingSDK;
 
 namespace HaddySimHub.Displays.IRacing;
 
-public sealed class Display() : DisplayBase<DataSample>()
+public sealed class Display() : DisplayBase<IDataSample>()
 {
     private int _lastPlayerLap;
     private int? _sessionNum;
@@ -40,7 +40,7 @@ public sealed class Display() : DisplayBase<DataSample>()
     public override string Description => "IRacing";
     public override bool IsActive => ProcessHelper.IsProcessRunning("iracingui");
 
-    protected override DisplayUpdate ConvertToDisplayUpdate(DataSample data)
+    internal override DisplayUpdate ConvertToDisplayUpdate(IDataSample data)
     {
         var telemetry = data.Telemetry;
 

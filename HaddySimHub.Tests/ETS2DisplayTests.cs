@@ -4,15 +4,15 @@ using HaddySimHub.Displays.ETS;
 using HaddySimHub.Models;
 using SCSSdkClient;
 using SCSSdkClient.Object;
-using Xunit;
 
 namespace HaddySimHub.Tests
 {
+    [TestClass]
     public class ETS2DisplayTests
     {
         #region Gear Tests
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_GearNeutral()
         {
             // Arrange
@@ -24,11 +24,11 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal("N", truckData.Gear);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual("N", truckData.Gear);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_GearReverse()
         {
             // Arrange
@@ -40,11 +40,11 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal("R1", truckData.Gear);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual("R1", truckData.Gear);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_GearMultipleReverse()
         {
             // Arrange
@@ -56,11 +56,11 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal("R2", truckData.Gear);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual("R2", truckData.Gear);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_GearForwardNonEuro()
         {
             // Arrange
@@ -72,11 +72,11 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal("5", truckData.Gear);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual("5", truckData.Gear);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_GearEuro14Gears_C1()
         {
             // Arrange - In Euro trucks with 14 gears, gear 1 is displayed as "C1"
@@ -88,11 +88,11 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal("C1", truckData.Gear);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual("C1", truckData.Gear);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_GearEuro14Gears_Offset()
         {
             // Arrange - Gear 3 becomes "1" in the display (3-2=1)
@@ -104,11 +104,11 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal("1", truckData.Gear);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual("1", truckData.Gear);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_GearEuro14Gears_High()
         {
             // Arrange - Gear 14 becomes "12" in the display (14-2=12)
@@ -120,31 +120,31 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal("12", truckData.Gear);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual("12", truckData.Gear);
         }
 
         #endregion
 
         #region Speed Tests
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_SpeedPositive()
         {
             // Arrange
             var display = new Display(new MockSCSTelemetryFactory());
-            var data = CreateMockTelemetry(speed: 85.5);
+            var data = CreateMockTelemetry(speed: 85.0 / 3.6);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(85, truckData.Speed);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(85, truckData.Speed);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_SpeedNegativeClamped()
         {
             // Arrange
@@ -156,31 +156,31 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(0, truckData.Speed);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(0, truckData.Speed);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_SpeedLimit()
         {
             // Arrange
             var display = new Display(new MockSCSTelemetryFactory());
-            var data = CreateMockTelemetry(speedLimit: 90.0);
+            var data = CreateMockTelemetry(speedLimit: 90.0 / 3.6);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(90, truckData.SpeedLimit);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(90, truckData.SpeedLimit);
         }
 
         #endregion
 
         #region Damage Tests
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_DamageCabin()
         {
             // Arrange
@@ -192,11 +192,11 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(25, truckData.DamageTruckCabin);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(25, truckData.DamageTruckCabin);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_DamageEngine()
         {
             // Arrange
@@ -208,15 +208,15 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(75, truckData.DamageTruckEngine);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(75, truckData.DamageTruckEngine);
         }
 
         #endregion
 
         #region Fuel Tests
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_FuelAverageConsumption()
         {
             // Arrange
@@ -228,11 +228,11 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(25.0f, truckData.FuelAverageConsumption);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(25.0f, truckData.FuelAverageConsumption);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_FuelAmount()
         {
             // Arrange
@@ -244,11 +244,11 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(500f, truckData.FuelAmount);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(500f, truckData.FuelAmount);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_FuelDistance()
         {
             // Arrange
@@ -260,17 +260,17 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(1500f, truckData.FuelDistance);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(1500f, truckData.FuelDistance);
         }
 
         #endregion
 
         #region Light Tests
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
+        [TestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
         public void ConvertToDisplayUpdate_ParkingLights(bool parkingLightsOn)
         {
             // Arrange
@@ -282,13 +282,13 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(parkingLightsOn, truckData.ParkingLightsOn);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(parkingLightsOn, truckData.ParkingLightsOn);
         }
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
+        [TestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
         public void ConvertToDisplayUpdate_LowBeam(bool lowBeamOn)
         {
             // Arrange
@@ -300,13 +300,13 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(lowBeamOn, truckData.LowBeamOn);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(lowBeamOn, truckData.LowBeamOn);
         }
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
+        [TestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
         public void ConvertToDisplayUpdate_HighBeam(bool highBeamOn)
         {
             // Arrange
@@ -318,13 +318,13 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(highBeamOn, truckData.HighBeamOn);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(highBeamOn, truckData.HighBeamOn);
         }
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
+        [TestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
         public void ConvertToDisplayUpdate_HazardLights(bool hazardLightsOn)
         {
             // Arrange
@@ -336,13 +336,13 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(hazardLightsOn, truckData.HazardLightsOn);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(hazardLightsOn, truckData.HazardLightsOn);
         }
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
+        [TestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
         public void ConvertToDisplayUpdate_BlinkerLeft(bool blinkerLeftOn)
         {
             // Arrange
@@ -354,13 +354,13 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(blinkerLeftOn, truckData.BlinkerLeftOn);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(blinkerLeftOn, truckData.BlinkerLeftOn);
         }
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
+        [TestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
         public void ConvertToDisplayUpdate_BlinkerRight(bool blinkerRightOn)
         {
             // Arrange
@@ -372,17 +372,17 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(blinkerRightOn, truckData.BlinkerRightOn);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(blinkerRightOn, truckData.BlinkerRightOn);
         }
 
         #endregion
 
         #region Brake Tests
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
+        [TestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
         public void ConvertToDisplayUpdate_ParkingBrake(bool parkingBrakeOn)
         {
             // Arrange
@@ -394,11 +394,11 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(parkingBrakeOn, truckData.ParkingBrakeOn);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(parkingBrakeOn, truckData.ParkingBrakeOn);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_RetarderLevel()
         {
             // Arrange
@@ -410,16 +410,16 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(3u, truckData.RetarderLevel);
-            Assert.Equal(5u, truckData.RetarderStepCount);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(3u, truckData.RetarderLevel);
+            Assert.AreEqual(5u, truckData.RetarderStepCount);
         }
 
         #endregion
 
         #region Throttle Tests
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_Throttle75Percent()
         {
             // Arrange
@@ -431,11 +431,11 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(75, truckData.Throttle);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(75, truckData.Throttle);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_ThrottleMinimum()
         {
             // Arrange
@@ -447,11 +447,11 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(0, truckData.Throttle);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(0, truckData.Throttle);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_ThrottleMaximum()
         {
             // Arrange
@@ -463,15 +463,15 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(100, truckData.Throttle);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(100, truckData.Throttle);
         }
 
         #endregion
 
         #region Temperature and Pressure Tests
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_OilTemperature()
         {
             // Arrange
@@ -483,11 +483,11 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(85.5f, truckData.OilTemp);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(85.5f, truckData.OilTemp);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_WaterTemperature()
         {
             // Arrange
@@ -499,11 +499,11 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(95.0f, truckData.WaterTemp);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(95.0f, truckData.WaterTemp);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_OilPressure()
         {
             // Arrange
@@ -515,11 +515,11 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(4.5f, truckData.OilPressure);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(4.5f, truckData.OilPressure);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_BatteryVoltage()
         {
             // Arrange
@@ -531,17 +531,17 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(13.5f, truckData.BatteryVoltage);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(13.5f, truckData.BatteryVoltage);
         }
 
         #endregion
 
         #region Warning Tests
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
+        [TestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
         public void ConvertToDisplayUpdate_FuelWarning(bool fuelWarningOn)
         {
             // Arrange
@@ -553,13 +553,13 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(fuelWarningOn, truckData.FuelWarningOn);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(fuelWarningOn, truckData.FuelWarningOn);
         }
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
+        [TestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
         public void ConvertToDisplayUpdate_AdBlueWarning(bool adBlueWarningOn)
         {
             // Arrange
@@ -571,13 +571,13 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(adBlueWarningOn, truckData.AdBlueWarningOn);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(adBlueWarningOn, truckData.AdBlueWarningOn);
         }
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
+        [TestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
         public void ConvertToDisplayUpdate_OilPressureWarning(bool oilPressureWarningOn)
         {
             // Arrange
@@ -589,13 +589,13 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(oilPressureWarningOn, truckData.OilPressureWarningOn);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(oilPressureWarningOn, truckData.OilPressureWarningOn);
         }
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
+        [TestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
         public void ConvertToDisplayUpdate_WaterTempWarning(bool waterTempWarningOn)
         {
             // Arrange
@@ -607,13 +607,13 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(waterTempWarningOn, truckData.WaterTempWarningOn);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(waterTempWarningOn, truckData.WaterTempWarningOn);
         }
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
+        [TestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
         public void ConvertToDisplayUpdate_BatteryVoltageWarning(bool batteryVoltageWarningOn)
         {
             // Arrange
@@ -625,15 +625,15 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(batteryVoltageWarningOn, truckData.BatteryVoltageWarningOn);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(batteryVoltageWarningOn, truckData.BatteryVoltageWarningOn);
         }
 
         #endregion
 
         #region Job Data Tests
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_JobIncome()
         {
             // Arrange
@@ -645,11 +645,11 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(50000u, truckData.JobIncome);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(50000u, truckData.JobIncome);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_CargoMass()
         {
             // Arrange
@@ -661,11 +661,11 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(12501, truckData.JobCargoMass);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(12501, truckData.JobCargoMass);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_CargoDamage()
         {
             // Arrange
@@ -677,11 +677,11 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(15, truckData.JobCargoDamage);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(15, truckData.JobCargoDamage);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_JobCityAndCompany()
         {
             // Arrange
@@ -697,18 +697,18 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal("Berlin", truckData.SourceCity);
-            Assert.Equal("Company A", truckData.SourceCompany);
-            Assert.Equal("Paris", truckData.DestinationCity);
-            Assert.Equal("Company B", truckData.DestinationCompany);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual("Berlin", truckData.SourceCity);
+            Assert.AreEqual("Company A", truckData.SourceCompany);
+            Assert.AreEqual("Paris", truckData.DestinationCity);
+            Assert.AreEqual("Company B", truckData.DestinationCompany);
         }
 
         #endregion
 
         #region Navigation Tests
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_DistanceRemaining()
         {
             // Arrange
@@ -720,11 +720,11 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(50, truckData.DistanceRemaining);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(50, truckData.DistanceRemaining);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_TimeRemaining()
         {
             // Arrange
@@ -736,11 +736,11 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(60, truckData.TimeRemaining);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(60, truckData.TimeRemaining);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_RestTimeRemaining()
         {
             // Arrange
@@ -752,17 +752,17 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(120, truckData.RestTimeRemaining);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(120, truckData.RestTimeRemaining);
         }
 
         #endregion
 
         #region Cruise Control Tests
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
+        [TestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
         public void ConvertToDisplayUpdate_CruiseControl(bool cruiseControlOn)
         {
             // Arrange
@@ -774,31 +774,31 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(cruiseControlOn, truckData.CruiseControlOn);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(cruiseControlOn, truckData.CruiseControlOn);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_CruiseControlSpeed()
         {
             // Arrange
             var display = new Display(new MockSCSTelemetryFactory());
-            var data = CreateMockTelemetry(cruiseControlSpeed: 85.5);
+            var data = CreateMockTelemetry(cruiseControlSpeed: 85 / 3.6);
 
             // Act
             var update = display.ConvertToDisplayUpdate(data);
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(85, truckData.CruiseControlSpeed);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(85, truckData.CruiseControlSpeed);
         }
 
         #endregion
 
         #region RPM Tests
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_RPM()
         {
             // Arrange
@@ -810,9 +810,9 @@ namespace HaddySimHub.Tests
             var truckData = update.Data as TruckData;
 
             // Assert
-            Assert.NotNull(truckData);
-            Assert.Equal(2500, truckData.Rpm);
-            Assert.Equal(2800, truckData.RpmMax);
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(2500, truckData.Rpm);
+            Assert.AreEqual(2800, truckData.RpmMax);
         }
 
         #endregion
@@ -870,7 +870,7 @@ namespace HaddySimHub.Tests
                 .WithNavigation(navDistance, navTime, speedLimit)
                 .WithJob(sourceCity, sourceCompany, destCity, destCompany, jobIncome, cargoMass, cargoDamage)
                 .WithTruckConstants(forwardGearCount: forwardGearCount, engineRpmMax: rpmMax, retarderStepCount: retarderStepCount)
-                .WithDashboard(speedKph: speed, cruiseControl: cruiseControl, cruiseSpeedKph: cruiseControlSpeed, fuelAvg: fuelAverageConsumption, fuelAmount: fuelAmount, fuelRange: fuelDistance, oilPressure: oilPressure, oilTemp: oilTemp, waterTemp: waterTemp, batteryVoltage: batteryVoltage, rpm: rpm)
+                .WithDashboard(speed: speed, cruiseControl: cruiseControl, cruiseSpeed: cruiseControlSpeed, fuelAvg: fuelAverageConsumption, fuelAmount: fuelAmount, fuelRange: fuelDistance, oilPressure: oilPressure, oilTemp: oilTemp, waterTemp: waterTemp, batteryVoltage: batteryVoltage, rpm: rpm)
                 .WithWarnings(fuelWarning, adBlueWarning, oilPressureWarning, waterTempWarning, batteryVoltageWarning)
                 .WithLights(parkingLights, lowBeam, highBeam, hazardLights, blinkerLeft, blinkerRight)
                 .WithMotor(selectedGear, parkingBrake, retarderLevel)
@@ -885,9 +885,9 @@ namespace HaddySimHub.Tests
 
     public class MockSCSTelemetryFactory : ISCSTelemetryFactory
     {
-        public SCSTelemetry Create()
+        public SCSSdkTelemetry Create()
         {
-            return new SCSTelemetry();
+            return new SCSSdkTelemetry();
         }
     }
 }

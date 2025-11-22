@@ -36,7 +36,7 @@ public sealed class Display : DisplayBase<SCSTelemetry>
 
     public override bool IsActive => ProcessHelper.IsProcessRunning("eurotrucks2");
 
-    protected override DisplayUpdate ConvertToDisplayUpdate(SCSTelemetry data)
+    internal override DisplayUpdate ConvertToDisplayUpdate(SCSTelemetry data)
     {
         float fuelAverageConsumption = (float)Math.Round(data.TruckValues.CurrentValues.DashboardValues.FuelValue.AverageConsumption * 100, 1);
         if (fuelAverageConsumption > 0)
@@ -93,20 +93,20 @@ public sealed class Display : DisplayBase<SCSTelemetry>
             DamageTruckTransmission = (int)Math.Round(data.TruckValues.CurrentValues.DamageValues.Transmission * 100),
             DamageTruckEngine = (int)Math.Round(data.TruckValues.CurrentValues.DamageValues.Engine * 100),
             DamageTruckChassis = (int)Math.Round(data.TruckValues.CurrentValues.DamageValues.Chassis * 100),
-            DamageTrailerChassis = (int)Math.Round(data.TrailerValues.Average(t => t.DamageValues.Chassis) * 100),
-            DamageTrailerCargo = (int)Math.Round(data.TrailerValues.Average(t => t.DamageValues.Cargo) * 100),
-            DamageTrailerWheels = (int)Math.Round(data.TrailerValues.Average(t => t.DamageValues.Wheels) * 100),
-            DamageTrailerBody = (int)Math.Round(data.TrailerValues.Average(t => t.DamageValues.Body) * 100),
+            DamageTrailerChassis = data.TrailerValues.Length > 0 ? (int)Math.Round(data.TrailerValues.Average(t => t.DamageValues.Chassis) * 100) : 0,
+            DamageTrailerCargo = data.TrailerValues.Length > 0 ? (int)Math.Round(data.TrailerValues.Average(t => t.DamageValues.Cargo) * 100) : 0,
+            DamageTrailerWheels = data.TrailerValues.Length > 0 ? (int)Math.Round(data.TrailerValues.Average(t => t.DamageValues.Wheels) * 100) : 0,
+            DamageTrailerBody = data.TrailerValues.Length > 0 ? (int)Math.Round(data.TrailerValues.Average(t => t.DamageValues.Body) * 100) : 0,
             NumberOfTrailersAttached = data.TrailerValues.Length,
 
             // Dashboard
             Gear = gear,
             Rpm = (int)data.TruckValues.CurrentValues.DashboardValues.RPM,
             RpmMax = (int)data.TruckValues.ConstantsValues.MotorValues.EngineRpmMax,
-            Speed = (short)Math.Max(data.TruckValues.CurrentValues.DashboardValues.Speed.Kph, 0),
-            SpeedLimit = (short)Math.Max(data.NavigationValues.SpeedLimit.Kph, 0),
+            Speed = (short)Math.Round(Math.Max(data.TruckValues.CurrentValues.DashboardValues.Speed.Kph, 0)),
+            SpeedLimit = (short)Math.Round(Math.Max(data.NavigationValues.SpeedLimit.Kph, 0)),
             CruiseControlOn = data.TruckValues.CurrentValues.DashboardValues.CruiseControl,
-            CruiseControlSpeed = (short)data.TruckValues.CurrentValues.DashboardValues.CruiseControlSpeed.Kph,
+            CruiseControlSpeed = (short)Math.Round(data.TruckValues.CurrentValues.DashboardValues.CruiseControlSpeed.Kph),
             ParkingLightsOn = data.TruckValues.CurrentValues.LightsValues.Parking,
             LowBeamOn = data.TruckValues.CurrentValues.LightsValues.BeamLow,
             HighBeamOn = data.TruckValues.CurrentValues.LightsValues.BeamHigh,

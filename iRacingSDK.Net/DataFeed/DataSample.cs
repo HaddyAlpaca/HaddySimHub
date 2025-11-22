@@ -1,7 +1,16 @@
 namespace iRacingSDK;
 
+public interface IDataSample
+{
+    bool IsConnected { get; set; }
+    SessionData SessionData { get; set; }
+    Telemetry Telemetry { get; set; }
+    DataSample LastSample { get; set; }
+}
+
+
 [Serializable]
-public class DataSample
+public class DataSample : IDataSample
 {
     private Telemetry telemetry;
     private SessionData sessionData;

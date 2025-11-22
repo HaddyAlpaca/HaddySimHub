@@ -1,10 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
-using HaddySimHub;
 using HaddySimHub.Displays;
-using Xunit;
 
 namespace HaddySimHub.Tests
 {
+    [TestClass]
     public class DependencyInjectionTests
     {
         private IServiceCollection CreateServices()
@@ -27,175 +26,176 @@ namespace HaddySimHub.Tests
             return services;
         }
 
-        [Fact]
+        [TestMethod]
         public void ServiceProvider_CanResolveUdpClientFactory()
         {
             var provider = CreateServices().BuildServiceProvider();
             var factory = provider.GetRequiredService<IUdpClientFactory>();
-            Assert.NotNull(factory);
-            Assert.IsType<UdpClientFactory>(factory);
+            Assert.IsNotNull(factory);
+            Assert.IsInstanceOfType(factory, typeof(UdpClientFactory));
         }
 
-        [Fact]
+        [TestMethod]
         public void ServiceProvider_CanResolveSCSTelemetryFactory()
         {
             var provider = CreateServices().BuildServiceProvider();
             var factory = provider.GetRequiredService<ISCSTelemetryFactory>();
-            Assert.NotNull(factory);
-            Assert.IsType<SCSSdkTelemetryFactory>(factory);
+            Assert.IsNotNull(factory);
+            Assert.IsInstanceOfType(factory, typeof(SCSSdkTelemetryFactory));
         }
 
-        [Fact]
+        [TestMethod]
         public void ServiceProvider_CanResolveDisplayFactory()
         {
             var provider = CreateServices().BuildServiceProvider();
             var factory = provider.GetRequiredService<IDisplayFactory>();
-            Assert.NotNull(factory);
-            Assert.IsType<DisplayFactory>(factory);
+            Assert.IsNotNull(factory);
+            Assert.IsInstanceOfType(factory, typeof(DisplayFactory));
         }
 
-        [Fact]
+        [TestMethod]
         public void ServiceProvider_CanResolveDirt2Display()
         {
             var provider = CreateServices().BuildServiceProvider();
             var display = provider.GetRequiredService<Displays.Dirt2.Display>();
-            Assert.NotNull(display);
-            Assert.IsType<Displays.Dirt2.Display>(display);
+            Assert.IsNotNull(display);
+            Assert.IsInstanceOfType(display, typeof(Displays.Dirt2.Display));
         }
 
-        [Fact]
+        [TestMethod]
         public void ServiceProvider_CanResolveIracingDisplay()
         {
             var provider = CreateServices().BuildServiceProvider();
             var display = provider.GetRequiredService<Displays.IRacing.Display>();
-            Assert.NotNull(display);
-            Assert.IsType<Displays.IRacing.Display>(display);
+            Assert.IsNotNull(display);
+            Assert.IsInstanceOfType(display, typeof(Displays.IRacing.Display));
         }
 
-        [Fact]
+        [TestMethod]
         public void ServiceProvider_CanResolveETSDisplay()
         {
             var provider = CreateServices().BuildServiceProvider();
             var display = provider.GetRequiredService<Displays.ETS.Display>();
-            Assert.NotNull(display);
-            Assert.IsType<Displays.ETS.Display>(display);
+            Assert.IsNotNull(display);
+            Assert.IsInstanceOfType(display, typeof(Displays.ETS.Display));
         }
 
-        [Fact]
+        [TestMethod]
         public void ServiceProvider_CanResolveDisplaysRunner()
         {
             var provider = CreateServices().BuildServiceProvider();
             var runner = provider.GetRequiredService<DisplaysRunner>();
-            Assert.NotNull(runner);
-            Assert.IsType<DisplaysRunner>(runner);
+            Assert.IsNotNull(runner);
+            Assert.IsInstanceOfType(runner, typeof(DisplaysRunner));
         }
 
-        [Fact]
+        [TestMethod]
         public void ServiceProvider_CanResolveAllIDisplayInstances()
         {
             var provider = CreateServices().BuildServiceProvider();
             var displays = provider.GetRequiredService<IEnumerable<IDisplay>>();
-            Assert.NotEmpty(displays);
-            Assert.Equal(6, displays.Count());
+            Assert.AreNotEqual(0, displays.Count());
+            Assert.AreEqual(6, displays.Count());
         }
 
-        [Fact]
+        [TestMethod]
         public void DisplayFactory_CanCreateDirt2Display()
         {
             var provider = CreateServices().BuildServiceProvider();
             var factory = provider.GetRequiredService<IDisplayFactory>();
             var display = factory.Create("Dirt2.Display");
-            Assert.NotNull(display);
-            Assert.IsType<Displays.Dirt2.Display>(display);
+            Assert.IsNotNull(display);
+            Assert.IsInstanceOfType(display, typeof(Displays.Dirt2.Display));
         }
 
-        [Fact]
+        [TestMethod]
         public void DisplayFactory_CanCreateIracingDisplay()
         {
             var provider = CreateServices().BuildServiceProvider();
             var factory = provider.GetRequiredService<IDisplayFactory>();
             var display = factory.Create("IRacing.Display");
-            Assert.NotNull(display);
-            Assert.IsType<Displays.IRacing.Display>(display);
+            Assert.IsNotNull(display);
+            Assert.IsInstanceOfType(display, typeof(Displays.IRacing.Display));
         }
 
-        [Fact]
+        [TestMethod]
         public void DisplayFactory_CanCreateETSDisplay()
         {
             var provider = CreateServices().BuildServiceProvider();
             var factory = provider.GetRequiredService<IDisplayFactory>();
             var display = factory.Create("ETS.Display");
-            Assert.NotNull(display);
-            Assert.IsType<Displays.ETS.Display>(display);
+            Assert.IsNotNull(display);
+            Assert.IsInstanceOfType(display, typeof(Displays.ETS.Display));
         }
 
-        [Fact]
+        [TestMethod]
         public void DisplayFactory_CanCreateDirt2TestDisplay()
         {
             var provider = CreateServices().BuildServiceProvider();
             var factory = provider.GetRequiredService<IDisplayFactory>();
             var display = factory.Create("Dirt2.TestDisplay");
-            Assert.NotNull(display);
-            Assert.IsType<Displays.Dirt2.TestDisplay>(display);
+            Assert.IsNotNull(display);
+            Assert.IsInstanceOfType(display, typeof(Displays.Dirt2.TestDisplay));
         }
 
-        [Fact]
+        [TestMethod]
         public void DisplayFactory_CanCreateIracingTestDisplay()
         {
             var provider = CreateServices().BuildServiceProvider();
             var factory = provider.GetRequiredService<IDisplayFactory>();
             var display = factory.Create("IRacing.TestDisplay");
-            Assert.NotNull(display);
-            Assert.IsType<Displays.IRacing.TestDisplay>(display);
+            Assert.IsNotNull(display);
+            Assert.IsInstanceOfType(display, typeof(Displays.IRacing.TestDisplay));
         }
 
-        [Fact]
+        [TestMethod]
         public void DisplayFactory_CanCreateETSTestDisplay()
         {
             var provider = CreateServices().BuildServiceProvider();
             var factory = provider.GetRequiredService<IDisplayFactory>();
             var display = factory.Create("ETS.TestDisplay");
-            Assert.NotNull(display);
-            Assert.IsType<Displays.ETS.TestDisplay>(display);
+            Assert.IsNotNull(display);
+            Assert.IsInstanceOfType(display, typeof(Displays.ETS.TestDisplay));
         }
 
-        [Fact]
+        [TestMethod]
         public void DisplayFactory_ThrowsOnUnknownDisplayType()
         {
             var provider = CreateServices().BuildServiceProvider();
             var factory = provider.GetRequiredService<IDisplayFactory>();
+            
             var ex = Assert.Throws<InvalidOperationException>(() => factory.Create("Unknown.Display"));
-            Assert.Contains("Unknown display type", ex.Message);
+            StringAssert.Contains(ex.Message, "Unknown display type");
         }
 
-        [Fact]
+        [TestMethod]
         public void DisplaysRunner_Singleton_ReturnsSameInstance()
         {
             var provider = CreateServices().BuildServiceProvider();
             var runner1 = provider.GetRequiredService<DisplaysRunner>();
             var runner2 = provider.GetRequiredService<DisplaysRunner>();
-            Assert.Same(runner1, runner2);
+            Assert.AreSame(runner1, runner2);
         }
 
-        [Fact]
+        [TestMethod]
         public void Displays_Singleton_ReturnsSameInstance()
         {
             var provider = CreateServices().BuildServiceProvider();
             var display1 = provider.GetRequiredService<Displays.Dirt2.Display>();
             var display2 = provider.GetRequiredService<Displays.Dirt2.Display>();
-            Assert.Same(display1, display2);
+            Assert.AreSame(display1, display2);
         }
 
-        [Fact]
+        [TestMethod]
         public void DisplayFactory_Singleton_ReturnsSameInstance()
         {
             var provider = CreateServices().BuildServiceProvider();
             var factory1 = provider.GetRequiredService<IDisplayFactory>();
             var factory2 = provider.GetRequiredService<IDisplayFactory>();
-            Assert.Same(factory1, factory2);
+            Assert.AreSame(factory1, factory2);
         }
 
-        [Fact]
+        [TestMethod]
         public void Factories_Singleton_ReturnsSameInstance()
         {
             var provider = CreateServices().BuildServiceProvider();
@@ -203,8 +203,8 @@ namespace HaddySimHub.Tests
             var udpFactory2 = provider.GetRequiredService<IUdpClientFactory>();
             var scsFactory1 = provider.GetRequiredService<ISCSTelemetryFactory>();
             var scsFactory2 = provider.GetRequiredService<ISCSTelemetryFactory>();
-            Assert.Same(udpFactory1, udpFactory2);
-            Assert.Same(scsFactory1, scsFactory2);
+            Assert.AreSame(udpFactory1, udpFactory2);
+            Assert.AreSame(scsFactory1, scsFactory2);
         }
     }
 }

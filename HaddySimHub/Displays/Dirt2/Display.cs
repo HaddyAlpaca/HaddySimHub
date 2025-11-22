@@ -66,7 +66,7 @@ public sealed class Display : DisplayBase<Packet>
         }
     }
 
-    protected override DisplayUpdate ConvertToDisplayUpdate(Packet data)
+    internal override DisplayUpdate ConvertToDisplayUpdate(Packet data)
     {
         var rpmMax = Convert.ToInt32(data.max_rpm * 10);
 
