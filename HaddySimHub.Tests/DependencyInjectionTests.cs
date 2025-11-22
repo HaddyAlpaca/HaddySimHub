@@ -1,5 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using HaddySimHub.Displays;
+using HaddySimHub.Interfaces;
+using HaddySimHub.Models;
 
 namespace HaddySimHub.Tests
 {
@@ -13,6 +15,20 @@ namespace HaddySimHub.Tests
             services.AddSingleton<IUdpClientFactory, UdpClientFactory>();
             services.AddSingleton<ISCSTelemetryFactory, SCSSdkTelemetryFactory>();
             services.AddSingleton<IDisplayFactory, DisplayFactory>();
+            
+            // Register IDisplayUpdateSender
+            services.AddSingleton<IDisplayUpdateSender, HaddySimHub.Services.DisplayUpdateSender>();
+
+            // Register IGameDataProvider implementations
+            services.AddSingleton<IGameDataProvider<Displays.Dirt2.Packet>, Displays.Dirt2.Dirt2GameDataProvider>();
+            services.AddSingleton<IGameDataProvider<iRacingSDK.IDataSample>, Displays.IRacing.IRacingGameDataProvider>();
+            services.AddSingleton<IGameDataProvider<SCSSdkClient.Object.SCSTelemetry>, Displays.ETS.EtsGameDataProvider>();
+
+            // Register IDataConverter implementations
+            services.AddSingleton<IDataConverter<Displays.Dirt2.Packet, DisplayUpdate>, Displays.Dirt2.Dirt2DataConverter>();
+            services.AddSingleton<IDataConverter<iRacingSDK.IDataSample, DisplayUpdate>, Displays.IRacing.IRacingDataConverter>();
+            services.AddSingleton<IDataConverter<SCSSdkClient.Object.SCSTelemetry, DisplayUpdate>, Displays.ETS.EtsDataConverter>();
+            services.AddSingleton<IDataConverter<DisplayUpdate, DisplayUpdate>, Services.IdentityDataConverter<DisplayUpdate>>(); // Added for TestDisplays
             services.AddSingleton<DisplaysRunner>();
             services.AddSingleton<Displays.Dirt2.Display>();
             services.AddSingleton<IDisplay>(sp => sp.GetRequiredService<Displays.Dirt2.Display>());

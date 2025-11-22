@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\HaddySimHub\HaddySimHub.csproj" />
     <ProjectReference Include="..\HaddySimHub.Shared\HaddySimHub.Shared.csproj" />
+    <ProjectReference Include="..\SCSSdkClient\SCSSdkClient.csproj" />
   </ItemGroup>
 
   <ItemGroup>

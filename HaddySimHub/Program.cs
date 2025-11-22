@@ -102,10 +102,23 @@ public class Program
             options.Ids = new List<string> { "race", "rally", "truck" };
         });
 
-        // Register factories used by displays
         builder.Services.AddSingleton<HaddySimHub.Displays.IUdpClientFactory, HaddySimHub.Displays.UdpClientFactory>();
         builder.Services.AddSingleton<HaddySimHub.Displays.ISCSTelemetryFactory, HaddySimHub.Displays.SCSSdkTelemetryFactory>();
         builder.Services.AddSingleton<HaddySimHub.Displays.IDisplayFactory, HaddySimHub.Displays.DisplayFactory>();
+
+        // Register new services for refactored architecture
+        builder.Services.AddSingleton<HaddySimHub.Interfaces.IDisplayUpdateSender, HaddySimHub.Services.DisplayUpdateSender>();
+
+        // Register GameDataProviders
+        builder.Services.AddSingleton<HaddySimHub.Interfaces.IGameDataProvider<HaddySimHub.Displays.Dirt2.Packet>, HaddySimHub.Displays.Dirt2.Dirt2GameDataProvider>();
+        builder.Services.AddSingleton<HaddySimHub.Interfaces.IGameDataProvider<SCSSdkClient.Object.SCSTelemetry>, HaddySimHub.Displays.ETS.EtsGameDataProvider>();
+        builder.Services.AddSingleton<HaddySimHub.Interfaces.IGameDataProvider<iRacingSDK.IDataSample>, HaddySimHub.Displays.IRacing.IRacingGameDataProvider>();
+
+        // Register DataConverters
+        builder.Services.AddSingleton<HaddySimHub.Interfaces.IDataConverter<HaddySimHub.Displays.Dirt2.Packet, HaddySimHub.Models.DisplayUpdate>, HaddySimHub.Displays.Dirt2.Dirt2DataConverter>();
+        builder.Services.AddSingleton<HaddySimHub.Interfaces.IDataConverter<SCSSdkClient.Object.SCSTelemetry, HaddySimHub.Models.DisplayUpdate>, HaddySimHub.Displays.ETS.EtsDataConverter>();
+        builder.Services.AddSingleton<HaddySimHub.Interfaces.IDataConverter<iRacingSDK.IDataSample, HaddySimHub.Models.DisplayUpdate>, HaddySimHub.Displays.IRacing.IRacingDataConverter>();
+        builder.Services.AddSingleton<HaddySimHub.Interfaces.IDataConverter<HaddySimHub.Models.DisplayUpdate, HaddySimHub.Models.DisplayUpdate>, HaddySimHub.Services.IdentityDataConverter<HaddySimHub.Models.DisplayUpdate>>();
 
         // Register displays and runner for DI
         builder.Services.AddSingleton<DisplaysRunner>();
