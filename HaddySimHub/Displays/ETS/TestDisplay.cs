@@ -1,10 +1,20 @@
 ﻿using HaddySimHub.Models;
+using HaddySimHub.Interfaces;
+using HaddySimHub.Services;
 
 namespace HaddySimHub.Displays.ETS
 {
-    public class TestDisplay(string name) : TestDisplayBase(name)
+    public class TestDisplay : TestDisplayBase
     {
         private bool _parkingBrakeOn = false;
+
+        public TestDisplay(
+            string id,
+            IDataConverter<DisplayUpdate, DisplayUpdate> identityDataConverter,
+            IDisplayUpdateSender displayUpdateSender)
+            : base(id, identityDataConverter, displayUpdateSender)
+        {
+        }
 
         protected override DisplayUpdate GenerateDisplayUpdate()
         {

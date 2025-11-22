@@ -1,113 +1,19 @@
-﻿using System.Net.Sockets;
-using System.Net;
-using System.Runtime.InteropServices;
-using HaddySimHub.Models;
+﻿using HaddySimHub.Models;
 using HaddySimHub.Shared;
+using HaddySimHub.Interfaces;
 
 namespace HaddySimHub.Displays.Dirt2;
 
 public sealed class Display : DisplayBase<Packet>
 {
-    private const int PORT = 20777;
-    private IPEndPoint _endPoint = new(IPAddress.Any, PORT);
-    private UdpClient? _client;
-    private readonly IUdpClientFactory _udpClientFactory;
-
-    public Display(IUdpClientFactory udpClientFactory)
-    {
-        _udpClientFactory = udpClientFactory ?? throw new ArgumentNullException(nameof(udpClientFactory));
-    }
-
     public override string Description => "Dirt Rally 2";
     public override bool IsActive => ProcessHelper.IsProcessRunning("dirtrally2");
-    public override void Start()
+
+    public Display(
+        IGameDataProvider<Packet> gameDataProvider,
+        IDataConverter<Packet, DisplayUpdate> dataConverter,
+        IDisplayUpdateSender displayUpdateSender)
+        : base(gameDataProvider, dataConverter, displayUpdateSender)
     {
-        _client ??= _udpClientFactory.Create(PORT);
-        _client.BeginReceive(new AsyncCallback(ReceiveCallback), null);
-    }
-
-    public override void Stop()
-    {
-        if (_client is null)
-        {
-            return;
-        }
-
-        _client.Close();
-        _client = null;
-    }
-
-    private async void ReceiveCallback(IAsyncResult result)
-    {
-        if (_client is null || _endPoint is null)
-        {
-            return;
-        }
-
-        // Get data we received.
-#pragma warning disable CS8601 // Possible null reference assignment.
-        byte[] data = _client.EndReceive(result, ref _endPoint);
-#pragma warning restore CS8601 // Possible null reference assignment.
-
-        // Start receiving again.
-        _client.BeginReceive(new AsyncCallback(ReceiveCallback), null);
-
-        GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
-
-        try
-        {
-            // Get the header to retrieve the packet ID.
-            var packet = Marshal.PtrToStructure<Packet>(handle.AddrOfPinnedObject());
-            await this.SendUpdate(packet);
-        }
-        finally
-        {
-            handle.Free();
-        }
-    }
-
-    internal override DisplayUpdate ConvertToDisplayUpdate(Packet data)
-    {
-        var rpmMax = Convert.ToInt32(data.max_rpm * 10);
-
-        var displayData = new RallyData
-        {
-            Speed = Convert.ToInt32(data.speed_ms * 3.6),
-            Rpm = Convert.ToInt32(data.rpm * 10),
-            RpmLights = GenerateRpmLights(rpmMax),
-            RpmMax = rpmMax,
-            Gear = data.gear == 0 ? "N" : data.gear < 0 ? "R" : data.gear.ToString(),
-            Clutch = Convert.ToInt32(data.clutch * 100),
-            Brake = Convert.ToInt32(data.brakes * 100),
-            Throttle = Convert.ToInt32(data.throttle * 100),
-            CompletedPct = Math.Min(Convert.ToInt32(data.progress * 100), 100),
-            DistanceTravelled = Math.Max(Convert.ToInt32(data.distance), 0),
-            Position = Convert.ToInt32(data.car_pos),
-            Sector1Time = data.sector_1_time,
-            Sector2Time = data.sector_2_time,
-            LapTime = data.lap_time,
-        };
-
-        return new DisplayUpdate { Type = DisplayType.RallyDashboard, Data = displayData };
-    }
-
-    public static RpmLight[] GenerateRpmLights(int rpmMax)
-    {
-        int lightsCount = 6;
-        int lightsStep = 200;
-        var rpmLights = new List<RpmLight>();
-        for (int i = 0; i < lightsCount; i++)
-        {
-            int rpm = rpmMax - ((lightsCount - i) * lightsStep);
-            string color = i switch
-            {
-                0 or 1 => "Green",
-                2 or 3 => "Yellow",
-                _ => "Red"
-            };
-            rpmLights.Add(new RpmLight { Rpm = rpm, Color = color });
-        }
-        return [.. rpmLights];
     }
 }
-#pragma warning restore CS0649

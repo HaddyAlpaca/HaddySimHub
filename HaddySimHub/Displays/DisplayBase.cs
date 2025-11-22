@@ -1,19 +1,44 @@
 using HaddySimHub.Models;
+using HaddySimHub.Interfaces;
+using System;
+using System.Threading.Tasks;
 
 namespace HaddySimHub.Displays;
 
 public abstract class DisplayBase<T> : IDisplay
 {
+    protected readonly IGameDataProvider<T> _gameDataProvider;
+    protected readonly IDataConverter<T, DisplayUpdate> _dataConverter;
+    protected readonly IDisplayUpdateSender _displayUpdateSender;
+
     public abstract string Description { get; }
     public abstract bool IsActive { get; }
-    public abstract void Start();
-    public abstract void Stop();
 
-    protected async Task SendUpdate(T data)
+    public DisplayBase(
+        IGameDataProvider<T> gameDataProvider,
+        IDataConverter<T, DisplayUpdate> dataConverter,
+        IDisplayUpdateSender displayUpdateSender)
     {
-        var update = this.ConvertToDisplayUpdate(data);
-        await GameDataHub.SendDisplayUpdate(update);
+        _gameDataProvider = gameDataProvider ?? throw new ArgumentNullException(nameof(gameDataProvider));
+        _dataConverter = dataConverter ?? throw new ArgumentNullException(nameof(dataConverter));
+        _displayUpdateSender = displayUpdateSender ?? throw new ArgumentNullException(nameof(displayUpdateSender));
     }
 
-    internal abstract DisplayUpdate ConvertToDisplayUpdate(T data);
+    public virtual void Start()
+    {
+        _gameDataProvider.DataReceived += HandleDataReceived;
+        _gameDataProvider.Start();
+    }
+
+    public virtual void Stop()
+    {
+        _gameDataProvider.Stop();
+        _gameDataProvider.DataReceived -= HandleDataReceived;
+    }
+
+    protected virtual async void HandleDataReceived(object? sender, T data)
+    {
+        var update = _dataConverter.Convert(data);
+        await _displayUpdateSender.SendDisplayUpdate(update);
+    }
 }

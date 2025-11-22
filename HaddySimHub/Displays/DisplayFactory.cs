@@ -1,5 +1,10 @@
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
+using HaddySimHub.Interfaces;
+using HaddySimHub.Displays.Dirt2;
+using HaddySimHub.Displays.IRacing;
+using HaddySimHub.Displays.ETS;
+using HaddySimHub.Models;
 
 namespace HaddySimHub.Displays
 {
@@ -22,12 +27,30 @@ namespace HaddySimHub.Displays
         {
             return displayTypeName switch
             {
-                "Dirt2.Display" => new Displays.Dirt2.Display(_serviceProvider.GetRequiredService<IUdpClientFactory>()),
-                "Dirt2.TestDisplay" => new Displays.Dirt2.TestDisplay("rally"),
-                "IRacing.Display" => new Displays.IRacing.Display(),
-                "IRacing.TestDisplay" => new Displays.IRacing.TestDisplay("race"),
-                "ETS.Display" => new Displays.ETS.Display(_serviceProvider.GetRequiredService<ISCSTelemetryFactory>()),
-                "ETS.TestDisplay" => new Displays.ETS.TestDisplay("truck"),
+                "Dirt2.Display" => new Displays.Dirt2.Display(
+                    _serviceProvider.GetRequiredService<IGameDataProvider<Packet>>(),
+                    _serviceProvider.GetRequiredService<IDataConverter<Packet, DisplayUpdate>>(),
+                    _serviceProvider.GetRequiredService<IDisplayUpdateSender>()),
+                "Dirt2.TestDisplay" => new Displays.Dirt2.TestDisplay(
+                    "rally", 
+                    _serviceProvider.GetRequiredService<IDataConverter<DisplayUpdate, DisplayUpdate>>(),
+                    _serviceProvider.GetRequiredService<IDisplayUpdateSender>()),
+                "IRacing.Display" => new Displays.IRacing.Display(
+                    _serviceProvider.GetRequiredService<IGameDataProvider<iRacingSDK.IDataSample>>(),
+                    _serviceProvider.GetRequiredService<IDataConverter<iRacingSDK.IDataSample, DisplayUpdate>>(),
+                    _serviceProvider.GetRequiredService<IDisplayUpdateSender>()),
+                "IRacing.TestDisplay" => new Displays.IRacing.TestDisplay(
+                    "race",
+                    _serviceProvider.GetRequiredService<IDataConverter<DisplayUpdate, DisplayUpdate>>(),
+                    _serviceProvider.GetRequiredService<IDisplayUpdateSender>()),
+                "ETS.Display" => new Displays.ETS.Display(
+                    _serviceProvider.GetRequiredService<IGameDataProvider<SCSSdkClient.Object.SCSTelemetry>>(),
+                    _serviceProvider.GetRequiredService<IDataConverter<SCSSdkClient.Object.SCSTelemetry, DisplayUpdate>>(),
+                    _serviceProvider.GetRequiredService<IDisplayUpdateSender>()),
+                "ETS.TestDisplay" => new Displays.ETS.TestDisplay(
+                    "truck",
+                    _serviceProvider.GetRequiredService<IDataConverter<DisplayUpdate, DisplayUpdate>>(),
+                    _serviceProvider.GetRequiredService<IDisplayUpdateSender>()),
                 _ => throw new InvalidOperationException($"Unknown display type: {displayTypeName}")
             };
         }

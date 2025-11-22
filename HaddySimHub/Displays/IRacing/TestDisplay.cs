@@ -1,9 +1,19 @@
 ﻿using HaddySimHub.Models;
+using HaddySimHub.Interfaces;
+using HaddySimHub.Services;
 
 namespace HaddySimHub.Displays.IRacing
 {
-    public class TestDisplay(string name) : TestDisplayBase(name)
+    public class TestDisplay : TestDisplayBase
     {
+        public TestDisplay(
+            string id,
+            IDataConverter<DisplayUpdate, DisplayUpdate> identityDataConverter,
+            IDisplayUpdateSender displayUpdateSender)
+            : base(id, identityDataConverter, displayUpdateSender)
+        {
+        }
+
         protected override DisplayUpdate GenerateDisplayUpdate()
         {
             return new DisplayUpdate
@@ -14,7 +24,7 @@ namespace HaddySimHub.Displays.IRacing
                     Speed = (short)DateTime.Now.Second,
                     Gear = _random.Next(1, 6).ToString(),
                     Rpm = (short)_random.Next(0, 10000),
-                    RpmLights = [.. Display.GenerateRpmLights("FIA F4")],
+                    RpmLights = [.. IRacingDataConverter.GenerateRpmLights("FIA F4")], // Use the static method from IRacingDataConverter
                     RpmMax = 7000,
                     TrackTemp = _random.Next(10, 50),
                     AirTemp = _random.Next(10, 50),

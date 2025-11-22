@@ -1,26 +1,23 @@
-using System.Reflection;
-using HaddySimHub.Displays;
 using HaddySimHub.Displays.ETS;
 using HaddySimHub.Models;
-using SCSSdkClient;
 using SCSSdkClient.Object;
 
 namespace HaddySimHub.Tests
 {
     [TestClass]
-    public class ETS2DisplayTests
+    public class EtsDataConverterTests
     {
         #region Gear Tests
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_GearNeutral()
+        public void Convert_GearNeutral()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(selectedGear: 0, forwardGearCount: 12);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -29,14 +26,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_GearReverse()
+        public void Convert_GearReverse()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(selectedGear: -1, forwardGearCount: 12);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -45,14 +42,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_GearMultipleReverse()
+        public void Convert_GearMultipleReverse()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(selectedGear: -2, forwardGearCount: 12);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -61,14 +58,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_GearForwardNonEuro()
+        public void Convert_GearForwardNonEuro()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(selectedGear: 5, forwardGearCount: 8);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -77,14 +74,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_GearEuro14Gears_C1()
+        public void Convert_GearEuro14Gears_C1()
         {
             // Arrange - In Euro trucks with 14 gears, gear 1 is displayed as "C1"
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(selectedGear: 1, forwardGearCount: 14);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -93,14 +90,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_GearEuro14Gears_Offset()
+        public void Convert_GearEuro14Gears_Offset()
         {
             // Arrange - Gear 3 becomes "1" in the display (3-2=1)
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(selectedGear: 3, forwardGearCount: 14);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -109,14 +106,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_GearEuro14Gears_High()
+        public void Convert_GearEuro14Gears_High()
         {
             // Arrange - Gear 14 becomes "12" in the display (14-2=12)
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(selectedGear: 14, forwardGearCount: 14);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -129,14 +126,14 @@ namespace HaddySimHub.Tests
         #region Speed Tests
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_SpeedPositive()
+        public void Convert_SpeedPositive()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(speed: 85.0 / 3.6);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -145,14 +142,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_SpeedNegativeClamped()
+        public void Convert_SpeedNegativeClamped()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(speed: -10.0);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -161,14 +158,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_SpeedLimit()
+        public void Convert_SpeedLimit()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(speedLimit: 90.0 / 3.6);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -181,14 +178,14 @@ namespace HaddySimHub.Tests
         #region Damage Tests
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_DamageCabin()
+        public void Convert_DamageCabin()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(cabinDamage: 0.25f);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -197,14 +194,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_DamageEngine()
+        public void Convert_DamageEngine()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(engineDamage: 0.75f);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -217,14 +214,14 @@ namespace HaddySimHub.Tests
         #region Fuel Tests
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_FuelAverageConsumption()
+        public void Convert_FuelAverageConsumption()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(fuelAverageConsumption: 0.25f);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -233,14 +230,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_FuelAmount()
+        public void Convert_FuelAmount()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(fuelAmount: 500f);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -249,14 +246,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_FuelDistance()
+        public void Convert_FuelDistance()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(fuelDistance: 1500f);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -271,14 +268,14 @@ namespace HaddySimHub.Tests
         [TestMethod]
         [DataRow(true)]
         [DataRow(false)]
-        public void ConvertToDisplayUpdate_ParkingLights(bool parkingLightsOn)
+        public void Convert_ParkingLights(bool parkingLightsOn)
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(parkingLights: parkingLightsOn);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -289,14 +286,14 @@ namespace HaddySimHub.Tests
         [TestMethod]
         [DataRow(true)]
         [DataRow(false)]
-        public void ConvertToDisplayUpdate_LowBeam(bool lowBeamOn)
+        public void Convert_LowBeam(bool lowBeamOn)
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(lowBeam: lowBeamOn);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -307,14 +304,14 @@ namespace HaddySimHub.Tests
         [TestMethod]
         [DataRow(true)]
         [DataRow(false)]
-        public void ConvertToDisplayUpdate_HighBeam(bool highBeamOn)
+        public void Convert_HighBeam(bool highBeamOn)
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(highBeam: highBeamOn);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -325,14 +322,14 @@ namespace HaddySimHub.Tests
         [TestMethod]
         [DataRow(true)]
         [DataRow(false)]
-        public void ConvertToDisplayUpdate_HazardLights(bool hazardLightsOn)
+        public void Convert_HazardLights(bool hazardLightsOn)
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(hazardLights: hazardLightsOn);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -343,14 +340,14 @@ namespace HaddySimHub.Tests
         [TestMethod]
         [DataRow(true)]
         [DataRow(false)]
-        public void ConvertToDisplayUpdate_BlinkerLeft(bool blinkerLeftOn)
+        public void Convert_BlinkerLeft(bool blinkerLeftOn)
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(blinkerLeft: blinkerLeftOn);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -361,14 +358,14 @@ namespace HaddySimHub.Tests
         [TestMethod]
         [DataRow(true)]
         [DataRow(false)]
-        public void ConvertToDisplayUpdate_BlinkerRight(bool blinkerRightOn)
+        public void Convert_BlinkerRight(bool blinkerRightOn)
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(blinkerRight: blinkerRightOn);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -383,14 +380,14 @@ namespace HaddySimHub.Tests
         [TestMethod]
         [DataRow(true)]
         [DataRow(false)]
-        public void ConvertToDisplayUpdate_ParkingBrake(bool parkingBrakeOn)
+        public void Convert_ParkingBrake(bool parkingBrakeOn)
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(parkingBrake: parkingBrakeOn);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -399,14 +396,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_RetarderLevel()
+        public void Convert_RetarderLevel()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(retarderLevel: 3, retarderStepCount: 5);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -420,14 +417,14 @@ namespace HaddySimHub.Tests
         #region Throttle Tests
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_Throttle75Percent()
+        public void Convert_Throttle75Percent()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(throttle: 0.75);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -436,14 +433,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_ThrottleMinimum()
+        public void Convert_ThrottleMinimum()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(throttle: 0.0);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -452,14 +449,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_ThrottleMaximum()
+        public void Convert_ThrottleMaximum()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(throttle: 1.0);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -472,14 +469,14 @@ namespace HaddySimHub.Tests
         #region Temperature and Pressure Tests
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_OilTemperature()
+        public void Convert_OilTemperature()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(oilTemp: 85.5f);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -488,14 +485,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_WaterTemperature()
+        public void Convert_WaterTemperature()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(waterTemp: 95.0f);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -504,14 +501,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_OilPressure()
+        public void Convert_OilPressure()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(oilPressure: 4.5f);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -520,14 +517,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_BatteryVoltage()
+        public void Convert_BatteryVoltage()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(batteryVoltage: 13.5f);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -542,14 +539,14 @@ namespace HaddySimHub.Tests
         [TestMethod]
         [DataRow(true)]
         [DataRow(false)]
-        public void ConvertToDisplayUpdate_FuelWarning(bool fuelWarningOn)
+        public void Convert_FuelWarning(bool fuelWarningOn)
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(fuelWarning: fuelWarningOn);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -560,14 +557,14 @@ namespace HaddySimHub.Tests
         [TestMethod]
         [DataRow(true)]
         [DataRow(false)]
-        public void ConvertToDisplayUpdate_AdBlueWarning(bool adBlueWarningOn)
+        public void Convert_AdBlueWarning(bool adBlueWarningOn)
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(adBlueWarning: adBlueWarningOn);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -578,14 +575,14 @@ namespace HaddySimHub.Tests
         [TestMethod]
         [DataRow(true)]
         [DataRow(false)]
-        public void ConvertToDisplayUpdate_OilPressureWarning(bool oilPressureWarningOn)
+        public void Convert_OilPressureWarning(bool oilPressureWarningOn)
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(oilPressureWarning: oilPressureWarningOn);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -596,14 +593,14 @@ namespace HaddySimHub.Tests
         [TestMethod]
         [DataRow(true)]
         [DataRow(false)]
-        public void ConvertToDisplayUpdate_WaterTempWarning(bool waterTempWarningOn)
+        public void Convert_WaterTempWarning(bool waterTempWarningOn)
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(waterTempWarning: waterTempWarningOn);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -614,14 +611,14 @@ namespace HaddySimHub.Tests
         [TestMethod]
         [DataRow(true)]
         [DataRow(false)]
-        public void ConvertToDisplayUpdate_BatteryVoltageWarning(bool batteryVoltageWarningOn)
+        public void Convert_BatteryVoltageWarning(bool batteryVoltageWarningOn)
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(batteryVoltageWarning: batteryVoltageWarningOn);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -634,14 +631,14 @@ namespace HaddySimHub.Tests
         #region Job Data Tests
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_JobIncome()
+        public void Convert_JobIncome()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(jobIncome: 50000);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -650,14 +647,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_CargoMass()
+        public void Convert_CargoMass()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(cargoMass: 12500.7);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -666,14 +663,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_CargoDamage()
+        public void Convert_CargoDamage()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(cargoDamage: 0.15f);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -682,10 +679,10 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_JobCityAndCompany()
+        public void Convert_JobCityAndCompany()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(
                 sourceCity: "Berlin",
                 sourceCompany: "Company A",
@@ -693,7 +690,7 @@ namespace HaddySimHub.Tests
                 destCompany: "Company B");
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -709,14 +706,14 @@ namespace HaddySimHub.Tests
         #region Navigation Tests
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_DistanceRemaining()
+        public void Convert_DistanceRemaining()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(navDistance: 50000);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -725,14 +722,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_TimeRemaining()
+        public void Convert_TimeRemaining()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(navTime: 3600);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -741,14 +738,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_RestTimeRemaining()
+        public void Convert_RestTimeRemaining()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(restTimeRemaining: 120);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -763,14 +760,14 @@ namespace HaddySimHub.Tests
         [TestMethod]
         [DataRow(true)]
         [DataRow(false)]
-        public void ConvertToDisplayUpdate_CruiseControl(bool cruiseControlOn)
+        public void Convert_CruiseControl(bool cruiseControlOn)
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(cruiseControl: cruiseControlOn);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -779,14 +776,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_CruiseControlSpeed()
+        public void Convert_CruiseControlSpeed()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(cruiseControlSpeed: 85 / 3.6);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -799,14 +796,14 @@ namespace HaddySimHub.Tests
         #region RPM Tests
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_RPM()
+        public void Convert_RPM()
         {
             // Arrange
-            var display = new Display(new MockSCSTelemetryFactory());
+            var converter = new EtsDataConverter();
             var data = CreateMockTelemetry(rpm: 2500, rpmMax: 2800);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var truckData = update.Data as TruckData;
 
             // Assert
@@ -883,11 +880,5 @@ namespace HaddySimHub.Tests
         #endregion
     }
 
-    public class MockSCSTelemetryFactory : ISCSTelemetryFactory
-    {
-        public SCSSdkTelemetry Create()
-        {
-            return new SCSSdkTelemetry();
-        }
-    }
+
 }

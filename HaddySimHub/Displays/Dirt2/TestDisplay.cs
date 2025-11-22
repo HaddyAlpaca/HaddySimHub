@@ -1,9 +1,19 @@
 ﻿using HaddySimHub.Models;
+using HaddySimHub.Interfaces;
+using HaddySimHub.Services;
 
 namespace HaddySimHub.Displays.Dirt2
 {
-    public class TestDisplay(string name) : TestDisplayBase(name)
+    public class TestDisplay : TestDisplayBase
     {
+        public TestDisplay(
+            string id, 
+            IDataConverter<DisplayUpdate, DisplayUpdate> identityDataConverter, 
+            IDisplayUpdateSender displayUpdateSender) 
+            : base(id, identityDataConverter, displayUpdateSender)
+        {
+        }
+
         protected override DisplayUpdate GenerateDisplayUpdate()
         {
             int rpmMax = 7000;
@@ -16,13 +26,13 @@ namespace HaddySimHub.Displays.Dirt2
                     Speed = (short)DateTime.Now.Second,
                     CompletedPct = (short)DateTime.Now.Second,
                     DistanceTravelled = (short)DateTime.Now.Millisecond,
-                    Gear = new Random().Next(1, 6).ToString(),
-                    Rpm = new Random().Next(0, 10000),
-                    RpmLights = Display.GenerateRpmLights(rpmMax),
+                    Gear = _random.Next(1, 6).ToString(),
+                    Rpm = _random.Next(0, 10000),
+                    RpmLights = Dirt2DataConverter.GenerateRpmLights(rpmMax), // Use the static method from Dirt2DataConverter
                     RpmMax = rpmMax,
-                    LapTime = new Random().Next(0, 100),
-                    Sector1Time = new Random().Next(0, 100),
-                    Sector2Time = new Random().Next(0, 100),
+                    LapTime = _random.Next(0, 100),
+                    Sector1Time = _random.Next(0, 100),
+                    Sector2Time = _random.Next(0, 100),
                 }
             };
         }

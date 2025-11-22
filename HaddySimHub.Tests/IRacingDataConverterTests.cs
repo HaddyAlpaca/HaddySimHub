@@ -9,7 +9,7 @@ using static iRacingSDK.SessionData._WeekendInfo;
 namespace HaddySimHub.Tests
 {
     [TestClass]
-    public class IRacingDisplayTests
+    public class IRacingDataConverterTests
     {
         #region GenerateRpmLights Tests
 
@@ -20,7 +20,7 @@ namespace HaddySimHub.Tests
             var carName = "FIA F4";
 
             // Act
-            var lights = Display.GenerateRpmLights(carName);
+            var lights = IRacingDataConverter.GenerateRpmLights(carName);
 
             // Assert
             Assert.IsNotNull(lights);
@@ -46,7 +46,7 @@ namespace HaddySimHub.Tests
             var carName = "FIA F4";
 
             // Act
-            var lights = Display.GenerateRpmLights(carName);
+            var lights = IRacingDataConverter.GenerateRpmLights(carName);
 
             // Assert
             foreach (var light in lights)
@@ -63,7 +63,7 @@ namespace HaddySimHub.Tests
             var carName = "FIA F4";
 
             // Act
-            var lights = Display.GenerateRpmLights(carName);
+            var lights = IRacingDataConverter.GenerateRpmLights(carName);
 
             // Assert
             Assert.AreEqual("Green", lights[0].Color);
@@ -81,7 +81,7 @@ namespace HaddySimHub.Tests
             var carName = "FIA F4";
 
             // Act
-            var lights = Display.GenerateRpmLights(carName);
+            var lights = IRacingDataConverter.GenerateRpmLights(carName);
 
             // Assert
             for (int i = 1; i < lights.Length; i++)
@@ -97,7 +97,7 @@ namespace HaddySimHub.Tests
             var carName = "UnknownCar";
 
             // Act
-            var lights = Display.GenerateRpmLights(carName);
+            var lights = IRacingDataConverter.GenerateRpmLights(carName);
 
             // Assert
             Assert.IsNotNull(lights);
@@ -111,7 +111,7 @@ namespace HaddySimHub.Tests
             var carName = string.Empty;
 
             // Act
-            var lights = Display.GenerateRpmLights(carName);
+            var lights = IRacingDataConverter.GenerateRpmLights(carName);
 
             // Assert
             Assert.IsNotNull(lights);
@@ -122,7 +122,7 @@ namespace HaddySimHub.Tests
         public void GenerateRpmLights_WithNullCarName_ReturnsEmptyArray()
         {
             // Arrange & Act & Assert
-            var lights = Display.GenerateRpmLights(null!);
+            var lights = IRacingDataConverter.GenerateRpmLights(null!);
             Assert.IsNotNull(lights);
             Assert.IsEmpty(lights);
         }
@@ -138,7 +138,7 @@ namespace HaddySimHub.Tests
             var carName = "FIA F4";
 
             // Act
-            var rpmMax = Display.GetRpmMax(carName);
+            var rpmMax = IRacingDataConverter.GetRpmMax(carName);
 
             // Assert
             Assert.AreEqual(7000, rpmMax);
@@ -151,7 +151,7 @@ namespace HaddySimHub.Tests
             var carName = "UnknownCar";
 
             // Act
-            var rpmMax = Display.GetRpmMax(carName);
+            var rpmMax = IRacingDataConverter.GetRpmMax(carName);
 
             // Assert
             Assert.AreEqual(0, rpmMax);
@@ -164,7 +164,7 @@ namespace HaddySimHub.Tests
             var carName = string.Empty;
 
             // Act
-            var rpmMax = Display.GetRpmMax(carName);
+            var rpmMax = IRacingDataConverter.GetRpmMax(carName);
 
             // Assert
             Assert.AreEqual(0, rpmMax);
@@ -174,7 +174,7 @@ namespace HaddySimHub.Tests
         public void GetRpmMax_WithNullCarName_ReturnsZero()
         {
             // Arrange & Act
-            var rpmMax = Display.GetRpmMax(null!);
+            var rpmMax = IRacingDataConverter.GetRpmMax(null!);
 
             // Assert
             Assert.AreEqual(0, rpmMax);
@@ -185,14 +185,14 @@ namespace HaddySimHub.Tests
         #region Gear Conversion Tests
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_GearReverseConvertsToR()
+        public void Convert_GearReverseConvertsToR()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(gear: -1, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -201,14 +201,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_GearNeutralConvertsToN()
+        public void Convert_GearNeutralConvertsToN()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(gear: 0, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -217,14 +217,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_GearFirstConvertsToOneString()
+        public void Convert_GearFirstConvertsToOneString()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(gear: 1, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -233,14 +233,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_GearHighConvertsToNumericString()
+        public void Convert_GearHighConvertsToNumericString()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(gear: 6, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -253,14 +253,14 @@ namespace HaddySimHub.Tests
         #region Speed Conversion Tests
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_SpeedConversionMultipliesByThree_Six()
+        public void Convert_SpeedConversionMultipliesByThree_Six()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(speed: 10.0f, playerCarIdx: 0, carIdxLap: new int[64]); // 10 m/s = 36 km/h
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -269,14 +269,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_SpeedZeroRemains()
+        public void Convert_SpeedZeroRemains()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(speed: 0.0f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -285,14 +285,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_SpeedRoundsCorrectly()
+        public void Convert_SpeedRoundsCorrectly()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(speed: 27.777f, playerCarIdx: 0, carIdxLap: new int[64]); // 27.777 * 3.6 = 99.9972 -> rounds to 100
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -305,14 +305,14 @@ namespace HaddySimHub.Tests
         #region RPM Tests
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_RpmConvertedToInt()
+        public void Convert_RpmConvertedToInt()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(rpm: 6543.5f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -321,14 +321,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_RpmZeroRemains()
+        public void Convert_RpmZeroRemains()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(rpm: 0.0f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -341,14 +341,14 @@ namespace HaddySimHub.Tests
         #region Throttle and Brake Conversion Tests
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_ThrottleConvertedToPercentage()
+        public void Convert_ThrottleConvertedToPercentage()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(throttle: 0.75f, playerCarIdx: 0, carIdxLap: new int[64]); // 0.75 = 75%
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -357,14 +357,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_BrakeConvertedToPercentage()
+        public void Convert_BrakeConvertedToPercentage()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(brake: 0.50f, playerCarIdx: 0, carIdxLap: new int[64]); // 0.50 = 50%
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -373,14 +373,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_FullThrottle()
+        public void Convert_FullThrottle()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(throttle: 1.0f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -389,14 +389,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_NoThrottle()
+        public void Convert_NoThrottle()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(throttle: 0.0f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -409,14 +409,14 @@ namespace HaddySimHub.Tests
         #region Steering Conversion Tests
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_SteeringCenteredIs50Percent()
+        public void Convert_SteeringCenteredIs50Percent()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(steeringAngle: 0.0f, steeringWheelAngleMax: 12.0f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -425,14 +425,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_SteeringFullLeft()
+        public void Convert_SteeringFullLeft()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(steeringAngle: -6.0f, steeringWheelAngleMax: 12.0f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -441,14 +441,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_SteeringFullRight()
+        public void Convert_SteeringFullRight()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(steeringAngle: 6.0f, steeringWheelAngleMax: 12.0f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -457,14 +457,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_SteeringQuarterLeft()
+        public void Convert_SteeringQuarterLeft()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(steeringAngle: -3.0f, steeringWheelAngleMax: 12.0f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -473,14 +473,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_SteeringZeroAngleMaxDefaultsTo50()
+        public void Convert_SteeringZeroAngleMaxDefaultsTo50()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(steeringAngle: 5.0f, steeringWheelAngleMax: 0.0f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -489,14 +489,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_SteeringClampsToZero()
+        public void Convert_SteeringClampsToZero()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(steeringAngle: -7.0f, steeringWheelAngleMax: 12.0f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -505,14 +505,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_SteeringClampsTo100()
+        public void Convert_SteeringClampsTo100()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(steeringAngle: 7.0f, steeringWheelAngleMax: 12.0f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -524,46 +524,23 @@ namespace HaddySimHub.Tests
 
         #region Display Properties Tests
 
-        [TestMethod]
-        public void Display_Description_ReturnsIRacing()
-        {
-            // Arrange
-            var display = new Display();
 
-            // Act
-            var description = display.Description;
 
-            // Assert
-            Assert.AreEqual("IRacing", description);
-        }
 
-        [TestMethod]
-        public void Display_DisplayType_IsRaceDashboard()
-        {
-            // Arrange
-            var display = new Display();
-            var data = CreateMockDataSample(playerCarIdx: 0, carIdxLap: new int[64]);
-
-            // Act
-            var update = display.ConvertToDisplayUpdate(data);
-
-            // Assert
-            Assert.AreEqual(DisplayType.RaceDashboard, update.Type);
-        }
 
         #endregion
 
         #region Fuel Tests
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_FuelRemaining()
+        public void Convert_FuelRemaining()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(fuelLevel: 45.5f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -572,14 +549,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_FuelEstLapsZeroWhenNoHistory()
+        public void Convert_FuelEstLapsZeroWhenNoHistory()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(fuelLevel: 50.0f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -592,14 +569,14 @@ namespace HaddySimHub.Tests
         #region Brake Bias Tests
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_BrakeBiasPassedThrough()
+        public void Convert_BrakeBiasPassedThrough()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(brakeBias: 52.5f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -612,14 +589,14 @@ namespace HaddySimHub.Tests
         #region Temperature Tests
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_AirTemperaturePassedThrough()
+        public void Convert_AirTemperaturePassedThrough()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(airTemp: 28.5f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -628,14 +605,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_TrackTemperaturePassedThrough()
+        public void Convert_TrackTemperaturePassedThrough()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(trackTemp: 45.2f, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -648,14 +625,14 @@ namespace HaddySimHub.Tests
         #region Pit Limiter Tests
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_PitLimiterDetected()
+        public void Convert_PitLimiterDetected()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(engineWarnings: EngineWarnings.PitSpeedLimiter, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -664,14 +641,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_PitLimiterNotActive()
+        public void Convert_PitLimiterNotActive()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(engineWarnings: EngineWarnings.None, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -684,14 +661,14 @@ namespace HaddySimHub.Tests
         #region Position and Incidents Tests
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_PositionPassedThrough()
+        public void Convert_PositionPassedThrough()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(position: 5, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -700,14 +677,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_IncidentsCountClamped()
+        public void Convert_IncidentsCountClamped()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(incidents: -5, playerCarIdx: 0, carIdxLap: new int[64]); // Negative should be clamped to 0
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
@@ -716,14 +693,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void ConvertToDisplayUpdate_IncidentsCountPositive()
+        public void Convert_IncidentsCountPositive()
         {
             // Arrange
-            var display = new Display();
+            var converter = new IRacingDataConverter();
             var data = CreateMockDataSample(incidents: 3, playerCarIdx: 0, carIdxLap: new int[64]);
 
             // Act
-            var update = display.ConvertToDisplayUpdate(data);
+            var update = converter.Convert(data);
             var raceData = update.Data as RaceData;
 
             // Assert
