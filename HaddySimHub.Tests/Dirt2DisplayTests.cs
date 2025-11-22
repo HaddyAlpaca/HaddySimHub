@@ -2,10 +2,10 @@ using HaddySimHub.Displays;
 using HaddySimHub.Displays.Dirt2;
 using HaddySimHub.Models;
 using System.Net.Sockets;
-using Xunit;
 
 namespace HaddySimHub.Tests
 {
+    [TestClass]
     public class Dirt2DisplayTests
     {
         private static Packet CreatePacket(
@@ -39,7 +39,7 @@ namespace HaddySimHub.Tests
         }
         #region GenerateRpmLights Tests
 
-        [Fact]
+        [TestMethod]
         public void GenerateRpmLights_Creates6Lights()
         {
             // Arrange
@@ -49,11 +49,11 @@ namespace HaddySimHub.Tests
             var lights = Display.GenerateRpmLights(rpmMax);
 
             // Assert
-            Assert.NotNull(lights);
-            Assert.Equal(6, lights.Length);
+            Assert.IsNotNull(lights);
+            Assert.HasCount(6, lights);
         }
 
-        [Fact]
+        [TestMethod]
         public void GenerateRpmLights_FirstTwoLightsAreGreen()
         {
             // Arrange
@@ -63,11 +63,11 @@ namespace HaddySimHub.Tests
             var lights = Display.GenerateRpmLights(rpmMax);
 
             // Assert
-            Assert.Equal("Green", lights[0].Color);
-            Assert.Equal("Green", lights[1].Color);
+            Assert.AreEqual("Green", lights[0].Color);
+            Assert.AreEqual("Green", lights[1].Color);
         }
 
-        [Fact]
+        [TestMethod]
         public void GenerateRpmLights_MiddleTwoLightsAreYellow()
         {
             // Arrange
@@ -77,11 +77,11 @@ namespace HaddySimHub.Tests
             var lights = Display.GenerateRpmLights(rpmMax);
 
             // Assert
-            Assert.Equal("Yellow", lights[2].Color);
-            Assert.Equal("Yellow", lights[3].Color);
+            Assert.AreEqual("Yellow", lights[2].Color);
+            Assert.AreEqual("Yellow", lights[3].Color);
         }
 
-        [Fact]
+        [TestMethod]
         public void GenerateRpmLights_LastTwoLightsAreRed()
         {
             // Arrange
@@ -91,11 +91,11 @@ namespace HaddySimHub.Tests
             var lights = Display.GenerateRpmLights(rpmMax);
 
             // Assert
-            Assert.Equal("Red", lights[4].Color);
-            Assert.Equal("Red", lights[5].Color);
+            Assert.AreEqual("Red", lights[4].Color);
+            Assert.AreEqual("Red", lights[5].Color);
         }
 
-        [Fact]
+        [TestMethod]
         public void GenerateRpmLights_RpmValuesCorrect()
         {
             // Arrange
@@ -107,15 +107,15 @@ namespace HaddySimHub.Tests
             // Assert
             // RPM values are calculated as: rpmMax - ((lightsCount - i) * lightsStep)
             // So: 7000 - (6*200)=5800, 7000-(5*200)=6000, etc.
-            Assert.Equal(5800, lights[0].Rpm);
-            Assert.Equal(6000, lights[1].Rpm);
-            Assert.Equal(6200, lights[2].Rpm);
-            Assert.Equal(6400, lights[3].Rpm);
-            Assert.Equal(6600, lights[4].Rpm);
-            Assert.Equal(6800, lights[5].Rpm);
+            Assert.AreEqual(5800, lights[0].Rpm);
+            Assert.AreEqual(6000, lights[1].Rpm);
+            Assert.AreEqual(6200, lights[2].Rpm);
+            Assert.AreEqual(6400, lights[3].Rpm);
+            Assert.AreEqual(6600, lights[4].Rpm);
+            Assert.AreEqual(6800, lights[5].Rpm);
         }
 
-        [Fact]
+        [TestMethod]
         public void GenerateRpmLights_WithDifferentRpmMax()
         {
             // Arrange
@@ -126,15 +126,15 @@ namespace HaddySimHub.Tests
 
             // Assert
             // 8000 - (6*200)=6800, 8000-(5*200)=7000, etc.
-            Assert.Equal(6800, lights[0].Rpm);
-            Assert.Equal(7000, lights[1].Rpm);
-            Assert.Equal(7200, lights[2].Rpm);
-            Assert.Equal(7400, lights[3].Rpm);
-            Assert.Equal(7600, lights[4].Rpm);
-            Assert.Equal(7800, lights[5].Rpm);
+            Assert.AreEqual(6800, lights[0].Rpm);
+            Assert.AreEqual(7000, lights[1].Rpm);
+            Assert.AreEqual(7200, lights[2].Rpm);
+            Assert.AreEqual(7400, lights[3].Rpm);
+            Assert.AreEqual(7600, lights[4].Rpm);
+            Assert.AreEqual(7800, lights[5].Rpm);
         }
 
-        [Fact]
+        [TestMethod]
         public void GenerateRpmLights_WithLowRpmMax()
         {
             // Arrange
@@ -144,13 +144,13 @@ namespace HaddySimHub.Tests
             var lights = Display.GenerateRpmLights(rpmMax);
 
             // Assert
-            Assert.NotNull(lights);
+            Assert.IsNotNull(lights);
             // Even with low max, lights are calculated correctly
             // 2000 - (6*200)=800
-            Assert.Equal(800, lights[0].Rpm);
+            Assert.AreEqual(800, lights[0].Rpm);
         }
 
-        [Fact]
+        [TestMethod]
         public void GenerateRpmLights_AllLightsHaveValidRpm()
         {
             // Arrange
@@ -162,7 +162,7 @@ namespace HaddySimHub.Tests
             // Assert
             foreach (var light in lights)
             {
-                Assert.True(light.Rpm > 0);
+                Assert.IsGreaterThan(0, light.Rpm);
             }
         }
 
@@ -170,197 +170,197 @@ namespace HaddySimHub.Tests
 
         #region Speed Conversion Tests
 
-        [Fact]
+        [TestMethod]
             public void ConvertToDisplayUpdate_ConvertsSpeedMsToKmh()
             {
                 var display = new Display(new MockUdpClientFactory());
                 var packet = CreatePacket(speed_ms: 27.78f);
                 var update = display.ConvertToDisplayUpdate(packet);
                 var rally = update.Data as RallyData;
-                Assert.NotNull(rally);
-                Assert.Equal(100, rally.Speed);
+                Assert.IsNotNull(rally);
+                Assert.AreEqual(100, rally.Speed);
             }
 
-        [Fact]
+        [TestMethod]
             public void ConvertToDisplayUpdate_ConvertsZeroSpeed()
             {
                 var display = new Display(new MockUdpClientFactory());
                 var packet = CreatePacket(speed_ms: 0f);
                 var update = display.ConvertToDisplayUpdate(packet);
                 var rally = update.Data as RallyData;
-                Assert.NotNull(rally);
-                Assert.Equal(0, rally.Speed);
+                Assert.IsNotNull(rally);
+                Assert.AreEqual(0, rally.Speed);
             }
 
-        [Fact]
+        [TestMethod]
             public void ConvertToDisplayUpdate_ConvertsHighSpeed()
             {
                 var display = new Display(new MockUdpClientFactory());
                 var packet = CreatePacket(speed_ms: 50f);
                 var update = display.ConvertToDisplayUpdate(packet);
                 var rally = update.Data as RallyData;
-                Assert.NotNull(rally);
-                Assert.Equal(180, rally.Speed);
+                Assert.IsNotNull(rally);
+                Assert.AreEqual(180, rally.Speed);
             }
 
         #endregion
 
         #region RPM Calculation Tests
 
-        [Fact]
+        [TestMethod]
             public void ConvertToDisplayUpdate_CalculatesRpmFromRawValue()
             {
                 var display = new Display(new MockUdpClientFactory());
                 var packet = CreatePacket(rpm: 500f);
                 var update = display.ConvertToDisplayUpdate(packet);
                 var rally = update.Data as RallyData;
-                Assert.NotNull(rally);
-                Assert.Equal(5000, rally.Rpm);
+                Assert.IsNotNull(rally);
+                Assert.AreEqual(5000, rally.Rpm);
             }
 
-        [Fact]
+        [TestMethod]
             public void ConvertToDisplayUpdate_CalculatesRpmMax()
             {
                 var display = new Display(new MockUdpClientFactory());
                 var packet = CreatePacket(max_rpm: 700f);
                 var update = display.ConvertToDisplayUpdate(packet);
                 var rally = update.Data as RallyData;
-                Assert.NotNull(rally);
-                Assert.Equal(7000, rally.RpmMax);
+                Assert.IsNotNull(rally);
+                Assert.AreEqual(7000, rally.RpmMax);
             }
 
-        [Fact]
+        [TestMethod]
             public void ConvertToDisplayUpdate_CalculatesIdleRpm()
             {
                 var display = new Display(new MockUdpClientFactory());
                 var packet = CreatePacket(idle_rpm: 100f);
                 // idle_rpm is not used in RallyData, but we can check the packet value
-                Assert.Equal(1000, packet.idle_rpm * 10);
+                Assert.AreEqual(1000, packet.idle_rpm * 10);
             }
 
         #endregion
 
         #region Gear Tests
 
-        [Fact]
+        [TestMethod]
             public void ConvertToDisplayUpdate_NeutralGear()
             {
                 var display = new Display(new MockUdpClientFactory());
                 var packet = CreatePacket(gear: 0f);
                 var update = display.ConvertToDisplayUpdate(packet);
                 var rally = update.Data as RallyData;
-                Assert.NotNull(rally);
-                Assert.Equal("N", rally.Gear);
+                Assert.IsNotNull(rally);
+                Assert.AreEqual("N", rally.Gear);
             }
 
-        [Fact]
+        [TestMethod]
             public void ConvertToDisplayUpdate_ReverseGear()
             {
                 var display = new Display(new MockUdpClientFactory());
                 var packet = CreatePacket(gear: -1f);
                 var update = display.ConvertToDisplayUpdate(packet);
                 var rally = update.Data as RallyData;
-                Assert.NotNull(rally);
-                Assert.Equal("R", rally.Gear);
+                Assert.IsNotNull(rally);
+                Assert.AreEqual("R", rally.Gear);
             }
 
-        [Fact]
+        [TestMethod]
             public void ConvertToDisplayUpdate_FirstGear()
             {
                 var display = new Display(new MockUdpClientFactory());
                 var packet = CreatePacket(gear: 1f);
                 var update = display.ConvertToDisplayUpdate(packet);
                 var rally = update.Data as RallyData;
-                Assert.NotNull(rally);
-                Assert.Equal("1", rally.Gear);
+                Assert.IsNotNull(rally);
+                Assert.AreEqual("1", rally.Gear);
             }
 
-        [Fact]
+        [TestMethod]
             public void ConvertToDisplayUpdate_HighGear()
             {
                 var display = new Display(new MockUdpClientFactory());
                 var packet = CreatePacket(gear: 6f);
                 var update = display.ConvertToDisplayUpdate(packet);
                 var rally = update.Data as RallyData;
-                Assert.NotNull(rally);
-                Assert.Equal("6", rally.Gear);
+                Assert.IsNotNull(rally);
+                Assert.AreEqual("6", rally.Gear);
             }
 
         #endregion
 
         #region Control Input Tests
 
-            [Fact]
+            [TestMethod]
             public void ConvertToDisplayUpdate_CalculatesThrottle()
             {
                 var display = new Display(new MockUdpClientFactory());
                 var packet = CreatePacket(throttle: 0.75f);
                 var update = display.ConvertToDisplayUpdate(packet);
                 var rally = update.Data as RallyData;
-                Assert.NotNull(rally);
-                Assert.Equal(75, rally.Throttle);
+                Assert.IsNotNull(rally);
+                Assert.AreEqual(75, rally.Throttle);
             }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_CalculatesBrake()
         {
             var display = new Display(new MockUdpClientFactory());
             var packet = CreatePacket(brakes: 0.50f);
             var update = display.ConvertToDisplayUpdate(packet);
             var rally = update.Data as RallyData;
-            Assert.NotNull(rally);
-            Assert.Equal(50, rally.Brake);
+            Assert.IsNotNull(rally);
+            Assert.AreEqual(50, rally.Brake);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_CalculatesClutch()
         {
             var display = new Display(new MockUdpClientFactory());
             var packet = CreatePacket(clutch: 0.25f);
             var update = display.ConvertToDisplayUpdate(packet);
             var rally = update.Data as RallyData;
-            Assert.NotNull(rally);
-            Assert.Equal(25, rally.Clutch);
+            Assert.IsNotNull(rally);
+            Assert.AreEqual(25, rally.Clutch);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_ThrottleFullyEngaged()
         {
             var display = new Display(new MockUdpClientFactory());
             var packet = CreatePacket(throttle: 1.0f);
             var update = display.ConvertToDisplayUpdate(packet);
             var rally = update.Data as RallyData;
-            Assert.NotNull(rally);
-            Assert.Equal(100, rally.Throttle);
+            Assert.IsNotNull(rally);
+            Assert.AreEqual(100, rally.Throttle);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_BrakeNotPressed()
         {
             var display = new Display(new MockUdpClientFactory());
             var packet = CreatePacket(brakes: 0.0f);
             var update = display.ConvertToDisplayUpdate(packet);
             var rally = update.Data as RallyData;
-            Assert.NotNull(rally);
-            Assert.Equal(0, rally.Brake);
+            Assert.IsNotNull(rally);
+            Assert.AreEqual(0, rally.Brake);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_ClutchFullyEngaged()
         {
             var display = new Display(new MockUdpClientFactory());
             var packet = CreatePacket(clutch: 1.0f);
             var update = display.ConvertToDisplayUpdate(packet);
             var rally = update.Data as RallyData;
-            Assert.NotNull(rally);
-            Assert.Equal(100, rally.Clutch);
+            Assert.IsNotNull(rally);
+            Assert.AreEqual(100, rally.Clutch);
         }
 
         #endregion
 
         #region Progress Tests
 
-            [Fact]
+            [TestMethod]
             public void ConvertToDisplayUpdate_CalculatesProgress()
             {
                 var display = new Display(new MockUdpClientFactory());
@@ -368,11 +368,11 @@ namespace HaddySimHub.Tests
                 packet.progress = 0.5f;
                 var update = display.ConvertToDisplayUpdate(packet);
                 var rally = update.Data as RallyData;
-                Assert.NotNull(rally);
-                Assert.Equal(50, rally.CompletedPct);
+                Assert.IsNotNull(rally);
+                Assert.AreEqual(50, rally.CompletedPct);
             }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_ProgressClamped()
         {
             var display = new Display(new MockUdpClientFactory());
@@ -380,11 +380,11 @@ namespace HaddySimHub.Tests
             packet.progress = 1.05f;
             var update = display.ConvertToDisplayUpdate(packet);
             var rally = update.Data as RallyData;
-            Assert.NotNull(rally);
-            Assert.Equal(100, rally.CompletedPct);
+            Assert.IsNotNull(rally);
+            Assert.AreEqual(100, rally.CompletedPct);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_ProgressAtStart()
         {
             var display = new Display(new MockUdpClientFactory());
@@ -392,11 +392,11 @@ namespace HaddySimHub.Tests
             packet.progress = 0.0f;
             var update = display.ConvertToDisplayUpdate(packet);
             var rally = update.Data as RallyData;
-            Assert.NotNull(rally);
-            Assert.Equal(0, rally.CompletedPct);
+            Assert.IsNotNull(rally);
+            Assert.AreEqual(0, rally.CompletedPct);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_ProgressAtEnd()
         {
             var display = new Display(new MockUdpClientFactory());
@@ -404,52 +404,52 @@ namespace HaddySimHub.Tests
             packet.progress = 1.0f;
             var update = display.ConvertToDisplayUpdate(packet);
             var rally = update.Data as RallyData;
-            Assert.NotNull(rally);
-            Assert.Equal(100, rally.CompletedPct);
+            Assert.IsNotNull(rally);
+            Assert.AreEqual(100, rally.CompletedPct);
         }
 
         #endregion
 
         #region Distance Tests
 
-            [Fact]
+            [TestMethod]
             public void ConvertToDisplayUpdate_CalculatesDistance()
             {
                 var display = new Display(new MockUdpClientFactory());
                 var packet = CreatePacket(distance: 5000.5f);
                 var update = display.ConvertToDisplayUpdate(packet);
                 var rally = update.Data as RallyData;
-                Assert.NotNull(rally);
-                Assert.Equal(5000, rally.DistanceTravelled);
+                Assert.IsNotNull(rally);
+                Assert.AreEqual(5000, rally.DistanceTravelled);
             }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_DistanceClamped()
         {
             var display = new Display(new MockUdpClientFactory());
             var packet = CreatePacket(distance: -100f);
             var update = display.ConvertToDisplayUpdate(packet);
             var rally = update.Data as RallyData;
-            Assert.NotNull(rally);
-            Assert.Equal(0, rally.DistanceTravelled);
+            Assert.IsNotNull(rally);
+            Assert.AreEqual(0, rally.DistanceTravelled);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_DistanceZero()
         {
             var display = new Display(new MockUdpClientFactory());
             var packet = CreatePacket(distance: 0f);
             var update = display.ConvertToDisplayUpdate(packet);
             var rally = update.Data as RallyData;
-            Assert.NotNull(rally);
-            Assert.Equal(0, rally.DistanceTravelled);
+            Assert.IsNotNull(rally);
+            Assert.AreEqual(0, rally.DistanceTravelled);
         }
 
         #endregion
 
         #region Position Tests
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_CarPosition()
         {
             // Arrange
@@ -459,10 +459,10 @@ namespace HaddySimHub.Tests
             int position = Convert.ToInt32(carPos);
 
             // Assert
-            Assert.Equal(3, position);
+            Assert.AreEqual(3, position);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_FirstPosition()
         {
             // Arrange
@@ -472,10 +472,10 @@ namespace HaddySimHub.Tests
             int position = Convert.ToInt32(carPos);
 
             // Assert
-            Assert.Equal(1, position);
+            Assert.AreEqual(1, position);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_HighPosition()
         {
             // Arrange
@@ -485,44 +485,44 @@ namespace HaddySimHub.Tests
             int position = Convert.ToInt32(carPos);
 
             // Assert
-            Assert.Equal(20, position);
+            Assert.AreEqual(20, position);
         }
 
         #endregion
 
         #region Sector Time Tests
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_Sector1Time()
         {
             // Arrange
             float sector1Time = 45.5f; // seconds
 
             // Act & Assert
-            Assert.True(sector1Time >= 0);
+            Assert.IsGreaterThanOrEqualTo(0, sector1Time);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_Sector2Time()
         {
             // Arrange
             float sector2Time = 52.3f; // seconds
 
             // Act & Assert
-            Assert.True(sector2Time >= 0);
+            Assert.IsGreaterThanOrEqualTo(0, sector2Time);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_LapTime()
         {
             // Arrange
             float lapTime = 180.5f; // seconds
 
             // Act & Assert
-            Assert.True(lapTime >= 0);
+            Assert.IsGreaterThanOrEqualTo(0, lapTime);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_SectorTimesAddUpToLapTime()
         {
             // Arrange
@@ -534,52 +534,52 @@ namespace HaddySimHub.Tests
             float calculatedTime = sector1Time + sector2Time;
 
             // Assert - sectors are part of the lap, but not all of it
-            Assert.True(calculatedTime < lapTime);
+            Assert.IsLessThan(lapTime, calculatedTime);
         }
 
         #endregion
 
         #region Display Property Tests
 
-        [Fact]
+        [TestMethod]
         public void Display_Description_ReturnsDirtRally2()
         {
             // Arrange
             string description = "Dirt Rally 2";
 
             // Act & Assert
-            Assert.Equal("Dirt Rally 2", description);
+            Assert.AreEqual("Dirt Rally 2", description);
         }
 
-        [Fact]
+        [TestMethod]
         public void Display_IsActive_ChecksForDirtrally2Process()
         {
             // Arrange
             string processName = "dirtrally2";
 
             // Act & Assert
-            Assert.Equal("dirtrally2", processName);
+            Assert.AreEqual("dirtrally2", processName);
         }
 
         #endregion
 
         #region Display Type Tests
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_ReturnsRallyDashboardType()
         {
             // Arrange
             var expectedType = DisplayType.RallyDashboard;
 
             // Act & Assert
-            Assert.Equal(DisplayType.RallyDashboard, expectedType);
+            Assert.AreEqual(DisplayType.RallyDashboard, expectedType);
         }
 
         #endregion
 
         #region Edge Case Tests
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_HandleZeroRpmMax()
         {
             // Arrange
@@ -589,11 +589,11 @@ namespace HaddySimHub.Tests
             var lights = Display.GenerateRpmLights(rpmMax);
 
             // Assert
-            Assert.NotNull(lights);
-            Assert.Equal(6, lights.Length);
+            Assert.IsNotNull(lights);
+            Assert.HasCount(6, lights);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_HandleLargeRpmMax()
         {
             // Arrange
@@ -603,13 +603,13 @@ namespace HaddySimHub.Tests
             var lights = Display.GenerateRpmLights(rpmMax);
 
             // Assert
-            Assert.NotNull(lights);
-            Assert.Equal(6, lights.Length);
+            Assert.IsNotNull(lights);
+            Assert.HasCount(6, lights);
             // 10000 - (6*200) = 8800
-            Assert.Equal(8800, lights[0].Rpm);
+            Assert.AreEqual(8800, lights[0].Rpm);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_HandleVeryLowSpeed()
         {
             // Arrange
@@ -619,10 +619,10 @@ namespace HaddySimHub.Tests
             int speedKmh = Convert.ToInt32(speedMs * 3.6);
 
             // Assert
-            Assert.True(speedKmh >= 0);
+            Assert.IsGreaterThanOrEqualTo(0, speedKmh);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_HandleVeryHighSpeed()
         {
             // Arrange
@@ -632,7 +632,7 @@ namespace HaddySimHub.Tests
             int speedKmh = Convert.ToInt32(speedMs * 3.6);
 
             // Assert
-            Assert.Equal(360, speedKmh);
+            Assert.AreEqual(360, speedKmh);
         }
 
         #endregion

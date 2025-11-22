@@ -1,8 +1,6 @@
-using System;
 using HaddySimHub.Displays.IRacing;
 using HaddySimHub.Models;
 using iRacingSDK;
-using Xunit;
 using static iRacingSDK.SessionData;
 using static iRacingSDK.SessionData._SessionInfo;
 using static iRacingSDK.SessionData._SessionInfo._Sessions;
@@ -10,11 +8,12 @@ using static iRacingSDK.SessionData._WeekendInfo;
 
 namespace HaddySimHub.Tests
 {
+    [TestClass]
     public class IRacingDisplayTests
     {
         #region GenerateRpmLights Tests
 
-        [Fact]
+        [TestMethod]
         public void GenerateRpmLights_WithFiaF4_ReturnsCorrectRpmLights()
         {
             // Arrange
@@ -24,23 +23,23 @@ namespace HaddySimHub.Tests
             var lights = Display.GenerateRpmLights(carName);
 
             // Assert
-            Assert.NotNull(lights);
-            Assert.Equal(6, lights.Length);
-            Assert.Equal(6300, lights[0].Rpm);
-            Assert.Equal("Green", lights[0].Color);
-            Assert.Equal(6500, lights[1].Rpm);
-            Assert.Equal("Green", lights[1].Color);
-            Assert.Equal(6600, lights[2].Rpm);
-            Assert.Equal("Green", lights[2].Color);
-            Assert.Equal(6700, lights[3].Rpm);
-            Assert.Equal("Green", lights[3].Color);
-            Assert.Equal(6800, lights[4].Rpm);
-            Assert.Equal("Red", lights[4].Color);
-            Assert.Equal(6900, lights[5].Rpm);
-            Assert.Equal("Red", lights[5].Color);
+            Assert.IsNotNull(lights);
+            Assert.HasCount(6, lights);
+            Assert.AreEqual(6300, lights[0].Rpm);
+            Assert.AreEqual("Green", lights[0].Color);
+            Assert.AreEqual(6500, lights[1].Rpm);
+            Assert.AreEqual("Green", lights[1].Color);
+            Assert.AreEqual(6600, lights[2].Rpm);
+            Assert.AreEqual("Green", lights[2].Color);
+            Assert.AreEqual(6700, lights[3].Rpm);
+            Assert.AreEqual("Green", lights[3].Color);
+            Assert.AreEqual(6800, lights[4].Rpm);
+            Assert.AreEqual("Red", lights[4].Color);
+            Assert.AreEqual(6900, lights[5].Rpm);
+            Assert.AreEqual("Red", lights[5].Color);
         }
 
-        [Fact]
+        [TestMethod]
         public void GenerateRpmLights_WithFiaF4_AllLightsHaveValidRpm()
         {
             // Arrange
@@ -52,12 +51,12 @@ namespace HaddySimHub.Tests
             // Assert
             foreach (var light in lights)
             {
-                Assert.True(light.Rpm >= 6300, $"RPM {light.Rpm} should be >= 6300");
-                Assert.True(light.Rpm <= 6900, $"RPM {light.Rpm} should be <= 6900");
+                Assert.IsGreaterThanOrEqualTo(6300, light.Rpm, $"RPM {light.Rpm} should be >= 6300");
+                Assert.IsLessThanOrEqualTo(6900, light.Rpm, $"RPM {light.Rpm} should be <= 6900");
             }
         }
 
-        [Fact]
+        [TestMethod]
         public void GenerateRpmLights_WithFiaF4_HasCorrectColorPattern()
         {
             // Arrange
@@ -67,15 +66,15 @@ namespace HaddySimHub.Tests
             var lights = Display.GenerateRpmLights(carName);
 
             // Assert
-            Assert.Equal("Green", lights[0].Color);
-            Assert.Equal("Green", lights[1].Color);
-            Assert.Equal("Green", lights[2].Color);
-            Assert.Equal("Green", lights[3].Color);
-            Assert.Equal("Red", lights[4].Color);
-            Assert.Equal("Red", lights[5].Color);
+            Assert.AreEqual("Green", lights[0].Color);
+            Assert.AreEqual("Green", lights[1].Color);
+            Assert.AreEqual("Green", lights[2].Color);
+            Assert.AreEqual("Green", lights[3].Color);
+            Assert.AreEqual("Red", lights[4].Color);
+            Assert.AreEqual("Red", lights[5].Color);
         }
 
-        [Fact]
+        [TestMethod]
         public void GenerateRpmLights_WithFiaF4_RpmValuesAreAscending()
         {
             // Arrange
@@ -87,12 +86,11 @@ namespace HaddySimHub.Tests
             // Assert
             for (int i = 1; i < lights.Length; i++)
             {
-                Assert.True(lights[i].Rpm > lights[i - 1].Rpm,
-                    $"RPM values should be ascending: {lights[i].Rpm} should be > {lights[i - 1].Rpm}");
+                Assert.IsGreaterThan(lights[i - 1].Rpm, lights[i].Rpm, $"RPM values should be ascending: {lights[i].Rpm} should be > {lights[i - 1].Rpm}");
             }
         }
 
-        [Fact]
+        [TestMethod]
         public void GenerateRpmLights_WithUnknownCar_ReturnsEmptyArray()
         {
             // Arrange
@@ -102,11 +100,11 @@ namespace HaddySimHub.Tests
             var lights = Display.GenerateRpmLights(carName);
 
             // Assert
-            Assert.NotNull(lights);
-            Assert.Empty(lights);
+            Assert.IsNotNull(lights);
+            Assert.IsEmpty(lights);
         }
 
-        [Fact]
+        [TestMethod]
         public void GenerateRpmLights_WithEmptyString_ReturnsEmptyArray()
         {
             // Arrange
@@ -116,24 +114,24 @@ namespace HaddySimHub.Tests
             var lights = Display.GenerateRpmLights(carName);
 
             // Assert
-            Assert.NotNull(lights);
-            Assert.Empty(lights);
+            Assert.IsNotNull(lights);
+            Assert.IsEmpty(lights);
         }
 
-        [Fact]
+        [TestMethod]
         public void GenerateRpmLights_WithNullCarName_ReturnsEmptyArray()
         {
             // Arrange & Act & Assert
             var lights = Display.GenerateRpmLights(null!);
-            Assert.NotNull(lights);
-            Assert.Empty(lights);
+            Assert.IsNotNull(lights);
+            Assert.IsEmpty(lights);
         }
 
         #endregion
 
         #region GetRpmMax Tests
 
-        [Fact]
+        [TestMethod]
         public void GetRpmMax_WithFiaF4_Returns7000()
         {
             // Arrange
@@ -143,10 +141,10 @@ namespace HaddySimHub.Tests
             var rpmMax = Display.GetRpmMax(carName);
 
             // Assert
-            Assert.Equal(7000, rpmMax);
+            Assert.AreEqual(7000, rpmMax);
         }
 
-        [Fact]
+        [TestMethod]
         public void GetRpmMax_WithUnknownCar_ReturnsZero()
         {
             // Arrange
@@ -156,10 +154,10 @@ namespace HaddySimHub.Tests
             var rpmMax = Display.GetRpmMax(carName);
 
             // Assert
-            Assert.Equal(0, rpmMax);
+            Assert.AreEqual(0, rpmMax);
         }
 
-        [Fact]
+        [TestMethod]
         public void GetRpmMax_WithEmptyString_ReturnsZero()
         {
             // Arrange
@@ -169,24 +167,24 @@ namespace HaddySimHub.Tests
             var rpmMax = Display.GetRpmMax(carName);
 
             // Assert
-            Assert.Equal(0, rpmMax);
+            Assert.AreEqual(0, rpmMax);
         }
 
-        [Fact]
+        [TestMethod]
         public void GetRpmMax_WithNullCarName_ReturnsZero()
         {
             // Arrange & Act
             var rpmMax = Display.GetRpmMax(null!);
 
             // Assert
-            Assert.Equal(0, rpmMax);
+            Assert.AreEqual(0, rpmMax);
         }
 
         #endregion
 
         #region Gear Conversion Tests
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_GearReverseConvertsToR()
         {
             // Arrange
@@ -198,11 +196,11 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.Equal("R", raceData.Gear);
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual("R", raceData.Gear);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_GearNeutralConvertsToN()
         {
             // Arrange
@@ -214,11 +212,11 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.Equal("N", raceData.Gear);
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual("N", raceData.Gear);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_GearFirstConvertsToOneString()
         {
             // Arrange
@@ -230,11 +228,11 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.Equal("1", raceData.Gear);
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual("1", raceData.Gear);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_GearHighConvertsToNumericString()
         {
             // Arrange
@@ -246,15 +244,15 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.Equal("6", raceData.Gear);
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual("6", raceData.Gear);
         }
 
         #endregion
 
         #region Speed Conversion Tests
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_SpeedConversionMultipliesByThree_Six()
         {
             // Arrange
@@ -266,11 +264,11 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.Equal(36, raceData.Speed);
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual(36, raceData.Speed);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_SpeedZeroRemains()
         {
             // Arrange
@@ -282,11 +280,11 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.Equal(0, raceData.Speed);
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual(0, raceData.Speed);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_SpeedRoundsCorrectly()
         {
             // Arrange
@@ -298,15 +296,15 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.Equal(100, raceData.Speed);
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual(100, raceData.Speed);
         }
 
         #endregion
 
         #region RPM Tests
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_RpmConvertedToInt()
         {
             // Arrange
@@ -318,11 +316,11 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.Equal(6543, raceData.Rpm);
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual(6543, raceData.Rpm);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_RpmZeroRemains()
         {
             // Arrange
@@ -334,15 +332,15 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.Equal(0, raceData.Rpm);
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual(0, raceData.Rpm);
         }
 
         #endregion
 
         #region Throttle and Brake Conversion Tests
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_ThrottleConvertedToPercentage()
         {
             // Arrange
@@ -354,11 +352,11 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.Equal(75, raceData.ThrottlePct);
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual(75, raceData.ThrottlePct);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_BrakeConvertedToPercentage()
         {
             // Arrange
@@ -370,11 +368,11 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.Equal(50, raceData.BrakePct);
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual(50, raceData.BrakePct);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_FullThrottle()
         {
             // Arrange
@@ -386,11 +384,11 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.Equal(100, raceData.ThrottlePct);
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual(100, raceData.ThrottlePct);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_NoThrottle()
         {
             // Arrange
@@ -402,15 +400,15 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.Equal(0, raceData.ThrottlePct);
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual(0, raceData.ThrottlePct);
         }
 
         #endregion
 
         #region Steering Conversion Tests
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_SteeringCenteredIs50Percent()
         {
             // Arrange
@@ -422,11 +420,11 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.Equal(50, raceData.SteeringPct);
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual(50, raceData.SteeringPct);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_SteeringFullLeft()
         {
             // Arrange
@@ -438,11 +436,11 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.Equal(0, raceData.SteeringPct);
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual(0, raceData.SteeringPct);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_SteeringFullRight()
         {
             // Arrange
@@ -454,11 +452,11 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.Equal(100, raceData.SteeringPct);
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual(100, raceData.SteeringPct);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_SteeringQuarterLeft()
         {
             // Arrange
@@ -470,11 +468,11 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.Equal(25, raceData.SteeringPct);
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual(25, raceData.SteeringPct);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_SteeringZeroAngleMaxDefaultsTo50()
         {
             // Arrange
@@ -486,11 +484,11 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.Equal(50, raceData.SteeringPct);
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual(50, raceData.SteeringPct);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_SteeringClampsToZero()
         {
             // Arrange
@@ -502,11 +500,11 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.True(raceData.SteeringPct >= 0);
+            Assert.IsNotNull(raceData);
+            Assert.IsGreaterThanOrEqualTo(0, raceData.SteeringPct);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_SteeringClampsTo100()
         {
             // Arrange
@@ -518,15 +516,15 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.True(raceData.SteeringPct <= 100);
+            Assert.IsNotNull(raceData);
+            Assert.IsLessThanOrEqualTo(100, raceData.SteeringPct);
         }
 
         #endregion
 
         #region Display Properties Tests
 
-        [Fact]
+        [TestMethod]
         public void Display_Description_ReturnsIRacing()
         {
             // Arrange
@@ -536,23 +534,10 @@ namespace HaddySimHub.Tests
             var description = display.Description;
 
             // Assert
-            Assert.Equal("IRacing", description);
+            Assert.AreEqual("IRacing", description);
         }
 
-        [Fact]
-        public void Display_IsActive_ChecksForIracingProcessRunning()
-        {
-            // Arrange
-            var display = new Display();
-
-            // Act
-            var isActive = display.IsActive;
-
-            // Assert - will be false when not running iRacing
-            Assert.IsType<bool>(isActive);
-        }
-
-        [Fact]
+        [TestMethod]
         public void Display_DisplayType_IsRaceDashboard()
         {
             // Arrange
@@ -563,14 +548,14 @@ namespace HaddySimHub.Tests
             var update = display.ConvertToDisplayUpdate(data);
 
             // Assert
-            Assert.Equal(DisplayType.RaceDashboard, update.Type);
+            Assert.AreEqual(DisplayType.RaceDashboard, update.Type);
         }
 
         #endregion
 
         #region Fuel Tests
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_FuelRemaining()
         {
             // Arrange
@@ -582,11 +567,11 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.Equal(45.5f, raceData.FuelRemaining);
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual(45.5f, raceData.FuelRemaining);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_FuelEstLapsZeroWhenNoHistory()
         {
             // Arrange
@@ -598,15 +583,15 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.Equal(0, raceData.FuelEstLaps);
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual(0, raceData.FuelEstLaps);
         }
 
         #endregion
 
         #region Brake Bias Tests
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_BrakeBiasPassedThrough()
         {
             // Arrange
@@ -618,15 +603,15 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.Equal(52.5f, raceData.BrakeBias);
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual(52.5f, raceData.BrakeBias);
         }
 
         #endregion
 
         #region Temperature Tests
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_AirTemperaturePassedThrough()
         {
             // Arrange
@@ -638,11 +623,11 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.Equal(28.5f, raceData.AirTemp);
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual(28.5f, raceData.AirTemp);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_TrackTemperaturePassedThrough()
         {
             // Arrange
@@ -654,15 +639,15 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.Equal(45.2f, raceData.TrackTemp);
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual(45.2f, raceData.TrackTemp);
         }
 
         #endregion
 
         #region Pit Limiter Tests
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_PitLimiterDetected()
         {
             // Arrange
@@ -674,11 +659,11 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.True(raceData.PitLimiterOn);
+            Assert.IsNotNull(raceData);
+            Assert.IsTrue(raceData.PitLimiterOn);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_PitLimiterNotActive()
         {
             // Arrange
@@ -690,15 +675,15 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.False(raceData.PitLimiterOn);
+            Assert.IsNotNull(raceData);
+            Assert.IsFalse(raceData.PitLimiterOn);
         }
 
         #endregion
 
         #region Position and Incidents Tests
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_PositionPassedThrough()
         {
             // Arrange
@@ -710,11 +695,11 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.Equal(5, raceData.Position);
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual(5, raceData.Position);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_IncidentsCountClamped()
         {
             // Arrange
@@ -726,11 +711,11 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.Equal(0, raceData.Incidents);
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual(0, raceData.Incidents);
         }
 
-        [Fact]
+        [TestMethod]
         public void ConvertToDisplayUpdate_IncidentsCountPositive()
         {
             // Arrange
@@ -742,8 +727,8 @@ namespace HaddySimHub.Tests
             var raceData = update.Data as RaceData;
 
             // Assert
-            Assert.NotNull(raceData);
-            Assert.Equal(3, raceData.Incidents);
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual(3, raceData.Incidents);
         }
 
         #endregion
