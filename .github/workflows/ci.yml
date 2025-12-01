@@ -72,6 +72,9 @@ jobs:
     - name: Lint
       run: npm run lint
 
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+
     - name: Run tests
       run: npm run test_ci
 
