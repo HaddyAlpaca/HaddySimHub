@@ -6,8 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test --code-coverage=true",
-    "test_ci": "ng test --no-watch --code-coverage=true",
+    "test": "ng test",
+    "test_ci": "ng test --no-watch",
     "lint": "cross-env LINT_CONFIG=production ng lint --eslint-config eslint.config.mjs",
     "build:prod": "ng build --prod"
   },
@@ -52,6 +52,8 @@
     "@types/node": "^24.10.1",
     "@typescript-eslint/eslint-plugin": "^8.46.4",
     "@typescript-eslint/parser": "^8.46.4",
+    "@vitest/browser": "^4.0.14",
+    "@vitest/browser-playwright": "^4.0.14",
     "angular-eslint": "^20.6.0",
     "cross-env": "^10.1.0",
     "eslint": "^9.39.1",
@@ -64,16 +66,10 @@
     "eslint-plugin-rxjs-angular": "2.0.1",
     "globals": "^16.5.0",
     "jasmine-core": "~5.12.1",
-    "karma": "~6.4.4",
-    "karma-chrome-launcher": "~3.2.0",
-    "karma-coverage": "~2.2.1",
-    "karma-jasmine": "~5.1.0",
-    "karma-jasmine-html-reporter": "~2.1.0",
-    "karma-jasmine-order-reporter": "^1.2.0",
-    "karma-junit-reporter": "^2.0.1",
-    "karma-sabarivka-reporter": "^3.3.1",
-    "karma-spec-reporter": "^0.0.36",
+    "jsdom": "^27.2.0",
+    "playwright": "^1.57.0",
     "typescript": "5.9.3",
-    "typescript-eslint": "^8.46.4"
+    "typescript-eslint": "^8.46.4",
+    "vitest": "^4.0.14"
   }
 }

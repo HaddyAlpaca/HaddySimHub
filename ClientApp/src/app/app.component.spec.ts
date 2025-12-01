@@ -30,39 +30,39 @@ describe('AppComponent tests', () => {
     const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, AppComponentHarness);
     mockSignalRService.displayData.set({ type: DisplayType.None, data: undefined } as DisplayUpdate);
 
-    expect(await harness.isTruckDisplayVisible()).toBeFalse();
-    expect(await harness.isRaceDisplayVisible()).toBeFalse();
-    expect(await harness.isRallyDisplayVisible()).toBeFalse();
-    expect(await harness.isConnectionStatusVisible()).toBeTrue();
+    expect(await harness.isTruckDisplayVisible()).toBe(false);
+    expect(await harness.isRaceDisplayVisible()).toBe(false);
+    expect(await harness.isRallyDisplayVisible()).toBe(false);
+    expect(await harness.isConnectionStatusVisible()).toBe(true);
   });
 
   it('should show the truck display when truck data is available', async () => {
     const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, AppComponentHarness);
     mockSignalRService.displayData.set({ type: DisplayType.TruckDashboard, data: {} as TruckData } as DisplayUpdate);
 
-    expect(await harness.isTruckDisplayVisible()).toBeTrue();
-    expect(await harness.isRaceDisplayVisible()).toBeFalse();
-    expect(await harness.isRallyDisplayVisible()).toBeFalse();
-    expect(await harness.isConnectionStatusVisible()).toBeFalse();
+    expect(await harness.isTruckDisplayVisible()).toBe(true);
+    expect(await harness.isRaceDisplayVisible()).toBe(false);
+    expect(await harness.isRallyDisplayVisible()).toBe(false);
+    expect(await harness.isConnectionStatusVisible()).toBe(false);
   });
 
   it('should show the race display when race data is available', async () => {
     const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, AppComponentHarness);
     mockSignalRService.displayData.set({ type: DisplayType.RaceDashboard, data: {} as RaceData } as DisplayUpdate);
 
-    expect(await harness.isTruckDisplayVisible()).toBeFalse();
-    expect(await harness.isRaceDisplayVisible()).toBeTrue();
-    expect(await harness.isRallyDisplayVisible()).toBeFalse();
-    expect(await harness.isConnectionStatusVisible()).toBeFalse();
+    expect(await harness.isTruckDisplayVisible()).toBe(false);
+    expect(await harness.isRaceDisplayVisible()).toBe(true);
+    expect(await harness.isRallyDisplayVisible()).toBe(false);
+    expect(await harness.isConnectionStatusVisible()).toBe(false);
   });
 
   it('should show the rally display when rally data is available', async () => {
     const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, AppComponentHarness);
-    mockSignalRService.displayData.set({ type: DisplayType.RallyDashboard, data: { rpmLights: []} as unknown as RallyData } as DisplayUpdate);
+    mockSignalRService.displayData.set({ type: DisplayType.RallyDashboard, data: { rpmLights: [] } as unknown as RallyData } as DisplayUpdate);
 
-    expect(await harness.isTruckDisplayVisible()).toBeFalse();
-    expect(await harness.isRaceDisplayVisible()).toBeFalse();
-    expect(await harness.isRallyDisplayVisible()).toBeTrue();
-    expect(await harness.isConnectionStatusVisible()).toBeFalse();
+    expect(await harness.isTruckDisplayVisible()).toBe(false);
+    expect(await harness.isRaceDisplayVisible()).toBe(false);
+    expect(await harness.isRallyDisplayVisible()).toBe(true);
+    expect(await harness.isConnectionStatusVisible()).toBe(false);
   });
 });
