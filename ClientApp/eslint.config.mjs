@@ -321,7 +321,6 @@ export default tseslint.config(
         ],
       }
     },
-
     {
         files: ['**/*.spec.ts'],
         plugins: {
@@ -331,12 +330,14 @@ export default tseslint.config(
             globals: {
                 ...vitest.environments.env.globals,
             },
+            parserOptions: {
+                types: ['vitest/globals'],
+            },
         },
         rules: {
             ...vitest.configs.recommended.rules,
-            '@typescript-eslint/no-non-null-assertion': 'off',
-            '@typescript-eslint/unbound-method': 'off',
-            '@angular-eslint/prefer-on-push-component-change-detection': 'off',
+            '@typescript-eslint/no-unsafe-call': 'off',
+            '@typescript-eslint/no-unsafe-member-access': 'off',
         }
     }
 );

@@ -1,7 +1,3 @@
-// HACK: This is a workaround for a bug in typescript-eslint where it doesn't
-// correctly resolve the vitest types from tsconfig.spec.json.
-/// <reference types="vitest/globals" />
-
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { AppComponent } from './app.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';

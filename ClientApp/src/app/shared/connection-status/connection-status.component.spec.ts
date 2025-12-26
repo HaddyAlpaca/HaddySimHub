@@ -1,7 +1,3 @@
-// HACK: This is a workaround for a bug in typescript-eslint where it doesn't
-// correctly resolve the vitest types from tsconfig.spec.json.
-/// <reference types="vitest/globals" />
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ConnectionStatusComponent } from './connection-status.component';
 import { ConnectionStatusComponentHarness } from './connection-status.component.harness';
