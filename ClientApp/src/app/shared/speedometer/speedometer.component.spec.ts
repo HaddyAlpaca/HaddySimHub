@@ -1,5 +1,4 @@
-﻿
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SpeedometerComponent } from './speedometer.component';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { SpeedometerComponentHarness } from './speedometer.component.harness';

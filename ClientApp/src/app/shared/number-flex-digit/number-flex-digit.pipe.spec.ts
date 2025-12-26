@@ -1,5 +1,4 @@
-﻿
-import { NumberFlexDigitPipe } from './number-flex-digit.pipe';
+﻿import { NumberFlexDigitPipe } from './number-flex-digit.pipe';
 
 describe('NumberFlexDigitPipe tests', () => {
   const pipe = new NumberFlexDigitPipe();

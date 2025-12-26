@@ -1,5 +1,4 @@
-﻿
-import { TimespanPipe } from './timespan.pipe';
+﻿import { TimespanPipe } from './timespan.pipe';
 
 describe('TimespanPipe', () => {
   const pipe = new TimespanPipe();

@@ -1,5 +1,4 @@
-﻿
-import { IRatingPipe } from './irating.pipe';
+﻿import { IRatingPipe } from './irating.pipe';
 
 describe('IRating pipe tests', () => {
   const pipe = new IRatingPipe();

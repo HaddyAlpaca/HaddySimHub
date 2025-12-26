@@ -1,5 +1,4 @@
-﻿
-import { DeltaTimePipe } from './delta-time.pipe';
+﻿import { DeltaTimePipe } from './delta-time.pipe';
 
 describe('DeltaTimePipe', () => {
   const pipe = new DeltaTimePipe();
