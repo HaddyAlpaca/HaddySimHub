@@ -1,4 +1,4 @@
-﻿
+﻿import { describe, it, expect } from 'vitest';
 import { DeltaTimePipe } from './delta-time.pipe';
 
 describe('DeltaTimePipe', () => {

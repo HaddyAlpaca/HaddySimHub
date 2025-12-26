@@ -1,4 +1,4 @@
-﻿
+﻿import { describe, it, expect } from 'vitest';
 import { TimespanPipe } from './timespan.pipe';
 
 describe('TimespanPipe', () => {

@@ -1,9 +1,9 @@
-﻿
-import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
+﻿import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { inputBinding, provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { WaypointComponentHarness } from './waypoint.component.harness';
 import { WaypointComponent } from './waypoint.component';
+import { describe, beforeEach, it, expect } from 'vitest';
 
 describe('WaypointComponent tests', () => {
   let fixture: ComponentFixture<WaypointComponent>;

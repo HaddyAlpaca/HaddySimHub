@@ -5,9 +5,9 @@ import { AppComponentHarness } from './app.component.harness';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { DisplayType, SignalRService } from './signalr.service';
-import { APP_STORE } from './state/app.store';
+import { describe, beforeEach, it, expect, MockedObject } from 'vitest';
 import { MockAppStore } from 'src/testing/mock-app.store';
-import { MockedObject } from 'vitest';
+import { APP_STORE } from './state/app.store';
 import { mock } from 'vitest-mock-extended';
 
 describe('AppComponent tests', () => {

@@ -1,4 +1,4 @@
-﻿
+﻿import { describe, expect, it } from 'vitest';
 import { NumberNlPipe } from './number-nl.pipe';
 
 describe('NumberNlPipe tests', () => {
