@@ -17,10 +17,6 @@
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
     "target": "ES2022",
-    "typeRoots": [
-      "node_modules/@types",
-      "./src/@types"
-    ],
     "useDefineForClassFields": true
   },
   "exclude": [
