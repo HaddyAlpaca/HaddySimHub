@@ -71,6 +71,29 @@ describe('AppComponent tests', () => {
 
   it('should show the rally display when rally data is available', async () => {
     const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, AppComponentHarness);
+    mockStore.rallyData.set({
+      speed: 0,
+      gear: 'N',
+      rpm: 0,
+      rpmLights: [],
+      rpmMax: 0,
+      distanceTravelled: 0,
+      completedPct: 0,
+      timeElapsed: 0,
+      sector1Time: 0,
+      sector2Time: 0,
+      lapTime: 0,
+      sector: 0,
+      position: 0,
+      brakeTempFl: 0,
+      brakeTempFr: 0,
+      brakeTempRl: 0,
+      brakeTempRr: 0,
+      tyrePressFl: 0,
+      tyrePressFr: 0,
+      tyrePressRl: 0,
+      tyrePressRr: 0,
+    });
     mockStore.displayType.set(DisplayType.RallyDashboard);
     fixture.detectChanges();
 
