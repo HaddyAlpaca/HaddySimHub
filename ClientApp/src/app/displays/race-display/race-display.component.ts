@@ -2,10 +2,9 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, inject
 import { DecimalPipe } from '@angular/common';
 import { DeltaTimePipe, LapTimePipe, SpeedometerComponent } from 'src/app/shared';
 import { TelemetrySample, TelemetryTraceComponent } from './telemetry-trace.component';
-import { RaceData } from './race-data';
-import { SignalRService } from 'src/app/signalr.service';
 import { RpmLightsComponent } from 'src/app/shared/rpm-lights/rpm-lights.component';
 import { TimePipe } from 'src/app/shared/time/time.pipe';
+import { APP_STORE } from 'src/app/state/app.store';
 
 @Component({
   selector: 'app-race-display',
@@ -24,8 +23,8 @@ import { TimePipe } from 'src/app/shared/time/time.pipe';
   ],
 })
 export class RaceDisplayComponent {
-  private readonly _signalRService = inject(SignalRService);
-  protected readonly data = computed(() => (this._signalRService.displayData()?.data ?? {}) as RaceData);
+  private readonly _store = inject(APP_STORE);
+  protected readonly data = this._store.raceData;
 
   protected readonly telemetrySample = computed(() => {
     const sample = {

@@ -26,8 +26,9 @@
     "@angular/platform-browser": "^21.0.6",
     "@angular/platform-browser-dynamic": "^21.0.6",
     "@angular/router": "^21.0.6",
-    "@microsoft/signalr": "^9.0.6",
+    "@microsoft/signalr": "^10.0.0",
     "@ngneat/until-destroy": "^10.0.0",
+    "@ngrx/signals": "^21.0.1",
     "@stylistic/eslint-plugin": "^5.6.1",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
@@ -47,7 +48,7 @@
     "@angular/build": "^21.0.4",
     "@angular/cli": "~21.0.4",
     "@angular/compiler-cli": "^21.0.6",
-    "@eslint/compat": "^1.4.1",
+    "@eslint/compat": "^2.0.0",
     "@stylistic/eslint-plugin-ts": "4.4.1",
     "@types/node": "^24.10.4",
     "@typescript-eslint/eslint-plugin": "^8.50.1",
@@ -69,6 +70,7 @@
     "playwright": "^1.57.0",
     "typescript": "5.9.3",
     "typescript-eslint": "^8.50.1",
-    "vitest": "^4.0.16"
+    "vitest": "^4.0.16",
+    "vitest-mock-extended": "^3.1.0"
   }
 }
