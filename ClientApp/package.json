@@ -28,6 +28,7 @@
     "@angular/router": "^21.0.6",
     "@microsoft/signalr": "^9.0.6",
     "@ngneat/until-destroy": "^10.0.0",
+    "@ngrx/signals": "^21.0.1",
     "@stylistic/eslint-plugin": "^5.6.1",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
@@ -69,6 +70,7 @@
     "playwright": "^1.57.0",
     "typescript": "5.9.3",
     "typescript-eslint": "^8.50.1",
-    "vitest": "^4.0.16"
+    "vitest": "^4.0.16",
+    "vitest-mock-extended": "^3.1.0"
   }
 }
