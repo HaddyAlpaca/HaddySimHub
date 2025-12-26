@@ -7,6 +7,7 @@ import { MockSignalRService } from 'src/testing/mock-signalr.service';
 import { DisplayType, SignalRService } from 'src/app/signalr.service';
 import { RaceDisplayComponentHarness } from './race-display.component.harness';
 import { RaceDisplayComponent } from './race-display.component';
+import { describe, beforeEach, it, expect } from 'vitest';
 
 describe('Race display component tests', () => {
   let fixture: ComponentFixture<RaceDisplayComponent>;

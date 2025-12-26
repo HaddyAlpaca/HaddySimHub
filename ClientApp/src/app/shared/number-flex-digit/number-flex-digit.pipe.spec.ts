@@ -1,4 +1,5 @@
-﻿import { NumberFlexDigitPipe } from './number-flex-digit.pipe';
+﻿import { describe, it, expect } from 'vitest';
+import { NumberFlexDigitPipe } from './number-flex-digit.pipe';
 
 describe('NumberFlexDigitPipe tests', () => {
   const pipe = new NumberFlexDigitPipe();

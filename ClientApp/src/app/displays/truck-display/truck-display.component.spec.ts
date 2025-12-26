@@ -5,6 +5,7 @@ import { TruckDashComponentHarness } from './truck-display.component.harness';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { MockSignalRService } from 'src/testing/mock-signalr.service';
 import { DisplayType, SignalRService } from 'src/app/signalr.service';
+import { describe, beforeEach, it, expect } from 'vitest';
 
 describe('TruckDisplayComponent', () => {
   let fixture: ComponentFixture<TruckDisplayComponent>;

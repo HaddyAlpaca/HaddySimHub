@@ -3,6 +3,7 @@ import { SpeedometerComponent } from './speedometer.component';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { SpeedometerComponentHarness } from './speedometer.component.harness';
 import { inputBinding, provideZonelessChangeDetection } from '@angular/core';
+import { describe, beforeEach, it, expect } from 'vitest';
 
 describe('SpeedometerComponent tests', () => {
   let fixture: ComponentFixture<SpeedometerComponent>;

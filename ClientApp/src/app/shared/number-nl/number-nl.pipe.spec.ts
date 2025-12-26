@@ -1,4 +1,5 @@
-﻿import { NumberNlPipe } from './number-nl.pipe';
+﻿import { describe, expect, it } from 'vitest';
+import { NumberNlPipe } from './number-nl.pipe';
 
 describe('NumberNlPipe tests', () => {
   const pipe = new NumberNlPipe();

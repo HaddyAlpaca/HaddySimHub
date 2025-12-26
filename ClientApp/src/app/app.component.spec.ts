@@ -7,6 +7,7 @@ import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { MockSignalRService } from 'src/testing/mock-signalr.service';
 import { DisplayType, DisplayUpdate, SignalRService } from './signalr.service';
 import { RaceData, RallyData, TruckData } from './displays';
+import { describe, beforeEach, it, expect } from 'vitest';
 
 describe('AppComponent tests', () => {
   let fixture: ComponentFixture<AppComponent>;

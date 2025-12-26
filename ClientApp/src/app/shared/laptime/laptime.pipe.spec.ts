@@ -1,4 +1,5 @@
-﻿import { LapTimePipe } from './laptime.pipe';
+﻿import { describe, it, expect } from 'vitest';
+import { LapTimePipe } from './laptime.pipe';
 
 describe('LaptimePipe', () => {
   const pipe = new LapTimePipe();

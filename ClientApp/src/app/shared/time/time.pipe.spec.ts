@@ -1,4 +1,5 @@
-﻿import { TimePipe } from './time.pipe';
+﻿import { describe, beforeEach, it, expect } from 'vitest';
+import { TimePipe } from './time.pipe';
 
 describe('TimePipe', () => {
   let pipe: TimePipe;

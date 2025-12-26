@@ -5,6 +5,7 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { MockSignalRService } from 'src/testing/mock-signalr.service';
 import { ConnectionStatus, SignalRService } from 'src/app/signalr.service';
+import { describe, beforeEach, it, expect } from 'vitest';
 
 describe('ConnectionStatusComponent tests', () => {
   let fixture: ComponentFixture<ConnectionStatusComponent>;

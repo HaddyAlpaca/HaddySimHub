@@ -336,8 +336,6 @@ export default tseslint.config(
         },
         rules: {
             ...vitest.configs.recommended.rules,
-            '@typescript-eslint/no-unsafe-call': 'off',
-            '@typescript-eslint/no-unsafe-member-access': 'off',
         }
     }
 );
