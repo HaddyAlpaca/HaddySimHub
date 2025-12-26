@@ -1,7 +1,8 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { filter, interval, take, tap } from 'rxjs';
 import { HttpTransportType, HubConnection, HubConnectionBuilder, IHttpConnectionOptions, LogLevel } from '@microsoft/signalr';
 import { RaceData, RallyData, TruckData } from './displays';
+import { APP_STORE } from './state/app.store';
 
 export interface ConnectionInfo {
   status: ConnectionStatus;
@@ -32,13 +33,11 @@ export interface DisplayUpdate {
   providedIn: 'root',
 })
 export class SignalRService {
+  private readonly _store = inject(APP_STORE);
   private readonly _hubConnection: HubConnection;
 
   private readonly _connectionStatus = signal<ConnectionInfo>({ status: ConnectionStatus.Disconnected });
   public readonly connectionStatus = this._connectionStatus.asReadonly();
-
-  private readonly _displayData = signal({} as DisplayUpdate);
-  public readonly displayData = this._displayData.asReadonly();
 
   public constructor() {
     const connectionOptions: IHttpConnectionOptions = {
@@ -70,7 +69,7 @@ export class SignalRService {
 
     //Monitor emmited data
     this._hubConnection.on('displayUpdate', (update: DisplayUpdate) => {
-      this._displayData.set(update);
+      this._store.updateDisplay(update);
     });
   }
 

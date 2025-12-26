@@ -3,25 +3,25 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { RaceData } from './race-data';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
-import { MockSignalRService } from 'src/testing/mock-signalr.service';
-import { DisplayType, SignalRService } from 'src/app/signalr.service';
 import { RaceDisplayComponentHarness } from './race-display.component.harness';
 import { RaceDisplayComponent } from './race-display.component';
 import { describe, beforeEach, it, expect } from 'vitest';
+import { APP_STORE } from 'src/app/state/app.store';
+import { MockAppStore } from 'src/testing/mock-app.store';
 
 describe('Race display component tests', () => {
   let fixture: ComponentFixture<RaceDisplayComponent>;
   let harness: RaceDisplayComponentHarness;
-  let mockSignalRService: MockSignalRService;
+  let mockStore: MockAppStore;
 
   beforeEach(async () => {
-    mockSignalRService = new MockSignalRService();
+    mockStore = new MockAppStore();
 
     await TestBed.configureTestingModule({
       providers: [
         provideZonelessChangeDetection(),
         provideCharts(withDefaultRegisterables()),
-        { provide: SignalRService, useValue: mockSignalRService },
+        { provide: APP_STORE, useValue: mockStore },
       ],
     }).compileComponents();
 
@@ -218,9 +218,6 @@ describe('Race display component tests', () => {
   });
 
   const patchData = (value: Record<string, unknown>): void => {
-    mockSignalRService.displayData.set({
-      type: DisplayType.RaceDashboard,
-      data: value as unknown as RaceData,
-    });
+    mockStore.raceData.set(value as unknown as RaceData);
   };
 });

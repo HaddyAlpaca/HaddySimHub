@@ -3,22 +3,22 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TruckData, TruckDisplayComponent } from './truck-display.component';
 import { TruckDashComponentHarness } from './truck-display.component.harness';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { MockSignalRService } from 'src/testing/mock-signalr.service';
-import { DisplayType, SignalRService } from 'src/app/signalr.service';
+import { MockAppStore } from 'src/testing/mock-app.store';
+import { APP_STORE } from 'src/app/state/app.store';
 import { describe, beforeEach, it, expect } from 'vitest';
 
 describe('TruckDisplayComponent', () => {
   let fixture: ComponentFixture<TruckDisplayComponent>;
   let harness: TruckDashComponentHarness;
-  let mockSignalRService: MockSignalRService;
+  let mockStore: MockAppStore;
 
   beforeEach(async () => {
-    mockSignalRService = new MockSignalRService();
+    mockStore = new MockAppStore();
 
     await TestBed.configureTestingModule({
       providers: [
         provideZonelessChangeDetection(),
-        { provide: SignalRService, useValue: mockSignalRService },
+        { provide: APP_STORE, useValue: mockStore },
       ],
     }).compileComponents();
 
@@ -91,9 +91,6 @@ describe('TruckDisplayComponent', () => {
   });
 
   const patchData = (value: Record<string, unknown>): void => {
-    mockSignalRService.displayData.set({
-      type: DisplayType.TruckDashboard,
-      data: value as unknown as TruckData,
-    });
+    mockStore.truckData.set(value as unknown as TruckData);
   };
 });
