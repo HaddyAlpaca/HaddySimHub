@@ -25,6 +25,7 @@ import jsDocPlugin from 'eslint-plugin-jsdoc';
 import preferArrowPlugin from 'eslint-plugin-prefer-arrow';
 import pluginRxjs from 'eslint-plugin-rxjs';
 import pluginAngularRxjs from 'eslint-plugin-rxjs-angular';
+import vitest from '@vitest/eslint-plugin'
 
 export default tseslint.config(
     {
@@ -323,7 +324,16 @@ export default tseslint.config(
 
     {
         files: ['**/*.spec.ts'],
+        plugins: {
+            vitest,
+        },
+        languageOptions: {
+            globals: {
+                ...vitest.environments.env.globals,
+            },
+        },
         rules: {
+            ...vitest.configs.recommended.rules,
             '@typescript-eslint/no-non-null-assertion': 'off',
             '@typescript-eslint/unbound-method': 'off',
             '@angular-eslint/prefer-on-push-component-change-detection': 'off',
