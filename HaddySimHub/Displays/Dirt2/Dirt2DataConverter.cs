@@ -13,7 +13,6 @@ public class Dirt2DataConverter : IDataConverter<Packet, DisplayUpdate>
         {
             Speed = System.Convert.ToInt32(data.speed_ms * 3.6),
             Rpm = System.Convert.ToInt32(data.rpm * 10),
-            RpmLights = GenerateRpmLights(rpmMax),
             RpmMax = rpmMax,
             Gear = data.gear == 0 ? "N" : data.gear < 0 ? "R" : data.gear.ToString(),
             Clutch = System.Convert.ToInt32(data.clutch * 100),
@@ -28,24 +27,5 @@ public class Dirt2DataConverter : IDataConverter<Packet, DisplayUpdate>
         };
 
         return new DisplayUpdate { Type = DisplayType.RallyDashboard, Data = displayData };
-    }
-
-    public static RpmLight[] GenerateRpmLights(int rpmMax)
-    {
-        int lightsCount = 6;
-        int lightsStep = 200;
-        var rpmLights = new List<RpmLight>();
-        for (int i = 0; i < lightsCount; i++)
-        {
-            int rpm = rpmMax - ((lightsCount - i) * lightsStep);
-            string color = i switch
-            {
-                0 or 1 => "Green",
-                2 or 3 => "Yellow",
-                _ => "Red"
-            };
-            rpmLights.Add(new RpmLight { Rpm = rpm, Color = color });
-        }
-        return [.. rpmLights];
     }
 }

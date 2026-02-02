@@ -1,13 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
 import { SpeedometerComponent, LapTimePipe } from 'src/app/shared';
-import { RpmLightsComponent } from 'src/app/shared/rpm-lights/rpm-lights.component';
 import { APP_STORE } from 'src/app/state/app.store';
 
 export interface RallyData {
   speed: number;
   gear: string;
   rpm: number;
-  rpmLights: { rpm: number; color: string }[];
   rpmMax: number;
   distanceTravelled: number;
   completedPct: number;
@@ -35,7 +33,6 @@ export interface RallyData {
   imports: [
     SpeedometerComponent,
     LapTimePipe,
-    RpmLightsComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

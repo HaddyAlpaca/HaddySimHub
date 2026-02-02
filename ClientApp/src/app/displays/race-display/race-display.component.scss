@@ -47,6 +47,10 @@ app-race-display {
       text-align: center;
       font-size: 6vw;
     }
+
+    &.max-rpm {
+      color: red;
+    }
   }
 
   label {

@@ -53,8 +53,7 @@
         </div>
       </div>
     </div>
-    <div class=" group-border border-yellow speedometer">
-      <app-rpm-lights [rpm]="data().rpm" [rpmMax]="data().rpmMax" [biDirectional]="false" [lights]="data().rpmLights" [class.hidden]="data().rpmMax <= 0"  />
+    <div class=" group-border border-yellow speedometer" [class.max-rpm]="data().rpm >= data().rpmMax">
       <app-speedometer [rpm]="data().rpm" [gear]="data().gear" [speed]="data().speed" />
     </div>
     <div class="group-border border-blue">

@@ -54,6 +54,10 @@ app-rally-display {
         text-align: center;
         font-size: 10vw;
       }
+
+      &.max-rpm {
+        color: red;
+      }
     }
   }
 }
