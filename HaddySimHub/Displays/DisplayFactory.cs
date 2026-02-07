@@ -6,6 +6,7 @@ using HaddySimHub.Displays.IRacing;
 using HaddySimHub.Displays.ETS;
 using HaddySimHub.Displays.AC;
 using HaddySimHub.Displays.ACC;
+using HaddySimHub.Displays.ACRally;
 using HaddySimHub.Models;
 
 namespace HaddySimHub.Displays
@@ -60,6 +61,10 @@ namespace HaddySimHub.Displays
                 "ACC.Display" => new Displays.ACC.Display(
                     _serviceProvider.GetRequiredService<IGameDataProvider<Displays.ACC.ACCTelemetry>>(),
                     _serviceProvider.GetRequiredService<IDataConverter<Displays.ACC.ACCTelemetry, DisplayUpdate>>(),
+                    _serviceProvider.GetRequiredService<IDisplayUpdateSender>()),
+                "ACRally.Display" => new Displays.ACRally.Display(
+                    _serviceProvider.GetRequiredService<IGameDataProvider<Displays.ACRally.ACRallyTelemetry>>(),
+                    _serviceProvider.GetRequiredService<IDataConverter<Displays.ACRally.ACRallyTelemetry, DisplayUpdate>>(),
                     _serviceProvider.GetRequiredService<IDisplayUpdateSender>()),
                 _ => throw new InvalidOperationException($"Unknown display type: {displayTypeName}")
             };

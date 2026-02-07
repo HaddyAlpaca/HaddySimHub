@@ -115,6 +115,7 @@ public class Program
         builder.Services.AddSingleton<HaddySimHub.Interfaces.IGameDataProvider<iRacingSDK.IDataSample>, HaddySimHub.Displays.IRacing.IRacingGameDataProvider>();
         builder.Services.AddSingleton<HaddySimHub.Interfaces.IGameDataProvider<HaddySimHub.Displays.AC.ACTelemetry>, HaddySimHub.Displays.AC.ACGameDataProvider>();
         builder.Services.AddSingleton<HaddySimHub.Interfaces.IGameDataProvider<HaddySimHub.Displays.ACC.ACCTelemetry>, HaddySimHub.Displays.ACC.ACCGameDataProvider>();
+        builder.Services.AddSingleton<HaddySimHub.Interfaces.IGameDataProvider<HaddySimHub.Displays.ACRally.ACRallyTelemetry>, HaddySimHub.Displays.ACRally.ACRallyGameDataProvider>();
 
         // Register DataConverters
         builder.Services.AddSingleton<HaddySimHub.Interfaces.IDataConverter<HaddySimHub.Displays.Dirt2.Packet, HaddySimHub.Models.DisplayUpdate>, HaddySimHub.Displays.Dirt2.Dirt2DataConverter>();
@@ -122,6 +123,7 @@ public class Program
         builder.Services.AddSingleton<HaddySimHub.Interfaces.IDataConverter<iRacingSDK.IDataSample, HaddySimHub.Models.DisplayUpdate>, HaddySimHub.Displays.IRacing.IRacingDataConverter>();
         builder.Services.AddSingleton<HaddySimHub.Interfaces.IDataConverter<HaddySimHub.Displays.AC.ACTelemetry, HaddySimHub.Models.DisplayUpdate>, HaddySimHub.Displays.AC.ACDataConverter>();
         builder.Services.AddSingleton<HaddySimHub.Interfaces.IDataConverter<HaddySimHub.Displays.ACC.ACCTelemetry, HaddySimHub.Models.DisplayUpdate>, HaddySimHub.Displays.ACC.ACCDataConverter>();
+        builder.Services.AddSingleton<HaddySimHub.Interfaces.IDataConverter<HaddySimHub.Displays.ACRally.ACRallyTelemetry, HaddySimHub.Models.DisplayUpdate>, HaddySimHub.Displays.ACRally.ACRallyDataConverter>();
         builder.Services.AddSingleton<HaddySimHub.Interfaces.IDataConverter<HaddySimHub.Models.DisplayUpdate, HaddySimHub.Models.DisplayUpdate>, HaddySimHub.Services.IdentityDataConverter<HaddySimHub.Models.DisplayUpdate>>();
 
         // Register displays and runner for DI
@@ -136,6 +138,8 @@ public class Program
         builder.Services.AddSingleton<HaddySimHub.Displays.IDisplay>(sp => sp.GetRequiredService<HaddySimHub.Displays.AC.Display>());
         builder.Services.AddSingleton<HaddySimHub.Displays.ACC.Display>();
         builder.Services.AddSingleton<HaddySimHub.Displays.IDisplay>(sp => sp.GetRequiredService<HaddySimHub.Displays.ACC.Display>());
+        builder.Services.AddSingleton<HaddySimHub.Displays.ACRally.Display>();
+        builder.Services.AddSingleton<HaddySimHub.Displays.IDisplay>(sp => sp.GetRequiredService<HaddySimHub.Displays.ACRally.Display>());
 
         // Register test displays via factory
         builder.Services.AddSingleton<HaddySimHub.Displays.IDisplay>(sp => sp.GetRequiredService<HaddySimHub.Displays.IDisplayFactory>().Create("Dirt2.TestDisplay"));
