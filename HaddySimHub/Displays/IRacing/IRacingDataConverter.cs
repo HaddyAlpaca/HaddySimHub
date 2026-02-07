@@ -89,7 +89,6 @@ public class IRacingDataConverter : IDataConverter<IDataSample, DisplayUpdate>
             BestLapTimeDelta = telemetry.LapDeltaToBestLap <= 0 ? 0 : telemetry.LapDeltaToBestLap,
             Gear = telemetry.Gear == -1 ? "R" : telemetry.Gear == 0 ? "N" : telemetry.Gear.ToString(),
             Rpm = (int)telemetry.RPM,
-            RpmLights = [.. GenerateRpmLights(carScreenName)],
             RpmMax = GetRpmMax(carScreenName),
             Speed = (int)Math.Round(telemetry.Speed * 3.6),
             BrakePct = (int)Math.Round(telemetry.Brake * 100, 0),
@@ -115,22 +114,6 @@ public class IRacingDataConverter : IDataConverter<IDataSample, DisplayUpdate>
         };
         
         return new DisplayUpdate { Type = DisplayType.RaceDashboard, Data = displayUpdate };
-    }
-
-    public static RpmLight[] GenerateRpmLights(string carName)
-    {
-        return carName switch
-        {
-            "FIA F4" => [
-                new RpmLight { Rpm = 6300, Color = "Green" },
-                new RpmLight { Rpm = 6500, Color = "Green" },
-                new RpmLight { Rpm = 6600, Color = "Green" },
-                new RpmLight { Rpm = 6700, Color = "Green" },
-                new RpmLight { Rpm = 6800, Color = "Red" },
-                new RpmLight { Rpm = 6900, Color = "Red" }
-            ],
-            _ => []
-        };
     }
 
     public static int GetRpmMax(string carName)

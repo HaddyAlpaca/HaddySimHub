@@ -16,8 +16,8 @@ export const APP_STORE = signalStore(
   withComputed(({ displayUpdate }) => ({
     displayData: computed(() => displayUpdate().data),
     displayType: computed(() => displayUpdate().type ?? DisplayType.None),
-    truckData: computed(() => (displayUpdate().data ?? {}) as TruckData),
+    truckData: computed(() => (displayUpdate().data ?? { }) as TruckData),
     raceData: computed(() => (displayUpdate().data ?? { }) as RaceData),
-    rallyData: computed(() => (displayUpdate().data ?? { rpmLights: [] }) as RallyData),
+    rallyData: computed(() => (displayUpdate().data ?? { }) as RallyData),
   })),
 );

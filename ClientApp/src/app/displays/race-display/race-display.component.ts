@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, inject
 import { DecimalPipe } from '@angular/common';
 import { DeltaTimePipe, LapTimePipe, SpeedometerComponent } from 'src/app/shared';
 import { TelemetrySample, TelemetryTraceComponent } from './telemetry-trace.component';
-import { RpmLightsComponent } from 'src/app/shared/rpm-lights/rpm-lights.component';
 import { TimePipe } from 'src/app/shared/time/time.pipe';
 import { APP_STORE } from 'src/app/state/app.store';
 
@@ -19,7 +18,6 @@ import { APP_STORE } from 'src/app/state/app.store';
     TimePipe,
     SpeedometerComponent,
     TelemetryTraceComponent,
-    RpmLightsComponent,
   ],
 })
 export class RaceDisplayComponent {

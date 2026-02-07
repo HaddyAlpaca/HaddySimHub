@@ -28,7 +28,6 @@ namespace HaddySimHub.Displays.Dirt2
                     DistanceTravelled = (short)DateTime.Now.Millisecond,
                     Gear = _random.Next(1, 6).ToString(),
                     Rpm = _random.Next(0, 10000),
-                    RpmLights = Dirt2DataConverter.GenerateRpmLights(rpmMax), // Use the static method from Dirt2DataConverter
                     RpmMax = rpmMax,
                     LapTime = _random.Next(0, 100),
                     Sector1Time = _random.Next(0, 100),

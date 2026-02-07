@@ -71,7 +71,6 @@ describe('AppComponent tests', () => {
       speed: 0,
       gear: 'N',
       rpm: 0,
-      rpmLights: [],
       rpmMax: 0,
       distanceTravelled: 0,
       completedPct: 0,
