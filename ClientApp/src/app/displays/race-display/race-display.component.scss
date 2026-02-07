@@ -25,6 +25,10 @@ app-race-display {
   .speedometer {
     display: flex;
     flex-direction: column;
+
+    &.max-rpm {
+      background-color: red;
+    }
   }
 
   app-speedometer {
@@ -46,10 +50,6 @@ app-race-display {
     .gear {
       text-align: center;
       font-size: 6vw;
-    }
-
-    &.max-rpm {
-      color: red;
     }
   }
 

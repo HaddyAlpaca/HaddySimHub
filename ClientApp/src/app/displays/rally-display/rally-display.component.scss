@@ -14,6 +14,10 @@ app-rally-display {
   .speedometer {
     display: flex;
     flex-direction: column;
+
+    &.max-rpm {
+      background-color: red;
+    }
   }
 
   .group-border {
@@ -53,10 +57,6 @@ app-rally-display {
       .gear {
         text-align: center;
         font-size: 10vw;
-      }
-
-      &.max-rpm {
-        color: red;
       }
     }
   }
