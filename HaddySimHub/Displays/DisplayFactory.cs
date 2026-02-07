@@ -4,6 +4,8 @@ using HaddySimHub.Interfaces;
 using HaddySimHub.Displays.Dirt2;
 using HaddySimHub.Displays.IRacing;
 using HaddySimHub.Displays.ETS;
+using HaddySimHub.Displays.AC;
+using HaddySimHub.Displays.ACC;
 using HaddySimHub.Models;
 
 namespace HaddySimHub.Displays
@@ -50,6 +52,14 @@ namespace HaddySimHub.Displays
                 "ETS.TestDisplay" => new Displays.ETS.TestDisplay(
                     "truck",
                     _serviceProvider.GetRequiredService<IDataConverter<DisplayUpdate, DisplayUpdate>>(),
+                    _serviceProvider.GetRequiredService<IDisplayUpdateSender>()),
+                "AC.Display" => new Displays.AC.Display(
+                    _serviceProvider.GetRequiredService<IGameDataProvider<Displays.AC.ACTelemetry>>(),
+                    _serviceProvider.GetRequiredService<IDataConverter<Displays.AC.ACTelemetry, DisplayUpdate>>(),
+                    _serviceProvider.GetRequiredService<IDisplayUpdateSender>()),
+                "ACC.Display" => new Displays.ACC.Display(
+                    _serviceProvider.GetRequiredService<IGameDataProvider<Displays.ACC.ACCTelemetry>>(),
+                    _serviceProvider.GetRequiredService<IDataConverter<Displays.ACC.ACCTelemetry, DisplayUpdate>>(),
                     _serviceProvider.GetRequiredService<IDisplayUpdateSender>()),
                 _ => throw new InvalidOperationException($"Unknown display type: {displayTypeName}")
             };
