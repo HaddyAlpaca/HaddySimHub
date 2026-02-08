@@ -16,6 +16,9 @@ Currently, HaddySimHub supports the following games:
 *   Euro Truck Simulator 2
 *   American Truck Simulator
 *   DiRT Rally 2.0
+*   Assetto Corsa
+*   Assetto Corsa Competizione
+*   Assetto Corsa Rally
 
 ## Referenced/cloned repositories
 * https://github.com/hfoxy/iRacingSDK.Net
