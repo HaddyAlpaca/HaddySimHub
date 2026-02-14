@@ -1,5 +1,7 @@
 using System.IO.MemoryMappedFiles;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
+using HaddySimHub;
 
 namespace HaddySimHub.Displays.ACC;
 
@@ -16,15 +18,33 @@ public class ACCSharedMemoryReader : IDisposable
 
     public void Connect()
     {
+        Logger.Info($"ACCSharedMemoryReader: attempting to open shared memory '{SharedMemoryName}'.");
         try
         {
             _memoryMappedFile = MemoryMappedFile.OpenExisting(SharedMemoryName);
             _viewAccessor = _memoryMappedFile.CreateViewAccessor(0, Marshal.SizeOf<ACCTelemetry>());
             IsConnected = true;
+            Logger.Info("ACCSharedMemoryReader: connected to shared memory.");
         }
-        catch
+        catch (Exception ex)
         {
             IsConnected = false;
+            Logger.Error($"ACCSharedMemoryReader: failed to open shared memory '{SharedMemoryName}': {ex.Message}");
+            Logger.Debug(ex.ToString());
+
+            try
+            {
+                var procs = Process.GetProcesses()
+                    .Where(p => p.ProcessName.ToLower().Contains("assetto") || p.ProcessName.ToLower().Contains("acc") || p.ProcessName.ToLower().Contains("ac"))
+                    .Select(p => $"{p.ProcessName} (Id={p.Id})")
+                    .Take(50);
+
+                Logger.Info("ACCSharedMemoryReader: matching processes: " + (procs.Any() ? string.Join(", ", procs) : "(none found)"));
+            }
+            catch (Exception px)
+            {
+                Logger.Debug("ACCSharedMemoryReader: failed to enumerate processes: " + px.ToString());
+            }
         }
     }
 
@@ -34,6 +54,7 @@ public class ACCSharedMemoryReader : IDisposable
 
         if (_viewAccessor == null || !IsConnected)
         {
+            Logger.Debug("ACCSharedMemoryReader: TryReadTelemetry called but not connected or view accessor is null.");
             return false;
         }
 
@@ -42,8 +63,10 @@ public class ACCSharedMemoryReader : IDisposable
             _viewAccessor.Read(0, out telemetry);
             return true;
         }
-        catch
+        catch (Exception ex)
         {
+            Logger.Error("ACCSharedMemoryReader: error reading telemetry: " + ex.Message);
+            Logger.Debug(ex.ToString());
             return false;
         }
     }
