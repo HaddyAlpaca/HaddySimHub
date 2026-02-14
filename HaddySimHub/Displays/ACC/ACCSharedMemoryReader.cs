@@ -19,7 +19,9 @@ public class ACCSharedMemoryReader : IDisposable
         try
         {
             Logger.Debug($"[ACC] Attempting to connect to shared memory: {SharedMemoryName}");
+#pragma warning disable CA1416 // Validate platform compatibility
             _memoryMappedFile = MemoryMappedFile.OpenExisting(SharedMemoryName);
+#pragma warning restore CA1416 // Validate platform compatibility
             _viewAccessor = _memoryMappedFile.CreateViewAccessor(0, Marshal.SizeOf<ACCTelemetry>());
             IsConnected = true;
             Logger.Info($"[ACC] Successfully connected to shared memory");

@@ -32,7 +32,7 @@ public class ACCGameDataProvider : IGameDataProvider<ACCTelemetry>
         }
         else
         {
-            Logger.Warn("[ACC] Failed to connect to ACC shared memory");
+            Logger.Error("[ACC] Failed to connect to ACC shared memory");
         }
     }
 

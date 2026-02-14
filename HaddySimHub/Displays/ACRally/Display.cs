@@ -9,9 +9,6 @@ namespace HaddySimHub.Displays.ACRally;
 /// </summary>
 public sealed class Display : DisplayBase<ACRallyTelemetry>
 {
-    private bool? _cachedIsActive = null;
-    private static string? _detectedProcessName = null;
-
     public override string Description => "Assetto Corsa Rally";
     
     public override bool IsActive => ProcessHelper.IsProcessRunning("acr");

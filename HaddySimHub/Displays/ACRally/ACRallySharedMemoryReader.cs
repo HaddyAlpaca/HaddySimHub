@@ -18,7 +18,9 @@ public class ACRallySharedMemoryReader : IDisposable
     {
         try
         {
+#pragma warning disable CA1416 // Validate platform compatibility
             _memoryMappedFile = MemoryMappedFile.OpenExisting(SharedMemoryName);
+#pragma warning restore CA1416 // Validate platform compatibility
             _viewAccessor = _memoryMappedFile.CreateViewAccessor(0, Marshal.SizeOf<ACRallyTelemetry>());
             IsConnected = true;
         }
