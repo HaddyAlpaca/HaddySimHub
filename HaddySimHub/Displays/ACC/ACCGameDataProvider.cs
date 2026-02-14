@@ -1,4 +1,5 @@
 using HaddySimHub.Interfaces;
+using HaddySimHub;
 
 namespace HaddySimHub.Displays.ACC;
 
@@ -24,11 +25,18 @@ public class ACCGameDataProvider : IGameDataProvider<ACCTelemetry>
         _reader = new ACCSharedMemoryReader();
         _reader.Connect();
 
+        Logger.Info($"ACCGameDataProvider: reader connected={_reader.IsConnected}");
+
         if (_reader.IsConnected)
         {
             Logger.Info("[ACC] Connected to ACC shared memory, starting data updates");
             // Update at ~100Hz (10ms intervals)
             _updateTimer?.Change(TimeSpan.Zero, TimeSpan.FromMilliseconds(10));
+            Logger.Debug("ACCGameDataProvider: update timer started (10ms intervals).");
+        }
+        else
+        {
+            Logger.Debug("ACCGameDataProvider: reader not connected after Connect(). Will retry only when Start() is called again.");
         }
         else
         {
@@ -49,6 +57,7 @@ public class ACCGameDataProvider : IGameDataProvider<ACCTelemetry>
     {
         if (_reader == null || !_reader.IsConnected)
         {
+            Logger.Debug("ACCGameDataProvider: UpdateTelemetry skipped because reader is null or not connected.");
             return;
         }
 
@@ -58,8 +67,13 @@ public class ACCGameDataProvider : IGameDataProvider<ACCTelemetry>
             if (telemetry.Rpm != _lastTelemetry.Rpm)
             {
                 _lastTelemetry = telemetry;
+                Logger.Debug($"ACCGameDataProvider: telemetry changed (rpm {telemetry.Rpm}). Raising DataReceived.");
                 DataReceived?.Invoke(this, telemetry);
             }
+        }
+        else
+        {
+            Logger.Debug("ACCGameDataProvider: TryReadTelemetry returned false.");
         }
     }
 }

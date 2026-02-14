@@ -1,5 +1,7 @@
 using System.IO.MemoryMappedFiles;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
+using HaddySimHub;
 
 namespace HaddySimHub.Displays.ACC;
 
@@ -16,6 +18,7 @@ public class ACCSharedMemoryReader : IDisposable
 
     public void Connect()
     {
+        Logger.Info($"ACCSharedMemoryReader: attempting to open shared memory '{SharedMemoryName}'.");
         try
         {
             Logger.Debug($"[ACC] Attempting to connect to shared memory: {SharedMemoryName}");
@@ -39,6 +42,7 @@ public class ACCSharedMemoryReader : IDisposable
 
         if (_viewAccessor == null || !IsConnected)
         {
+            Logger.Debug("ACCSharedMemoryReader: TryReadTelemetry called but not connected or view accessor is null.");
             return false;
         }
 
@@ -47,8 +51,10 @@ public class ACCSharedMemoryReader : IDisposable
             _viewAccessor.Read(0, out telemetry);
             return true;
         }
-        catch
+        catch (Exception ex)
         {
+            Logger.Error("ACCSharedMemoryReader: error reading telemetry: " + ex.Message);
+            Logger.Debug(ex.ToString());
             return false;
         }
     }
