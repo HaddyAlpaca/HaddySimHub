@@ -16,7 +16,7 @@ public sealed class Display : DisplayBase<ACCTelemetry>
         get
         {
             var isRunning = ProcessHelper.IsProcessRunning("ac2");
-            Logger.Debug($"[ACC Display] Process detection check - ac2 is {'RUNNING' if isRunning else 'NOT RUNNING'}");
+            Logger.Debug($"[ACC Display] Process detection check - ac2 is {(isRunning ? "RUNNING" : "NOT RUNNING")}");
             return isRunning;
         }
     }
