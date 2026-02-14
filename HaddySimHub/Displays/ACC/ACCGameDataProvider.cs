@@ -1,5 +1,4 @@
 using HaddySimHub.Interfaces;
-using HaddySimHub;
 
 namespace HaddySimHub.Displays.ACC;
 
@@ -37,10 +36,6 @@ public class ACCGameDataProvider : IGameDataProvider<ACCTelemetry>
         else
         {
             Logger.Debug("ACCGameDataProvider: reader not connected after Connect(). Will retry only when Start() is called again.");
-        }
-        else
-        {
-            Logger.Error("[ACC] Failed to connect to ACC shared memory");
         }
     }
 
