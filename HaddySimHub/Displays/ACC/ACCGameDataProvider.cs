@@ -20,18 +20,25 @@ public class ACCGameDataProvider : IGameDataProvider<ACCTelemetry>
 
     public void Start()
     {
+        Logger.Debug("[ACC] Starting game data provider");
         _reader = new ACCSharedMemoryReader();
         _reader.Connect();
 
         if (_reader.IsConnected)
         {
+            Logger.Info("[ACC] Connected to ACC shared memory, starting data updates");
             // Update at ~100Hz (10ms intervals)
             _updateTimer?.Change(TimeSpan.Zero, TimeSpan.FromMilliseconds(10));
+        }
+        else
+        {
+            Logger.Warn("[ACC] Failed to connect to ACC shared memory");
         }
     }
 
     public void Stop()
     {
+        Logger.Debug("[ACC] Stopping game data provider");
         _updateTimer?.Change(Timeout.Infinite, Timeout.Infinite);
         _reader?.Disconnect();
         _reader?.Dispose();

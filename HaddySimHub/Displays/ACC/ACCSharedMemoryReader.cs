@@ -18,13 +18,16 @@ public class ACCSharedMemoryReader : IDisposable
     {
         try
         {
+            Logger.Debug($"[ACC] Attempting to connect to shared memory: {SharedMemoryName}");
             _memoryMappedFile = MemoryMappedFile.OpenExisting(SharedMemoryName);
             _viewAccessor = _memoryMappedFile.CreateViewAccessor(0, Marshal.SizeOf<ACCTelemetry>());
             IsConnected = true;
+            Logger.Info($"[ACC] Successfully connected to shared memory");
         }
-        catch
+        catch (Exception ex)
         {
             IsConnected = false;
+            Logger.Debug($"[ACC] Failed to connect to shared memory: {ex.GetType().Name} - {ex.Message}");
         }
     }
 
