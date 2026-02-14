@@ -17,9 +17,6 @@ namespace HaddySimHub.Displays
         public override string Description => $"Test display: {_id}";
         public override bool IsActive => Program.TestId == _id;
 
-        // IGameDataProvider<DisplayUpdate> interface member - this event will be invoked by TestGameDataProviderWrapper
-        public event EventHandler<DisplayUpdate>? DataReceived; 
-
         // Traditional constructor
         public TestDisplayBase(
             string id,

@@ -21,30 +21,18 @@ public class ACCSharedMemoryReader : IDisposable
         Logger.Info($"ACCSharedMemoryReader: attempting to open shared memory '{SharedMemoryName}'.");
         try
         {
+            Logger.Debug($"[ACC] Attempting to connect to shared memory: {SharedMemoryName}");
+#pragma warning disable CA1416 // Validate platform compatibility
             _memoryMappedFile = MemoryMappedFile.OpenExisting(SharedMemoryName);
+#pragma warning restore CA1416 // Validate platform compatibility
             _viewAccessor = _memoryMappedFile.CreateViewAccessor(0, Marshal.SizeOf<ACCTelemetry>());
             IsConnected = true;
-            Logger.Info("ACCSharedMemoryReader: connected to shared memory.");
+            Logger.Info($"[ACC] Successfully connected to shared memory");
         }
         catch (Exception ex)
         {
             IsConnected = false;
-            Logger.Error($"ACCSharedMemoryReader: failed to open shared memory '{SharedMemoryName}': {ex.Message}");
-            Logger.Debug(ex.ToString());
-
-            try
-            {
-                var procs = Process.GetProcesses()
-                    .Where(p => p.ProcessName.ToLower().Contains("assetto") || p.ProcessName.ToLower().Contains("acc") || p.ProcessName.ToLower().Contains("ac"))
-                    .Select(p => $"{p.ProcessName} (Id={p.Id})")
-                    .Take(50);
-
-                Logger.Info("ACCSharedMemoryReader: matching processes: " + (procs.Any() ? string.Join(", ", procs) : "(none found)"));
-            }
-            catch (Exception px)
-            {
-                Logger.Debug("ACCSharedMemoryReader: failed to enumerate processes: " + px.ToString());
-            }
+            Logger.Debug($"[ACC] Failed to connect to shared memory: {ex.GetType().Name} - {ex.Message}");
         }
     }
 

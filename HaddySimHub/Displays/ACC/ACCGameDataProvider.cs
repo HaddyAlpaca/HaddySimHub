@@ -1,5 +1,4 @@
 using HaddySimHub.Interfaces;
-using HaddySimHub;
 
 namespace HaddySimHub.Displays.ACC;
 
@@ -21,7 +20,7 @@ public class ACCGameDataProvider : IGameDataProvider<ACCTelemetry>
 
     public void Start()
     {
-        Logger.Info("ACCGameDataProvider: starting, creating ACCSharedMemoryReader and attempting to connect.");
+        Logger.Debug("[ACC] Starting game data provider");
         _reader = new ACCSharedMemoryReader();
         _reader.Connect();
 
@@ -29,6 +28,7 @@ public class ACCGameDataProvider : IGameDataProvider<ACCTelemetry>
 
         if (_reader.IsConnected)
         {
+            Logger.Info("[ACC] Connected to ACC shared memory, starting data updates");
             // Update at ~100Hz (10ms intervals)
             _updateTimer?.Change(TimeSpan.Zero, TimeSpan.FromMilliseconds(10));
             Logger.Debug("ACCGameDataProvider: update timer started (10ms intervals).");
@@ -41,7 +41,7 @@ public class ACCGameDataProvider : IGameDataProvider<ACCTelemetry>
 
     public void Stop()
     {
-        Logger.Info("ACCGameDataProvider: stopping, disposing reader and stopping timer.");
+        Logger.Debug("[ACC] Stopping game data provider");
         _updateTimer?.Change(Timeout.Infinite, Timeout.Infinite);
         _reader?.Disconnect();
         _reader?.Dispose();

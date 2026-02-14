@@ -10,7 +10,16 @@ namespace HaddySimHub.Displays.ACC;
 public sealed class Display : DisplayBase<ACCTelemetry>
 {
     public override string Description => "Assetto Corsa Competizione";
-    public override bool IsActive => ProcessHelper.IsProcessRunning("ac2");
+    
+    public override bool IsActive
+    {
+        get
+        {
+            var isRunning = ProcessHelper.IsProcessRunning("ac2");
+            Logger.Debug($"[ACC Display] Process detection check - ac2 is {(isRunning ? "RUNNING" : "NOT RUNNING")}");
+            return isRunning;
+        }
+    }
 
     public Display(
         IGameDataProvider<ACCTelemetry> gameDataProvider,
