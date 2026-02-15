@@ -108,9 +108,9 @@ namespace HaddySimHub.Shared
             if (runningGameProcesses.Count > 0)
             {
                 System.Diagnostics.Debug.WriteLine($"[ProcessHelper] Currently running games:");
-                foreach (var (procName, gameName) in runningGameProcesses)
+                foreach (var (procName, runningGameName) in runningGameProcesses)
                 {
-                    System.Diagnostics.Debug.WriteLine($"[ProcessHelper]   - {gameName} ({procName})");
+                    System.Diagnostics.Debug.WriteLine($"[ProcessHelper]   - {runningGameName} ({procName})");
                 }
             }
             else
