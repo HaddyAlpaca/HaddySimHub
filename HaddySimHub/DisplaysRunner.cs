@@ -107,3 +107,5 @@ public class DisplaysRunner
         sb.AppendLine("==============================");
         
         Logger.Debug(sb.ToString());
+    }
+}
