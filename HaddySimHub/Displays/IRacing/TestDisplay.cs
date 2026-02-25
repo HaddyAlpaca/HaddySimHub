@@ -37,8 +37,6 @@ namespace HaddySimHub.Displays.IRacing
                     CurrentLapTime = _random.Next(60, 120),
                     PitLimiterOn = _random.Next(0, 2) == 1,
                     CurrentLap = _random.Next(1, 10),
-                    LastSectorNum = _random.Next(1, 3),
-                    LastSectorTime = _random.Next(10, 30),
                     FuelRemaining = _random.Next(0, 100),
                     Incidents = _random.Next(0, 10),
                     MaxIncidents = 17,

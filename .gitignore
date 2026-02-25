@@ -263,3 +263,9 @@ __pycache__/
 
 # JUnit files
 TEST*.xml
+
+# Claude Code IDE temporary files
+.claude/
+tmpclaude-*
+.claude-*
+*.claude
