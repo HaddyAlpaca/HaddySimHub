@@ -13,12 +13,6 @@ public sealed record RallyData
 
     public int RpmMax { get; init; }
 
-    public int Clutch { get; init; }
-
-    public int Brake { get; init; }
-
-    public int Throttle { get; init; }
-
     public int DistanceTravelled { get; init; }
 
     public int CompletedPct { get; init; }
