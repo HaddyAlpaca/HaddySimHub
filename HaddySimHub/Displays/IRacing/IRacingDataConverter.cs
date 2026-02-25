@@ -77,32 +77,29 @@ public class IRacingDataConverter : IDataConverter<IDataSample, DisplayUpdate>
             IsLimitedSessionLaps = session.IsLimitedSessionLaps,
             CurrentLap = telemetry.Lap,
             TotalLaps = session._SessionLaps,
-            Incidents = Math.Max(telemetry.PlayerCarDriverIncidentCount, 0),
-            MaxIncidents = Math.Max(Math.Min(sessionData!.WeekendInfo.WeekendOptions._IncidentLimit, 999), 0),
             SessionTimeRemaining = (float)telemetry.SessionTimeRemain,
             Position = telemetry.PlayerCarPosition,
-            StrengthOfField = telemetry.RaceCars.Count() > 1 ? (int)Math.Round(telemetry.RaceCars.Average(r => r.Details.Driver.IRating)) : 0,
             CurrentLapTime = telemetry.LapCurrentLapTime,
+            Speed = (int)Math.Round(telemetry.Speed * 3.6),
+            Gear = telemetry.Gear == -1 ? "R" : telemetry.Gear == 0 ? "N" : telemetry.Gear.ToString(),
+            Rpm = (int)telemetry.RPM,
+            RpmMax = GetRpmMax(carScreenName),
+            TrackTemp = telemetry.TrackTemp,
+            AirTemp = telemetry.AirTemp,
+            FuelRemaining = telemetry.FuelLevel,
+            FuelAvgLap = _fuelStintHistory.Count > 0 ? _fuelStintHistory.Average() : 0,
+            FuelLastLap = _fuelStintHistory.Count > 0 ? _fuelStintHistory[^1] : 0,
+            // Don't calculate estimated laps until we have fuel usage history
+            FuelEstLaps = _fuelStintHistory.Count > 0 && _fuelStintHistory.Average() > 0
+            ? (telemetry.FuelLevel / _fuelStintHistory.Average())
+            : 0,
             LastLapTime = Math.Max(telemetry.LapLastLapTime, 0),
             LastLapTimeDelta = telemetry.LapLastLapTime <= 0 ? 0 : telemetry.LapDeltaToSessionLastlLap,
             BestLapTime = Math.Max(telemetry.LapBestLapTime, 0),
             BestLapTimeDelta = telemetry.LapDeltaToBestLap <= 0 ? 0 : telemetry.LapDeltaToBestLap,
-            Gear = telemetry.Gear == -1 ? "R" : telemetry.Gear == 0 ? "N" : telemetry.Gear.ToString(),
-            Rpm = (int)telemetry.RPM,
-            RpmMax = GetRpmMax(carScreenName),
-            Speed = (int)Math.Round(telemetry.Speed * 3.6),
-            BrakePct = (int)Math.Round(telemetry.Brake * 100, 0),
+            ClutchPct = 0,  // Not available in standard telemetry
             ThrottlePct = (int)Math.Round(telemetry.Throttle * 100, 0),
-            BrakeBias = telemetry.DcBrakeBias,
-            FuelRemaining = telemetry.FuelLevel,
-            FuelLastLap = _fuelStintHistory.Count > 0 ? _fuelStintHistory[^1] : 0,
-            FuelAvgLap = _fuelStintHistory.Count > 0 ? _fuelStintHistory.Average() : 0,
-            // Don't calculate estimated laps until we have fuel usage history
-            FuelEstLaps = _fuelStintHistory.Count > 0 && _fuelStintHistory.Average() > 0 
-            ? (telemetry.FuelLevel / _fuelStintHistory.Average()) 
-            : 0,
-            AirTemp = telemetry.AirTemp,
-            TrackTemp = telemetry.TrackTemp,
+            BrakePct = (int)Math.Round(telemetry.Brake * 100, 0),
             PitLimiterOn = telemetry.EngineWarnings.HasFlag(EngineWarnings.PitSpeedLimiter),
             CarNumber = playerInfo?.CarNumber ?? string.Empty,
             // Convert steering angle to percentage (0-100).
@@ -111,6 +108,13 @@ public class IRacingDataConverter : IDataConverter<IDataSample, DisplayUpdate>
             SteeringPct = telemetry.SteeringWheelAngleMax == 0
             ? 50
             : Math.Max(0, Math.Min(100, (int)Math.Round(((telemetry.SteeringWheelAngle + (telemetry.SteeringWheelAngleMax / 2.0)) / telemetry.SteeringWheelAngleMax) * 100))),
+
+            // iRacing-specific fields
+            BrakeBias = telemetry.DcBrakeBias,
+            StrengthOfField = telemetry.RaceCars.Count() > 1 ? (int)Math.Round(telemetry.RaceCars.Average(r => r.Details.Driver.IRating)) : 0,
+            Incidents = (long)Math.Max(telemetry.PlayerCarDriverIncidentCount, 0),
+            MaxIncidents = (long)Math.Max(Math.Min(sessionData!.WeekendInfo.WeekendOptions._IncidentLimit, 999), 0),
+            SafetyRating = (int?)playerInfo?.LicLevel
         };
         
         return new DisplayUpdate { Type = DisplayType.RaceDashboard, Data = displayUpdate };

@@ -1,4 +1,5 @@
 export interface RaceData {
+  // Universal mandatory fields
   sessionType: string;
   isLimitedTime: boolean;
   isLimitedSessionLaps: boolean;
@@ -16,19 +17,28 @@ export interface RaceData {
   fuelAvgLap: number;
   fuelLastLap: number;
   fuelEstLaps: number;
-  brakeBias: number;
-  strengthOfField: number;
-  lastSectorNum: number;
-  lastSectorTime: number;
   lastLapTime: number;
   lastLapTimeDelta: number;
   bestLapTime: number;
   bestLapTimeDelta: number;
   pitLimiterOn: boolean;
-  incidents: number;
-  maxIncidents: number;
   brakePct: number;
   throttlePct: number;
   steeringPct: number;
   carNumber: string;
+
+  // Optional sim-specific fields
+  brakeBias?: number; // iRacing, ACC, etc.
+  strengthOfField?: number; // iRacing only
+  incidents?: number; // iRacing only
+  maxIncidents?: number; // iRacing only
+  irating?: number; // iRacing only
+  safetyRating?: number; // iRacing only
+  penalties?: number; // ACC only
+  penaltyTime?: number; // ACC only
+  drsRemaining?: number; // F1, ACC only
+  drsEnabled?: boolean; // F1, ACC only
+  brakeTempLeft?: number; // F1 only
+  brakeTempRight?: number; // F1 only
+  tyreCompound?: string; // F1 only
 }

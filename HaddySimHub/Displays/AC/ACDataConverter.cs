@@ -37,6 +37,7 @@ public class ACDataConverter : IDataConverter<ACTelemetry, DisplayUpdate>
 
         var raceData = new RaceData
         {
+            // Universal fields
             SessionType = sessionType,
             IsLimitedTime = false,
             IsLimitedSessionLaps = source.TotalLaps > 0,
@@ -56,7 +57,15 @@ public class ACDataConverter : IDataConverter<ACTelemetry, DisplayUpdate>
             FuelEstLaps = source.FuelEstimatedLaps,
             CurrentLapTime = source.CurrentLapTime / 1000f,
             LastLapTime = source.LastLapTime / 1000f,
-            CarNumber = "1"  // AC doesn't provide car number
+            LastLapTimeDelta = 0,  // Not available
+            BestLapTime = 0,  // Not available
+            BestLapTimeDelta = 0,  // Not available
+            ClutchPct = 0,  // Not available
+            ThrottlePct = 0,  // Not available
+            BrakePct = 0,  // Not available
+            PitLimiterOn = false,
+            CarNumber = "1",  // AC doesn't provide car number
+            SteeringPct = 0,  // Not available
         };
 
         return new DisplayUpdate
