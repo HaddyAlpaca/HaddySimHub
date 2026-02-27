@@ -9,20 +9,10 @@ export interface RallyData {
   rpmMax: number;
   distanceTravelled: number;
   completedPct: number;
-  timeElapsed: number;
   sector1Time: number;
   sector2Time: number;
   lapTime: number;
-  sector: number;
   position: number;
-  brakeTempFl: number;
-  brakeTempFr: number;
-  brakeTempRl: number;
-  brakeTempRr: number;
-  tyrePressFl: number;
-  tyrePressFr: number;
-  tyrePressRl: number;
-  tyrePressRr: number;
 }
 
 @Component({

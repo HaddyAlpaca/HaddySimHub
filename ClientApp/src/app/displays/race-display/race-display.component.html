@@ -6,10 +6,12 @@
           <label>Session Type</label>
           <div>{{data().sessionType}}</div>
         </div>
-        <div class="data-item">
-          <label>SOF</label>
-          <div>{{data().strengthOfField ? data().strengthOfField : '---' }}</div>
-        </div>
+        @if (data().strengthOfField !== undefined) {
+          <div class="data-item">
+            <label>SOF</label>
+            <div>{{data().strengthOfField}}</div>
+          </div>
+        }
       </div>
       <div class="dashboard-row cols-2">
         <div class="data-item">
@@ -43,14 +45,16 @@
           <div id="position">{{data().position}}</div>
         </div>
 
-        <div class="data-item">
-            <label>Incidents</label>
-            @if (data().maxIncidents === 999) {
-                <div id="incidents">{{data().incidents}}</div>
-            } @else {
-                <div id="incidents">{{data().incidents}}/{{data().maxIncidents}}</div>
-            }
-        </div>
+        @if (data().incidents !== undefined && data().maxIncidents !== undefined) {
+          <div class="data-item">
+              <label>Incidents</label>
+              @if (data().maxIncidents === 999) {
+                  <div id="incidents">{{data().incidents}}</div>
+              } @else {
+                  <div id="incidents">{{data().incidents}}/{{data().maxIncidents}}</div>
+              }
+          </div>
+        }
       </div>
     </div>
     <div class=" group-border border-yellow speedometer" [class.max-rpm]="data().rpm >= data().rpmMax">
@@ -103,14 +107,16 @@
       </div>
     </div>
 
-    <div class="group-border border-blue">
-        <div class="dashboard-row">    
-            <div class="data-item brake-bias-item">
-              <label>Brake bias</label>
-              <div id="brakeBias">{{data().brakeBias |number:'1.1-1':'en-US'}}</div>
-            </div>
-        </div>
-    </div>
+    @if (data().brakeBias !== undefined) {
+      <div class="group-border border-blue">
+          <div class="dashboard-row">
+              <div class="data-item brake-bias-item">
+                <label>Brake bias</label>
+                <div id="brakeBias">{{data().brakeBias |number:'1.1-1':'en-US'}}</div>
+              </div>
+          </div>
+      </div>
+    }
 
     <div class="group-border border-blue">
       <div class="dashboard-row cols-2">
@@ -122,8 +128,55 @@
               <label>Delta</label>
               <div id="bestLapTimeDelta" [class.text-green]="data().bestLapTimeDelta < 0" [class.text-red]="data().bestLapTimeDelta > 0">{{data().bestLapTimeDelta | deltatime}}</div>
           </div>
-      </div>  
+      </div>
     </div>
+
+    <!-- ACC: Penalties -->
+    @if (data().penalties !== undefined) {
+      <div class="group-border border-blue">
+        <div class="dashboard-row">
+          <div class="data-item">
+            <label>Penalties</label>
+            <div [class.has-penalty]="data().penalties! > 0">
+              {{data().penalties}}
+              @if (data().penaltyTime !== undefined) {
+                <span>({{data().penaltyTime}}s)</span>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- F1/ACC: DRS -->
+    @if (data().drsRemaining !== undefined) {
+      <div class="group-border border-blue">
+        <div class="dashboard-row">
+          <div class="data-item">
+            <label>DRS</label>
+            <div [class.drs-available]="data().drsRemaining! > 0">
+              {{data().drsRemaining! > 0 ? 'Available' : 'Used'}}
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- F1: Brake Temperatures -->
+    @if (data().brakeTempLeft !== undefined && data().brakeTempRight !== undefined) {
+      <div class="group-border border-blue">
+        <div class="dashboard-row cols-2">
+          <div class="data-item">
+            <label>Brake Temp L</label>
+            <div>{{data().brakeTempLeft}}&deg;C</div>
+          </div>
+          <div class="data-item">
+            <label>Brake Temp R</label>
+            <div>{{data().brakeTempRight}}&deg;C</div>
+          </div>
+        </div>
+      </div>
+    }
   </div>
   <app-telemetry-trace [telemetrySample]="telemetrySample()" />
 </div>

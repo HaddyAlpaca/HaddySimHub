@@ -24,10 +24,7 @@ public class ACRallyDataConverter : IDataConverter<ACRallyTelemetry, DisplayUpda
             Rpm = System.Convert.ToInt32(data.Rpm * 10),
             RpmMax = rpmMax,
             Gear = data.Gear == 0 ? "N" : data.Gear < 0 ? "R" : System.Convert.ToInt32(data.Gear).ToString(),
-            Clutch = System.Convert.ToInt32(data.ClutchInput * 100),
-            Brake = System.Convert.ToInt32(data.BrakeInput * 100),
-            Throttle = System.Convert.ToInt32(data.ThrottleInput * 100),
-            CompletedPct = data.CurrentLap > 0 && data.TotalLaps > 0 
+            CompletedPct = data.CurrentLap > 0 && data.TotalLaps > 0
                 ? Math.Min(System.Convert.ToInt32((data.CurrentLap / (float)data.TotalLaps) * 100), 100)
                 : Math.Min(System.Convert.ToInt32(data.NormalizedSplinePosTrack * 100), 100),
             DistanceTravelled = System.Convert.ToInt32(data.NormalizedSplinePosTrack * 1000),
