@@ -36,13 +36,14 @@ public class ACCDataConverter : IDataConverter<ACCTelemetry, DisplayUpdate>
 
         var raceData = new RaceData
         {
+            // Universal fields
             SessionType = sessionType,
             IsLimitedTime = false,
             IsLimitedSessionLaps = source.MaxLaps > 0,
             CurrentLap = source.CurrentLapCount,
             TotalLaps = source.MaxLaps,
             SessionTimeRemaining = source.SessionTimeLeftMs / 1000f,
-            Position = 1,  // ACC doesn't provide position directly in this struct
+            Position = 1,  // ACC doesn't provide position directly in basic telemetry
             Speed = speedKmh,
             Gear = gearString,
             Rpm = (int)source.Rpm,
@@ -55,7 +56,15 @@ public class ACCDataConverter : IDataConverter<ACCTelemetry, DisplayUpdate>
             FuelEstLaps = source.FuelEstimatedLaps,
             CurrentLapTime = lapTimeSeconds,
             LastLapTime = lapTimeSeconds,
-            CarNumber = "1"  // ACC doesn't provide car number in basic telemetry
+            LastLapTimeDelta = 0,  // Not available in basic telemetry
+            BestLapTime = 0,  // Not available in basic telemetry
+            BestLapTimeDelta = 0,  // Not available in basic telemetry
+            ClutchPct = 0,  // Not available
+            ThrottlePct = 0,  // Not available
+            BrakePct = 0,  // Not available
+            PitLimiterOn = false,
+            CarNumber = "1",  // ACC doesn't provide car number in basic telemetry
+            SteeringPct = 0,  // Not available
         };
 
         return new DisplayUpdate

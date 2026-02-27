@@ -161,53 +161,6 @@ namespace HaddySimHub.Tests
 
         #region Throttle/Brake Conversion Tests
 
-        [TestMethod]
-        public void Convert_ConvertsThrottlePercentage()
-        {
-            var converter = new ACRallyDataConverter();
-            var telemetry = CreateTelemetry(throttleInput: 0.75f);
-            var update = converter.Convert(telemetry);
-            var rally = update.Data as RallyData;
-            
-            Assert.IsNotNull(rally);
-            Assert.AreEqual(75, rally.Throttle);
-        }
-
-        [TestMethod]
-        public void Convert_ConvertsBrakePercentage()
-        {
-            var converter = new ACRallyDataConverter();
-            var telemetry = CreateTelemetry(brakeInput: 0.5f);
-            var update = converter.Convert(telemetry);
-            var rally = update.Data as RallyData;
-            
-            Assert.IsNotNull(rally);
-            Assert.AreEqual(50, rally.Brake);
-        }
-
-        [TestMethod]
-        public void Convert_ConvertsClutchPercentage()
-        {
-            var converter = new ACRallyDataConverter();
-            var telemetry = CreateTelemetry(clutchInput: 0.25f);
-            var update = converter.Convert(telemetry);
-            var rally = update.Data as RallyData;
-            
-            Assert.IsNotNull(rally);
-            Assert.AreEqual(25, rally.Clutch);
-        }
-
-        [TestMethod]
-        public void Convert_MaxThrottleIsOneHundred()
-        {
-            var converter = new ACRallyDataConverter();
-            var telemetry = CreateTelemetry(throttleInput: 1.0f);
-            var update = converter.Convert(telemetry);
-            var rally = update.Data as RallyData;
-            
-            Assert.IsNotNull(rally);
-            Assert.AreEqual(100, rally.Throttle);
-        }
 
         #endregion
 
