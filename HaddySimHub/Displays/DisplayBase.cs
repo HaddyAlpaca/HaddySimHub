@@ -36,9 +36,21 @@ public abstract class DisplayBase<T> : IDisplay
         _gameDataProvider.DataReceived -= HandleDataReceived;
     }
 
-    protected virtual async void HandleDataReceived(object? sender, T data)
+    private void HandleDataReceived(object? sender, T data)
     {
-        var update = _dataConverter.Convert(data);
-        await _displayUpdateSender.SendDisplayUpdate(update);
+        _ = HandleDataReceivedAsync(sender, data).ConfigureAwait(false);
+    }
+
+    protected virtual async Task HandleDataReceivedAsync(object? sender, T data)
+    {
+        try
+        {
+            var update = _dataConverter.Convert(data);
+            await _displayUpdateSender.SendDisplayUpdate(update);
+        }
+        catch (Exception ex)
+        {
+            Logger.Error($"Error in HandleDataReceived: {ex.Message}");
+        }
     }
 }

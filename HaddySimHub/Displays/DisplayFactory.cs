@@ -1,12 +1,6 @@
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
 using HaddySimHub.Interfaces;
-using HaddySimHub.Displays.Dirt2;
-using HaddySimHub.Displays.IRacing;
-using HaddySimHub.Displays.ETS;
-using HaddySimHub.Displays.AC;
-using HaddySimHub.Displays.ACC;
-using HaddySimHub.Displays.ACRally;
 using HaddySimHub.Models;
 
 namespace HaddySimHub.Displays
@@ -20,6 +14,14 @@ namespace HaddySimHub.Displays
         private readonly IServiceProvider _serviceProvider;
         private readonly IOptions<TestDisplayOptions> _testDisplayOptions;
 
+        // Factory delegates for game displays (generic approach)
+        private delegate IDisplay GameDisplayFactory(
+            IGameDataProvider<object> provider,
+            IDataConverter<object, DisplayUpdate> converter,
+            IDisplayUpdateSender sender,
+            string processName,
+            string description);
+
         public DisplayFactory(IServiceProvider serviceProvider, IOptions<TestDisplayOptions> testDisplayOptions)
         {
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
@@ -30,44 +32,55 @@ namespace HaddySimHub.Displays
         {
             return displayTypeName switch
             {
-                "Dirt2.Display" => new Displays.Dirt2.Display(
-                    _serviceProvider.GetRequiredService<IGameDataProvider<Packet>>(),
-                    _serviceProvider.GetRequiredService<IDataConverter<Packet, DisplayUpdate>>(),
-                    _serviceProvider.GetRequiredService<IDisplayUpdateSender>()),
-                "Dirt2.TestDisplay" => new Displays.Dirt2.TestDisplay(
-                    "rally", 
+                // Game displays using SimpleGameDisplay
+                "Dirt2.Display" => CreateGameDisplay<Dirt2.Packet>(
+                    "dirtrally2",
+                    "Dirt Rally 2"),
+                "IRacing.Display" => CreateGameDisplay<iRacingSDK.IDataSample>(
+                    "iracingui",
+                    "IRacing"),
+                "ETS.Display" => CreateGameDisplay<SCSSdkClient.Object.SCSTelemetry>(
+                    "eurotrucks2",
+                    "Euro Truck Simulator 2"),
+                "AC.Display" => CreateGameDisplay<AC.ACTelemetry>(
+                    "ac",
+                    "Assetto Corsa"),
+                "ACC.Display" => CreateGameDisplay<ACC.ACCTelemetry>(
+                    "ac2",
+                    "Assetto Corsa Competizione"),
+                "ACRally.Display" => CreateGameDisplay<ACRally.ACRallyTelemetry>(
+                    "acr",
+                    "Assetto Corsa Rally"),
+
+                // Test displays
+                "Dirt2.TestDisplay" => new Dirt2.TestDisplay(
+                    "rally",
                     _serviceProvider.GetRequiredService<IDataConverter<DisplayUpdate, DisplayUpdate>>(),
                     _serviceProvider.GetRequiredService<IDisplayUpdateSender>()),
-                "IRacing.Display" => new Displays.IRacing.Display(
-                    _serviceProvider.GetRequiredService<IGameDataProvider<iRacingSDK.IDataSample>>(),
-                    _serviceProvider.GetRequiredService<IDataConverter<iRacingSDK.IDataSample, DisplayUpdate>>(),
-                    _serviceProvider.GetRequiredService<IDisplayUpdateSender>()),
-                "IRacing.TestDisplay" => new Displays.IRacing.TestDisplay(
+                "IRacing.TestDisplay" => new IRacing.TestDisplay(
                     "race",
                     _serviceProvider.GetRequiredService<IDataConverter<DisplayUpdate, DisplayUpdate>>(),
                     _serviceProvider.GetRequiredService<IDisplayUpdateSender>()),
-                "ETS.Display" => new Displays.ETS.Display(
-                    _serviceProvider.GetRequiredService<IGameDataProvider<SCSSdkClient.Object.SCSTelemetry>>(),
-                    _serviceProvider.GetRequiredService<IDataConverter<SCSSdkClient.Object.SCSTelemetry, DisplayUpdate>>(),
-                    _serviceProvider.GetRequiredService<IDisplayUpdateSender>()),
-                "ETS.TestDisplay" => new Displays.ETS.TestDisplay(
+                "ETS.TestDisplay" => new ETS.TestDisplay(
                     "truck",
                     _serviceProvider.GetRequiredService<IDataConverter<DisplayUpdate, DisplayUpdate>>(),
                     _serviceProvider.GetRequiredService<IDisplayUpdateSender>()),
-                "AC.Display" => new Displays.AC.Display(
-                    _serviceProvider.GetRequiredService<IGameDataProvider<Displays.AC.ACTelemetry>>(),
-                    _serviceProvider.GetRequiredService<IDataConverter<Displays.AC.ACTelemetry, DisplayUpdate>>(),
-                    _serviceProvider.GetRequiredService<IDisplayUpdateSender>()),
-                "ACC.Display" => new Displays.ACC.Display(
-                    _serviceProvider.GetRequiredService<IGameDataProvider<Displays.ACC.ACCTelemetry>>(),
-                    _serviceProvider.GetRequiredService<IDataConverter<Displays.ACC.ACCTelemetry, DisplayUpdate>>(),
-                    _serviceProvider.GetRequiredService<IDisplayUpdateSender>()),
-                "ACRally.Display" => new Displays.ACRally.Display(
-                    _serviceProvider.GetRequiredService<IGameDataProvider<Displays.ACRally.ACRallyTelemetry>>(),
-                    _serviceProvider.GetRequiredService<IDataConverter<Displays.ACRally.ACRallyTelemetry, DisplayUpdate>>(),
-                    _serviceProvider.GetRequiredService<IDisplayUpdateSender>()),
+
                 _ => throw new InvalidOperationException($"Unknown display type: {displayTypeName}")
             };
         }
+
+        /// <summary>
+        /// Generic helper to create a game display using SimpleGameDisplay<T>
+        /// </summary>
+        private IDisplay CreateGameDisplay<T>(string processName, string description)
+        {
+            var provider = _serviceProvider.GetRequiredService<IGameDataProvider<T>>();
+            var converter = _serviceProvider.GetRequiredService<IDataConverter<T, DisplayUpdate>>();
+            var sender = _serviceProvider.GetRequiredService<IDisplayUpdateSender>();
+
+            return new SimpleGameDisplay<T>(processName, description, provider, converter, sender);
+        }
     }
 }
+

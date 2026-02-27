@@ -1,58 +1,38 @@
-using HaddySimHub.Interfaces;
-
 namespace HaddySimHub.Displays.AC;
 
 /// <summary>
 /// Provides Assetto Corsa telemetry data from shared memory
 /// </summary>
-public class ACGameDataProvider : IGameDataProvider<ACTelemetry>
+public class ACGameDataProvider : SharedMemoryGameDataProviderBase<ACSharedMemoryReader, ACTelemetry>
 {
-    private ACSharedMemoryReader? _reader;
-    private readonly Timer? _updateTimer;
-    private ACTelemetry _lastTelemetry;
-
-    public event EventHandler<ACTelemetry>? DataReceived;
-
-    public ACGameDataProvider()
+    protected override ACSharedMemoryReader CreateReader()
     {
-        _updateTimer = new Timer(UpdateTelemetry, null, Timeout.Infinite, Timeout.Infinite);
+        return new ACSharedMemoryReader();
     }
 
-    public void Start()
+    protected override void ConnectReader(ACSharedMemoryReader reader)
     {
-        _reader = new ACSharedMemoryReader();
-        _reader.Connect();
-
-        if (_reader.IsConnected)
-        {
-            // Update at ~100Hz (10ms intervals)
-            _updateTimer?.Change(TimeSpan.Zero, TimeSpan.FromMilliseconds(10));
-        }
+        reader.Connect();
     }
 
-    public void Stop()
+    protected override void DisconnectReader(ACSharedMemoryReader? reader)
     {
-        _updateTimer?.Change(Timeout.Infinite, Timeout.Infinite);
-        _reader?.Disconnect();
-        _reader?.Dispose();
-        _reader = null;
+        reader?.Disconnect();
+        reader?.Dispose();
     }
 
-    private void UpdateTelemetry(object? state)
+    protected override bool IsConnected(ACSharedMemoryReader? reader)
     {
-        if (_reader == null || !_reader.IsConnected)
-        {
-            return;
-        }
+        return reader?.IsConnected ?? false;
+    }
 
-        if (_reader.TryReadTelemetry(out var telemetry))
-        {
-            // Only fire event if data changed (simple check on RPM)
-            if (telemetry.Rpm != _lastTelemetry.Rpm)
-            {
-                _lastTelemetry = telemetry;
-                DataReceived?.Invoke(this, telemetry);
-            }
-        }
+    protected override bool TryReadTelemetry(ACSharedMemoryReader reader, out ACTelemetry telemetry)
+    {
+        return reader.TryReadTelemetry(out telemetry);
+    }
+
+    protected override bool HasDataChanged(ACTelemetry current, ACTelemetry last)
+    {
+        return current.Rpm != last.Rpm;
     }
 }

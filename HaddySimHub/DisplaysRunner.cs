@@ -1,4 +1,5 @@
 ﻿using HaddySimHub.Displays;
+using HaddySimHub.Interfaces;
 using HaddySimHub.Models;
 using HaddySimHub.Shared;
 using System.Text;
@@ -9,11 +10,13 @@ public class DisplaysRunner
 {
     private readonly DisplayUpdate _idleDisplayUpdate = new() { Type = DisplayType.None };
     private readonly IEnumerable<IDisplay> _displays;
+    private readonly IDisplayUpdateSender _displayUpdateSender;
     private bool _lastStateHadDisplays = false;
 
-    public DisplaysRunner(IEnumerable<IDisplay> displays)
+    public DisplaysRunner(IEnumerable<IDisplay> displays, IDisplayUpdateSender displayUpdateSender)
     {
         _displays = displays ?? [];
+        _displayUpdateSender = displayUpdateSender ?? throw new ArgumentNullException(nameof(displayUpdateSender));
     }
 
     public IDisplay? CurrentDisplay { get; private set; }
@@ -34,7 +37,7 @@ public class DisplaysRunner
 
                     ProcessHelper.FindProcessByDescription("Assetto Corsa Competizione").ForEach(p => Logger.Info($"Found process matching 'Assetto Corsa Competizione': {p.ProcessName} (PID: {p.Id})"));
                 }
-                await GameDataHub.SendDisplayUpdate(_idleDisplayUpdate);
+                await _displayUpdateSender.SendDisplayUpdate(_idleDisplayUpdate);
             }
             else
             {
