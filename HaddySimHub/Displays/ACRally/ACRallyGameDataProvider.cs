@@ -1,58 +1,38 @@
-using HaddySimHub.Interfaces;
-
 namespace HaddySimHub.Displays.ACRally;
 
 /// <summary>
 /// Provides Assetto Corsa Rally telemetry data from shared memory
 /// </summary>
-public class ACRallyGameDataProvider : IGameDataProvider<ACRallyTelemetry>
+public class ACRallyGameDataProvider : SharedMemoryGameDataProviderBase<ACRallySharedMemoryReader, ACRallyTelemetry>
 {
-    private ACRallySharedMemoryReader? _reader;
-    private readonly Timer? _updateTimer;
-    private ACRallyTelemetry _lastTelemetry;
-
-    public event EventHandler<ACRallyTelemetry>? DataReceived;
-
-    public ACRallyGameDataProvider()
+    protected override ACRallySharedMemoryReader CreateReader()
     {
-        _updateTimer = new Timer(UpdateTelemetry, null, Timeout.Infinite, Timeout.Infinite);
+        return new ACRallySharedMemoryReader();
     }
 
-    public void Start()
+    protected override void ConnectReader(ACRallySharedMemoryReader reader)
     {
-        _reader = new ACRallySharedMemoryReader();
-        _reader.Connect();
-
-        if (_reader.IsConnected)
-        {
-            // Update at ~100Hz (10ms intervals)
-            _updateTimer?.Change(TimeSpan.Zero, TimeSpan.FromMilliseconds(10));
-        }
+        reader.Connect();
     }
 
-    public void Stop()
+    protected override void DisconnectReader(ACRallySharedMemoryReader? reader)
     {
-        _updateTimer?.Change(Timeout.Infinite, Timeout.Infinite);
-        _reader?.Disconnect();
-        _reader?.Dispose();
-        _reader = null;
+        reader?.Disconnect();
+        reader?.Dispose();
     }
 
-    private void UpdateTelemetry(object? state)
+    protected override bool IsConnected(ACRallySharedMemoryReader? reader)
     {
-        if (_reader == null || !_reader.IsConnected)
-        {
-            return;
-        }
+        return reader?.IsConnected ?? false;
+    }
 
-        if (_reader.TryReadTelemetry(out var telemetry))
-        {
-            // Only fire event if data changed (simple check on RPM)
-            if (telemetry.Rpm != _lastTelemetry.Rpm)
-            {
-                _lastTelemetry = telemetry;
-                DataReceived?.Invoke(this, telemetry);
-            }
-        }
+    protected override bool TryReadTelemetry(ACRallySharedMemoryReader reader, out ACRallyTelemetry telemetry)
+    {
+        return reader.TryReadTelemetry(out telemetry);
+    }
+
+    protected override bool HasDataChanged(ACRallyTelemetry current, ACRallyTelemetry last)
+    {
+        return current.Rpm != last.Rpm;
     }
 }
