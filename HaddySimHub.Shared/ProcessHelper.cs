@@ -22,6 +22,15 @@ namespace HaddySimHub.Shared
             var processes = Process.GetProcessesByName(processName);
             var isRunning = processes.Length != 0;
             
+            Console.WriteLine($"[ProcessHelper] Checking for process '{processName}': found {processes.Length} instances");
+            if (processes.Length > 0)
+            {
+                foreach (var p in processes)
+                {
+                    Console.WriteLine($"[ProcessHelper] - {processName} (PID: {p.Id})");
+                }
+            }
+            
             return isRunning;
         }
 
@@ -32,6 +41,7 @@ namespace HaddySimHub.Shared
         {
             try
             {
+                Console.WriteLine($"[ProcessHelper] Searching for processes with description containing '{searchTerm}'");
                 var allProcesses = Process.GetProcesses();
                 var matchingProcesses = new List<Process>();
 
@@ -47,20 +57,22 @@ namespace HaddySimHub.Shared
                             fileName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
                         {
                             matchingProcesses.Add(process);
-                            System.Diagnostics.Debug.WriteLine(
-                                $"[ProcessHelper] Found process by description: {process.ProcessName} - {description}");
+                            Console.WriteLine($"[ProcessHelper] Found matching process: {process.ProcessName} (PID: {process.Id}) - Description: '{description}', Filename: '{fileName}'");
                         }
                     }
                     catch
                     {
                         // Skip processes we can't access
+                        Console.WriteLine($"[ProcessHelper] Could not access process {process.ProcessName} (PID: {process.Id})");
                     }
                 }
 
+                Console.WriteLine($"[ProcessHelper] Search completed: found {matchingProcesses.Count} processes matching '{searchTerm}'");
                 return [.. matchingProcesses];
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine($"[ProcessHelper] Error searching for processes: {ex.Message}");
                 return [];
             }
         }

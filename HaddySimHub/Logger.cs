@@ -23,8 +23,11 @@ public static class Logger
 
     public static void LogData(object data) => _logger.Trace($"{JsonSerializer.Serialize(data)}\n");
 
-    public static void Setup(bool debug)
+    public static void Setup()
     {
+        // Check environment variable voor debug logging
+        var enableDebugLogging = Environment.GetEnvironmentVariable("HADDYSIMHUB_DEBUG") == "1";
+        
         var logConfig = new LoggingConfiguration();
 
         var consoleTarget = new ColoredConsoleTarget
@@ -33,12 +36,12 @@ public static class Logger
         };
         logConfig.LoggingRules.Add(new LoggingRule(
             "*",
-            debug ? LogLevel.Debug : LogLevel.Info,
+            enableDebugLogging ? LogLevel.Debug : LogLevel.Info,
             LogLevel.Fatal,
             consoleTarget));
         logConfig.AddTarget("console", consoleTarget);
 
-        if (debug)
+        if (enableDebugLogging)
         {
             // Setup data logging
             var debugTarget = new FileTarget
@@ -64,7 +67,7 @@ public static class Logger
 
         logConfig.LoggingRules.Add(new LoggingRule(
             "*",
-            debug ? LogLevel.Debug : LogLevel.Info,
+            enableDebugLogging ? LogLevel.Debug : LogLevel.Info,
             LogLevel.Fatal,
             fileTarget));
         logConfig.AddTarget("general-logfile", fileTarget);

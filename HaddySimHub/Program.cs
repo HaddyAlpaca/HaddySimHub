@@ -14,7 +14,7 @@ public class Program
     public static async Task Main(string[] args)
     {
         VerifySingleInstance();
-        Logger.Setup(args.Contains("--debug"));
+        Logger.Setup();
 
         if (!args.Contains("--no-update"))
         {
