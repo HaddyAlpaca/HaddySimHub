@@ -29,25 +29,9 @@ public class DisplaysRunner
             var activeDisplays = _displays.Where(d => d.IsActive).ToList();
             if (activeDisplays.Count == 0)
             {
-                // Only log suggestions once when transitioning from having displays to none
                 if (_lastStateHadDisplays)
                 {
-                    Logger.Info("No active displays found - checking for ACC processes:");
-                    
-                    var accProcesses = ProcessHelper.FindProcessByDescription("Assetto Corsa Competizione");
-                    if (accProcesses.Length == 0)
-                    {
-                        Logger.Info("No processes found matching 'Assetto Corsa Competizione'");
-                    }
-                    else
-                    {
-                        Logger.Info($"Found {accProcesses.Length} ACC processes:");
-                        foreach (var p in accProcesses)
-                        {
-                            Logger.Info($"ACC process: {p.ProcessName} (PID: {p.Id})");
-                        }
-                    }
-                    
+                     Logger.Debug("No active displays found");
                     _lastStateHadDisplays = false;
                 }
                 await _displayUpdateSender.SendDisplayUpdate(_idleDisplayUpdate);
