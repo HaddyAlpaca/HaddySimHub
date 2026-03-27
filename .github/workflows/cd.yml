@@ -33,10 +33,10 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Cache NuGet packages
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ~/.nuget/packages
         key: nuget-${{ runner.os }}-${{ hashFiles('**/packages.lock.json') }}
@@ -44,7 +44,7 @@ jobs:
           nuget-${{ runner.os }}-
 
     - name: Install .NET Core
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: ${{ env.dotnet_version }}
 
@@ -58,7 +58,7 @@ jobs:
       run: dotnet publish ./HaddySimHubUpdater -r win-x64 --output ${{ env.dist_folder }}/Updater --no-restore
     
     - name: Cache node modules
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ~/.npm
         key: npm-${{ runner.os }}-${{ hashFiles('ClientApp/src/package-lock.json') }}
@@ -66,7 +66,7 @@ jobs:
           npm-${{ runner.os }}-
 
     - name: Install Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
         node-version: ${{ env.node-version }}
     
