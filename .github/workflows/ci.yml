@@ -20,7 +20,7 @@ jobs:
     uses: actions/checkout@v4
 
   - name: Cache NuGet packages
-    uses: actions/cache@v3
+    uses: actions/cache@v4
     with:
       path: ~/.nuget/packages
       key: nuget-${{ runner.os }}-${{ hashFiles('**/packages.lock.json') }}
@@ -54,7 +54,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Cache node modules
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.npm
         key: npm-${{ runner.os }}-${{ hashFiles('ClientApp/src/package-lock.json') }}
