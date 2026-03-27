@@ -5,9 +5,7 @@
   ],
   "enabledManagers": [
     "npm",
-    "nuget",
-    "dotnet",
-    "msbuild"
+    "nuget"
   ],
   "packageRules": [
     {
