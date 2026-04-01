@@ -57,7 +57,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./ClientApp/src
+        working-directory: ./ClientApp
     env:
       node-version: 24
 
@@ -68,7 +68,7 @@ jobs:
         uses: actions/cache@v5
         with:
           path: ~/.npm
-          key: npm-${{ runner.os }}-${{ hashFiles('ClientApp/src/package-lock.json') }}
+          key: npm-${{ runner.os }}-${{ hashFiles('ClientApp/package-lock.json') }}
           restore-keys: |
             npm-${{ runner.os }}-
 
@@ -93,7 +93,7 @@ jobs:
         uses: actions/upload-artifact@v5
         with:
           name: frontend-coverage
-          path: ClientApp/src/coverage/lcov.info
+          path: ClientApp/coverage/lcov.info
           retention-days: 7
 
   coverage-comment:
