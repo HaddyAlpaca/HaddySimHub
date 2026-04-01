@@ -49,7 +49,7 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: server-coverage
-          path: '**/coverage/coverage.info'
+          path: 'HaddySimHub.Tests/coverage/coverage.info'
           retention-days: 7
 
   clientapp-tests:
