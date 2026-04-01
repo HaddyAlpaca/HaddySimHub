@@ -2,6 +2,7 @@ name: CI
 
 permissions:
   contents: read
+  pull-requests: write
 
 on:
   workflow_dispatch:
@@ -10,74 +11,135 @@ on:
     branches: [main]
 
 jobs:
- server-tests:
-  name: Server tests
-  runs-on: ubuntu-latest
+  server-tests:
+    name: Server tests
+    runs-on: ubuntu-latest
 
-  env:
-    solution_file: ./HaddySimHub.sln
-    dotnet_version: '10.0.100'
+    env:
+      solution_file: ./HaddySimHub.sln
+      dotnet_version: '10.0.100'
 
-  steps:
-  - name: Checkout
-    uses: actions/checkout@v5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
 
-  - name: Cache NuGet packages
-    uses: actions/cache@v5
-    with:
-      path: ~/.nuget/packages
-      key: nuget-${{ runner.os }}-${{ hashFiles('**/packages.lock.json') }}
-      restore-keys: |
-        nuget-${{ runner.os }}-
+      - name: Cache NuGet packages
+        uses: actions/cache@v5
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
 
-  - name: Install .NET Core
-    uses: actions/setup-dotnet@v5
-    with:
-      dotnet-version: ${{ env.dotnet_version }}
+      - name: Install .NET Core
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ env.dotnet_version }}
 
-  - name: Restore dependencies
-    run: dotnet restore ${{ env.solution_file }}
+      - name: Restore dependencies
+        run: dotnet restore ${{ env.solution_file }}
 
-  - name: Build
-    run: dotnet build ${{ env.solution_file }} --no-restore
+      - name: Build
+        run: dotnet build ${{ env.solution_file }} --no-restore
 
-  - name: Test
-    run: dotnet test ${{ env.solution_file }} --no-restore --no-build --verbosity normal
+      - name: Test with coverage
+        run: dotnet test ${{ env.solution_file }} --no-restore --no-build --verbosity normal --collect:"XPlat Code Coverage"
 
- clientapp-tests:
-  name: Frontend tests
-  runs-on: ubuntu-latest
-  defaults:
-    run:
-      working-directory: ./ClientApp/src
-  env:
-    node-version: 24
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v6
+        with:
+          name: server-coverage
+          path: 'HaddySimHub.Tests/coverage/coverage.info'
+          retention-days: 7
 
-  steps:
-    - uses: actions/checkout@v5
+  clientapp-tests:
+    name: Frontend tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./ClientApp
+    env:
+      node-version: 24
 
-    - name: Cache node modules
-      uses: actions/cache@v5
-      with:
-        path: ~/.npm
-        key: npm-${{ runner.os }}-${{ hashFiles('ClientApp/src/package-lock.json') }}
-        restore-keys: |
-          npm-${{ runner.os }}-
+    steps:
+      - uses: actions/checkout@v5
 
-    - name: Install Node.js
-      uses: actions/setup-node@v6
-      with:
-        node-version: ${{ env.node-version }}
+      - name: Cache node modules
+        uses: actions/cache@v5
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ hashFiles('ClientApp/package-lock.json') }}
+          restore-keys: |
+            npm-${{ runner.os }}-
 
-    - name: Install dependencies
-      run: npm ci
-    
-    - name: Lint
-      run: npm run lint
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.node-version }}
 
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Lint
+        run: npm run lint
 
-    - name: Run tests
-      run: npm run test_ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
 
+      - name: Run tests with coverage
+        run: npm run coverage
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v6
+        with:
+          name: frontend-coverage
+          path: ClientApp/coverage/lcov.info
+          retention-days: 7
+
+  coverage-comment:
+    name: Coverage summary
+    runs-on: ubuntu-latest
+    needs: [server-tests, clientapp-tests]
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Download server coverage
+        uses: actions/download-artifact@v8
+        with:
+          name: server-coverage
+          path: ./coverage/server
+
+      - name: Download frontend coverage
+        uses: actions/download-artifact@v8
+        with:
+          name: frontend-coverage
+          path: ./coverage/frontend
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Generate coverage summary
+        run: node .github/workflows/scripts/coverage-summary.js > /tmp/coverage_summary.txt
+
+      - name: Generate workflow summary
+        run: |
+          echo "## Code Coverage Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          cat /tmp/coverage_summary.txt >> $GITHUB_STEP_SUMMARY
+
+      - name: Post PR comment
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "## Code Coverage Report" > /tmp/coverage_comment.md
+          echo "" >> /tmp/coverage_comment.md
+          cat /tmp/coverage_summary.txt >> /tmp/coverage_comment.md
+          gh pr comment ${{ github.event.pull_request.number }} --body-file /tmp/coverage_comment.md
