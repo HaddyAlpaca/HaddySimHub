@@ -147,6 +147,8 @@ jobs:
 
       - name: Post PR comment
         if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           # Create comment file
           cat > /tmp/coverage_comment.md << 'EOF'
