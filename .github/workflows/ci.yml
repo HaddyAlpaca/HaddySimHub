@@ -44,40 +44,47 @@ jobs:
   - name: Test
     run: dotnet test ${{ env.solution_file }} --no-restore --no-build --verbosity normal
 
- clientapp-tests:
-  name: Frontend tests
-  runs-on: ubuntu-latest
-  defaults:
-    run:
-      working-directory: ./ClientApp/src
-  env:
-    node-version: 24
+  clientapp-tests:
+   name: Frontend tests
+   runs-on: ubuntu-latest
+   defaults:
+     run:
+       working-directory: ./ClientApp/src
+   env:
+     node-version: 24
 
-  steps:
-    - uses: actions/checkout@v5
+   steps:
+     - uses: actions/checkout@v5
 
-    - name: Cache node modules
-      uses: actions/cache@v5
-      with:
-        path: ~/.npm
-        key: npm-${{ runner.os }}-${{ hashFiles('ClientApp/src/package-lock.json') }}
-        restore-keys: |
-          npm-${{ runner.os }}-
+     - name: Cache node modules
+       uses: actions/cache@v5
+       with:
+         path: ~/.npm
+         key: npm-${{ runner.os }}-${{ hashFiles('ClientApp/src/package-lock.json') }}
+         restore-keys: |
+           npm-${{ runner.os }}-
 
-    - name: Install Node.js
-      uses: actions/setup-node@v6
-      with:
-        node-version: ${{ env.node-version }}
+     - name: Install Node.js
+       uses: actions/setup-node@v6
+       with:
+         node-version: ${{ env.node-version }}
 
-    - name: Install dependencies
-      run: npm ci
+     - name: Install dependencies
+       run: npm ci
     
-    - name: Lint
-      run: npm run lint
+     - name: Lint
+       run: npm run lint
 
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
+     - name: Install Playwright Browsers
+       run: npx playwright install --with-deps
 
-    - name: Run tests
-      run: npm run test_ci
+     - name: Run tests with coverage
+       run: npm run coverage
+
+     - name: Upload coverage reports
+       uses: actions/upload-artifact@v5
+       with:
+         name: coverage-report
+         path: ClientApp/src/coverage/**/*
+         retention-days: 7
 

@@ -6,9 +6,19 @@ export default defineConfig({
     browser: {
       provider: playwright(),
       enabled: true,
-      // at least one instance is required
       instances: [
         { browser: 'chromium' },
+      ],
+    },
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'lcov', 'html'],
+      reportsDirectory: './coverage',
+      exclude: [
+        '**/*.spec.ts',
+        '**/*.harness.ts',
+        '**/testing/**',
+        '**/index.ts',
       ],
     },
   },

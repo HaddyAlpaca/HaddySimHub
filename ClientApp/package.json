@@ -8,6 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "test_ci": "ng test --no-watch",
+    "coverage": "ng test --no-watch --coverage",
     "lint": "cross-env LINT_CONFIG=production ng lint --eslint-config eslint.config.mjs",
     "build:prod": "ng build --prod"
   },
@@ -55,6 +56,7 @@
     "@typescript-eslint/parser": "^8.57.2",
     "@vitest/browser": "^4.1.2",
     "@vitest/browser-playwright": "^4.1.2",
+    "@vitest/coverage-v8": "^4.1.2",
     "@vitest/eslint-plugin": "^1.6.13",
     "angular-eslint": "^21.3.1",
     "baseline-browser-mapping": "^2.10.11",
