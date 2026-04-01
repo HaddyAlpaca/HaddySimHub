@@ -41,8 +41,15 @@ jobs:
   - name: Build
     run: dotnet build ${{ env.solution_file }} --no-restore
 
-  - name: Test
-    run: dotnet test ${{ env.solution_file }} --no-restore --no-build --verbosity normal
+  - name: Test with coverage
+    run: dotnet test ${{ env.solution_file }} --no-restore --no-build --verbosity normal --collect:"XPlat Code Coverage"
+
+  - name: Upload coverage report
+    uses: actions/upload-artifact@v5
+    with:
+      name: server-coverage-report
+      path: '**/coverage/**/*'
+      retention-days: 7
 
   clientapp-tests:
    name: Frontend tests
