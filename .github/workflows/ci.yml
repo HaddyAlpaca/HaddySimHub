@@ -49,7 +49,7 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: server-coverage
-          path: HaddySimHub.Tests/coverage/coverage.info
+          path: '**/coverage/coverage.info'
           retention-days: 7
 
   clientapp-tests:
@@ -93,7 +93,7 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: frontend-coverage
-          path: coverage/lcov.info
+          path: ClientApp/coverage/lcov.info
           retention-days: 7
 
   coverage-comment:
@@ -109,13 +109,13 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Download server coverage
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: server-coverage
           path: ./coverage/server
 
       - name: Download frontend coverage
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: frontend-coverage
           path: ./coverage/frontend
