@@ -109,185 +109,37 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Download server coverage
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: server-coverage
           path: ./coverage/server
 
       - name: Download frontend coverage
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: frontend-coverage
           path: ./coverage/frontend
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Generate coverage summary
+        run: node .github/workflows/scripts/coverage-summary.js > /tmp/coverage_summary.txt
 
       - name: Generate workflow summary
         run: |
           echo "## Code Coverage Report" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
-          # Backend coverage summary
-          echo "### Backend (.NET)" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          if [ -f "./coverage/server/coverage.info" ]; then
-            # Extract summary from lcov file
-            SERVER_FILE="./coverage/server/coverage.info"
-            TOTAL_LINES=$(grep "^LF:" "$SERVER_FILE" | cut -d: -f2)
-            COVERED_LINES=$(grep "^LH:" "$SERVER_FILE" | cut -d: -f2)
-            TOTAL_FUNCS=$(grep "^FNF:" "$SERVER_FILE" | cut -d: -f2)
-            COVERED_FUNCS=$(grep "^FNH:" "$SERVER_FILE" | cut -d: -f2)
-            TOTAL_BRANCHES=$(grep "^BRF:" "$SERVER_FILE" | cut -d: -f2)
-            COVERED_BRANCHES=$(grep "^BRH:" "$SERVER_FILE" | cut -d: -f2)
-            
-            LINE_PCT="0"
-            if [ "$TOTAL_LINES" -gt 0 ]; then
-              LINE_PCT=$(awk "BEGIN {printf \"%.1f\", ($COVERED_LINES/$TOTAL_LINES)*100}")
-            fi
-            FUNC_PCT="0"
-            if [ "$TOTAL_FUNCS" -gt 0 ]; then
-              FUNC_PCT=$(awk "BEGIN {printf \"%.1f\", ($COVERED_FUNCS/$TOTAL_FUNCS)*100}")
-            fi
-            BRANCH_PCT="0"
-            if [ "$TOTAL_BRANCHES" -gt 0 ]; then
-              BRANCH_PCT=$(awk "BEGIN {printf \"%.1f\", ($COVERED_BRANCHES/$TOTAL_BRANCHES)*100}")
-            fi
-            
-            echo "| Metric   | Coverage |" >> $GITHUB_STEP_SUMMARY
-            echo "|----------|----------|" >> $GITHUB_STEP_SUMMARY
-            echo "| Lines    | $LINE_PCT%   |" >> $GITHUB_STEP_SUMMARY
-            echo "| Functions| $FUNC_PCT%   |" >> $GITHUB_STEP_SUMMARY
-            echo "| Branches | $BRANCH_PCT%   |" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "No coverage file found" >> $GITHUB_STEP_SUMMARY
-          fi
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          
-          # Frontend coverage summary
-          echo "### Frontend (TypeScript)" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          if [ -f "./coverage/frontend/lcov.info" ]; then
-            # Extract summary from lcov file
-            FRONTEND_FILE="./coverage/frontend/lcov.info"
-            TOTAL_LINES=$(grep "^LH:" "$FRONTEND_FILE" | cut -d: -f2)
-            COVERED_LINES=$(grep "^LF:" "$FRONTEND_FILE" | cut -d: -f2)
-            TOTAL_FUNCS=$(grep "^FNH:" "$FRONTEND_FILE" | cut -d: -f2)
-            COVERED_FUNCS=$(grep "^FNF:" "$FRONTEND_FILE" | cut -d: -f2)
-            TOTAL_BRANCHES=$(grep "^BRH:" "$FRONTEND_FILE" | cut -d: -f2)
-            COVERED_BRANCHES=$(grep "^BRF:" "$FRONTEND_FILE" | cut -d: -f2)
-            
-            # Swap for frontend format
-            TEMP=$TOTAL_LINES
-            TOTAL_LINES=$COVERED_LINES
-            COVERED_LINES=$TEMP
-            
-            LINE_PCT="0"
-            if [ "$TOTAL_LINES" -gt 0 ]; then
-              LINE_PCT=$(awk "BEGIN {printf \"%.1f\", ($COVERED_LINES/$TOTAL_LINES)*100}")
-            fi
-            FUNC_PCT="0"
-            if [ "$TOTAL_FUNCS" -gt 0 ]; then
-              FUNC_PCT=$(awk "BEGIN {printf \"%.1f\", ($COVERED_FUNCS/$TOTAL_FUNCS)*100}")
-            fi
-            BRANCH_PCT="0"
-            if [ "$TOTAL_BRANCHES" -gt 0 ]; then
-              BRANCH_PCT=$(awk "BEGIN {printf \"%.1f\", ($COVERED_BRANCHES/$TOTAL_BRANCHES)*100}")
-            fi
-            
-            echo "| Metric   | Coverage |" >> $GITHUB_STEP_SUMMARY
-            echo "|----------|----------|" >> $GITHUB_STEP_SUMMARY
-            echo "| Lines    | $LINE_PCT%   |" >> $GITHUB_STEP_SUMMARY
-            echo "| Functions| $FUNC_PCT%   |" >> $GITHUB_STEP_SUMMARY
-            echo "| Branches | $BRANCH_PCT%   |" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "No coverage file found" >> $GITHUB_STEP_SUMMARY
-          fi
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat /tmp/coverage_summary.txt >> $GITHUB_STEP_SUMMARY
 
       - name: Post PR comment
         if: github.event_name == 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          # Build comment body
-          cat > /tmp/coverage_comment.md << 'EOF'
-          ## Code Coverage Report
-          EOF
-          
-          # Backend coverage
+          echo "## Code Coverage Report" > /tmp/coverage_comment.md
           echo "" >> /tmp/coverage_comment.md
-          echo "### Backend (.NET)" >> /tmp/coverage_comment.md
-          echo '```' >> /tmp/coverage_comment.md
-          if [ -f "./coverage/server/coverage.info" ]; then
-            SERVER_FILE="./coverage/server/coverage.info"
-            TOTAL_LINES=$(grep "^LF:" "$SERVER_FILE" | cut -d: -f2)
-            COVERED_LINES=$(grep "^LH:" "$SERVER_FILE" | cut -d: -f2)
-            TOTAL_FUNCS=$(grep "^FNF:" "$SERVER_FILE" | cut -d: -f2)
-            COVERED_FUNCS=$(grep "^FNH:" "$SERVER_FILE" | cut -d: -f2)
-            TOTAL_BRANCHES=$(grep "^BRF:" "$SERVER_FILE" | cut -d: -f2)
-            COVERED_BRANCHES=$(grep "^BRH:" "$SERVER_FILE" | cut -d: -f2)
-            
-            LINE_PCT="0"
-            if [ "$TOTAL_LINES" -gt 0 ]; then
-              LINE_PCT=$(awk "BEGIN {printf \"%.1f\", ($COVERED_LINES/$TOTAL_LINES)*100}")
-            fi
-            FUNC_PCT="0"
-            if [ "$TOTAL_FUNCS" -gt 0 ]; then
-              FUNC_PCT=$(awk "BEGIN {printf \"%.1f\", ($COVERED_FUNCS/$TOTAL_FUNCS)*100}")
-            fi
-            BRANCH_PCT="0"
-            if [ "$TOTAL_BRANCHES" -gt 0 ]; then
-              BRANCH_PCT=$(awk "BEGIN {printf \"%.1f\", ($COVERED_BRANCHES/$TOTAL_BRANCHES)*100}")
-            fi
-            
-            echo "| Metric   | Coverage |" >> /tmp/coverage_comment.md
-            echo "|----------|----------|" >> /tmp/coverage_comment.md
-            echo "| Lines    | $LINE_PCT%   |" >> /tmp/coverage_comment.md
-            echo "| Functions| $FUNC_PCT%   |" >> /tmp/coverage_comment.md
-            echo "| Branches | $BRANCH_PCT%   |" >> /tmp/coverage_comment.md
-          else
-            echo "No coverage file found" >> /tmp/coverage_comment.md
-          fi
-          echo '```' >> /tmp/coverage_comment.md
-          
-          # Frontend coverage
-          echo "" >> /tmp/coverage_comment.md
-          echo "### Frontend (TypeScript)" >> /tmp/coverage_comment.md
-          echo '```' >> /tmp/coverage_comment.md
-          if [ -f "./coverage/frontend/lcov.info" ]; then
-            FRONTEND_FILE="./coverage/frontend/lcov.info"
-            TOTAL_LINES=$(grep "^LH:" "$FRONTEND_FILE" | cut -d: -f2)
-            COVERED_LINES=$(grep "^LF:" "$FRONTEND_FILE" | cut -d: -f2)
-            TOTAL_FUNCS=$(grep "^FNH:" "$FRONTEND_FILE" | cut -d: -f2)
-            COVERED_FUNCS=$(grep "^FNF:" "$FRONTEND_FILE" | cut -d: -f2)
-            TOTAL_BRANCHES=$(grep "^BRH:" "$FRONTEND_FILE" | cut -d: -f2)
-            COVERED_BRANCHES=$(grep "^BRF:" "$FRONTEND_FILE" | cut -d: -f2)
-            
-            TEMP=$TOTAL_LINES
-            TOTAL_LINES=$COVERED_LINES
-            COVERED_LINES=$TEMP
-            
-            LINE_PCT="0"
-            if [ "$TOTAL_LINES" -gt 0 ]; then
-              LINE_PCT=$(awk "BEGIN {printf \"%.1f\", ($COVERED_LINES/$TOTAL_LINES)*100}")
-            fi
-            FUNC_PCT="0"
-            if [ "$TOTAL_FUNCS" -gt 0 ]; then
-              FUNC_PCT=$(awk "BEGIN {printf \"%.1f\", ($COVERED_FUNCS/$TOTAL_FUNCS)*100}")
-            fi
-            BRANCH_PCT="0"
-            if [ "$TOTAL_BRANCHES" -gt 0 ]; then
-              BRANCH_PCT=$(awk "BEGIN {printf \"%.1f\", ($COVERED_BRANCHES/$TOTAL_BRANCHES)*100}")
-            fi
-            
-            echo "| Metric   | Coverage |" >> /tmp/coverage_comment.md
-            echo "|----------|----------|" >> /tmp/coverage_comment.md
-            echo "| Lines    | $LINE_PCT%   |" >> /tmp/coverage_comment.md
-            echo "| Functions| $FUNC_PCT%   |" >> /tmp/coverage_comment.md
-            echo "| Branches | $BRANCH_PCT%   |" >> /tmp/coverage_comment.md
-          else
-            echo "No coverage file found" >> /tmp/coverage_comment.md
-          fi
-          echo '```' >> /tmp/coverage_comment.md
-          
-          # Post comment using GitHub CLI
+          cat /tmp/coverage_summary.txt >> /tmp/coverage_comment.md
           gh pr comment ${{ github.event.pull_request.number }} --body-file /tmp/coverage_comment.md
