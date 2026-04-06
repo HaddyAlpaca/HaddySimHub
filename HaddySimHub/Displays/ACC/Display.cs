@@ -4,14 +4,24 @@ using HaddySimHub.Shared;
 
 namespace HaddySimHub.Displays.ACC;
 
-/// <summary>
-/// Display for Assetto Corsa Competizione
-/// </summary>
 public sealed class Display : DisplayBase<ACCTelemetry>
 {
+    private static readonly string[] ACCProcessNames = { "acc", "ACC", "Acc" };
+    
     public override string Description => "Assetto Corsa Competizione";
     
-    public override bool IsActive  => ProcessHelper.IsProcessRunning("acc");
+    public override bool IsActive
+    {
+        get
+        {
+            var isRunning = ACCProcessNames.Any(name => ProcessHelper.IsProcessRunning(name));
+            if (!isRunning)
+            {
+                Logger.Debug($"[ACC] Game not detected (checked: {string.Join(", ", ACCProcessNames)})");
+            }
+            return isRunning;
+        }
+    }
 
     public Display(
         IGameDataProvider<ACCTelemetry> gameDataProvider,
