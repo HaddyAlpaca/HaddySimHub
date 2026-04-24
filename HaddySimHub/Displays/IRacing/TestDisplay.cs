@@ -42,9 +42,9 @@ namespace HaddySimHub.Displays.IRacing
                     MaxIncidents = 17,
                     Position = new Random().Next(1, 20),
                     TotalLaps = new Random().Next(10, 20),
-                    BrakePct = 20,
-                    ThrottlePct = 80,
-                    SteeringPct = 40,
+                    BrakePct = new Random().Next(20, 30),
+                    ThrottlePct = new Random().Next(70, 80),
+                    SteeringPct = new Random().Next(40, 50),
                     CarNumber = "80",
                 }
             };
