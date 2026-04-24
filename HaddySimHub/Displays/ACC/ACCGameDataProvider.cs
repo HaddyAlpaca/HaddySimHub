@@ -1,30 +1,30 @@
+using HaddySimHub;
+
 namespace HaddySimHub.Displays.ACC;
 
-/// <summary>
-/// Provides Assetto Corsa Competizione telemetry data from shared memory
-/// </summary>
 public class ACCGameDataProvider : SharedMemoryGameDataProviderBase<ACCSharedMemoryReader, ACCTelemetry>
 {
+    private DateTime _lastDataLog = DateTime.MinValue;
+    private int _missedReads;
+    
     public override void Start()
     {
-        Logger.Debug("[ACC] Starting game data provider");
+        Logger.Info("[ACC] Starting game data provider");
         base.Start();
 
-        Logger.Info($"ACCGameDataProvider: reader connected={IsConnected(Reader)}");
         if (IsConnected(Reader))
         {
-            Logger.Info("[ACC] Connected to ACC shared memory, starting data updates");
-            Logger.Debug("ACCGameDataProvider: update timer started (10ms intervals).");
+            Logger.Info("[ACC] Connected to ACC shared memory, starting data updates (10ms intervals)");
         }
         else
         {
-            Logger.Debug("ACCGameDataProvider: reader not connected after Connect(). Will retry only when Start() is called again.");
+            Logger.Info("[ACC] Not connected to shared memory. Will retry when game is detected...");
         }
     }
 
     public override void Stop()
     {
-        Logger.Debug("[ACC] Stopping game data provider");
+        Logger.Info("[ACC] Stopping game data provider");
         base.Stop();
     }
 
@@ -32,21 +32,29 @@ public class ACCGameDataProvider : SharedMemoryGameDataProviderBase<ACCSharedMem
     {
         if (Reader == null || !IsConnected(Reader))
         {
-            Logger.Debug("ACCGameDataProvider: UpdateTelemetry skipped because reader is null or not connected.");
+            _missedReads++;
+            if (_missedReads == 1 || _missedReads % 100 == 0)
+            {
+                Logger.Debug($"[ACC] UpdateTelemetry: not connected ({_missedReads} consecutive misses)");
+            }
             return;
         }
 
+        _missedReads = 0;
+        
         if (TryReadTelemetry(Reader, out var telemetry))
         {
             if (HasDataChanged(telemetry, LastTelemetry))
             {
                 LastTelemetry = telemetry;
                 OnDataReceived(telemetry);
+                
+                if ((DateTime.Now - _lastDataLog).TotalSeconds > 5)
+                {
+                    Logger.Debug($"[ACC] Telemetry: RPM={telemetry.Rpms:F0} Speed={telemetry.SpeedKmh:F1} Gear={telemetry.Gear}");
+                    _lastDataLog = DateTime.Now;
+                }
             }
-        }
-        else
-        {
-            Logger.Debug("ACCGameDataProvider: TryReadTelemetry returned false.");
         }
     }
 
@@ -78,6 +86,6 @@ public class ACCGameDataProvider : SharedMemoryGameDataProviderBase<ACCSharedMem
 
     protected override bool HasDataChanged(ACCTelemetry current, ACCTelemetry last)
     {
-        return current.Rpm != last.Rpm;
+        return current.Rpms != last.Rpms;
     }
 }

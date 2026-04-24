@@ -260,18 +260,18 @@ FN:21,HaddySimHub.Displays.IDisplay HaddySimHub.DisplaysRunner::get_CurrentDispl
 FNDA:0,HaddySimHub.Displays.IDisplay HaddySimHub.DisplaysRunner::get_CurrentDisplay()
 DA:22,0
 FN:10,System.Void HaddySimHub.DisplaysRunner::.ctor(System.Collections.Generic.IEnumerable`1<HaddySimHub.Displays.IDisplay>,HaddySimHub.Interfaces.IDisplayUpdateSender)
-FNDA:2,System.Void HaddySimHub.DisplaysRunner::.ctor(System.Collections.Generic.IEnumerable`1<HaddySimHub.Displays.IDisplay>,HaddySimHub.Interfaces.IDisplayUpdateSender)
-DA:11,2
-DA:14,2
-DA:16,2
-DA:17,2
-DA:18,2
-DA:19,2
-DA:20,2
+FNDA:0,System.Void HaddySimHub.DisplaysRunner::.ctor(System.Collections.Generic.IEnumerable`1<HaddySimHub.Displays.IDisplay>,HaddySimHub.Interfaces.IDisplayUpdateSender)
+DA:11,0
+DA:14,0
+DA:16,0
+DA:17,0
+DA:18,0
+DA:19,0
+DA:20,0
 BRDA:18,37,0,0
-BRDA:18,37,1,2
+BRDA:18,37,1,0
 BRDA:19,53,0,0
-BRDA:19,53,1,2
+BRDA:19,53,1,0
 FN:28,System.Boolean HaddySimHub.DisplaysRunner/<>c::<RunAsync>b__9_0(HaddySimHub.Displays.IDisplay)
 FNDA:0,System.Boolean HaddySimHub.DisplaysRunner/<>c::<RunAsync>b__9_0(HaddySimHub.Displays.IDisplay)
 DA:29,0
@@ -342,11 +342,11 @@ BRDA:52,565,0,0
 BRDA:52,565,1,0
 BRDA:27,901,0,0
 LF:59
-LH:7
+LH:0
 BRF:14
-BRH:2
+BRH:0
 FNF:6
-FNH:1
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Logger.cs
 FN:12,System.Void HaddySimHub.Logger::Debug(System.String)
@@ -514,24 +514,24 @@ FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Services\DisplayUpdateSender.cs
 FN:10,System.Void HaddySimHub.Services.DisplayUpdateSender::.ctor(HaddySimHub.Interfaces.IHubService)
-FNDA:13,System.Void HaddySimHub.Services.DisplayUpdateSender::.ctor(HaddySimHub.Interfaces.IHubService)
-DA:11,13
-DA:12,13
-DA:13,13
-DA:14,13
+FNDA:0,System.Void HaddySimHub.Services.DisplayUpdateSender::.ctor(HaddySimHub.Interfaces.IHubService)
+DA:11,0
+DA:12,0
+DA:13,0
+DA:14,0
 BRDA:13,11,0,0
-BRDA:13,11,1,13
+BRDA:13,11,1,0
 FN:16,System.Void HaddySimHub.Services.DisplayUpdateSender/<SendDisplayUpdate>d__2::MoveNext()
 FNDA:0,System.Void HaddySimHub.Services.DisplayUpdateSender/<SendDisplayUpdate>d__2::MoveNext()
 DA:17,0
 DA:18,0
 DA:19,0
 LF:7
-LH:4
+LH:0
 BRF:2
-BRH:1
+BRH:0
 FNF:2
-FNH:1
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Services\HubService.cs
 FN:10,System.Void HaddySimHub.Services.HubService::.ctor(Microsoft.AspNetCore.SignalR.IHubContext`1<HaddySimHub.GameDataHub>)
@@ -572,11 +572,11 @@ FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Models\DisplayUpdate.cs
 FN:4,HaddySimHub.Models.DisplayType HaddySimHub.Models.DisplayUpdate::get_Type()
-FNDA:163,HaddySimHub.Models.DisplayType HaddySimHub.Models.DisplayUpdate::get_Type()
-DA:5,163
+FNDA:16,HaddySimHub.Models.DisplayType HaddySimHub.Models.DisplayUpdate::get_Type()
+DA:5,16
 FN:5,System.Object HaddySimHub.Models.DisplayUpdate::get_Data()
-FNDA:312,System.Object HaddySimHub.Models.DisplayUpdate::get_Data()
-DA:6,312
+FNDA:30,System.Object HaddySimHub.Models.DisplayUpdate::get_Data()
+DA:6,30
 LF:2
 LH:2
 BRF:0
@@ -586,119 +586,119 @@ FNH:2
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Models\RaceData.cs
 FN:5,System.String HaddySimHub.Models.RaceData::get_SessionType()
-FNDA:122,System.String HaddySimHub.Models.RaceData::get_SessionType()
-DA:6,122
+FNDA:33,System.String HaddySimHub.Models.RaceData::get_SessionType()
+DA:6,33
 FN:7,System.Boolean HaddySimHub.Models.RaceData::get_IsLimitedTime()
-FNDA:58,System.Boolean HaddySimHub.Models.RaceData::get_IsLimitedTime()
-DA:8,58
+FNDA:15,System.Boolean HaddySimHub.Models.RaceData::get_IsLimitedTime()
+DA:8,15
 FN:9,System.Boolean HaddySimHub.Models.RaceData::get_IsLimitedSessionLaps()
-FNDA:58,System.Boolean HaddySimHub.Models.RaceData::get_IsLimitedSessionLaps()
-DA:10,58
+FNDA:15,System.Boolean HaddySimHub.Models.RaceData::get_IsLimitedSessionLaps()
+DA:10,15
 FN:11,System.Int32 HaddySimHub.Models.RaceData::get_CurrentLap()
-FNDA:60,System.Int32 HaddySimHub.Models.RaceData::get_CurrentLap()
-DA:12,60
+FNDA:16,System.Int32 HaddySimHub.Models.RaceData::get_CurrentLap()
+DA:12,16
 FN:13,System.Int32 HaddySimHub.Models.RaceData::get_TotalLaps()
-FNDA:60,System.Int32 HaddySimHub.Models.RaceData::get_TotalLaps()
-DA:14,60
+FNDA:16,System.Int32 HaddySimHub.Models.RaceData::get_TotalLaps()
+DA:14,16
 FN:15,System.Single HaddySimHub.Models.RaceData::get_SessionTimeRemaining()
-FNDA:58,System.Single HaddySimHub.Models.RaceData::get_SessionTimeRemaining()
-DA:16,58
+FNDA:15,System.Single HaddySimHub.Models.RaceData::get_SessionTimeRemaining()
+DA:16,15
 FN:17,System.Int32 HaddySimHub.Models.RaceData::get_Position()
-FNDA:59,System.Int32 HaddySimHub.Models.RaceData::get_Position()
-DA:18,59
+FNDA:15,System.Int32 HaddySimHub.Models.RaceData::get_Position()
+DA:18,15
 FN:19,System.Int32 HaddySimHub.Models.RaceData::get_Speed()
-FNDA:63,System.Int32 HaddySimHub.Models.RaceData::get_Speed()
-DA:20,63
+FNDA:16,System.Int32 HaddySimHub.Models.RaceData::get_Speed()
+DA:20,16
 FN:21,System.String HaddySimHub.Models.RaceData::get_Gear()
-FNDA:68,System.String HaddySimHub.Models.RaceData::get_Gear()
-DA:22,68
+FNDA:18,System.String HaddySimHub.Models.RaceData::get_Gear()
+DA:22,18
 FN:23,System.Int32 HaddySimHub.Models.RaceData::get_Rpm()
-FNDA:62,System.Int32 HaddySimHub.Models.RaceData::get_Rpm()
-DA:24,62
+FNDA:16,System.Int32 HaddySimHub.Models.RaceData::get_Rpm()
+DA:24,16
 FN:25,System.Int32 HaddySimHub.Models.RaceData::get_RpmMax()
-FNDA:58,System.Int32 HaddySimHub.Models.RaceData::get_RpmMax()
-DA:26,58
+FNDA:15,System.Int32 HaddySimHub.Models.RaceData::get_RpmMax()
+DA:26,15
 FN:27,System.Single HaddySimHub.Models.RaceData::get_TrackTemp()
-FNDA:61,System.Single HaddySimHub.Models.RaceData::get_TrackTemp()
-DA:28,61
+FNDA:16,System.Single HaddySimHub.Models.RaceData::get_TrackTemp()
+DA:28,16
 FN:29,System.Single HaddySimHub.Models.RaceData::get_AirTemp()
-FNDA:61,System.Single HaddySimHub.Models.RaceData::get_AirTemp()
-DA:30,61
+FNDA:16,System.Single HaddySimHub.Models.RaceData::get_AirTemp()
+DA:30,16
 FN:31,System.Single HaddySimHub.Models.RaceData::get_FuelRemaining()
-FNDA:59,System.Single HaddySimHub.Models.RaceData::get_FuelRemaining()
-DA:32,59
+FNDA:15,System.Single HaddySimHub.Models.RaceData::get_FuelRemaining()
+DA:32,15
 FN:33,System.Single HaddySimHub.Models.RaceData::get_FuelAvgLap()
-FNDA:59,System.Single HaddySimHub.Models.RaceData::get_FuelAvgLap()
-DA:34,59
+FNDA:16,System.Single HaddySimHub.Models.RaceData::get_FuelAvgLap()
+DA:34,16
 FN:35,System.Single HaddySimHub.Models.RaceData::get_FuelLastLap()
-FNDA:58,System.Single HaddySimHub.Models.RaceData::get_FuelLastLap()
-DA:36,58
+FNDA:15,System.Single HaddySimHub.Models.RaceData::get_FuelLastLap()
+DA:36,15
 FN:37,System.Single HaddySimHub.Models.RaceData::get_FuelEstLaps()
-FNDA:61,System.Single HaddySimHub.Models.RaceData::get_FuelEstLaps()
-DA:38,61
+FNDA:16,System.Single HaddySimHub.Models.RaceData::get_FuelEstLaps()
+DA:38,16
 FN:39,System.Single HaddySimHub.Models.RaceData::get_CurrentLapTime()
-FNDA:59,System.Single HaddySimHub.Models.RaceData::get_CurrentLapTime()
-DA:40,59
+FNDA:16,System.Single HaddySimHub.Models.RaceData::get_CurrentLapTime()
+DA:40,16
 FN:41,System.Single HaddySimHub.Models.RaceData::get_LastLapTime()
-FNDA:58,System.Single HaddySimHub.Models.RaceData::get_LastLapTime()
-DA:42,58
+FNDA:15,System.Single HaddySimHub.Models.RaceData::get_LastLapTime()
+DA:42,15
 FN:43,System.Single HaddySimHub.Models.RaceData::get_LastLapTimeDelta()
-FNDA:58,System.Single HaddySimHub.Models.RaceData::get_LastLapTimeDelta()
-DA:44,58
+FNDA:15,System.Single HaddySimHub.Models.RaceData::get_LastLapTimeDelta()
+DA:44,15
 FN:45,System.Single HaddySimHub.Models.RaceData::get_BestLapTime()
-FNDA:58,System.Single HaddySimHub.Models.RaceData::get_BestLapTime()
-DA:46,58
+FNDA:15,System.Single HaddySimHub.Models.RaceData::get_BestLapTime()
+DA:46,15
 FN:47,System.Single HaddySimHub.Models.RaceData::get_BestLapTimeDelta()
-FNDA:58,System.Single HaddySimHub.Models.RaceData::get_BestLapTimeDelta()
-DA:48,58
+FNDA:15,System.Single HaddySimHub.Models.RaceData::get_BestLapTimeDelta()
+DA:48,15
 FN:49,System.Int32 HaddySimHub.Models.RaceData::get_ClutchPct()
-FNDA:58,System.Int32 HaddySimHub.Models.RaceData::get_ClutchPct()
-DA:50,58
+FNDA:15,System.Int32 HaddySimHub.Models.RaceData::get_ClutchPct()
+DA:50,15
 FN:51,System.Int32 HaddySimHub.Models.RaceData::get_ThrottlePct()
-FNDA:61,System.Int32 HaddySimHub.Models.RaceData::get_ThrottlePct()
-DA:52,61
+FNDA:15,System.Int32 HaddySimHub.Models.RaceData::get_ThrottlePct()
+DA:52,15
 FN:53,System.Int32 HaddySimHub.Models.RaceData::get_BrakePct()
-FNDA:59,System.Int32 HaddySimHub.Models.RaceData::get_BrakePct()
-DA:54,59
+FNDA:15,System.Int32 HaddySimHub.Models.RaceData::get_BrakePct()
+DA:54,15
 FN:55,System.Boolean HaddySimHub.Models.RaceData::get_PitLimiterOn()
-FNDA:60,System.Boolean HaddySimHub.Models.RaceData::get_PitLimiterOn()
-DA:56,60
+FNDA:15,System.Boolean HaddySimHub.Models.RaceData::get_PitLimiterOn()
+DA:56,15
 FN:57,System.String HaddySimHub.Models.RaceData::get_CarNumber()
-FNDA:58,System.String HaddySimHub.Models.RaceData::get_CarNumber()
-DA:58,58
+FNDA:15,System.String HaddySimHub.Models.RaceData::get_CarNumber()
+DA:58,15
 FN:59,System.Int32 HaddySimHub.Models.RaceData::get_SteeringPct()
-FNDA:65,System.Int32 HaddySimHub.Models.RaceData::get_SteeringPct()
-DA:60,65
+FNDA:15,System.Int32 HaddySimHub.Models.RaceData::get_SteeringPct()
+DA:60,15
 FN:63,System.Nullable`1<System.Single> HaddySimHub.Models.RaceData::get_BrakeBias()
-FNDA:31,System.Nullable`1<System.Single> HaddySimHub.Models.RaceData::get_BrakeBias()
-DA:64,31
+FNDA:15,System.Nullable`1<System.Single> HaddySimHub.Models.RaceData::get_BrakeBias()
+DA:64,15
 FN:66,System.Nullable`1<System.Int32> HaddySimHub.Models.RaceData::get_StrengthOfField()
-FNDA:30,System.Nullable`1<System.Int32> HaddySimHub.Models.RaceData::get_StrengthOfField()
-DA:67,30
+FNDA:0,System.Nullable`1<System.Int32> HaddySimHub.Models.RaceData::get_StrengthOfField()
+DA:67,0
 FN:69,System.Nullable`1<System.Int64> HaddySimHub.Models.RaceData::get_Incidents()
-FNDA:32,System.Nullable`1<System.Int64> HaddySimHub.Models.RaceData::get_Incidents()
-DA:70,32
+FNDA:0,System.Nullable`1<System.Int64> HaddySimHub.Models.RaceData::get_Incidents()
+DA:70,0
 FN:72,System.Nullable`1<System.Int64> HaddySimHub.Models.RaceData::get_MaxIncidents()
-FNDA:30,System.Nullable`1<System.Int64> HaddySimHub.Models.RaceData::get_MaxIncidents()
-DA:73,30
+FNDA:0,System.Nullable`1<System.Int64> HaddySimHub.Models.RaceData::get_MaxIncidents()
+DA:73,0
 FN:75,System.Nullable`1<System.Int32> HaddySimHub.Models.RaceData::get_IRating()
 FNDA:0,System.Nullable`1<System.Int32> HaddySimHub.Models.RaceData::get_IRating()
 DA:76,0
 FN:78,System.Nullable`1<System.Int32> HaddySimHub.Models.RaceData::get_SafetyRating()
-FNDA:30,System.Nullable`1<System.Int32> HaddySimHub.Models.RaceData::get_SafetyRating()
-DA:79,30
+FNDA:0,System.Nullable`1<System.Int32> HaddySimHub.Models.RaceData::get_SafetyRating()
+DA:79,0
 FN:81,System.Nullable`1<System.Int32> HaddySimHub.Models.RaceData::get_Penalties()
 FNDA:0,System.Nullable`1<System.Int32> HaddySimHub.Models.RaceData::get_Penalties()
 DA:82,0
 FN:84,System.Nullable`1<System.Int32> HaddySimHub.Models.RaceData::get_PenaltyTime()
-FNDA:0,System.Nullable`1<System.Int32> HaddySimHub.Models.RaceData::get_PenaltyTime()
-DA:85,0
+FNDA:15,System.Nullable`1<System.Int32> HaddySimHub.Models.RaceData::get_PenaltyTime()
+DA:85,15
 FN:87,System.Nullable`1<System.Int32> HaddySimHub.Models.RaceData::get_DrsRemaining()
 FNDA:0,System.Nullable`1<System.Int32> HaddySimHub.Models.RaceData::get_DrsRemaining()
 DA:88,0
 FN:90,System.Nullable`1<System.Boolean> HaddySimHub.Models.RaceData::get_DrsEnabled()
-FNDA:0,System.Nullable`1<System.Boolean> HaddySimHub.Models.RaceData::get_DrsEnabled()
-DA:91,0
+FNDA:15,System.Nullable`1<System.Boolean> HaddySimHub.Models.RaceData::get_DrsEnabled()
+DA:91,15
 FN:93,System.Nullable`1<System.Int32> HaddySimHub.Models.RaceData::get_BrakeTempLeft()
 FNDA:0,System.Nullable`1<System.Int32> HaddySimHub.Models.RaceData::get_BrakeTempLeft()
 DA:94,0
@@ -709,234 +709,234 @@ FN:99,System.String HaddySimHub.Models.RaceData::get_TyreCompound()
 FNDA:0,System.String HaddySimHub.Models.RaceData::get_TyreCompound()
 DA:100,0
 LF:41
-LH:33
+LH:31
 BRF:0
 BRH:0
 FNF:41
-FNH:33
+FNH:31
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Models\RallyData.cs
 FN:7,System.Int32 HaddySimHub.Models.RallyData::get_Speed()
-FNDA:49,System.Int32 HaddySimHub.Models.RallyData::get_Speed()
-DA:8,49
+FNDA:0,System.Int32 HaddySimHub.Models.RallyData::get_Speed()
+DA:8,0
 FN:9,System.String HaddySimHub.Models.RallyData::get_Gear()
-FNDA:49,System.String HaddySimHub.Models.RallyData::get_Gear()
-DA:10,49
+FNDA:0,System.String HaddySimHub.Models.RallyData::get_Gear()
+DA:10,0
 FN:11,System.Int32 HaddySimHub.Models.RallyData::get_Rpm()
-FNDA:44,System.Int32 HaddySimHub.Models.RallyData::get_Rpm()
-DA:12,44
+FNDA:0,System.Int32 HaddySimHub.Models.RallyData::get_Rpm()
+DA:12,0
 FN:13,System.Int32 HaddySimHub.Models.RallyData::get_RpmMax()
-FNDA:43,System.Int32 HaddySimHub.Models.RallyData::get_RpmMax()
-DA:14,43
+FNDA:0,System.Int32 HaddySimHub.Models.RallyData::get_RpmMax()
+DA:14,0
 FN:15,System.Int32 HaddySimHub.Models.RallyData::get_DistanceTravelled()
-FNDA:44,System.Int32 HaddySimHub.Models.RallyData::get_DistanceTravelled()
-DA:16,44
+FNDA:0,System.Int32 HaddySimHub.Models.RallyData::get_DistanceTravelled()
+DA:16,0
 FN:17,System.Int32 HaddySimHub.Models.RallyData::get_CompletedPct()
-FNDA:48,System.Int32 HaddySimHub.Models.RallyData::get_CompletedPct()
-DA:18,48
+FNDA:0,System.Int32 HaddySimHub.Models.RallyData::get_CompletedPct()
+DA:18,0
 FN:22,System.Single HaddySimHub.Models.RallyData::get_Sector1Time()
-FNDA:44,System.Single HaddySimHub.Models.RallyData::get_Sector1Time()
-DA:23,44
+FNDA:0,System.Single HaddySimHub.Models.RallyData::get_Sector1Time()
+DA:23,0
 FN:27,System.Single HaddySimHub.Models.RallyData::get_Sector2Time()
-FNDA:44,System.Single HaddySimHub.Models.RallyData::get_Sector2Time()
-DA:28,44
+FNDA:0,System.Single HaddySimHub.Models.RallyData::get_Sector2Time()
+DA:28,0
 FN:32,System.Single HaddySimHub.Models.RallyData::get_LapTime()
-FNDA:44,System.Single HaddySimHub.Models.RallyData::get_LapTime()
-DA:33,44
+FNDA:0,System.Single HaddySimHub.Models.RallyData::get_LapTime()
+DA:33,0
 FN:34,System.Int32 HaddySimHub.Models.RallyData::get_Position()
-FNDA:44,System.Int32 HaddySimHub.Models.RallyData::get_Position()
-DA:35,44
+FNDA:0,System.Int32 HaddySimHub.Models.RallyData::get_Position()
+DA:35,0
 LF:10
-LH:10
+LH:0
 BRF:0
 BRH:0
 FNF:10
-FNH:10
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Models\TruckData.cs
 FN:4,System.String HaddySimHub.Models.TruckData::get_DestinationCity()
-FNDA:117,System.String HaddySimHub.Models.TruckData::get_DestinationCity()
-DA:5,117
+FNDA:0,System.String HaddySimHub.Models.TruckData::get_DestinationCity()
+DA:5,0
 FN:6,System.String HaddySimHub.Models.TruckData::get_DestinationCompany()
-FNDA:117,System.String HaddySimHub.Models.TruckData::get_DestinationCompany()
-DA:7,117
+FNDA:0,System.String HaddySimHub.Models.TruckData::get_DestinationCompany()
+DA:7,0
 FN:8,System.String HaddySimHub.Models.TruckData::get_SourceCity()
-FNDA:117,System.String HaddySimHub.Models.TruckData::get_SourceCity()
-DA:9,117
+FNDA:0,System.String HaddySimHub.Models.TruckData::get_SourceCity()
+DA:9,0
 FN:10,System.String HaddySimHub.Models.TruckData::get_SourceCompany()
-FNDA:117,System.String HaddySimHub.Models.TruckData::get_SourceCompany()
-DA:11,117
+FNDA:0,System.String HaddySimHub.Models.TruckData::get_SourceCompany()
+DA:11,0
 FN:15,System.Single HaddySimHub.Models.TruckData::get_DistanceRemaining()
-FNDA:59,System.Single HaddySimHub.Models.TruckData::get_DistanceRemaining()
-DA:16,59
+FNDA:0,System.Single HaddySimHub.Models.TruckData::get_DistanceRemaining()
+DA:16,0
 FN:20,System.Int32 HaddySimHub.Models.TruckData::get_TimeRemaining()
-FNDA:59,System.Int32 HaddySimHub.Models.TruckData::get_TimeRemaining()
-DA:21,59
+FNDA:0,System.Int32 HaddySimHub.Models.TruckData::get_TimeRemaining()
+DA:21,0
 FN:25,System.Int32 HaddySimHub.Models.TruckData::get_TimeRemainingIrl()
-FNDA:58,System.Int32 HaddySimHub.Models.TruckData::get_TimeRemainingIrl()
-DA:26,58
+FNDA:0,System.Int32 HaddySimHub.Models.TruckData::get_TimeRemainingIrl()
+DA:26,0
 FN:28,System.UInt64 HaddySimHub.Models.TruckData::get_GameTime()
-FNDA:58,System.UInt64 HaddySimHub.Models.TruckData::get_GameTime()
-DA:29,58
+FNDA:0,System.UInt64 HaddySimHub.Models.TruckData::get_GameTime()
+DA:29,0
 FN:35,System.Int32 HaddySimHub.Models.TruckData::get_RestTimeRemaining()
-FNDA:59,System.Int32 HaddySimHub.Models.TruckData::get_RestTimeRemaining()
-DA:36,59
+FNDA:0,System.Int32 HaddySimHub.Models.TruckData::get_RestTimeRemaining()
+DA:36,0
 FN:40,System.Int32 HaddySimHub.Models.TruckData::get_RestTimeRemainingIrl()
-FNDA:58,System.Int32 HaddySimHub.Models.TruckData::get_RestTimeRemainingIrl()
-DA:41,58
+FNDA:0,System.Int32 HaddySimHub.Models.TruckData::get_RestTimeRemainingIrl()
+DA:41,0
 FN:48,System.Single HaddySimHub.Models.TruckData::get_FuelDistance()
-FNDA:59,System.Single HaddySimHub.Models.TruckData::get_FuelDistance()
-DA:49,59
+FNDA:0,System.Single HaddySimHub.Models.TruckData::get_FuelDistance()
+DA:49,0
 FN:53,System.Single HaddySimHub.Models.TruckData::get_FuelAmount()
-FNDA:59,System.Single HaddySimHub.Models.TruckData::get_FuelAmount()
-DA:54,59
+FNDA:0,System.Single HaddySimHub.Models.TruckData::get_FuelAmount()
+DA:54,0
 FN:58,System.Single HaddySimHub.Models.TruckData::get_AdBlueAmount()
-FNDA:58,System.Single HaddySimHub.Models.TruckData::get_AdBlueAmount()
-DA:59,58
+FNDA:0,System.Single HaddySimHub.Models.TruckData::get_AdBlueAmount()
+DA:59,0
 FN:60,System.Boolean HaddySimHub.Models.TruckData::get_AdBlueWarningOn()
-FNDA:60,System.Boolean HaddySimHub.Models.TruckData::get_AdBlueWarningOn()
-DA:61,60
+FNDA:0,System.Boolean HaddySimHub.Models.TruckData::get_AdBlueWarningOn()
+DA:61,0
 FN:67,System.Int64 HaddySimHub.Models.TruckData::get_JobTimeRemaining()
-FNDA:58,System.Int64 HaddySimHub.Models.TruckData::get_JobTimeRemaining()
-DA:68,58
+FNDA:0,System.Int64 HaddySimHub.Models.TruckData::get_JobTimeRemaining()
+DA:68,0
 FN:72,System.Int64 HaddySimHub.Models.TruckData::get_JobTimeRemainingIrl()
-FNDA:58,System.Int64 HaddySimHub.Models.TruckData::get_JobTimeRemainingIrl()
-DA:73,58
+FNDA:0,System.Int64 HaddySimHub.Models.TruckData::get_JobTimeRemainingIrl()
+DA:73,0
 FN:77,System.UInt64 HaddySimHub.Models.TruckData::get_JobIncome()
-FNDA:59,System.UInt64 HaddySimHub.Models.TruckData::get_JobIncome()
-DA:78,59
+FNDA:0,System.UInt64 HaddySimHub.Models.TruckData::get_JobIncome()
+DA:78,0
 FN:79,System.String HaddySimHub.Models.TruckData::get_JobCargoName()
-FNDA:116,System.String HaddySimHub.Models.TruckData::get_JobCargoName()
-DA:80,116
+FNDA:0,System.String HaddySimHub.Models.TruckData::get_JobCargoName()
+DA:80,0
 FN:81,System.Int32 HaddySimHub.Models.TruckData::get_JobCargoMass()
-FNDA:59,System.Int32 HaddySimHub.Models.TruckData::get_JobCargoMass()
-DA:82,59
+FNDA:0,System.Int32 HaddySimHub.Models.TruckData::get_JobCargoMass()
+DA:82,0
 FN:83,System.Int32 HaddySimHub.Models.TruckData::get_JobCargoDamage()
-FNDA:59,System.Int32 HaddySimHub.Models.TruckData::get_JobCargoDamage()
-DA:84,59
+FNDA:0,System.Int32 HaddySimHub.Models.TruckData::get_JobCargoDamage()
+DA:84,0
 FN:86,System.Int32 HaddySimHub.Models.TruckData::get_DamageTruckCabin()
-FNDA:59,System.Int32 HaddySimHub.Models.TruckData::get_DamageTruckCabin()
-DA:87,59
+FNDA:0,System.Int32 HaddySimHub.Models.TruckData::get_DamageTruckCabin()
+DA:87,0
 FN:88,System.Int32 HaddySimHub.Models.TruckData::get_DamageTruckTransmission()
-FNDA:58,System.Int32 HaddySimHub.Models.TruckData::get_DamageTruckTransmission()
-DA:89,58
+FNDA:0,System.Int32 HaddySimHub.Models.TruckData::get_DamageTruckTransmission()
+DA:89,0
 FN:90,System.Int32 HaddySimHub.Models.TruckData::get_DamageTruckWheels()
-FNDA:58,System.Int32 HaddySimHub.Models.TruckData::get_DamageTruckWheels()
-DA:91,58
+FNDA:0,System.Int32 HaddySimHub.Models.TruckData::get_DamageTruckWheels()
+DA:91,0
 FN:92,System.Int32 HaddySimHub.Models.TruckData::get_DamageTruckEngine()
-FNDA:59,System.Int32 HaddySimHub.Models.TruckData::get_DamageTruckEngine()
-DA:93,59
+FNDA:0,System.Int32 HaddySimHub.Models.TruckData::get_DamageTruckEngine()
+DA:93,0
 FN:94,System.Int32 HaddySimHub.Models.TruckData::get_DamageTruckChassis()
-FNDA:58,System.Int32 HaddySimHub.Models.TruckData::get_DamageTruckChassis()
-DA:95,58
+FNDA:0,System.Int32 HaddySimHub.Models.TruckData::get_DamageTruckChassis()
+DA:95,0
 FN:96,System.Int32 HaddySimHub.Models.TruckData::get_DamageTrailerChassis()
-FNDA:58,System.Int32 HaddySimHub.Models.TruckData::get_DamageTrailerChassis()
-DA:97,58
+FNDA:0,System.Int32 HaddySimHub.Models.TruckData::get_DamageTrailerChassis()
+DA:97,0
 FN:98,System.Int32 HaddySimHub.Models.TruckData::get_DamageTrailerCargo()
-FNDA:58,System.Int32 HaddySimHub.Models.TruckData::get_DamageTrailerCargo()
-DA:99,58
+FNDA:0,System.Int32 HaddySimHub.Models.TruckData::get_DamageTrailerCargo()
+DA:99,0
 FN:100,System.Int32 HaddySimHub.Models.TruckData::get_DamageTrailerWheels()
-FNDA:58,System.Int32 HaddySimHub.Models.TruckData::get_DamageTrailerWheels()
-DA:101,58
+FNDA:0,System.Int32 HaddySimHub.Models.TruckData::get_DamageTrailerWheels()
+DA:101,0
 FN:102,System.Int32 HaddySimHub.Models.TruckData::get_DamageTrailerBody()
-FNDA:58,System.Int32 HaddySimHub.Models.TruckData::get_DamageTrailerBody()
-DA:103,58
+FNDA:0,System.Int32 HaddySimHub.Models.TruckData::get_DamageTrailerBody()
+DA:103,0
 FN:108,System.Int16 HaddySimHub.Models.TruckData::get_Speed()
-FNDA:60,System.Int16 HaddySimHub.Models.TruckData::get_Speed()
-DA:109,60
+FNDA:0,System.Int16 HaddySimHub.Models.TruckData::get_Speed()
+DA:109,0
 FN:113,System.Int16 HaddySimHub.Models.TruckData::get_SpeedLimit()
-FNDA:59,System.Int16 HaddySimHub.Models.TruckData::get_SpeedLimit()
-DA:114,59
+FNDA:0,System.Int16 HaddySimHub.Models.TruckData::get_SpeedLimit()
+DA:114,0
 FN:118,System.Int32 HaddySimHub.Models.TruckData::get_Rpm()
-FNDA:59,System.Int32 HaddySimHub.Models.TruckData::get_Rpm()
-DA:119,59
+FNDA:0,System.Int32 HaddySimHub.Models.TruckData::get_Rpm()
+DA:119,0
 FN:123,System.Int32 HaddySimHub.Models.TruckData::get_RpmMax()
-FNDA:59,System.Int32 HaddySimHub.Models.TruckData::get_RpmMax()
-DA:124,59
+FNDA:0,System.Int32 HaddySimHub.Models.TruckData::get_RpmMax()
+DA:124,0
 FN:128,System.String HaddySimHub.Models.TruckData::get_Gear()
-FNDA:65,System.String HaddySimHub.Models.TruckData::get_Gear()
-DA:129,65
+FNDA:0,System.String HaddySimHub.Models.TruckData::get_Gear()
+DA:129,0
 FN:133,System.Boolean HaddySimHub.Models.TruckData::get_CruiseControlOn()
-FNDA:60,System.Boolean HaddySimHub.Models.TruckData::get_CruiseControlOn()
-DA:134,60
+FNDA:0,System.Boolean HaddySimHub.Models.TruckData::get_CruiseControlOn()
+DA:134,0
 FN:138,System.Int16 HaddySimHub.Models.TruckData::get_CruiseControlSpeed()
-FNDA:59,System.Int16 HaddySimHub.Models.TruckData::get_CruiseControlSpeed()
-DA:139,59
+FNDA:0,System.Int16 HaddySimHub.Models.TruckData::get_CruiseControlSpeed()
+DA:139,0
 FN:143,System.Boolean HaddySimHub.Models.TruckData::get_ParkingLightsOn()
-FNDA:60,System.Boolean HaddySimHub.Models.TruckData::get_ParkingLightsOn()
-DA:144,60
+FNDA:0,System.Boolean HaddySimHub.Models.TruckData::get_ParkingLightsOn()
+DA:144,0
 FN:148,System.Boolean HaddySimHub.Models.TruckData::get_LowBeamOn()
-FNDA:60,System.Boolean HaddySimHub.Models.TruckData::get_LowBeamOn()
-DA:149,60
+FNDA:0,System.Boolean HaddySimHub.Models.TruckData::get_LowBeamOn()
+DA:149,0
 FN:153,System.Boolean HaddySimHub.Models.TruckData::get_HighBeamOn()
-FNDA:60,System.Boolean HaddySimHub.Models.TruckData::get_HighBeamOn()
-DA:154,60
+FNDA:0,System.Boolean HaddySimHub.Models.TruckData::get_HighBeamOn()
+DA:154,0
 FN:158,System.Boolean HaddySimHub.Models.TruckData::get_ParkingBrakeOn()
-FNDA:60,System.Boolean HaddySimHub.Models.TruckData::get_ParkingBrakeOn()
-DA:159,60
+FNDA:0,System.Boolean HaddySimHub.Models.TruckData::get_ParkingBrakeOn()
+DA:159,0
 FN:163,System.Boolean HaddySimHub.Models.TruckData::get_BatteryVoltageWarningOn()
-FNDA:60,System.Boolean HaddySimHub.Models.TruckData::get_BatteryVoltageWarningOn()
-DA:164,60
+FNDA:0,System.Boolean HaddySimHub.Models.TruckData::get_BatteryVoltageWarningOn()
+DA:164,0
 FN:165,System.Single HaddySimHub.Models.TruckData::get_BatteryVoltage()
-FNDA:59,System.Single HaddySimHub.Models.TruckData::get_BatteryVoltage()
-DA:166,59
+FNDA:0,System.Single HaddySimHub.Models.TruckData::get_BatteryVoltage()
+DA:166,0
 FN:167,System.Boolean HaddySimHub.Models.TruckData::get_HazardLightsOn()
-FNDA:60,System.Boolean HaddySimHub.Models.TruckData::get_HazardLightsOn()
-DA:168,60
+FNDA:0,System.Boolean HaddySimHub.Models.TruckData::get_HazardLightsOn()
+DA:168,0
 FN:169,System.Boolean HaddySimHub.Models.TruckData::get_OilPressureWarningOn()
-FNDA:60,System.Boolean HaddySimHub.Models.TruckData::get_OilPressureWarningOn()
-DA:170,60
+FNDA:0,System.Boolean HaddySimHub.Models.TruckData::get_OilPressureWarningOn()
+DA:170,0
 FN:171,System.Boolean HaddySimHub.Models.TruckData::get_FuelWarningOn()
-FNDA:60,System.Boolean HaddySimHub.Models.TruckData::get_FuelWarningOn()
-DA:172,60
+FNDA:0,System.Boolean HaddySimHub.Models.TruckData::get_FuelWarningOn()
+DA:172,0
 FN:173,System.Boolean HaddySimHub.Models.TruckData::get_BlinkerLeftOn()
-FNDA:60,System.Boolean HaddySimHub.Models.TruckData::get_BlinkerLeftOn()
-DA:174,60
+FNDA:0,System.Boolean HaddySimHub.Models.TruckData::get_BlinkerLeftOn()
+DA:174,0
 FN:175,System.Boolean HaddySimHub.Models.TruckData::get_BlinkerRightOn()
-FNDA:60,System.Boolean HaddySimHub.Models.TruckData::get_BlinkerRightOn()
-DA:176,60
+FNDA:0,System.Boolean HaddySimHub.Models.TruckData::get_BlinkerRightOn()
+DA:176,0
 FN:180,System.String HaddySimHub.Models.TruckData::get_TruckName()
-FNDA:116,System.String HaddySimHub.Models.TruckData::get_TruckName()
-DA:181,116
+FNDA:0,System.String HaddySimHub.Models.TruckData::get_TruckName()
+DA:181,0
 FN:182,System.Int32 HaddySimHub.Models.TruckData::get_NumberOfTrailersAttached()
-FNDA:58,System.Int32 HaddySimHub.Models.TruckData::get_NumberOfTrailersAttached()
-DA:183,58
+FNDA:0,System.Int32 HaddySimHub.Models.TruckData::get_NumberOfTrailersAttached()
+DA:183,0
 FN:184,System.Boolean HaddySimHub.Models.TruckData::get_WipersOn()
-FNDA:58,System.Boolean HaddySimHub.Models.TruckData::get_WipersOn()
-DA:185,58
+FNDA:0,System.Boolean HaddySimHub.Models.TruckData::get_WipersOn()
+DA:185,0
 FN:189,System.Single HaddySimHub.Models.TruckData::get_FuelAverageConsumption()
-FNDA:59,System.Single HaddySimHub.Models.TruckData::get_FuelAverageConsumption()
-DA:190,59
+FNDA:0,System.Single HaddySimHub.Models.TruckData::get_FuelAverageConsumption()
+DA:190,0
 FN:194,System.Int32 HaddySimHub.Models.TruckData::get_Throttle()
-FNDA:61,System.Int32 HaddySimHub.Models.TruckData::get_Throttle()
-DA:195,61
+FNDA:0,System.Int32 HaddySimHub.Models.TruckData::get_Throttle()
+DA:195,0
 FN:200,System.Boolean HaddySimHub.Models.TruckData::get_DifferentialLock()
-FNDA:58,System.Boolean HaddySimHub.Models.TruckData::get_DifferentialLock()
-DA:201,58
+FNDA:0,System.Boolean HaddySimHub.Models.TruckData::get_DifferentialLock()
+DA:201,0
 FN:206,System.Single HaddySimHub.Models.TruckData::get_OilPressure()
-FNDA:59,System.Single HaddySimHub.Models.TruckData::get_OilPressure()
-DA:207,59
+FNDA:0,System.Single HaddySimHub.Models.TruckData::get_OilPressure()
+DA:207,0
 FN:211,System.Single HaddySimHub.Models.TruckData::get_OilTemp()
-FNDA:59,System.Single HaddySimHub.Models.TruckData::get_OilTemp()
-DA:212,59
+FNDA:0,System.Single HaddySimHub.Models.TruckData::get_OilTemp()
+DA:212,0
 FN:216,System.Single HaddySimHub.Models.TruckData::get_WaterTemp()
-FNDA:59,System.Single HaddySimHub.Models.TruckData::get_WaterTemp()
-DA:217,59
+FNDA:0,System.Single HaddySimHub.Models.TruckData::get_WaterTemp()
+DA:217,0
 FN:218,System.Boolean HaddySimHub.Models.TruckData::get_WaterTempWarningOn()
-FNDA:60,System.Boolean HaddySimHub.Models.TruckData::get_WaterTempWarningOn()
-DA:219,60
+FNDA:0,System.Boolean HaddySimHub.Models.TruckData::get_WaterTempWarningOn()
+DA:219,0
 FN:219,System.UInt32 HaddySimHub.Models.TruckData::get_RetarderLevel()
-FNDA:59,System.UInt32 HaddySimHub.Models.TruckData::get_RetarderLevel()
-DA:220,59
+FNDA:0,System.UInt32 HaddySimHub.Models.TruckData::get_RetarderLevel()
+DA:220,0
 FN:220,System.UInt32 HaddySimHub.Models.TruckData::get_RetarderStepCount()
-FNDA:59,System.UInt32 HaddySimHub.Models.TruckData::get_RetarderStepCount()
-DA:221,59
+FNDA:0,System.UInt32 HaddySimHub.Models.TruckData::get_RetarderStepCount()
+DA:221,0
 LF:59
-LH:59
+LH:0
 BRF:0
 BRH:0
 FNF:59
-FNH:59
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Extensions\DisplayRegistrationExtensions.cs
 FN:26,Microsoft.Extensions.DependencyInjection.IServiceCollection HaddySimHub.Extensions.DisplayRegistrationExtensions::RegisterGameDisplay(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Type,System.String)
@@ -974,22 +974,22 @@ DA:40,0
 DA:41,0
 DA:42,0
 FN:16,System.Void HaddySimHub.Displays.DisplayBase`1::.ctor(HaddySimHub.Interfaces.IGameDataProvider`1<T>,HaddySimHub.Interfaces.IDataConverter`2<T,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
-FNDA:28,System.Void HaddySimHub.Displays.DisplayBase`1::.ctor(HaddySimHub.Interfaces.IGameDataProvider`1<T>,HaddySimHub.Interfaces.IDataConverter`2<T,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
-DA:17,28
-DA:18,28
-DA:19,28
-DA:20,28
-DA:21,28
-DA:22,28
-DA:23,28
-DA:24,28
-DA:25,28
+FNDA:0,System.Void HaddySimHub.Displays.DisplayBase`1::.ctor(HaddySimHub.Interfaces.IGameDataProvider`1<T>,HaddySimHub.Interfaces.IDataConverter`2<T,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
+DA:17,0
+DA:18,0
+DA:19,0
+DA:20,0
+DA:21,0
+DA:22,0
+DA:23,0
+DA:24,0
+DA:25,0
 BRDA:22,11,0,0
-BRDA:22,11,1,28
+BRDA:22,11,1,0
 BRDA:23,33,0,0
-BRDA:23,33,1,28
+BRDA:23,33,1,0
 BRDA:24,55,0,0
-BRDA:24,55,1,28
+BRDA:24,55,1,0
 FN:44,System.Void HaddySimHub.Displays.DisplayBase`1/<HandleDataReceivedAsync>d__11::MoveNext()
 FNDA:0,System.Void HaddySimHub.Displays.DisplayBase`1/<HandleDataReceivedAsync>d__11::MoveNext()
 DA:45,0
@@ -1003,28 +1003,28 @@ DA:53,0
 DA:54,0
 DA:55,0
 LF:30
-LH:9
+LH:0
 BRF:6
-BRH:3
+BRH:0
 FNF:5
-FNH:1
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Displays\DisplayFactory.cs
 FN:31,HaddySimHub.Displays.IDisplay HaddySimHub.Displays.DisplayFactory::Create(System.String)
-FNDA:16,HaddySimHub.Displays.IDisplay HaddySimHub.Displays.DisplayFactory::Create(System.String)
-DA:32,16
-DA:33,16
-DA:34,16
-DA:35,16
-DA:36,1
-DA:37,1
-DA:38,1
-DA:39,1
-DA:40,1
-DA:41,1
-DA:42,1
-DA:43,1
-DA:44,1
+FNDA:0,HaddySimHub.Displays.IDisplay HaddySimHub.Displays.DisplayFactory::Create(System.String)
+DA:32,0
+DA:33,0
+DA:34,0
+DA:35,0
+DA:36,0
+DA:37,0
+DA:38,0
+DA:39,0
+DA:40,0
+DA:41,0
+DA:42,0
+DA:43,0
+DA:44,0
 DA:45,0
 DA:46,0
 DA:47,0
@@ -1034,91 +1034,91 @@ DA:50,0
 DA:51,0
 DA:52,0
 DA:53,0
-DA:54,16
-DA:55,16
-DA:56,4
-DA:57,4
-DA:58,4
-DA:59,4
-DA:60,4
-DA:61,4
-DA:62,4
-DA:63,4
-DA:64,4
-DA:65,4
-DA:66,4
-DA:67,4
-DA:68,16
-DA:69,1
-DA:70,16
-DA:71,15
-BRDA:33,18,0,9
-BRDA:33,26,0,5
-BRDA:33,34,0,1
-BRDA:33,26,1,4
-BRDA:33,60,0,4
-BRDA:33,18,1,7
-BRDA:33,89,0,1
-BRDA:33,97,0,1
-BRDA:33,89,1,6
-BRDA:33,120,0,6
-BRDA:33,133,0,2
-BRDA:33,47,1,1
-BRDA:33,107,1,1
-BRDA:33,146,1,1
+DA:54,0
+DA:55,0
+DA:56,0
+DA:57,0
+DA:58,0
+DA:59,0
+DA:60,0
+DA:61,0
+DA:62,0
+DA:63,0
+DA:64,0
+DA:65,0
+DA:66,0
+DA:67,0
+DA:68,0
+DA:69,0
+DA:70,0
+DA:71,0
+BRDA:33,18,0,0
+BRDA:33,26,0,0
+BRDA:33,34,0,0
+BRDA:33,26,1,0
+BRDA:33,60,0,0
+BRDA:33,18,1,0
+BRDA:33,89,0,0
+BRDA:33,97,0,0
+BRDA:33,89,1,0
+BRDA:33,120,0,0
+BRDA:33,133,0,0
+BRDA:33,47,1,0
+BRDA:33,107,1,0
+BRDA:33,146,1,0
 BRDA:33,97,1,0
 BRDA:33,60,1,0
 BRDA:33,120,1,0
-BRDA:33,133,1,4
-BRDA:33,73,1,4
-BRDA:33,34,1,4
-BRDA:33,164,1,1
-BRDA:33,185,1,1
-BRDA:33,206,1,1
+BRDA:33,133,1,0
+BRDA:33,73,1,0
+BRDA:33,34,1,0
+BRDA:33,164,1,0
+BRDA:33,185,1,0
+BRDA:33,206,1,0
 BRDA:33,227,1,0
 BRDA:33,248,1,0
 BRDA:33,269,1,0
-BRDA:33,290,1,4
-BRDA:33,311,1,4
-BRDA:33,332,1,4
-BRDA:33,47,0,1
-BRDA:33,73,0,1
-BRDA:33,107,0,1
-BRDA:33,146,0,1
-BRDA:33,164,0,1
-BRDA:33,185,0,1
-BRDA:33,206,0,1
-BRDA:33,227,0,1
-BRDA:33,248,0,1
-BRDA:33,269,0,1
-BRDA:33,290,0,1
-BRDA:33,311,0,1
-BRDA:33,332,0,1
+BRDA:33,290,1,0
+BRDA:33,311,1,0
+BRDA:33,332,1,0
+BRDA:33,47,0,0
+BRDA:33,73,0,0
+BRDA:33,107,0,0
+BRDA:33,146,0,0
+BRDA:33,164,0,0
+BRDA:33,185,0,0
+BRDA:33,206,0,0
+BRDA:33,227,0,0
+BRDA:33,248,0,0
+BRDA:33,269,0,0
+BRDA:33,290,0,0
+BRDA:33,311,0,0
+BRDA:33,332,0,0
 FN:76,HaddySimHub.Displays.IDisplay HaddySimHub.Displays.DisplayFactory::CreateGameDisplay(System.String,System.String)
-FNDA:3,HaddySimHub.Displays.IDisplay HaddySimHub.Displays.DisplayFactory::CreateGameDisplay(System.String,System.String)
-DA:77,3
-DA:78,3
-DA:79,3
-DA:80,3
-DA:82,3
-DA:83,3
+FNDA:0,HaddySimHub.Displays.IDisplay HaddySimHub.Displays.DisplayFactory::CreateGameDisplay(System.String,System.String)
+DA:77,0
+DA:78,0
+DA:79,0
+DA:80,0
+DA:82,0
+DA:83,0
 FN:24,System.Void HaddySimHub.Displays.DisplayFactory::.ctor(System.IServiceProvider,Microsoft.Extensions.Options.IOptions`1<HaddySimHub.Displays.TestDisplayOptions>)
-FNDA:12,System.Void HaddySimHub.Displays.DisplayFactory::.ctor(System.IServiceProvider,Microsoft.Extensions.Options.IOptions`1<HaddySimHub.Displays.TestDisplayOptions>)
-DA:25,12
-DA:26,12
-DA:27,12
-DA:28,12
-DA:29,12
+FNDA:0,System.Void HaddySimHub.Displays.DisplayFactory::.ctor(System.IServiceProvider,Microsoft.Extensions.Options.IOptions`1<HaddySimHub.Displays.TestDisplayOptions>)
+DA:25,0
+DA:26,0
+DA:27,0
+DA:28,0
+DA:29,0
 BRDA:27,11,0,0
-BRDA:27,11,1,12
+BRDA:27,11,1,0
 BRDA:28,33,0,0
-BRDA:28,33,1,12
+BRDA:28,33,1,0
 LF:51
-LH:42
+LH:0
 BRF:46
-BRH:38
+BRH:0
 FNF:3
-FNH:3
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Displays\SCSSdkTelemetryFactory.cs
 FN:8,SCSSdkClient.SCSSdkTelemetry HaddySimHub.Displays.SCSSdkTelemetryFactory::Create()
@@ -1292,22 +1292,22 @@ FN:12,System.Boolean HaddySimHub.Displays.SimpleGameDisplay`1::get_IsActive()
 FNDA:0,System.Boolean HaddySimHub.Displays.SimpleGameDisplay`1::get_IsActive()
 DA:13,0
 FN:20,System.Void HaddySimHub.Displays.SimpleGameDisplay`1::.ctor(System.String,System.String,HaddySimHub.Interfaces.IGameDataProvider`1<T>,HaddySimHub.Interfaces.IDataConverter`2<T,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
-FNDA:3,System.Void HaddySimHub.Displays.SimpleGameDisplay`1::.ctor(System.String,System.String,HaddySimHub.Interfaces.IGameDataProvider`1<T>,HaddySimHub.Interfaces.IDataConverter`2<T,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
-DA:21,3
-DA:22,3
-DA:23,3
-DA:24,3
-DA:25,3
+FNDA:0,System.Void HaddySimHub.Displays.SimpleGameDisplay`1::.ctor(System.String,System.String,HaddySimHub.Interfaces.IGameDataProvider`1<T>,HaddySimHub.Interfaces.IDataConverter`2<T,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
+DA:21,0
+DA:22,0
+DA:23,0
+DA:24,0
+DA:25,0
 BRDA:23,16,0,0
-BRDA:23,16,1,3
+BRDA:23,16,1,0
 BRDA:24,38,0,0
-BRDA:24,38,1,3
+BRDA:24,38,1,0
 LF:7
-LH:5
+LH:0
 BRF:4
-BRH:2
+BRH:0
 FNF:3
-FNH:1
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Displays\TestDisplayBase.cs
 FN:16,System.String HaddySimHub.Displays.TestDisplayBase::get_Description()
@@ -1349,12 +1349,12 @@ DA:60,0
 DA:61,0
 DA:62,0
 FN:11,System.Void HaddySimHub.Displays.TestDisplayBase::.ctor(System.String,HaddySimHub.Interfaces.IDataConverter`2<HaddySimHub.Models.DisplayUpdate,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
-FNDA:12,System.Void HaddySimHub.Displays.TestDisplayBase::.ctor(System.String,HaddySimHub.Interfaces.IDataConverter`2<HaddySimHub.Models.DisplayUpdate,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
-DA:12,12
-DA:25,12
-DA:26,12
-DA:27,12
-DA:28,12
+FNDA:0,System.Void HaddySimHub.Displays.TestDisplayBase::.ctor(System.String,HaddySimHub.Interfaces.IDataConverter`2<HaddySimHub.Models.DisplayUpdate,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
+DA:12,0
+DA:25,0
+DA:26,0
+DA:27,0
+DA:28,0
 FN:13,System.Void HaddySimHub.Displays.TestDisplayBase::.cctor()
 FNDA:0,System.Void HaddySimHub.Displays.TestDisplayBase::.cctor()
 DA:14,0
@@ -1374,17 +1374,17 @@ DA:91,0
 BRDA:90,8,0,0
 BRDA:90,8,1,0
 FN:70,System.Void HaddySimHub.Displays.TestDisplayBase/TestGameDataProviderWrapper::.ctor(System.String)
-FNDA:12,System.Void HaddySimHub.Displays.TestDisplayBase/TestGameDataProviderWrapper::.ctor(System.String)
-DA:71,12
-DA:72,12
-DA:73,12
-DA:74,12
+FNDA:0,System.Void HaddySimHub.Displays.TestDisplayBase/TestGameDataProviderWrapper::.ctor(System.String)
+DA:71,0
+DA:72,0
+DA:73,0
+DA:74,0
 LF:47
-LH:9
+LH:0
 BRF:6
 BRH:0
 FNF:10
-FNH:2
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Displays\TestDisplayOptions.cs
 FN:14,System.Collections.Generic.List`1<System.String> HaddySimHub.Displays.TestDisplayOptions::get_Ids()
@@ -1418,40 +1418,40 @@ FN:10,System.Boolean HaddySimHub.Displays.IRacing.Display::get_IsActive()
 FNDA:0,System.Boolean HaddySimHub.Displays.IRacing.Display::get_IsActive()
 DA:11,0
 FN:16,System.Void HaddySimHub.Displays.IRacing.Display::.ctor(HaddySimHub.Interfaces.IGameDataProvider`1<iRacingSDK.IDataSample>,HaddySimHub.Interfaces.IDataConverter`2<iRacingSDK.IDataSample,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
-FNDA:4,System.Void HaddySimHub.Displays.IRacing.Display::.ctor(HaddySimHub.Interfaces.IGameDataProvider`1<iRacingSDK.IDataSample>,HaddySimHub.Interfaces.IDataConverter`2<iRacingSDK.IDataSample,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
-DA:17,4
-DA:18,4
-DA:19,4
+FNDA:0,System.Void HaddySimHub.Displays.IRacing.Display::.ctor(HaddySimHub.Interfaces.IGameDataProvider`1<iRacingSDK.IDataSample>,HaddySimHub.Interfaces.IDataConverter`2<iRacingSDK.IDataSample,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
+DA:17,0
+DA:18,0
+DA:19,0
 LF:5
-LH:3
+LH:0
 BRF:0
 BRH:0
 FNF:3
-FNH:1
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Displays\IRacing\IRacingDataConverter.cs
 FN:20,HaddySimHub.Models.DisplayUpdate HaddySimHub.Displays.IRacing.IRacingDataConverter::Convert(iRacingSDK.IDataSample)
-FNDA:30,HaddySimHub.Models.DisplayUpdate HaddySimHub.Displays.IRacing.IRacingDataConverter::Convert(iRacingSDK.IDataSample)
-DA:21,30
-DA:22,30
-DA:24,30
-DA:25,60
-DA:27,30
-DA:29,30
-DA:30,30
-DA:31,30
-DA:32,30
-DA:33,30
-DA:34,30
-DA:36,30
-DA:37,30
-DA:38,30
-DA:42,30
+FNDA:0,HaddySimHub.Models.DisplayUpdate HaddySimHub.Displays.IRacing.IRacingDataConverter::Convert(iRacingSDK.IDataSample)
+DA:21,0
+DA:22,0
+DA:24,0
+DA:25,0
+DA:27,0
+DA:29,0
+DA:30,0
+DA:31,0
+DA:32,0
+DA:33,0
+DA:34,0
+DA:36,0
+DA:37,0
+DA:38,0
+DA:42,0
 DA:43,0
 DA:44,0
 DA:46,0
 DA:47,0
-DA:50,30
+DA:50,0
 DA:51,0
 DA:53,0
 DA:55,0
@@ -1461,129 +1461,129 @@ DA:58,0
 DA:59,0
 DA:62,0
 DA:63,0
-DA:66,30
-DA:67,30
-DA:69,30
-DA:71,60
-DA:73,30
-DA:74,30
-DA:75,30
-DA:76,30
-DA:77,30
-DA:78,30
-DA:79,30
-DA:80,30
-DA:81,30
-DA:82,30
-DA:83,30
-DA:84,30
-DA:85,30
-DA:86,30
-DA:87,30
-DA:88,30
-DA:89,30
-DA:90,30
-DA:91,30
-DA:92,30
-DA:93,30
-DA:94,30
-DA:95,30
-DA:96,30
-DA:97,30
-DA:98,30
-DA:99,30
-DA:100,30
-DA:101,30
-DA:102,30
-DA:103,30
-DA:104,30
-DA:105,30
-DA:106,30
-DA:107,30
-DA:108,30
-DA:109,30
-DA:110,30
-DA:111,30
-DA:112,30
-DA:113,30
+DA:66,0
+DA:67,0
+DA:69,0
+DA:71,0
+DA:73,0
+DA:74,0
+DA:75,0
+DA:76,0
+DA:77,0
+DA:78,0
+DA:79,0
+DA:80,0
+DA:81,0
+DA:82,0
+DA:83,0
+DA:84,0
+DA:85,0
+DA:86,0
+DA:87,0
+DA:88,0
+DA:89,0
+DA:90,0
+DA:91,0
+DA:92,0
+DA:93,0
+DA:94,0
+DA:95,0
+DA:96,0
+DA:97,0
+DA:98,0
+DA:99,0
+DA:100,0
+DA:101,0
+DA:102,0
+DA:103,0
+DA:104,0
+DA:105,0
+DA:106,0
+DA:107,0
+DA:108,0
+DA:109,0
+DA:110,0
+DA:111,0
+DA:112,0
+DA:113,0
 DA:114,0
-DA:115,30
-DA:116,30
-DA:117,30
-DA:118,30
-DA:120,30
-DA:121,30
-BRDA:29,126,0,30
-BRDA:29,126,1,30
+DA:115,0
+DA:116,0
+DA:117,0
+DA:118,0
+DA:120,0
+DA:121,0
+BRDA:29,126,0,0
+BRDA:29,126,1,0
 BRDA:42,228,0,0
-BRDA:42,228,1,30
-BRDA:42,241,0,30
+BRDA:42,228,1,0
+BRDA:42,241,0,0
 BRDA:42,249,0,0
-BRDA:42,249,1,30
+BRDA:42,249,1,0
 BRDA:42,241,1,0
 BRDA:42,275,0,0
-BRDA:42,275,1,30
+BRDA:42,275,1,0
 BRDA:50,321,0,0
 BRDA:55,351,0,0
 BRDA:55,351,1,0
 BRDA:55,382,0,0
 BRDA:55,382,1,0
-BRDA:50,321,1,30
-BRDA:69,475,0,30
+BRDA:50,321,1,0
+BRDA:69,475,0,0
 BRDA:69,475,1,0
 BRDA:69,506,0,0
-BRDA:69,506,1,30
-BRDA:73,724,0,29
-BRDA:73,737,0,2
-BRDA:73,737,1,27
-BRDA:73,724,1,1
-BRDA:73,879,0,30
+BRDA:69,506,1,0
+BRDA:73,724,0,0
+BRDA:73,737,0,0
+BRDA:73,737,1,0
+BRDA:73,724,1,0
+BRDA:73,879,0,0
 BRDA:73,879,1,0
-BRDA:73,918,0,30
+BRDA:73,918,0,0
 BRDA:73,918,1,0
 BRDA:73,965,0,0
-BRDA:73,965,1,30
-BRDA:73,983,0,30
+BRDA:73,965,1,0
+BRDA:73,983,0,0
 BRDA:73,983,1,0
 BRDA:73,1066,0,0
-BRDA:73,1066,1,30
+BRDA:73,1066,1,0
 BRDA:73,1137,0,0
-BRDA:73,1137,1,30
+BRDA:73,1137,1,0
 BRDA:73,1273,0,0
-BRDA:73,1273,1,30
+BRDA:73,1273,1,0
 BRDA:73,1286,0,0
-BRDA:73,1286,1,30
-BRDA:73,1317,0,6
-BRDA:73,1317,1,24
-BRDA:73,1447,0,30
+BRDA:73,1286,1,0
+BRDA:73,1317,0,0
+BRDA:73,1317,1,0
+BRDA:73,1447,0,0
 BRDA:73,1447,1,0
 BRDA:73,1595,0,0
-BRDA:73,1595,1,30
+BRDA:73,1595,1,0
 BRDA:73,1630,0,0
-BRDA:73,1630,1,30
+BRDA:73,1630,1,0
 FN:123,System.Int32 HaddySimHub.Displays.IRacing.IRacingDataConverter::GetRpmMax(System.String)
-FNDA:34,System.Int32 HaddySimHub.Displays.IRacing.IRacingDataConverter::GetRpmMax(System.String)
-DA:124,34
-DA:125,34
-DA:126,34
-DA:127,1
-DA:128,33
-DA:129,34
-DA:130,34
-BRDA:125,16,1,1
-BRDA:125,16,0,33
+FNDA:0,System.Int32 HaddySimHub.Displays.IRacing.IRacingDataConverter::GetRpmMax(System.String)
+DA:124,0
+DA:125,0
+DA:126,0
+DA:127,0
+DA:128,0
+DA:129,0
+DA:130,0
+BRDA:125,16,1,0
+BRDA:125,16,0,0
 FN:13,System.Void HaddySimHub.Displays.IRacing.IRacingDataConverter::.ctor()
-FNDA:35,System.Void HaddySimHub.Displays.IRacing.IRacingDataConverter::.ctor()
-DA:14,35
-DA:16,35
-DA:17,35
-DA:18,35
+FNDA:0,System.Void HaddySimHub.Displays.IRacing.IRacingDataConverter::.ctor()
+DA:14,0
+DA:16,0
+DA:17,0
+DA:18,0
 LF:92
-LH:78
+LH:0
 BRF:50
-BRH:28
+BRH:0
 FNF:3
-FNH:3
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Displays\IRacing\IRacingGameDataProvider.cs
 FN:14,System.Void HaddySimHub.Displays.IRacing.IRacingGameDataProvider::Start()
@@ -1611,16 +1611,16 @@ DA:32,0
 BRDA:31,8,0,0
 BRDA:31,8,1,0
 FN:9,System.Void HaddySimHub.Displays.IRacing.IRacingGameDataProvider::.ctor()
-FNDA:5,System.Void HaddySimHub.Displays.IRacing.IRacingGameDataProvider::.ctor()
-DA:10,5
-DA:11,5
-DA:12,5
+FNDA:0,System.Void HaddySimHub.Displays.IRacing.IRacingGameDataProvider::.ctor()
+DA:10,0
+DA:11,0
+DA:12,0
 LF:17
-LH:3
+LH:0
 BRF:4
 BRH:0
 FNF:4
-FNH:1
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Displays\IRacing\TestDisplay.cs
 FN:17,HaddySimHub.Models.DisplayUpdate HaddySimHub.Displays.IRacing.TestDisplay::GenerateDisplayUpdate()
@@ -1660,16 +1660,16 @@ DA:49,0
 DA:50,0
 DA:51,0
 FN:12,System.Void HaddySimHub.Displays.IRacing.TestDisplay::.ctor(System.String,HaddySimHub.Interfaces.IDataConverter`2<HaddySimHub.Models.DisplayUpdate,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
-FNDA:4,System.Void HaddySimHub.Displays.IRacing.TestDisplay::.ctor(System.String,HaddySimHub.Interfaces.IDataConverter`2<HaddySimHub.Models.DisplayUpdate,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
-DA:13,4
-DA:14,4
-DA:15,4
+FNDA:0,System.Void HaddySimHub.Displays.IRacing.TestDisplay::.ctor(System.String,HaddySimHub.Interfaces.IDataConverter`2<HaddySimHub.Models.DisplayUpdate,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
+DA:13,0
+DA:14,0
+DA:15,0
 LF:37
-LH:3
+LH:0
 BRF:0
 BRH:0
 FNF:2
-FNH:1
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Displays\ETS\Display.cs
 FN:9,System.String HaddySimHub.Displays.ETS.Display::get_Description()
@@ -1679,146 +1679,146 @@ FN:11,System.Boolean HaddySimHub.Displays.ETS.Display::get_IsActive()
 FNDA:0,System.Boolean HaddySimHub.Displays.ETS.Display::get_IsActive()
 DA:12,0
 FN:17,System.Void HaddySimHub.Displays.ETS.Display::.ctor(HaddySimHub.Interfaces.IGameDataProvider`1<SCSSdkClient.Object.SCSTelemetry>,HaddySimHub.Interfaces.IDataConverter`2<SCSSdkClient.Object.SCSTelemetry,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
-FNDA:4,System.Void HaddySimHub.Displays.ETS.Display::.ctor(HaddySimHub.Interfaces.IGameDataProvider`1<SCSSdkClient.Object.SCSTelemetry>,HaddySimHub.Interfaces.IDataConverter`2<SCSSdkClient.Object.SCSTelemetry,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
-DA:18,4
-DA:19,4
-DA:20,4
+FNDA:0,System.Void HaddySimHub.Displays.ETS.Display::.ctor(HaddySimHub.Interfaces.IGameDataProvider`1<SCSSdkClient.Object.SCSTelemetry>,HaddySimHub.Interfaces.IDataConverter`2<SCSSdkClient.Object.SCSTelemetry,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
+DA:18,0
+DA:19,0
+DA:20,0
 LF:5
-LH:3
+LH:0
 BRF:0
 BRH:0
 FNF:3
-FNH:1
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Displays\ETS\EtsDataConverter.cs
 FN:11,HaddySimHub.Models.DisplayUpdate HaddySimHub.Displays.ETS.EtsDataConverter::Convert(SCSSdkClient.Object.SCSTelemetry)
-FNDA:58,HaddySimHub.Models.DisplayUpdate HaddySimHub.Displays.ETS.EtsDataConverter::Convert(SCSSdkClient.Object.SCSTelemetry)
-DA:12,58
-DA:13,58
-DA:14,58
-DA:15,1
-DA:16,1
-DA:17,1
-DA:19,58
-DA:20,58
-DA:21,58
-DA:22,52
-DA:23,52
-DA:24,52
-DA:25,6
-DA:26,2
-DA:27,2
-DA:28,2
-DA:29,4
-DA:30,4
-DA:31,4
-DA:32,3
-DA:33,3
-DA:34,3
-DA:36,1
-DA:37,1
-DA:38,1
-DA:39,4
-DA:41,58
-DA:42,58
-DA:43,58
-DA:44,58
-DA:45,58
-DA:46,58
-DA:47,58
-DA:48,58
-DA:49,58
-DA:50,58
-DA:51,58
-DA:52,58
-DA:53,58
-DA:54,58
-DA:55,58
-DA:56,58
-DA:57,58
-DA:58,58
-DA:59,58
-DA:60,58
-DA:61,58
-DA:62,58
-DA:63,58
-DA:64,58
-DA:65,58
-DA:66,58
-DA:67,58
+FNDA:0,HaddySimHub.Models.DisplayUpdate HaddySimHub.Displays.ETS.EtsDataConverter::Convert(SCSSdkClient.Object.SCSTelemetry)
+DA:12,0
+DA:13,0
+DA:14,0
+DA:15,0
+DA:16,0
+DA:17,0
+DA:19,0
+DA:20,0
+DA:21,0
+DA:22,0
+DA:23,0
+DA:24,0
+DA:25,0
+DA:26,0
+DA:27,0
+DA:28,0
+DA:29,0
+DA:30,0
+DA:31,0
+DA:32,0
+DA:33,0
+DA:34,0
+DA:36,0
+DA:37,0
+DA:38,0
+DA:39,0
+DA:41,0
+DA:42,0
+DA:43,0
+DA:44,0
+DA:45,0
+DA:46,0
+DA:47,0
+DA:48,0
+DA:49,0
+DA:50,0
+DA:51,0
+DA:52,0
+DA:53,0
+DA:54,0
+DA:55,0
+DA:56,0
+DA:57,0
+DA:58,0
+DA:59,0
+DA:60,0
+DA:61,0
+DA:62,0
+DA:63,0
+DA:64,0
+DA:65,0
+DA:66,0
+DA:67,0
 DA:68,0
 DA:69,0
 DA:70,0
 DA:71,0
-DA:72,58
-DA:73,58
-DA:74,58
-DA:75,58
-DA:76,58
-DA:77,58
-DA:78,58
-DA:79,58
-DA:80,58
-DA:81,58
-DA:82,58
-DA:83,58
-DA:84,58
-DA:85,58
-DA:86,58
-DA:87,58
-DA:88,58
-DA:89,58
-DA:90,58
-DA:91,58
-DA:92,58
-DA:93,58
-DA:94,58
-DA:95,58
-DA:96,58
-DA:97,58
-DA:98,58
-DA:99,58
-DA:100,58
-DA:101,58
-DA:102,58
-DA:103,58
-DA:104,58
-DA:105,58
-DA:106,58
-DA:107,58
-DA:108,58
-DA:109,58
-DA:111,58
-DA:112,58
-BRDA:14,54,0,1
-BRDA:14,54,1,58
-BRDA:21,106,0,52
-BRDA:21,106,1,6
-BRDA:25,126,0,2
-BRDA:25,126,1,4
-BRDA:29,166,0,4
-BRDA:31,198,0,3
-BRDA:33,203,0,2
-BRDA:33,203,1,1
-BRDA:31,198,1,1
-BRDA:29,166,1,58
-BRDA:41,929,0,58
+DA:72,0
+DA:73,0
+DA:74,0
+DA:75,0
+DA:76,0
+DA:77,0
+DA:78,0
+DA:79,0
+DA:80,0
+DA:81,0
+DA:82,0
+DA:83,0
+DA:84,0
+DA:85,0
+DA:86,0
+DA:87,0
+DA:88,0
+DA:89,0
+DA:90,0
+DA:91,0
+DA:92,0
+DA:93,0
+DA:94,0
+DA:95,0
+DA:96,0
+DA:97,0
+DA:98,0
+DA:99,0
+DA:100,0
+DA:101,0
+DA:102,0
+DA:103,0
+DA:104,0
+DA:105,0
+DA:106,0
+DA:107,0
+DA:108,0
+DA:109,0
+DA:111,0
+DA:112,0
+BRDA:14,54,0,0
+BRDA:14,54,1,0
+BRDA:21,106,0,0
+BRDA:21,106,1,0
+BRDA:25,126,0,0
+BRDA:25,126,1,0
+BRDA:29,166,0,0
+BRDA:31,198,0,0
+BRDA:33,203,0,0
+BRDA:33,203,1,0
+BRDA:31,198,1,0
+BRDA:29,166,1,0
+BRDA:41,929,0,0
 BRDA:41,929,1,0
-BRDA:41,1003,0,58
+BRDA:41,1003,0,0
 BRDA:41,1003,1,0
-BRDA:41,1077,0,58
+BRDA:41,1077,0,0
 BRDA:41,1077,1,0
-BRDA:41,1151,0,58
+BRDA:41,1151,0,0
 BRDA:41,1151,1,0
 FN:8,System.Void HaddySimHub.Displays.ETS.EtsDataConverter::.ctor()
-FNDA:63,System.Void HaddySimHub.Displays.ETS.EtsDataConverter::.ctor()
-DA:9,63
+FNDA:0,System.Void HaddySimHub.Displays.ETS.EtsDataConverter::.ctor()
+DA:9,0
 LF:98
-LH:94
+LH:0
 BRF:20
-BRH:16
+BRH:0
 FNF:2
-FNH:2
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Displays\ETS\EtsGameDataProvider.cs
 FN:19,System.Void HaddySimHub.Displays.ETS.EtsGameDataProvider::Start()
@@ -1847,19 +1847,19 @@ DA:40,0
 BRDA:39,8,0,0
 BRDA:39,8,1,0
 FN:13,System.Void HaddySimHub.Displays.ETS.EtsGameDataProvider::.ctor(HaddySimHub.Displays.ISCSTelemetryFactory)
-FNDA:5,System.Void HaddySimHub.Displays.ETS.EtsGameDataProvider::.ctor(HaddySimHub.Displays.ISCSTelemetryFactory)
-DA:14,5
-DA:15,5
-DA:16,5
-DA:17,5
+FNDA:0,System.Void HaddySimHub.Displays.ETS.EtsGameDataProvider::.ctor(HaddySimHub.Displays.ISCSTelemetryFactory)
+DA:14,0
+DA:15,0
+DA:16,0
+DA:17,0
 BRDA:16,11,0,0
-BRDA:16,11,1,5
+BRDA:16,11,1,0
 LF:19
-LH:4
+LH:0
 BRF:6
-BRH:1
+BRH:0
 FNF:4
-FNH:1
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Displays\ETS\TestDisplay.cs
 FN:19,HaddySimHub.Models.DisplayUpdate HaddySimHub.Displays.ETS.TestDisplay::GenerateDisplayUpdate()
@@ -1883,48 +1883,48 @@ DA:35,0
 DA:36,0
 DA:37,0
 FN:8,System.Void HaddySimHub.Displays.ETS.TestDisplay::.ctor(System.String,HaddySimHub.Interfaces.IDataConverter`2<HaddySimHub.Models.DisplayUpdate,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
-FNDA:4,System.Void HaddySimHub.Displays.ETS.TestDisplay::.ctor(System.String,HaddySimHub.Interfaces.IDataConverter`2<HaddySimHub.Models.DisplayUpdate,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
-DA:9,4
-DA:15,4
-DA:16,4
-DA:17,4
+FNDA:0,System.Void HaddySimHub.Displays.ETS.TestDisplay::.ctor(System.String,HaddySimHub.Interfaces.IDataConverter`2<HaddySimHub.Models.DisplayUpdate,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
+DA:9,0
+DA:15,0
+DA:16,0
+DA:17,0
 LF:22
-LH:4
+LH:0
 BRF:0
 BRH:0
 FNF:2
-FNH:1
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Displays\Dirt2\Dirt2DataConverter.cs
 FN:8,HaddySimHub.Models.DisplayUpdate HaddySimHub.Displays.Dirt2.Dirt2DataConverter::Convert(HaddySimHub.Displays.Dirt2.Packet)
-FNDA:26,HaddySimHub.Models.DisplayUpdate HaddySimHub.Displays.Dirt2.Dirt2DataConverter::Convert(HaddySimHub.Displays.Dirt2.Packet)
-DA:9,26
-DA:10,26
-DA:12,26
-DA:13,26
-DA:14,26
-DA:15,26
-DA:16,26
-DA:17,26
-DA:18,26
-DA:19,26
-DA:20,26
-DA:21,26
-DA:22,26
-DA:23,26
-DA:24,26
-DA:26,26
-DA:27,26
-BRDA:12,97,0,3
-BRDA:12,110,0,2
-BRDA:12,110,1,1
-BRDA:12,97,1,23
+FNDA:0,HaddySimHub.Models.DisplayUpdate HaddySimHub.Displays.Dirt2.Dirt2DataConverter::Convert(HaddySimHub.Displays.Dirt2.Packet)
+DA:9,0
+DA:10,0
+DA:12,0
+DA:13,0
+DA:14,0
+DA:15,0
+DA:16,0
+DA:17,0
+DA:18,0
+DA:19,0
+DA:20,0
+DA:21,0
+DA:22,0
+DA:23,0
+DA:24,0
+DA:26,0
+DA:27,0
+BRDA:12,97,0,0
+BRDA:12,110,0,0
+BRDA:12,110,1,0
+BRDA:12,97,1,0
 LF:17
-LH:17
+LH:0
 BRF:4
-BRH:4
+BRH:0
 FNF:1
-FNH:1
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Displays\Dirt2\Dirt2GameDataProvider.cs
 FN:23,System.Void HaddySimHub.Displays.Dirt2.Dirt2GameDataProvider::Start()
@@ -1970,20 +1970,20 @@ BRDA:42,23,1,0
 BRDA:61,101,0,0
 BRDA:61,101,1,0
 FN:11,System.Void HaddySimHub.Displays.Dirt2.Dirt2GameDataProvider::.ctor(HaddySimHub.Displays.IUdpClientFactory)
-FNDA:6,System.Void HaddySimHub.Displays.Dirt2.Dirt2GameDataProvider::.ctor(HaddySimHub.Displays.IUdpClientFactory)
-DA:12,6
-DA:18,6
-DA:19,6
-DA:20,6
-DA:21,6
+FNDA:0,System.Void HaddySimHub.Displays.Dirt2.Dirt2GameDataProvider::.ctor(HaddySimHub.Displays.IUdpClientFactory)
+DA:12,0
+DA:18,0
+DA:19,0
+DA:20,0
+DA:21,0
 BRDA:20,32,0,0
-BRDA:20,32,1,6
+BRDA:20,32,1,0
 LF:31
-LH:5
+LH:0
 BRF:12
-BRH:1
+BRH:0
 FNF:4
-FNH:1
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Displays\Dirt2\Display.cs
 FN:8,System.String HaddySimHub.Displays.Dirt2.Display::get_Description()
@@ -1993,16 +1993,16 @@ FN:9,System.Boolean HaddySimHub.Displays.Dirt2.Display::get_IsActive()
 FNDA:0,System.Boolean HaddySimHub.Displays.Dirt2.Display::get_IsActive()
 DA:10,0
 FN:15,System.Void HaddySimHub.Displays.Dirt2.Display::.ctor(HaddySimHub.Interfaces.IGameDataProvider`1<HaddySimHub.Displays.Dirt2.Packet>,HaddySimHub.Interfaces.IDataConverter`2<HaddySimHub.Displays.Dirt2.Packet,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
-FNDA:5,System.Void HaddySimHub.Displays.Dirt2.Display::.ctor(HaddySimHub.Interfaces.IGameDataProvider`1<HaddySimHub.Displays.Dirt2.Packet>,HaddySimHub.Interfaces.IDataConverter`2<HaddySimHub.Displays.Dirt2.Packet,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
-DA:16,5
-DA:17,5
-DA:18,5
+FNDA:0,System.Void HaddySimHub.Displays.Dirt2.Display::.ctor(HaddySimHub.Interfaces.IGameDataProvider`1<HaddySimHub.Displays.Dirt2.Packet>,HaddySimHub.Interfaces.IDataConverter`2<HaddySimHub.Displays.Dirt2.Packet,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
+DA:16,0
+DA:17,0
+DA:18,0
 LF:5
-LH:3
+LH:0
 BRF:0
 BRH:0
 FNF:3
-FNH:1
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Displays\Dirt2\TestDisplay.cs
 FN:17,HaddySimHub.Models.DisplayUpdate HaddySimHub.Displays.Dirt2.TestDisplay::GenerateDisplayUpdate()
@@ -2027,94 +2027,94 @@ DA:35,0
 DA:36,0
 DA:37,0
 FN:12,System.Void HaddySimHub.Displays.Dirt2.TestDisplay::.ctor(System.String,HaddySimHub.Interfaces.IDataConverter`2<HaddySimHub.Models.DisplayUpdate,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
-FNDA:4,System.Void HaddySimHub.Displays.Dirt2.TestDisplay::.ctor(System.String,HaddySimHub.Interfaces.IDataConverter`2<HaddySimHub.Models.DisplayUpdate,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
-DA:13,4
-DA:14,4
-DA:15,4
+FNDA:0,System.Void HaddySimHub.Displays.Dirt2.TestDisplay::.ctor(System.String,HaddySimHub.Interfaces.IDataConverter`2<HaddySimHub.Models.DisplayUpdate,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
+DA:13,0
+DA:14,0
+DA:15,0
 LF:22
-LH:3
+LH:0
 BRF:0
 BRH:0
 FNF:2
-FNH:1
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Displays\AC\ACDataConverter.cs
 FN:11,HaddySimHub.Models.DisplayUpdate HaddySimHub.Displays.AC.ACDataConverter::Convert(HaddySimHub.Displays.AC.ACTelemetry)
-FNDA:13,HaddySimHub.Models.DisplayUpdate HaddySimHub.Displays.AC.ACDataConverter::Convert(HaddySimHub.Displays.AC.ACTelemetry)
-DA:12,13
-DA:14,13
-DA:15,13
-DA:16,1
-DA:17,11
-DA:18,1
+FNDA:0,HaddySimHub.Models.DisplayUpdate HaddySimHub.Displays.AC.ACDataConverter::Convert(HaddySimHub.Displays.AC.ACTelemetry)
+DA:12,0
+DA:14,0
+DA:15,0
+DA:16,0
+DA:17,0
+DA:18,0
 DA:19,0
-DA:20,13
-DA:23,13
-DA:26,13
-DA:27,13
-DA:28,11
-DA:29,1
-DA:30,1
+DA:20,0
+DA:23,0
+DA:26,0
+DA:27,0
+DA:28,0
+DA:29,0
+DA:30,0
 DA:31,0
-DA:32,13
-DA:35,13
-DA:36,13
-DA:38,13
-DA:39,13
-DA:40,13
-DA:41,13
-DA:42,13
-DA:43,13
-DA:44,13
-DA:45,13
-DA:46,13
-DA:47,13
-DA:48,13
-DA:49,13
-DA:50,13
-DA:51,13
-DA:52,13
-DA:53,13
-DA:54,13
-DA:55,13
-DA:56,13
-DA:57,13
-DA:58,13
-DA:59,13
-DA:60,13
-DA:61,13
-DA:62,13
-DA:63,13
-DA:64,13
-DA:65,13
-DA:66,13
-DA:67,13
-DA:68,13
-DA:69,13
-DA:71,13
-DA:72,13
-DA:73,13
-DA:74,13
-DA:75,13
-DA:76,13
-BRDA:14,20,0,12
-BRDA:14,29,0,1
-BRDA:14,20,1,1
-BRDA:14,29,1,11
-BRDA:14,38,1,1
+DA:32,0
+DA:35,0
+DA:36,0
+DA:38,0
+DA:39,0
+DA:40,0
+DA:41,0
+DA:42,0
+DA:43,0
+DA:44,0
+DA:45,0
+DA:46,0
+DA:47,0
+DA:48,0
+DA:49,0
+DA:50,0
+DA:51,0
+DA:52,0
+DA:53,0
+DA:54,0
+DA:55,0
+DA:56,0
+DA:57,0
+DA:58,0
+DA:59,0
+DA:60,0
+DA:61,0
+DA:62,0
+DA:63,0
+DA:64,0
+DA:65,0
+DA:66,0
+DA:67,0
+DA:68,0
+DA:69,0
+DA:71,0
+DA:72,0
+DA:73,0
+DA:74,0
+DA:75,0
+DA:76,0
+BRDA:14,20,0,0
+BRDA:14,29,0,0
+BRDA:14,20,1,0
+BRDA:14,29,1,0
+BRDA:14,38,1,0
 BRDA:14,38,0,0
-BRDA:26,124,1,11
-BRDA:26,124,2,1
-BRDA:26,124,3,1
+BRDA:26,124,1,0
+BRDA:26,124,2,0
+BRDA:26,124,3,0
 BRDA:26,124,0,0
-BRDA:35,197,0,13
+BRDA:35,197,0,0
 BRDA:35,197,1,0
 LF:56
-LH:54
+LH:0
 BRF:12
-BRH:9
+BRH:0
 FNF:1
-FNH:1
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Displays\AC\ACGameDataProvider.cs
 FN:8,HaddySimHub.Displays.AC.ACSharedMemoryReader HaddySimHub.Displays.AC.ACGameDataProvider::CreateReader()
@@ -2240,43 +2240,43 @@ FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Displays\ACRally\ACRallyDataConverter.cs
 FN:11,HaddySimHub.Models.DisplayUpdate HaddySimHub.Displays.ACRally.ACRallyDataConverter::Convert(HaddySimHub.Displays.ACRally.ACRallyTelemetry)
-FNDA:15,HaddySimHub.Models.DisplayUpdate HaddySimHub.Displays.ACRally.ACRallyDataConverter::Convert(HaddySimHub.Displays.ACRally.ACRallyTelemetry)
-DA:12,15
-DA:13,15
-DA:17,15
-DA:18,15
-DA:19,15
-DA:21,15
-DA:22,15
-DA:23,15
-DA:24,15
-DA:25,15
-DA:26,15
-DA:27,15
-DA:28,15
-DA:29,15
-DA:30,15
-DA:31,15
-DA:32,15
-DA:33,15
-DA:34,15
-DA:35,15
-DA:37,15
-DA:38,15
-BRDA:21,127,0,3
-BRDA:21,140,0,2
-BRDA:21,140,1,1
-BRDA:21,127,1,12
-BRDA:21,190,0,2
-BRDA:21,190,1,13
-BRDA:21,199,0,13
-BRDA:21,199,1,2
+FNDA:0,HaddySimHub.Models.DisplayUpdate HaddySimHub.Displays.ACRally.ACRallyDataConverter::Convert(HaddySimHub.Displays.ACRally.ACRallyTelemetry)
+DA:12,0
+DA:13,0
+DA:17,0
+DA:18,0
+DA:19,0
+DA:21,0
+DA:22,0
+DA:23,0
+DA:24,0
+DA:25,0
+DA:26,0
+DA:27,0
+DA:28,0
+DA:29,0
+DA:30,0
+DA:31,0
+DA:32,0
+DA:33,0
+DA:34,0
+DA:35,0
+DA:37,0
+DA:38,0
+BRDA:21,127,0,0
+BRDA:21,140,0,0
+BRDA:21,140,1,0
+BRDA:21,127,1,0
+BRDA:21,190,0,0
+BRDA:21,190,1,0
+BRDA:21,199,0,0
+BRDA:21,199,1,0
 LF:22
-LH:22
+LH:0
 BRF:8
-BRH:8
+BRH:0
 FNF:1
-FNH:1
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Displays\ACRally\ACRallyGameDataProvider.cs
 FN:8,HaddySimHub.Displays.ACRally.ACRallySharedMemoryReader HaddySimHub.Displays.ACRally.ACRallyGameDataProvider::CreateReader()
@@ -2401,24 +2401,31 @@ FNF:3
 FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Displays\ACC\ACCDataConverter.cs
-FN:11,HaddySimHub.Models.DisplayUpdate HaddySimHub.Displays.ACC.ACCDataConverter::Convert(HaddySimHub.Displays.ACC.ACCTelemetry)
+FN:9,HaddySimHub.Models.DisplayUpdate HaddySimHub.Displays.ACC.ACCDataConverter::Convert(HaddySimHub.Displays.ACC.ACCTelemetry)
 FNDA:15,HaddySimHub.Models.DisplayUpdate HaddySimHub.Displays.ACC.ACCDataConverter::Convert(HaddySimHub.Displays.ACC.ACCTelemetry)
+DA:10,15
+DA:11,15
 DA:12,15
-DA:14,15
-DA:15,15
-DA:16,1
-DA:17,13
-DA:18,1
-DA:19,0
-DA:20,15
-DA:23,15
-DA:26,15
-DA:27,15
-DA:28,13
-DA:29,1
-DA:30,1
-DA:31,0
+DA:13,1
+DA:14,13
+DA:15,1
+DA:16,15
+DA:18,15
+DA:19,15
+DA:20,13
+DA:21,1
+DA:22,1
+DA:23,0
+DA:24,0
+DA:25,0
+DA:26,0
+DA:27,0
+DA:28,0
+DA:29,0
+DA:30,15
 DA:32,15
+DA:33,15
+DA:34,15
 DA:35,15
 DA:37,15
 DA:38,15
@@ -2452,37 +2459,41 @@ DA:65,15
 DA:66,15
 DA:67,15
 DA:68,15
+DA:69,15
 DA:70,15
-DA:71,15
 DA:72,15
 DA:73,15
 DA:74,15
 DA:75,15
-BRDA:14,20,0,14
-BRDA:14,29,0,1
-BRDA:14,20,1,1
-BRDA:14,29,1,13
-BRDA:14,38,1,1
-BRDA:14,38,0,0
-BRDA:26,124,1,13
-BRDA:26,124,2,1
-BRDA:26,124,3,1
-BRDA:26,124,0,0
-LF:55
-LH:53
-BRF:10
-BRH:8
+DA:76,15
+DA:77,15
+BRDA:11,16,0,14
+BRDA:11,16,1,1
+BRDA:11,20,1,13
+BRDA:11,20,0,1
+BRDA:18,79,1,13
+BRDA:18,79,2,1
+BRDA:18,79,3,1
+BRDA:18,79,4,0
+BRDA:18,79,5,0
+BRDA:18,79,6,0
+BRDA:18,79,7,0
+BRDA:18,79,8,0
+BRDA:18,79,9,0
+BRDA:18,79,0,0
+LF:64
+LH:57
+BRF:14
+BRH:7
 FNF:1
 FNH:1
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Displays\ACC\ACCGameDataProvider.cs
-FN:8,System.Void HaddySimHub.Displays.ACC.ACCGameDataProvider::Start()
+FN:10,System.Void HaddySimHub.Displays.ACC.ACCGameDataProvider::Start()
 FNDA:0,System.Void HaddySimHub.Displays.ACC.ACCGameDataProvider::Start()
-DA:9,0
-DA:10,0
 DA:11,0
+DA:12,0
 DA:13,0
-DA:14,0
 DA:15,0
 DA:16,0
 DA:17,0
@@ -2491,8 +2502,8 @@ DA:20,0
 DA:21,0
 DA:22,0
 DA:23,0
-BRDA:14,89,0,0
-BRDA:14,89,1,0
+BRDA:15,33,0,0
+BRDA:15,33,1,0
 FN:25,System.Void HaddySimHub.Displays.ACC.ACCGameDataProvider::Stop()
 FNDA:0,System.Void HaddySimHub.Displays.ACC.ACCGameDataProvider::Stop()
 DA:26,0
@@ -2506,7 +2517,108 @@ DA:33,0
 DA:34,0
 DA:35,0
 DA:36,0
+DA:37,0
+DA:38,0
 DA:39,0
+DA:40,0
+DA:43,0
+DA:45,0
+DA:46,0
+DA:47,0
+DA:48,0
+DA:49,0
+DA:50,0
+DA:52,0
+DA:53,0
+DA:54,0
+DA:55,0
+DA:56,0
+DA:57,0
+DA:58,0
+DA:59,0
+BRDA:33,7,0,0
+BRDA:33,7,1,0
+BRDA:33,29,0,0
+BRDA:36,53,0,0
+BRDA:36,53,1,0
+BRDA:36,72,0,0
+BRDA:33,29,1,0
+BRDA:45,169,0,0
+BRDA:47,192,0,0
+BRDA:52,254,0,0
+BRDA:52,254,1,0
+BRDA:47,192,1,0
+BRDA:36,72,1,0
+BRDA:45,169,1,0
+FN:61,HaddySimHub.Displays.ACC.ACCSharedMemoryReader HaddySimHub.Displays.ACC.ACCGameDataProvider::CreateReader()
+FNDA:0,HaddySimHub.Displays.ACC.ACCSharedMemoryReader HaddySimHub.Displays.ACC.ACCGameDataProvider::CreateReader()
+DA:62,0
+DA:63,0
+DA:64,0
+FN:66,System.Void HaddySimHub.Displays.ACC.ACCGameDataProvider::ConnectReader(HaddySimHub.Displays.ACC.ACCSharedMemoryReader)
+FNDA:0,System.Void HaddySimHub.Displays.ACC.ACCGameDataProvider::ConnectReader(HaddySimHub.Displays.ACC.ACCSharedMemoryReader)
+DA:67,0
+DA:68,0
+DA:69,0
+FN:71,System.Void HaddySimHub.Displays.ACC.ACCGameDataProvider::DisconnectReader(HaddySimHub.Displays.ACC.ACCSharedMemoryReader)
+FNDA:0,System.Void HaddySimHub.Displays.ACC.ACCGameDataProvider::DisconnectReader(HaddySimHub.Displays.ACC.ACCSharedMemoryReader)
+DA:72,0
+DA:73,0
+DA:74,0
+DA:75,0
+BRDA:73,2,1,0
+BRDA:73,2,0,0
+BRDA:74,14,1,0
+BRDA:74,14,0,0
+FN:77,System.Boolean HaddySimHub.Displays.ACC.ACCGameDataProvider::IsConnected(HaddySimHub.Displays.ACC.ACCSharedMemoryReader)
+FNDA:0,System.Boolean HaddySimHub.Displays.ACC.ACCGameDataProvider::IsConnected(HaddySimHub.Displays.ACC.ACCSharedMemoryReader)
+DA:78,0
+DA:79,0
+DA:80,0
+BRDA:79,2,0,0
+BRDA:79,2,1,0
+FN:82,System.Boolean HaddySimHub.Displays.ACC.ACCGameDataProvider::TryReadTelemetry(HaddySimHub.Displays.ACC.ACCSharedMemoryReader,HaddySimHub.Displays.ACC.ACCTelemetry&)
+FNDA:0,System.Boolean HaddySimHub.Displays.ACC.ACCGameDataProvider::TryReadTelemetry(HaddySimHub.Displays.ACC.ACCSharedMemoryReader,HaddySimHub.Displays.ACC.ACCTelemetry&)
+DA:83,0
+DA:84,0
+DA:85,0
+FN:87,System.Boolean HaddySimHub.Displays.ACC.ACCGameDataProvider::HasDataChanged(HaddySimHub.Displays.ACC.ACCTelemetry,HaddySimHub.Displays.ACC.ACCTelemetry)
+FNDA:0,System.Boolean HaddySimHub.Displays.ACC.ACCGameDataProvider::HasDataChanged(HaddySimHub.Displays.ACC.ACCTelemetry,HaddySimHub.Displays.ACC.ACCTelemetry)
+DA:88,0
+DA:89,0
+DA:90,0
+FN:6,System.Void HaddySimHub.Displays.ACC.ACCGameDataProvider::.ctor()
+FNDA:0,System.Void HaddySimHub.Displays.ACC.ACCGameDataProvider::.ctor()
+DA:7,0
+LF:59
+LH:0
+BRF:22
+BRH:0
+FNF:10
+FNH:0
+end_of_record
+SF:C:\0Code\HaddySimHub\HaddySimHub\Displays\ACC\ACCSharedMemoryReader.cs
+FN:23,System.Boolean HaddySimHub.Displays.ACC.ACCSharedMemoryReader::get_IsConnected()
+FNDA:0,System.Boolean HaddySimHub.Displays.ACC.ACCSharedMemoryReader::get_IsConnected()
+DA:24,0
+BRDA:24,6,0,0
+BRDA:24,6,1,0
+FN:24,System.Boolean HaddySimHub.Displays.ACC.ACCSharedMemoryReader::get_IsPhysicsConnected()
+FNDA:0,System.Boolean HaddySimHub.Displays.ACC.ACCSharedMemoryReader::get_IsPhysicsConnected()
+DA:25,0
+FN:25,System.Boolean HaddySimHub.Displays.ACC.ACCSharedMemoryReader::get_IsGraphicsConnected()
+FNDA:0,System.Boolean HaddySimHub.Displays.ACC.ACCSharedMemoryReader::get_IsGraphicsConnected()
+DA:26,0
+FN:28,System.Void HaddySimHub.Displays.ACC.ACCSharedMemoryReader::Connect()
+FNDA:0,System.Void HaddySimHub.Displays.ACC.ACCSharedMemoryReader::Connect()
+DA:29,0
+DA:30,0
+DA:32,0
+DA:33,0
+DA:34,0
+DA:35,0
+DA:37,0
+DA:38,0
 DA:40,0
 DA:41,0
 DA:42,0
@@ -2515,144 +2627,370 @@ DA:44,0
 DA:45,0
 DA:46,0
 DA:47,0
-DA:49,0
-DA:50,0
+DA:48,0
+BRDA:30,9,1,0
+BRDA:33,44,0,0
+BRDA:33,44,1,0
+BRDA:33,60,1,0
+BRDA:40,110,0,0
+BRDA:40,110,1,0
+BRDA:44,222,0,0
+BRDA:30,9,0,0
+BRDA:33,60,0,0
+BRDA:44,222,1,0
+FN:50,System.Void HaddySimHub.Displays.ACC.ACCSharedMemoryReader::TryConnectPhysics()
+FNDA:0,System.Void HaddySimHub.Displays.ACC.ACCSharedMemoryReader::TryConnectPhysics()
 DA:51,0
 DA:52,0
-BRDA:33,7,0,0
-BRDA:33,7,1,0
-BRDA:33,29,0,0
-BRDA:33,29,1,0
-BRDA:39,64,0,0
-BRDA:41,82,0,0
-BRDA:41,82,1,0
-BRDA:39,64,1,0
-FN:54,HaddySimHub.Displays.ACC.ACCSharedMemoryReader HaddySimHub.Displays.ACC.ACCGameDataProvider::CreateReader()
-FNDA:0,HaddySimHub.Displays.ACC.ACCSharedMemoryReader HaddySimHub.Displays.ACC.ACCGameDataProvider::CreateReader()
 DA:55,0
 DA:56,0
-DA:57,0
-FN:59,System.Void HaddySimHub.Displays.ACC.ACCGameDataProvider::ConnectReader(HaddySimHub.Displays.ACC.ACCSharedMemoryReader)
-FNDA:0,System.Void HaddySimHub.Displays.ACC.ACCGameDataProvider::ConnectReader(HaddySimHub.Displays.ACC.ACCSharedMemoryReader)
+DA:58,0
 DA:60,0
 DA:61,0
 DA:62,0
-FN:64,System.Void HaddySimHub.Displays.ACC.ACCGameDataProvider::DisconnectReader(HaddySimHub.Displays.ACC.ACCSharedMemoryReader)
-FNDA:0,System.Void HaddySimHub.Displays.ACC.ACCGameDataProvider::DisconnectReader(HaddySimHub.Displays.ACC.ACCSharedMemoryReader)
-DA:65,0
-DA:66,0
-DA:67,0
-DA:68,0
-BRDA:66,2,1,0
-BRDA:66,2,0,0
-BRDA:67,14,1,0
-BRDA:67,14,0,0
-FN:70,System.Boolean HaddySimHub.Displays.ACC.ACCGameDataProvider::IsConnected(HaddySimHub.Displays.ACC.ACCSharedMemoryReader)
-FNDA:0,System.Boolean HaddySimHub.Displays.ACC.ACCGameDataProvider::IsConnected(HaddySimHub.Displays.ACC.ACCSharedMemoryReader)
-DA:71,0
-DA:72,0
-DA:73,0
-BRDA:72,2,0,0
-BRDA:72,2,1,0
-FN:75,System.Boolean HaddySimHub.Displays.ACC.ACCGameDataProvider::TryReadTelemetry(HaddySimHub.Displays.ACC.ACCSharedMemoryReader,HaddySimHub.Displays.ACC.ACCTelemetry&)
-FNDA:0,System.Boolean HaddySimHub.Displays.ACC.ACCGameDataProvider::TryReadTelemetry(HaddySimHub.Displays.ACC.ACCSharedMemoryReader,HaddySimHub.Displays.ACC.ACCTelemetry&)
-DA:76,0
-DA:77,0
-DA:78,0
-FN:80,System.Boolean HaddySimHub.Displays.ACC.ACCGameDataProvider::HasDataChanged(HaddySimHub.Displays.ACC.ACCTelemetry,HaddySimHub.Displays.ACC.ACCTelemetry)
-FNDA:0,System.Boolean HaddySimHub.Displays.ACC.ACCGameDataProvider::HasDataChanged(HaddySimHub.Displays.ACC.ACCTelemetry,HaddySimHub.Displays.ACC.ACCTelemetry)
-DA:81,0
-DA:82,0
-DA:83,0
-LF:54
-LH:0
-BRF:16
-BRH:0
-FNF:9
-FNH:0
-end_of_record
-SF:C:\0Code\HaddySimHub\HaddySimHub\Displays\ACC\ACCSharedMemoryReader.cs
-FN:16,System.Boolean HaddySimHub.Displays.ACC.ACCSharedMemoryReader::get_IsConnected()
-FNDA:0,System.Boolean HaddySimHub.Displays.ACC.ACCSharedMemoryReader::get_IsConnected()
-DA:17,0
-FN:19,System.Void HaddySimHub.Displays.ACC.ACCSharedMemoryReader::Connect()
-FNDA:0,System.Void HaddySimHub.Displays.ACC.ACCSharedMemoryReader::Connect()
-DA:20,0
-DA:21,0
-DA:23,0
-DA:24,0
-DA:26,0
-DA:28,0
-DA:29,0
-DA:30,0
-DA:31,0
-DA:32,0
-DA:33,0
-DA:34,0
-DA:35,0
-DA:36,0
-DA:37,0
-FN:39,System.Boolean HaddySimHub.Displays.ACC.ACCSharedMemoryReader::TryReadTelemetry(HaddySimHub.Displays.ACC.ACCTelemetry&)
-FNDA:0,System.Boolean HaddySimHub.Displays.ACC.ACCSharedMemoryReader::TryReadTelemetry(HaddySimHub.Displays.ACC.ACCTelemetry&)
-DA:40,0
-DA:41,0
-DA:43,0
-DA:44,0
-DA:45,0
-DA:46,0
-DA:50,0
-DA:51,0
-DA:52,0
-DA:54,0
-DA:55,0
-DA:56,0
-DA:57,0
-DA:58,0
-DA:60,0
-BRDA:43,14,0,0
-BRDA:43,14,1,0
-BRDA:43,30,0,0
-BRDA:43,30,1,0
-FN:62,System.Void HaddySimHub.Displays.ACC.ACCSharedMemoryReader::Disconnect()
-FNDA:0,System.Void HaddySimHub.Displays.ACC.ACCSharedMemoryReader::Disconnect()
 DA:63,0
 DA:64,0
 DA:65,0
 DA:66,0
 DA:67,0
-BRDA:64,8,0,0
-BRDA:64,8,1,0
-BRDA:65,26,0,0
-BRDA:65,26,1,0
-FN:69,System.Void HaddySimHub.Displays.ACC.ACCSharedMemoryReader::Dispose()
-FNDA:0,System.Void HaddySimHub.Displays.ACC.ACCSharedMemoryReader::Dispose()
+DA:68,0
+DA:69,0
 DA:70,0
 DA:71,0
 DA:72,0
-LF:39
+DA:73,0
+DA:74,0
+DA:75,0
+DA:76,0
+BRDA:52,9,1,0
+BRDA:52,9,0,0
+FN:78,System.Void HaddySimHub.Displays.ACC.ACCSharedMemoryReader::TryConnectGraphics()
+FNDA:0,System.Void HaddySimHub.Displays.ACC.ACCSharedMemoryReader::TryConnectGraphics()
+DA:79,0
+DA:80,0
+DA:83,0
+DA:84,0
+DA:86,0
+DA:88,0
+DA:89,0
+DA:90,0
+DA:91,0
+DA:92,0
+DA:93,0
+DA:94,0
+DA:95,0
+DA:96,0
+DA:97,0
+DA:98,0
+DA:99,0
+DA:100,0
+DA:101,0
+DA:102,0
+DA:103,0
+DA:104,0
+BRDA:80,9,1,0
+BRDA:80,9,0,0
+FN:106,System.Boolean HaddySimHub.Displays.ACC.ACCSharedMemoryReader::TryReadTelemetry(HaddySimHub.Displays.ACC.ACCTelemetry&)
+FNDA:0,System.Boolean HaddySimHub.Displays.ACC.ACCSharedMemoryReader::TryReadTelemetry(HaddySimHub.Displays.ACC.ACCTelemetry&)
+DA:107,0
+DA:108,0
+DA:110,0
+DA:111,0
+DA:112,0
+DA:113,0
+DA:117,0
+DA:118,0
+DA:119,0
+DA:121,0
+DA:122,0
+DA:123,0
+DA:124,0
+DA:125,0
+DA:126,0
+DA:128,0
+DA:129,0
+DA:130,0
+DA:131,0
+DA:132,0
+DA:134,0
+DA:135,0
+DA:136,0
+DA:137,0
+DA:138,0
+DA:139,0
+DA:140,0
+DA:141,0
+DA:142,0
+DA:143,0
+DA:144,0
+DA:145,0
+DA:146,0
+DA:147,0
+DA:148,0
+DA:149,0
+DA:150,0
+DA:151,0
+DA:152,0
+DA:153,0
+DA:154,0
+DA:155,0
+DA:156,0
+DA:157,0
+DA:158,0
+DA:159,0
+DA:160,0
+DA:161,0
+DA:162,0
+DA:163,0
+DA:164,0
+DA:165,0
+DA:166,0
+DA:167,0
+DA:168,0
+DA:169,0
+DA:170,0
+DA:171,0
+DA:172,0
+DA:173,0
+DA:174,0
+DA:175,0
+DA:176,0
+DA:177,0
+DA:178,0
+DA:179,0
+DA:180,0
+DA:181,0
+DA:182,0
+DA:183,0
+DA:184,0
+DA:185,0
+DA:186,0
+DA:187,0
+DA:188,0
+DA:189,0
+DA:190,0
+DA:191,0
+DA:192,0
+DA:193,0
+DA:194,0
+DA:195,0
+DA:196,0
+DA:197,0
+DA:198,0
+DA:199,0
+DA:200,0
+DA:201,0
+DA:202,0
+DA:203,0
+DA:204,0
+DA:205,0
+DA:206,0
+DA:207,0
+DA:208,0
+DA:209,0
+DA:210,0
+DA:211,0
+DA:212,0
+DA:213,0
+DA:214,0
+DA:215,0
+DA:216,0
+DA:217,0
+DA:218,0
+DA:219,0
+DA:220,0
+DA:221,0
+DA:222,0
+DA:223,0
+DA:224,0
+DA:225,0
+DA:226,0
+DA:227,0
+DA:228,0
+DA:229,0
+DA:230,0
+DA:231,0
+DA:232,0
+DA:233,0
+DA:234,0
+DA:235,0
+DA:236,0
+DA:237,0
+DA:238,0
+DA:239,0
+DA:240,0
+DA:241,0
+DA:242,0
+DA:243,0
+DA:244,0
+DA:245,0
+DA:246,0
+DA:247,0
+DA:248,0
+DA:249,0
+DA:250,0
+DA:251,0
+DA:252,0
+DA:253,0
+DA:254,0
+DA:255,0
+DA:256,0
+DA:257,0
+DA:258,0
+DA:259,0
+DA:260,0
+DA:261,0
+DA:262,0
+DA:263,0
+DA:264,0
+DA:265,0
+DA:266,0
+DA:267,0
+DA:268,0
+DA:269,0
+DA:270,0
+DA:271,0
+DA:272,0
+DA:273,0
+DA:274,0
+DA:275,0
+DA:276,0
+DA:277,0
+DA:278,0
+DA:279,0
+DA:280,0
+DA:281,0
+DA:282,0
+DA:283,0
+DA:284,0
+DA:285,0
+DA:286,0
+DA:287,0
+DA:288,0
+DA:289,0
+DA:290,0
+DA:291,0
+DA:292,0
+DA:293,0
+DA:294,0
+DA:295,0
+DA:296,0
+DA:297,0
+DA:298,0
+DA:299,0
+DA:300,0
+DA:301,0
+DA:302,0
+DA:303,0
+DA:305,0
+DA:307,0
+DA:308,0
+DA:309,0
+DA:310,0
+DA:311,0
+DA:312,0
+DA:313,0
+DA:315,0
+BRDA:110,14,0,0
+BRDA:110,14,1,0
+BRDA:110,30,0,0
+BRDA:110,30,1,0
+BRDA:121,71,0,0
+BRDA:121,71,1,0
+BRDA:121,86,0,0
+BRDA:124,118,0,0
+BRDA:124,118,1,0
+BRDA:125,146,0,0
+BRDA:125,146,1,0
+BRDA:121,86,1,0
+BRDA:128,168,0,0
+BRDA:128,168,1,0
+BRDA:128,183,0,0
+BRDA:131,214,0,0
+BRDA:131,214,1,0
+BRDA:128,183,1,0
+BRDA:134,1181,0,0
+BRDA:134,1181,1,0
+BRDA:134,1207,0,0
+BRDA:134,1207,1,0
+BRDA:134,1233,0,0
+BRDA:134,1233,1,0
+BRDA:134,1259,0,0
+BRDA:134,1259,1,0
+BRDA:134,1285,0,0
+BRDA:134,1285,1,0
+BRDA:134,1389,0,0
+BRDA:134,1389,1,0
+BRDA:134,1415,0,0
+BRDA:134,1415,1,0
+BRDA:134,2449,0,0
+BRDA:134,2449,1,0
+FN:317,System.Void HaddySimHub.Displays.ACC.ACCSharedMemoryReader::Disconnect()
+FNDA:0,System.Void HaddySimHub.Displays.ACC.ACCSharedMemoryReader::Disconnect()
+DA:318,0
+DA:319,0
+DA:320,0
+DA:321,0
+DA:322,0
+DA:323,0
+DA:324,0
+DA:325,0
+DA:326,0
+BRDA:319,8,0,0
+BRDA:319,8,1,0
+BRDA:320,26,0,0
+BRDA:320,26,1,0
+BRDA:321,44,0,0
+BRDA:321,44,1,0
+BRDA:322,62,0,0
+BRDA:322,62,1,0
+FN:328,System.Void HaddySimHub.Displays.ACC.ACCSharedMemoryReader::Dispose()
+FNDA:0,System.Void HaddySimHub.Displays.ACC.ACCSharedMemoryReader::Dispose()
+DA:329,0
+DA:330,0
+DA:331,0
+FN:17,System.Void HaddySimHub.Displays.ACC.ACCSharedMemoryReader::.ctor()
+FNDA:0,System.Void HaddySimHub.Displays.ACC.ACCSharedMemoryReader::.ctor()
+DA:18,0
+FN:18,System.Void HaddySimHub.Displays.ACC.ACCSharedMemoryReader::.cctor()
+FNDA:0,System.Void HaddySimHub.Displays.ACC.ACCSharedMemoryReader::.cctor()
+DA:19,0
+LF:277
 LH:0
-BRF:8
+BRF:58
 BRH:0
-FNF:5
+FNF:11
 FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub\Displays\ACC\Display.cs
-FN:11,System.String HaddySimHub.Displays.ACC.Display::get_Description()
+FN:10,System.String HaddySimHub.Displays.ACC.Display::get_Description()
 FNDA:0,System.String HaddySimHub.Displays.ACC.Display::get_Description()
-DA:12,0
-FN:13,System.Boolean HaddySimHub.Displays.ACC.Display::get_IsActive()
+DA:11,0
+FN:15,System.Boolean HaddySimHub.Displays.ACC.Display::get_IsActive()
 FNDA:0,System.Boolean HaddySimHub.Displays.ACC.Display::get_IsActive()
-DA:14,0
-FN:19,System.Void HaddySimHub.Displays.ACC.Display::.ctor(HaddySimHub.Interfaces.IGameDataProvider`1<HaddySimHub.Displays.ACC.ACCTelemetry>,HaddySimHub.Interfaces.IDataConverter`2<HaddySimHub.Displays.ACC.ACCTelemetry,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
-FNDA:0,System.Void HaddySimHub.Displays.ACC.Display::.ctor(HaddySimHub.Interfaces.IGameDataProvider`1<HaddySimHub.Displays.ACC.ACCTelemetry>,HaddySimHub.Interfaces.IDataConverter`2<HaddySimHub.Displays.ACC.ACCTelemetry,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
+DA:16,0
+DA:17,0
+DA:18,0
+DA:19,0
 DA:20,0
 DA:21,0
 DA:22,0
-LF:5
+DA:23,0
+BRDA:18,49,0,0
+BRDA:18,49,1,0
+FN:29,System.Void HaddySimHub.Displays.ACC.Display::.ctor(HaddySimHub.Interfaces.IGameDataProvider`1<HaddySimHub.Displays.ACC.ACCTelemetry>,HaddySimHub.Interfaces.IDataConverter`2<HaddySimHub.Displays.ACC.ACCTelemetry,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
+FNDA:0,System.Void HaddySimHub.Displays.ACC.Display::.ctor(HaddySimHub.Interfaces.IGameDataProvider`1<HaddySimHub.Displays.ACC.ACCTelemetry>,HaddySimHub.Interfaces.IDataConverter`2<HaddySimHub.Displays.ACC.ACCTelemetry,HaddySimHub.Models.DisplayUpdate>,HaddySimHub.Interfaces.IDisplayUpdateSender)
+DA:30,0
+DA:31,0
+DA:32,0
+FN:8,System.Void HaddySimHub.Displays.ACC.Display::.cctor()
+FNDA:0,System.Void HaddySimHub.Displays.ACC.Display::.cctor()
+DA:9,0
+LF:13
 LH:0
-BRF:0
+BRF:2
 BRH:0
-FNF:3
+FNF:4
 FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\HaddySimHub.Shared\ProcessHelper.cs
@@ -3091,20 +3429,20 @@ BRDA:57,14,1,0
 BRDA:60,50,0,0
 BRDA:60,50,1,0
 FN:11,System.Void iRacingSDK.Car::.ctor(iRacingSDK.Telemetry,System.Int32)
-FNDA:30,System.Void iRacingSDK.Car::.ctor(iRacingSDK.Telemetry,System.Int32)
-DA:12,30
-DA:13,30
-DA:14,30
-DA:15,30
-DA:16,30
-DA:17,30
-DA:18,30
+FNDA:0,System.Void iRacingSDK.Car::.ctor(iRacingSDK.Telemetry,System.Int32)
+DA:12,0
+DA:13,0
+DA:14,0
+DA:15,0
+DA:16,0
+DA:17,0
+DA:18,0
 LF:37
-LH:7
+LH:0
 BRF:10
 BRH:0
 FNF:18
-FNH:1
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\iRacingSDK.Net\DataFeed\CarDetails.cs
 FN:15,System.Int32 iRacingSDK.CarDetails::get_Index()
@@ -3132,9 +3470,9 @@ DA:21,0
 BRDA:21,7,0,0
 BRDA:21,7,1,0
 FN:21,System.Boolean iRacingSDK.CarDetails::get_IsPaceCar()
-FNDA:90,System.Boolean iRacingSDK.CarDetails::get_IsPaceCar()
-DA:22,90
-BRDA:22,7,0,30
+FNDA:0,System.Boolean iRacingSDK.CarDetails::get_IsPaceCar()
+DA:22,0
+BRDA:22,7,0,0
 BRDA:22,7,1,0
 FN:22,System.Boolean iRacingSDK.CarDetails::get_IsOnPitRoad()
 FNDA:0,System.Boolean iRacingSDK.CarDetails::get_IsOnPitRoad()
@@ -3145,19 +3483,19 @@ DA:27,0
 DA:28,0
 DA:29,0
 FN:8,System.Void iRacingSDK.CarDetails::.ctor(iRacingSDK.Telemetry,System.Int32)
-FNDA:30,System.Void iRacingSDK.CarDetails::.ctor(iRacingSDK.Telemetry,System.Int32)
-DA:9,30
-DA:10,30
-DA:11,30
-DA:12,30
-DA:13,30
-DA:14,30
+FNDA:0,System.Void iRacingSDK.CarDetails::.ctor(iRacingSDK.Telemetry,System.Int32)
+DA:9,0
+DA:10,0
+DA:11,0
+DA:12,0
+DA:13,0
+DA:14,0
 LF:17
-LH:7
+LH:0
 BRF:8
-BRH:1
+BRH:0
 FNF:10
-FNH:2
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\iRacingSDK.Net\DataFeed\DataSample.cs
 FN:18,iRacingSDK.DataSample iRacingSDK.DataSample::get_LastSample()
@@ -3217,11 +3555,11 @@ FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\iRacingSDK.Net\DataFeed\GeneratedSessionData.cs
 FN:97,iRacingSDK.SessionData/_WeekendInfo iRacingSDK.SessionData::get_WeekendInfo()
-FNDA:60,iRacingSDK.SessionData/_WeekendInfo iRacingSDK.SessionData::get_WeekendInfo()
-DA:98,60
+FNDA:0,iRacingSDK.SessionData/_WeekendInfo iRacingSDK.SessionData::get_WeekendInfo()
+DA:98,0
 FN:147,iRacingSDK.SessionData/_SessionInfo iRacingSDK.SessionData::get_SessionInfo()
-FNDA:60,iRacingSDK.SessionData/_SessionInfo iRacingSDK.SessionData::get_SessionInfo()
-DA:148,60
+FNDA:0,iRacingSDK.SessionData/_SessionInfo iRacingSDK.SessionData::get_SessionInfo()
+DA:148,0
 FN:167,iRacingSDK.SessionData/_CameraInfo iRacingSDK.SessionData::get_CameraInfo()
 FNDA:0,iRacingSDK.SessionData/_CameraInfo iRacingSDK.SessionData::get_CameraInfo()
 DA:168,0
@@ -3229,14 +3567,14 @@ FN:200,iRacingSDK.SessionData/_RadioInfo iRacingSDK.SessionData::get_RadioInfo()
 FNDA:0,iRacingSDK.SessionData/_RadioInfo iRacingSDK.SessionData::get_RadioInfo()
 DA:201,0
 FN:271,iRacingSDK.SessionData/_DriverInfo iRacingSDK.SessionData::get_DriverInfo()
-FNDA:180,iRacingSDK.SessionData/_DriverInfo iRacingSDK.SessionData::get_DriverInfo()
-DA:272,180
+FNDA:0,iRacingSDK.SessionData/_DriverInfo iRacingSDK.SessionData::get_DriverInfo()
+DA:272,0
 FN:284,iRacingSDK.SessionData/_SplitTimeInfo iRacingSDK.SessionData::get_SplitTimeInfo()
 FNDA:0,iRacingSDK.SessionData/_SplitTimeInfo iRacingSDK.SessionData::get_SplitTimeInfo()
 DA:285,0
 FN:7,System.String iRacingSDK.SessionData/_WeekendInfo::get_TrackName()
-FNDA:30,System.String iRacingSDK.SessionData/_WeekendInfo::get_TrackName()
-DA:8,30
+FNDA:0,System.String iRacingSDK.SessionData/_WeekendInfo::get_TrackName()
+DA:8,0
 FN:8,System.Int64 iRacingSDK.SessionData/_WeekendInfo::get_TrackID()
 FNDA:0,System.Int64 iRacingSDK.SessionData/_WeekendInfo::get_TrackID()
 DA:9,0
@@ -3364,8 +3702,8 @@ FN:49,System.Int64 iRacingSDK.SessionData/_WeekendInfo::get_NumCarTypes()
 FNDA:0,System.Int64 iRacingSDK.SessionData/_WeekendInfo::get_NumCarTypes()
 DA:50,0
 FN:87,iRacingSDK.SessionData/_WeekendInfo/_WeekendOptions iRacingSDK.SessionData/_WeekendInfo::get_WeekendOptions()
-FNDA:60,iRacingSDK.SessionData/_WeekendInfo/_WeekendOptions iRacingSDK.SessionData/_WeekendInfo::get_WeekendOptions()
-DA:88,60
+FNDA:0,iRacingSDK.SessionData/_WeekendInfo/_WeekendOptions iRacingSDK.SessionData/_WeekendInfo::get_WeekendOptions()
+DA:88,0
 FN:94,iRacingSDK.SessionData/_WeekendInfo/_TelemetryOptions iRacingSDK.SessionData/_WeekendInfo::get_TelemetryOptions()
 FNDA:0,iRacingSDK.SessionData/_WeekendInfo/_TelemetryOptions iRacingSDK.SessionData/_WeekendInfo::get_TelemetryOptions()
 DA:95,0
@@ -3433,12 +3771,12 @@ FN:73,System.Int64 iRacingSDK.SessionData/_WeekendInfo/_WeekendOptions::get_NumJ
 FNDA:0,System.Int64 iRacingSDK.SessionData/_WeekendInfo/_WeekendOptions::get_NumJokerLaps()
 DA:74,0
 FN:74,System.String iRacingSDK.SessionData/_WeekendInfo/_WeekendOptions::get_IncidentLimit()
-FNDA:90,System.String iRacingSDK.SessionData/_WeekendInfo/_WeekendOptions::get_IncidentLimit()
-DA:75,90
+FNDA:0,System.String iRacingSDK.SessionData/_WeekendInfo/_WeekendOptions::get_IncidentLimit()
+DA:75,0
 FN:77,System.Int64 iRacingSDK.SessionData/_WeekendInfo/_WeekendOptions::get__IncidentLimit()
-FNDA:90,System.Int64 iRacingSDK.SessionData/_WeekendInfo/_WeekendOptions::get__IncidentLimit()
-DA:78,90
-BRDA:78,17,0,30
+FNDA:0,System.Int64 iRacingSDK.SessionData/_WeekendInfo/_WeekendOptions::get__IncidentLimit()
+DA:78,0
+BRDA:78,17,0,0
 BRDA:78,17,1,0
 FN:79,System.String iRacingSDK.SessionData/_WeekendInfo/_WeekendOptions::get_FastRepairsLimit()
 FNDA:0,System.String iRacingSDK.SessionData/_WeekendInfo/_WeekendOptions::get_FastRepairsLimit()
@@ -3455,29 +3793,29 @@ FN:91,System.String iRacingSDK.SessionData/_WeekendInfo/_TelemetryOptions::get_T
 FNDA:0,System.String iRacingSDK.SessionData/_WeekendInfo/_TelemetryOptions::get_TelemetryDiskFile()
 DA:92,0
 FN:144,iRacingSDK.SessionData/_SessionInfo/_Sessions[] iRacingSDK.SessionData/_SessionInfo::get_Sessions()
-FNDA:60,iRacingSDK.SessionData/_SessionInfo/_Sessions[] iRacingSDK.SessionData/_SessionInfo::get_Sessions()
-DA:145,60
+FNDA:0,iRacingSDK.SessionData/_SessionInfo/_Sessions[] iRacingSDK.SessionData/_SessionInfo::get_Sessions()
+DA:145,0
 FN:103,System.Int64 iRacingSDK.SessionData/_SessionInfo/_Sessions::get_SessionNum()
-FNDA:60,System.Int64 iRacingSDK.SessionData/_SessionInfo/_Sessions::get_SessionNum()
-DA:104,60
+FNDA:0,System.Int64 iRacingSDK.SessionData/_SessionInfo/_Sessions::get_SessionNum()
+DA:104,0
 FN:104,System.String iRacingSDK.SessionData/_SessionInfo/_Sessions::get_SessionLaps()
-FNDA:90,System.String iRacingSDK.SessionData/_SessionInfo/_Sessions::get_SessionLaps()
-DA:105,90
+FNDA:0,System.String iRacingSDK.SessionData/_SessionInfo/_Sessions::get_SessionLaps()
+DA:105,0
 FN:105,System.String iRacingSDK.SessionData/_SessionInfo/_Sessions::get_SessionTime()
-FNDA:60,System.String iRacingSDK.SessionData/_SessionInfo/_Sessions::get_SessionTime()
-DA:106,60
+FNDA:0,System.String iRacingSDK.SessionData/_SessionInfo/_Sessions::get_SessionTime()
+DA:106,0
 FN:106,System.Int64 iRacingSDK.SessionData/_SessionInfo/_Sessions::get_SessionNumLapsToAvg()
 FNDA:0,System.Int64 iRacingSDK.SessionData/_SessionInfo/_Sessions::get_SessionNumLapsToAvg()
 DA:107,0
 FN:107,System.String iRacingSDK.SessionData/_SessionInfo/_Sessions::get_SessionType()
-FNDA:30,System.String iRacingSDK.SessionData/_SessionInfo/_Sessions::get_SessionType()
-DA:108,30
+FNDA:0,System.String iRacingSDK.SessionData/_SessionInfo/_Sessions::get_SessionType()
+DA:108,0
 FN:108,System.String iRacingSDK.SessionData/_SessionInfo/_Sessions::get_SessionTrackRubberState()
 FNDA:0,System.String iRacingSDK.SessionData/_SessionInfo/_Sessions::get_SessionTrackRubberState()
 DA:109,0
 FN:127,iRacingSDK.SessionData/_SessionInfo/_Sessions/_ResultsPositions[] iRacingSDK.SessionData/_SessionInfo/_Sessions::get_ResultsPositions()
-FNDA:30,iRacingSDK.SessionData/_SessionInfo/_Sessions/_ResultsPositions[] iRacingSDK.SessionData/_SessionInfo/_Sessions::get_ResultsPositions()
-DA:128,30
+FNDA:0,iRacingSDK.SessionData/_SessionInfo/_Sessions/_ResultsPositions[] iRacingSDK.SessionData/_SessionInfo/_Sessions::get_ResultsPositions()
+DA:128,0
 FN:135,iRacingSDK.SessionData/_SessionInfo/_Sessions/_ResultsFastestLap[] iRacingSDK.SessionData/_SessionInfo/_Sessions::get_ResultsFastestLap()
 FNDA:0,iRacingSDK.SessionData/_SessionInfo/_Sessions/_ResultsFastestLap[] iRacingSDK.SessionData/_SessionInfo/_Sessions::get_ResultsFastestLap()
 DA:136,0
@@ -3686,14 +4024,14 @@ FN:223,System.Int64 iRacingSDK.SessionData/_DriverInfo::get_DriverSetupPassedTec
 FNDA:0,System.Int64 iRacingSDK.SessionData/_DriverInfo::get_DriverSetupPassedTech()
 DA:224,0
 FN:268,iRacingSDK.SessionData/_DriverInfo/_Drivers[] iRacingSDK.SessionData/_DriverInfo::get_Drivers()
-FNDA:120,iRacingSDK.SessionData/_DriverInfo/_Drivers[] iRacingSDK.SessionData/_DriverInfo::get_Drivers()
-DA:269,120
+FNDA:0,iRacingSDK.SessionData/_DriverInfo/_Drivers[] iRacingSDK.SessionData/_DriverInfo::get_Drivers()
+DA:269,0
 FN:226,System.Int64 iRacingSDK.SessionData/_DriverInfo/_Drivers::get_CarIdx()
-FNDA:180,System.Int64 iRacingSDK.SessionData/_DriverInfo/_Drivers::get_CarIdx()
-DA:227,180
+FNDA:0,System.Int64 iRacingSDK.SessionData/_DriverInfo/_Drivers::get_CarIdx()
+DA:227,0
 FN:227,System.String iRacingSDK.SessionData/_DriverInfo/_Drivers::get_UserName()
-FNDA:30,System.String iRacingSDK.SessionData/_DriverInfo/_Drivers::get_UserName()
-DA:228,30
+FNDA:0,System.String iRacingSDK.SessionData/_DriverInfo/_Drivers::get_UserName()
+DA:228,0
 FN:228,System.String iRacingSDK.SessionData/_DriverInfo/_Drivers::get_AbbrevName()
 FNDA:0,System.String iRacingSDK.SessionData/_DriverInfo/_Drivers::get_AbbrevName()
 DA:229,0
@@ -3710,11 +4048,11 @@ FN:232,System.String iRacingSDK.SessionData/_DriverInfo/_Drivers::get_TeamName()
 FNDA:0,System.String iRacingSDK.SessionData/_DriverInfo/_Drivers::get_TeamName()
 DA:233,0
 FN:233,System.String iRacingSDK.SessionData/_DriverInfo/_Drivers::get_CarNumber()
-FNDA:60,System.String iRacingSDK.SessionData/_DriverInfo/_Drivers::get_CarNumber()
-DA:234,60
+FNDA:0,System.String iRacingSDK.SessionData/_DriverInfo/_Drivers::get_CarNumber()
+DA:234,0
 FN:234,System.Int64 iRacingSDK.SessionData/_DriverInfo/_Drivers::get_CarNumberRaw()
-FNDA:60,System.Int64 iRacingSDK.SessionData/_DriverInfo/_Drivers::get_CarNumberRaw()
-DA:235,60
+FNDA:0,System.Int64 iRacingSDK.SessionData/_DriverInfo/_Drivers::get_CarNumberRaw()
+DA:235,0
 FN:235,System.String iRacingSDK.SessionData/_DriverInfo/_Drivers::get_CarPath()
 FNDA:0,System.String iRacingSDK.SessionData/_DriverInfo/_Drivers::get_CarPath()
 DA:236,0
@@ -3725,8 +4063,8 @@ FN:237,System.Int64 iRacingSDK.SessionData/_DriverInfo/_Drivers::get_CarID()
 FNDA:0,System.Int64 iRacingSDK.SessionData/_DriverInfo/_Drivers::get_CarID()
 DA:238,0
 FN:238,System.Int64 iRacingSDK.SessionData/_DriverInfo/_Drivers::get_CarIsPaceCar()
-FNDA:30,System.Int64 iRacingSDK.SessionData/_DriverInfo/_Drivers::get_CarIsPaceCar()
-DA:239,30
+FNDA:0,System.Int64 iRacingSDK.SessionData/_DriverInfo/_Drivers::get_CarIsPaceCar()
+DA:239,0
 FN:239,System.Int64 iRacingSDK.SessionData/_DriverInfo/_Drivers::get_CarIsAI()
 FNDA:0,System.Int64 iRacingSDK.SessionData/_DriverInfo/_Drivers::get_CarIsAI()
 DA:240,0
@@ -3767,11 +4105,11 @@ FN:251,System.Double iRacingSDK.SessionData/_DriverInfo/_Drivers::get_CarClassEs
 FNDA:0,System.Double iRacingSDK.SessionData/_DriverInfo/_Drivers::get_CarClassEstLapTime()
 DA:252,0
 FN:252,System.Int64 iRacingSDK.SessionData/_DriverInfo/_Drivers::get_IRating()
-FNDA:30,System.Int64 iRacingSDK.SessionData/_DriverInfo/_Drivers::get_IRating()
-DA:253,30
+FNDA:0,System.Int64 iRacingSDK.SessionData/_DriverInfo/_Drivers::get_IRating()
+DA:253,0
 FN:253,System.Int64 iRacingSDK.SessionData/_DriverInfo/_Drivers::get_LicLevel()
-FNDA:30,System.Int64 iRacingSDK.SessionData/_DriverInfo/_Drivers::get_LicLevel()
-DA:254,30
+FNDA:0,System.Int64 iRacingSDK.SessionData/_DriverInfo/_Drivers::get_LicLevel()
+DA:254,0
 FN:254,System.Int64 iRacingSDK.SessionData/_DriverInfo/_Drivers::get_LicSubLevel()
 FNDA:0,System.Int64 iRacingSDK.SessionData/_DriverInfo/_Drivers::get_LicSubLevel()
 DA:255,0
@@ -3818,19 +4156,19 @@ FN:278,System.Double iRacingSDK.SessionData/_SplitTimeInfo/_Sectors::get_SectorS
 FNDA:0,System.Double iRacingSDK.SessionData/_SplitTimeInfo/_Sectors::get_SectorStartPct()
 DA:279,0
 LF:199
-LH:21
+LH:0
 BRF:4
-BRH:1
+BRH:0
 FNF:199
-FNH:21
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\iRacingSDK.Net\DataFeed\Session.cs
 FN:11,System.Int32 iRacingSDK.SessionData/_SessionInfo/_Sessions::get__SessionLaps()
-FNDA:30,System.Int32 iRacingSDK.SessionData/_SessionInfo/_Sessions::get__SessionLaps()
-DA:12,30
-DA:13,30
-DA:14,30
-DA:15,30
+FNDA:0,System.Int32 iRacingSDK.SessionData/_SessionInfo/_Sessions::get__SessionLaps()
+DA:12,0
+DA:13,0
+DA:14,0
+DA:15,0
 FN:20,System.Double iRacingSDK.SessionData/_SessionInfo/_Sessions::get__SessionTime()
 FNDA:0,System.Double iRacingSDK.SessionData/_SessionInfo/_Sessions::get__SessionTime()
 DA:21,0
@@ -3838,33 +4176,33 @@ DA:22,0
 DA:23,0
 DA:24,0
 FN:26,System.Boolean iRacingSDK.SessionData/_SessionInfo/_Sessions::get_IsLimitedSessionLaps()
-FNDA:30,System.Boolean iRacingSDK.SessionData/_SessionInfo/_Sessions::get_IsLimitedSessionLaps()
-DA:27,30
+FNDA:0,System.Boolean iRacingSDK.SessionData/_SessionInfo/_Sessions::get_IsLimitedSessionLaps()
+DA:27,0
 FN:28,System.Boolean iRacingSDK.SessionData/_SessionInfo/_Sessions::get_IsLimitedTime()
-FNDA:30,System.Boolean iRacingSDK.SessionData/_SessionInfo/_Sessions::get_IsLimitedTime()
-DA:29,30
+FNDA:0,System.Boolean iRacingSDK.SessionData/_SessionInfo/_Sessions::get_IsLimitedTime()
+DA:29,0
 LF:10
-LH:6
+LH:0
 BRF:0
 BRH:0
 FNF:4
-FNH:3
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\iRacingSDK.Net\DataFeed\SessionData.cs
 FN:11,System.Boolean iRacingSDK.SessionData/_SessionInfo/_Sessions::get_IsRace()
 FNDA:0,System.Boolean iRacingSDK.SessionData/_SessionInfo/_Sessions::get_IsRace()
 DA:12,0
 FN:27,iRacingSDK.SessionData/_DriverInfo/_Drivers[] iRacingSDK.SessionData/_DriverInfo::get_CompetingDrivers()
-FNDA:120,iRacingSDK.SessionData/_DriverInfo/_Drivers[] iRacingSDK.SessionData/_DriverInfo::get_CompetingDrivers()
-DA:28,120
-DA:29,120
-DA:30,90
-DA:32,30
-DA:34,150
-DA:35,30
-DA:36,30
-DA:38,120
-DA:39,30
+FNDA:0,iRacingSDK.SessionData/_DriverInfo/_Drivers[] iRacingSDK.SessionData/_DriverInfo::get_CompetingDrivers()
+DA:28,0
+DA:29,0
+DA:30,0
+DA:32,0
+DA:34,0
+DA:35,0
+DA:36,0
+DA:38,0
+DA:39,0
 DA:40,0
 DA:41,0
 DA:42,0
@@ -3885,21 +4223,21 @@ DA:56,0
 DA:57,0
 DA:58,0
 DA:59,0
-DA:61,30
-DA:62,120
-BRDA:29,12,0,90
-BRDA:29,12,1,30
-BRDA:34,114,1,30
-BRDA:35,87,0,30
-BRDA:35,87,1,30
-BRDA:34,114,0,30
-BRDA:38,385,1,30
+DA:61,0
+DA:62,0
+BRDA:29,12,0,0
+BRDA:29,12,1,0
+BRDA:34,114,1,0
+BRDA:35,87,0,0
+BRDA:35,87,1,0
+BRDA:34,114,0,0
+BRDA:38,385,1,0
 BRDA:39,140,0,0
-BRDA:39,140,1,30
-BRDA:38,385,0,30
+BRDA:39,140,1,0
+BRDA:38,385,0,0
 FN:22,System.Void iRacingSDK.SessionData/_DriverInfo::.ctor()
-FNDA:30,System.Void iRacingSDK.SessionData/_DriverInfo::.ctor()
-DA:23,30
+FNDA:0,System.Void iRacingSDK.SessionData/_DriverInfo::.ctor()
+DA:23,0
 FN:19,System.Boolean iRacingSDK.SessionData/_DriverInfo/_Drivers::get_IsPaceCar()
 FNDA:0,System.Boolean iRacingSDK.SessionData/_DriverInfo/_Drivers::get_IsPaceCar()
 DA:20,0
@@ -3910,25 +4248,25 @@ FN:73,iRacingSDK.SessionData/_SessionInfo/_Sessions iRacingSDK._SessionExtension
 FNDA:0,iRacingSDK.SessionData/_SessionInfo/_Sessions iRacingSDK._SessionExtensions::Race(iRacingSDK.SessionData/_SessionInfo/_Sessions[])
 DA:74,0
 FN:76,System.Int32 iRacingSDK._SessionExtensions::MaxLength(iRacingSDK.SessionData/_DriverInfo/_Drivers[])
-FNDA:90,System.Int32 iRacingSDK._SessionExtensions::MaxLength(iRacingSDK.SessionData/_DriverInfo/_Drivers[])
-DA:77,90
+FNDA:0,System.Int32 iRacingSDK._SessionExtensions::MaxLength(iRacingSDK.SessionData/_DriverInfo/_Drivers[])
+DA:77,0
 LF:37
-LH:13
+LH:0
 BRF:10
-BRH:9
+BRH:0
 FNF:7
-FNH:3
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\iRacingSDK.Net\DataFeed\GeneratedTelemetry.cs
 FN:4,iRacingSDK.SessionData iRacingSDK.Telemetry::get_SessionData()
-FNDA:120,iRacingSDK.SessionData iRacingSDK.Telemetry::get_SessionData()
-DA:5,120
+FNDA:0,iRacingSDK.SessionData iRacingSDK.Telemetry::get_SessionData()
+DA:5,0
 FN:9,System.Double iRacingSDK.Telemetry::get_SessionTime()
 FNDA:0,System.Double iRacingSDK.Telemetry::get_SessionTime()
 DA:10,0
 FN:14,System.Int32 iRacingSDK.Telemetry::get_SessionNum()
-FNDA:90,System.Int32 iRacingSDK.Telemetry::get_SessionNum()
-DA:15,90
+FNDA:0,System.Int32 iRacingSDK.Telemetry::get_SessionNum()
+DA:15,0
 FN:19,iRacingSDK.SessionState iRacingSDK.Telemetry::get_SessionState()
 FNDA:0,iRacingSDK.SessionState iRacingSDK.Telemetry::get_SessionState()
 DA:20,0
@@ -3939,8 +4277,8 @@ FN:29,iRacingSDK.SessionFlags iRacingSDK.Telemetry::get_SessionFlags()
 FNDA:0,iRacingSDK.SessionFlags iRacingSDK.Telemetry::get_SessionFlags()
 DA:30,0
 FN:34,System.Double iRacingSDK.Telemetry::get_SessionTimeRemain()
-FNDA:30,System.Double iRacingSDK.Telemetry::get_SessionTimeRemain()
-DA:35,30
+FNDA:0,System.Double iRacingSDK.Telemetry::get_SessionTimeRemain()
+DA:35,0
 FN:39,System.Int32 iRacingSDK.Telemetry::get_SessionLapsRemain()
 FNDA:0,System.Int32 iRacingSDK.Telemetry::get_SessionLapsRemain()
 DA:40,0
@@ -3987,8 +4325,8 @@ FN:109,System.Single iRacingSDK.Telemetry::get_CpuUsageBG()
 FNDA:0,System.Single iRacingSDK.Telemetry::get_CpuUsageBG()
 DA:110,0
 FN:114,System.Int32 iRacingSDK.Telemetry::get_PlayerCarPosition()
-FNDA:30,System.Int32 iRacingSDK.Telemetry::get_PlayerCarPosition()
-DA:115,30
+FNDA:0,System.Int32 iRacingSDK.Telemetry::get_PlayerCarPosition()
+DA:115,0
 FN:119,System.Int32 iRacingSDK.Telemetry::get_PlayerCarClassPosition()
 FNDA:0,System.Int32 iRacingSDK.Telemetry::get_PlayerCarClassPosition()
 DA:120,0
@@ -4002,8 +4340,8 @@ FN:134,System.Int32 iRacingSDK.Telemetry::get_PlayerTrackSurfaceMaterial()
 FNDA:0,System.Int32 iRacingSDK.Telemetry::get_PlayerTrackSurfaceMaterial()
 DA:135,0
 FN:139,System.Int32 iRacingSDK.Telemetry::get_PlayerCarIdx()
-FNDA:60,System.Int32 iRacingSDK.Telemetry::get_PlayerCarIdx()
-DA:140,60
+FNDA:0,System.Int32 iRacingSDK.Telemetry::get_PlayerCarIdx()
+DA:140,0
 FN:144,System.Int32 iRacingSDK.Telemetry::get_PlayerCarTeamIncidentCount()
 FNDA:0,System.Int32 iRacingSDK.Telemetry::get_PlayerCarTeamIncidentCount()
 DA:145,0
@@ -4011,8 +4349,8 @@ FN:149,System.Int32 iRacingSDK.Telemetry::get_PlayerCarMyIncidentCount()
 FNDA:0,System.Int32 iRacingSDK.Telemetry::get_PlayerCarMyIncidentCount()
 DA:150,0
 FN:154,System.Int32 iRacingSDK.Telemetry::get_PlayerCarDriverIncidentCount()
-FNDA:30,System.Int32 iRacingSDK.Telemetry::get_PlayerCarDriverIncidentCount()
-DA:155,30
+FNDA:0,System.Int32 iRacingSDK.Telemetry::get_PlayerCarDriverIncidentCount()
+DA:155,0
 FN:159,System.Single iRacingSDK.Telemetry::get_PlayerCarWeightPenalty()
 FNDA:0,System.Single iRacingSDK.Telemetry::get_PlayerCarWeightPenalty()
 DA:160,0
@@ -4026,8 +4364,8 @@ FN:174,System.Single iRacingSDK.Telemetry::get_PlayerCarTowTime()
 FNDA:0,System.Single iRacingSDK.Telemetry::get_PlayerCarTowTime()
 DA:175,0
 FN:179,System.Boolean iRacingSDK.Telemetry::get_PlayerCarInPitStall()
-FNDA:60,System.Boolean iRacingSDK.Telemetry::get_PlayerCarInPitStall()
-DA:180,60
+FNDA:0,System.Boolean iRacingSDK.Telemetry::get_PlayerCarInPitStall()
+DA:180,0
 FN:184,System.Int32 iRacingSDK.Telemetry::get_PlayerCarPitSvStatus()
 FNDA:0,System.Int32 iRacingSDK.Telemetry::get_PlayerCarPitSvStatus()
 DA:185,0
@@ -4038,8 +4376,8 @@ FN:194,System.Int32 iRacingSDK.Telemetry::get_PlayerFastRepairsUsed()
 FNDA:0,System.Int32 iRacingSDK.Telemetry::get_PlayerFastRepairsUsed()
 DA:195,0
 FN:199,System.Int32[] iRacingSDK.Telemetry::get_CarIdxLap()
-FNDA:30,System.Int32[] iRacingSDK.Telemetry::get_CarIdxLap()
-DA:200,30
+FNDA:0,System.Int32[] iRacingSDK.Telemetry::get_CarIdxLap()
+DA:200,0
 FN:204,System.Int32[] iRacingSDK.Telemetry::get_CarIdxLapCompleted()
 FNDA:0,System.Int32[] iRacingSDK.Telemetry::get_CarIdxLapCompleted()
 DA:205,0
@@ -4101,8 +4439,8 @@ FN:299,System.Int32[] iRacingSDK.Telemetry::get_CarIdxPaceFlags()
 FNDA:0,System.Int32[] iRacingSDK.Telemetry::get_CarIdxPaceFlags()
 DA:300,0
 FN:304,System.Boolean iRacingSDK.Telemetry::get_OnPitRoad()
-FNDA:60,System.Boolean iRacingSDK.Telemetry::get_OnPitRoad()
-DA:305,60
+FNDA:0,System.Boolean iRacingSDK.Telemetry::get_OnPitRoad()
+DA:305,0
 FN:309,System.Single[] iRacingSDK.Telemetry::get_CarIdxSteer()
 FNDA:0,System.Single[] iRacingSDK.Telemetry::get_CarIdxSteer()
 DA:310,0
@@ -4113,26 +4451,26 @@ FN:319,System.Int32[] iRacingSDK.Telemetry::get_CarIdxGear()
 FNDA:0,System.Int32[] iRacingSDK.Telemetry::get_CarIdxGear()
 DA:320,0
 FN:324,System.Single iRacingSDK.Telemetry::get_SteeringWheelAngle()
-FNDA:6,System.Single iRacingSDK.Telemetry::get_SteeringWheelAngle()
-DA:325,6
+FNDA:0,System.Single iRacingSDK.Telemetry::get_SteeringWheelAngle()
+DA:325,0
 FN:329,System.Single iRacingSDK.Telemetry::get_Throttle()
-FNDA:30,System.Single iRacingSDK.Telemetry::get_Throttle()
-DA:330,30
+FNDA:0,System.Single iRacingSDK.Telemetry::get_Throttle()
+DA:330,0
 FN:334,System.Single iRacingSDK.Telemetry::get_Brake()
-FNDA:30,System.Single iRacingSDK.Telemetry::get_Brake()
-DA:335,30
+FNDA:0,System.Single iRacingSDK.Telemetry::get_Brake()
+DA:335,0
 FN:339,System.Single iRacingSDK.Telemetry::get_Clutch()
 FNDA:0,System.Single iRacingSDK.Telemetry::get_Clutch()
 DA:340,0
 FN:344,System.Int32 iRacingSDK.Telemetry::get_Gear()
-FNDA:61,System.Int32 iRacingSDK.Telemetry::get_Gear()
-DA:345,61
+FNDA:0,System.Int32 iRacingSDK.Telemetry::get_Gear()
+DA:345,0
 FN:349,System.Single iRacingSDK.Telemetry::get_RPM()
-FNDA:30,System.Single iRacingSDK.Telemetry::get_RPM()
-DA:350,30
+FNDA:0,System.Single iRacingSDK.Telemetry::get_RPM()
+DA:350,0
 FN:354,System.Int32 iRacingSDK.Telemetry::get_Lap()
-FNDA:30,System.Int32 iRacingSDK.Telemetry::get_Lap()
-DA:355,30
+FNDA:0,System.Int32 iRacingSDK.Telemetry::get_Lap()
+DA:355,0
 FN:359,System.Int32 iRacingSDK.Telemetry::get_LapCompleted()
 FNDA:0,System.Int32 iRacingSDK.Telemetry::get_LapCompleted()
 DA:360,0
@@ -4149,14 +4487,14 @@ FN:379,System.Int32 iRacingSDK.Telemetry::get_LapBestLap()
 FNDA:0,System.Int32 iRacingSDK.Telemetry::get_LapBestLap()
 DA:380,0
 FN:384,System.Single iRacingSDK.Telemetry::get_LapBestLapTime()
-FNDA:30,System.Single iRacingSDK.Telemetry::get_LapBestLapTime()
-DA:385,30
+FNDA:0,System.Single iRacingSDK.Telemetry::get_LapBestLapTime()
+DA:385,0
 FN:389,System.Single iRacingSDK.Telemetry::get_LapLastLapTime()
-FNDA:60,System.Single iRacingSDK.Telemetry::get_LapLastLapTime()
-DA:390,60
+FNDA:0,System.Single iRacingSDK.Telemetry::get_LapLastLapTime()
+DA:390,0
 FN:394,System.Single iRacingSDK.Telemetry::get_LapCurrentLapTime()
-FNDA:30,System.Single iRacingSDK.Telemetry::get_LapCurrentLapTime()
-DA:395,30
+FNDA:0,System.Single iRacingSDK.Telemetry::get_LapCurrentLapTime()
+DA:395,0
 FN:399,System.Int32 iRacingSDK.Telemetry::get_LapLasNLapSeq()
 FNDA:0,System.Int32 iRacingSDK.Telemetry::get_LapLasNLapSeq()
 DA:400,0
@@ -4170,8 +4508,8 @@ FN:414,System.Single iRacingSDK.Telemetry::get_LapBestNLapTime()
 FNDA:0,System.Single iRacingSDK.Telemetry::get_LapBestNLapTime()
 DA:415,0
 FN:419,System.Single iRacingSDK.Telemetry::get_LapDeltaToBestLap()
-FNDA:30,System.Single iRacingSDK.Telemetry::get_LapDeltaToBestLap()
-DA:420,30
+FNDA:0,System.Single iRacingSDK.Telemetry::get_LapDeltaToBestLap()
+DA:420,0
 FN:424,System.Single iRacingSDK.Telemetry::get_LapDeltaToBestLap_DD()
 FNDA:0,System.Single iRacingSDK.Telemetry::get_LapDeltaToBestLap_DD()
 DA:425,0
@@ -4233,8 +4571,8 @@ FN:519,System.Single iRacingSDK.Telemetry::get_YawRate()
 FNDA:0,System.Single iRacingSDK.Telemetry::get_YawRate()
 DA:520,0
 FN:524,System.Single iRacingSDK.Telemetry::get_Speed()
-FNDA:30,System.Single iRacingSDK.Telemetry::get_Speed()
-DA:525,30
+FNDA:0,System.Single iRacingSDK.Telemetry::get_Speed()
+DA:525,0
 FN:529,System.Single iRacingSDK.Telemetry::get_VelocityX()
 FNDA:0,System.Single iRacingSDK.Telemetry::get_VelocityX()
 DA:530,0
@@ -4260,14 +4598,14 @@ FN:564,System.Int32 iRacingSDK.Telemetry::get_EnterExitReset()
 FNDA:0,System.Int32 iRacingSDK.Telemetry::get_EnterExitReset()
 DA:565,0
 FN:569,System.Single iRacingSDK.Telemetry::get_TrackTemp()
-FNDA:30,System.Single iRacingSDK.Telemetry::get_TrackTemp()
-DA:570,30
+FNDA:0,System.Single iRacingSDK.Telemetry::get_TrackTemp()
+DA:570,0
 FN:574,System.Single iRacingSDK.Telemetry::get_TrackTempCrew()
 FNDA:0,System.Single iRacingSDK.Telemetry::get_TrackTempCrew()
 DA:575,0
 FN:579,System.Single iRacingSDK.Telemetry::get_AirTemp()
-FNDA:30,System.Single iRacingSDK.Telemetry::get_AirTemp()
-DA:580,30
+FNDA:0,System.Single iRacingSDK.Telemetry::get_AirTemp()
+DA:580,0
 FN:584,iRacingSDK.WeatherType iRacingSDK.Telemetry::get_WeatherType()
 FNDA:0,iRacingSDK.WeatherType iRacingSDK.Telemetry::get_WeatherType()
 DA:585,0
@@ -4350,8 +4688,8 @@ FN:714,System.Single iRacingSDK.Telemetry::get_SteeringWheelPctDamper()
 FNDA:0,System.Single iRacingSDK.Telemetry::get_SteeringWheelPctDamper()
 DA:715,0
 FN:719,System.Single iRacingSDK.Telemetry::get_SteeringWheelAngleMax()
-FNDA:42,System.Single iRacingSDK.Telemetry::get_SteeringWheelAngleMax()
-DA:720,42
+FNDA:0,System.Single iRacingSDK.Telemetry::get_SteeringWheelAngleMax()
+DA:720,0
 FN:724,System.Single iRacingSDK.Telemetry::get_ShiftIndicatorPct()
 FNDA:0,System.Single iRacingSDK.Telemetry::get_ShiftIndicatorPct()
 DA:725,0
@@ -4371,11 +4709,11 @@ FN:749,System.Single iRacingSDK.Telemetry::get_SteeringWheelPeakForceNm()
 FNDA:0,System.Single iRacingSDK.Telemetry::get_SteeringWheelPeakForceNm()
 DA:750,0
 FN:754,iRacingSDK.EngineWarnings iRacingSDK.Telemetry::get_EngineWarnings()
-FNDA:30,iRacingSDK.EngineWarnings iRacingSDK.Telemetry::get_EngineWarnings()
-DA:755,30
+FNDA:0,iRacingSDK.EngineWarnings iRacingSDK.Telemetry::get_EngineWarnings()
+DA:755,0
 FN:759,System.Single iRacingSDK.Telemetry::get_FuelLevel()
-FNDA:60,System.Single iRacingSDK.Telemetry::get_FuelLevel()
-DA:760,60
+FNDA:0,System.Single iRacingSDK.Telemetry::get_FuelLevel()
+DA:760,0
 FN:764,System.Single iRacingSDK.Telemetry::get_FuelLevelPct()
 FNDA:0,System.Single iRacingSDK.Telemetry::get_FuelLevelPct()
 DA:765,0
@@ -4413,10 +4751,10 @@ FN:819,System.Single iRacingSDK.Telemetry::get_DcAntiRollFront()
 FNDA:0,System.Single iRacingSDK.Telemetry::get_DcAntiRollFront()
 DA:820,0
 FN:824,System.Single iRacingSDK.Telemetry::get_DcBrakeBias()
-FNDA:30,System.Single iRacingSDK.Telemetry::get_DcBrakeBias()
-DA:825,30
-BRDA:825,11,0,29
-BRDA:825,11,1,1
+FNDA:0,System.Single iRacingSDK.Telemetry::get_DcBrakeBias()
+DA:825,0
+BRDA:825,11,0,0
+BRDA:825,11,1,0
 FN:829,System.Single iRacingSDK.Telemetry::get_DcTractionControl()
 FNDA:0,System.Single iRacingSDK.Telemetry::get_DcTractionControl()
 DA:830,0
@@ -4604,11 +4942,11 @@ FN:1134,System.Int32 iRacingSDK.Telemetry::get_TickCount()
 FNDA:0,System.Int32 iRacingSDK.Telemetry::get_TickCount()
 DA:1135,0
 LF:227
-LH:26
+LH:0
 BRF:2
-BRH:2
+BRH:0
 FNF:227
-FNH:26
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\iRacingSDK.Net\DataFeed\Telemetry\CarIdxDistance.cs
 FN:8,System.Single[] iRacingSDK.Telemetry::get_CarIdxDistance()
@@ -4862,20 +5200,20 @@ FN:18,iRacingSDK.Car iRacingSDK.Telemetry::get_CamCar()
 FNDA:0,iRacingSDK.Car iRacingSDK.Telemetry::get_CamCar()
 DA:19,0
 FN:24,iRacingSDK.CarArray iRacingSDK.Telemetry::get_Cars()
-FNDA:30,iRacingSDK.CarArray iRacingSDK.Telemetry::get_Cars()
-DA:25,30
-DA:26,30
+FNDA:0,iRacingSDK.CarArray iRacingSDK.Telemetry::get_Cars()
+DA:25,0
+DA:26,0
 DA:27,0
-DA:29,30
-DA:30,30
+DA:29,0
+DA:30,0
 BRDA:26,12,0,0
-BRDA:26,12,1,30
+BRDA:26,12,1,0
 FN:32,iRacingSDK.CarDetails[] iRacingSDK.Telemetry::get_CarDetails()
 FNDA:0,iRacingSDK.CarDetails[] iRacingSDK.Telemetry::get_CarDetails()
 DA:33,0
 FN:34,System.Collections.Generic.IEnumerable`1<iRacingSDK.Car> iRacingSDK.Telemetry::get_RaceCars()
-FNDA:60,System.Collections.Generic.IEnumerable`1<iRacingSDK.Car> iRacingSDK.Telemetry::get_RaceCars()
-DA:35,60
+FNDA:0,System.Collections.Generic.IEnumerable`1<iRacingSDK.Car> iRacingSDK.Telemetry::get_RaceCars()
+DA:35,0
 FN:36,System.Boolean iRacingSDK.Telemetry::get_UnderPaceCar()
 FNDA:0,System.Boolean iRacingSDK.Telemetry::get_UnderPaceCar()
 DA:37,0
@@ -4950,28 +5288,28 @@ BRDA:61,196,0,0
 BRDA:61,217,0,0
 BRDA:61,238,0,0
 LF:40
-LH:5
+LH:0
 BRF:44
-BRH:1
+BRH:0
 FNF:9
-FNH:2
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\iRacingSDK.Net\SerialisationSupport.cs
 FN:7,System.Void iRacingSDK.Telemetry::.ctor()
-FNDA:60,System.Void iRacingSDK.Telemetry::.ctor()
-DA:8,60
-DA:9,60
-DA:10,60
+FNDA:0,System.Void iRacingSDK.Telemetry::.ctor()
+DA:8,0
+DA:9,0
+DA:10,0
 FN:12,System.Void iRacingSDK.Telemetry::.ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
 FNDA:0,System.Void iRacingSDK.Telemetry::.ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
 DA:13,0
 DA:15,0
 LF:5
-LH:3
+LH:0
 BRF:0
 BRH:0
 FNF:2
-FNH:1
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\iRacingSDK.Net\DataFeed\LapSector.cs
 FN:7,iRacingSDK.LapSector iRacingSDK.LapSector::ForLap(System.Int32)
@@ -5040,28 +5378,28 @@ BRDA:23,8,1,0
 BRDA:26,58,0,0
 BRDA:26,58,1,0
 FN:32,System.Collections.Generic.IEnumerator`1<iRacingSDK.Car> iRacingSDK.CarArray::GetEnumerator()
-FNDA:30,System.Collections.Generic.IEnumerator`1<iRacingSDK.Car> iRacingSDK.CarArray::GetEnumerator()
-DA:33,30
+FNDA:0,System.Collections.Generic.IEnumerator`1<iRacingSDK.Car> iRacingSDK.CarArray::GetEnumerator()
+DA:33,0
 FN:34,System.Collections.IEnumerator iRacingSDK.CarArray::System.Collections.IEnumerable.GetEnumerator()
 FNDA:0,System.Collections.IEnumerator iRacingSDK.CarArray::System.Collections.IEnumerable.GetEnumerator()
 DA:35,0
 FN:8,System.Void iRacingSDK.CarArray::.ctor(iRacingSDK.Telemetry)
-FNDA:30,System.Void iRacingSDK.CarArray::.ctor(iRacingSDK.Telemetry)
-DA:9,30
-DA:10,30
-DA:11,30
-DA:13,30
-DA:15,120
-DA:16,30
-DA:17,30
-BRDA:15,70,1,30
-BRDA:15,70,0,30
+FNDA:0,System.Void iRacingSDK.CarArray::.ctor(iRacingSDK.Telemetry)
+DA:9,0
+DA:10,0
+DA:11,0
+DA:13,0
+DA:15,0
+DA:16,0
+DA:17,0
+BRDA:15,70,1,0
+BRDA:15,70,0,0
 LF:16
-LH:8
+LH:0
 BRF:6
-BRH:2
+BRH:0
 FNF:4
-FNH:2
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\iRacingSDK.Net\DataSampleExtensions\WithCorrectedDistances.cs
 FN:31,System.Void iRacingSDK.DataSampleExtensions::CorrectDistance(System.String,System.Int32&,System.Single&,System.Single&,System.Int32&)
@@ -6867,26 +7205,26 @@ FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\SCSSdkClient\Object\SCSTelemetry.cs
 FN:26,SCSSdkClient.Object.SCSTelemetry/Common SCSSdkClient.Object.SCSTelemetry::get_CommonValues()
-FNDA:580,SCSSdkClient.Object.SCSTelemetry/Common SCSSdkClient.Object.SCSTelemetry::get_CommonValues()
-DA:27,580
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Common SCSSdkClient.Object.SCSTelemetry::get_CommonValues()
+DA:27,0
 FN:31,SCSSdkClient.Object.SCSTelemetry/Control SCSSdkClient.Object.SCSTelemetry::get_ControlValues()
-FNDA:174,SCSSdkClient.Object.SCSTelemetry/Control SCSSdkClient.Object.SCSTelemetry::get_ControlValues()
-DA:32,174
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Control SCSSdkClient.Object.SCSTelemetry::get_ControlValues()
+DA:32,0
 FN:39,System.UInt32 SCSSdkClient.Object.SCSTelemetry::get_DllVersion()
 FNDA:0,System.UInt32 SCSSdkClient.Object.SCSTelemetry::get_DllVersion()
 DA:40,0
 FN:55,SCSSdkClient.SCSGame SCSSdkClient.Object.SCSTelemetry::get_Game()
-FNDA:58,SCSSdkClient.SCSGame SCSSdkClient.Object.SCSTelemetry::get_Game()
-DA:56,58
+FNDA:0,SCSSdkClient.SCSGame SCSSdkClient.Object.SCSTelemetry::get_Game()
+DA:56,0
 FN:57,SCSSdkClient.Object.SCSTelemetry/GamePlayEvents SCSSdkClient.Object.SCSTelemetry::get_GamePlay()
-FNDA:58,SCSSdkClient.Object.SCSTelemetry/GamePlayEvents SCSSdkClient.Object.SCSTelemetry::get_GamePlay()
-DA:58,58
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/GamePlayEvents SCSSdkClient.Object.SCSTelemetry::get_GamePlay()
+DA:58,0
 FN:65,SCSSdkClient.Object.SCSTelemetry/Version SCSSdkClient.Object.SCSTelemetry::get_GameVersion()
-FNDA:58,SCSSdkClient.Object.SCSTelemetry/Version SCSSdkClient.Object.SCSTelemetry::get_GameVersion()
-DA:66,58
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Version SCSSdkClient.Object.SCSTelemetry::get_GameVersion()
+DA:66,0
 FN:70,SCSSdkClient.Object.SCSTelemetry/Job SCSSdkClient.Object.SCSTelemetry::get_JobValues()
-FNDA:1044,SCSSdkClient.Object.SCSTelemetry/Job SCSSdkClient.Object.SCSTelemetry::get_JobValues()
-DA:71,1044
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Job SCSSdkClient.Object.SCSTelemetry::get_JobValues()
+DA:71,0
 FN:72,System.UInt32 SCSSdkClient.Object.SCSTelemetry::get_MaxTrailerCount()
 FNDA:0,System.UInt32 SCSSdkClient.Object.SCSTelemetry::get_MaxTrailerCount()
 DA:73,0
@@ -6894,8 +7232,8 @@ FN:85,System.Int64 SCSSdkClient.Object.SCSTelemetry::get_MultiplayerTimeOffset()
 FNDA:0,System.Int64 SCSSdkClient.Object.SCSTelemetry::get_MultiplayerTimeOffset()
 DA:86,0
 FN:90,SCSSdkClient.Object.SCSTelemetry/Navigation SCSSdkClient.Object.SCSTelemetry::get_NavigationValues()
-FNDA:464,SCSSdkClient.Object.SCSTelemetry/Navigation SCSSdkClient.Object.SCSTelemetry::get_NavigationValues()
-DA:91,464
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Navigation SCSSdkClient.Object.SCSTelemetry::get_NavigationValues()
+DA:91,0
 FN:105,System.Boolean SCSSdkClient.Object.SCSTelemetry::get_Paused()
 FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry::get_Paused()
 DA:106,0
@@ -6909,29 +7247,29 @@ FN:127,System.UInt64 SCSSdkClient.Object.SCSTelemetry::get_SimulationTimestamp()
 FNDA:0,System.UInt64 SCSSdkClient.Object.SCSTelemetry::get_SimulationTimestamp()
 DA:128,0
 FN:132,SCSSdkClient.Object.SCSTelemetry/SpecialEvents SCSSdkClient.Object.SCSTelemetry::get_SpecialEventsValues()
-FNDA:58,SCSSdkClient.Object.SCSTelemetry/SpecialEvents SCSSdkClient.Object.SCSTelemetry::get_SpecialEventsValues()
-DA:133,58
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/SpecialEvents SCSSdkClient.Object.SCSTelemetry::get_SpecialEventsValues()
+DA:133,0
 FN:137,System.Collections.Generic.List`1<SCSSdkClient.Object.SCSTelemetry/Substance> SCSSdkClient.Object.SCSTelemetry::get_Substances()
-FNDA:58,System.Collections.Generic.List`1<SCSSdkClient.Object.SCSTelemetry/Substance> SCSSdkClient.Object.SCSTelemetry::get_Substances()
-DA:138,58
+FNDA:0,System.Collections.Generic.List`1<SCSSdkClient.Object.SCSTelemetry/Substance> SCSSdkClient.Object.SCSTelemetry::get_Substances()
+DA:138,0
 FN:142,SCSSdkClient.Object.SCSTelemetry/Version SCSSdkClient.Object.SCSTelemetry::get_TelemetryVersion()
-FNDA:58,SCSSdkClient.Object.SCSTelemetry/Version SCSSdkClient.Object.SCSTelemetry::get_TelemetryVersion()
-DA:143,58
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Version SCSSdkClient.Object.SCSTelemetry::get_TelemetryVersion()
+DA:143,0
 FN:151,System.UInt64 SCSSdkClient.Object.SCSTelemetry::get_Timestamp()
 FNDA:0,System.UInt64 SCSSdkClient.Object.SCSTelemetry::get_Timestamp()
 DA:152,0
 FN:156,SCSSdkClient.Object.SCSTelemetry/Trailer[] SCSSdkClient.Object.SCSTelemetry::get_TrailerValues()
-FNDA:406,SCSSdkClient.Object.SCSTelemetry/Trailer[] SCSSdkClient.Object.SCSTelemetry::get_TrailerValues()
-DA:157,406
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Trailer[] SCSSdkClient.Object.SCSTelemetry::get_TrailerValues()
+DA:157,0
 FN:161,SCSSdkClient.Object.SCSTelemetry/Truck SCSSdkClient.Object.SCSTelemetry::get_TruckValues()
-FNDA:4122,SCSSdkClient.Object.SCSTelemetry/Truck SCSSdkClient.Object.SCSTelemetry::get_TruckValues()
-DA:162,4122
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Truck SCSSdkClient.Object.SCSTelemetry::get_TruckValues()
+DA:162,0
 LF:20
-LH:12
+LH:0
 BRF:0
 BRH:0
 FNF:20
-FNH:12
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\SCSSdkClient\Object\SCSTelemetry.Methods.cs
 FN:11,System.DateTime SCSSdkClient.Object.SCSTelemetry::MinutesToDate(System.UInt32)
@@ -7003,31 +7341,31 @@ FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\SCSSdkClient\Object\SCSTelemetry.Common.cs
 FN:30,SCSSdkClient.Object.SCSTelemetry/Time SCSSdkClient.Object.SCSTelemetry/Common::get_GameTime()
-FNDA:174,SCSSdkClient.Object.SCSTelemetry/Time SCSSdkClient.Object.SCSTelemetry/Common::get_GameTime()
-DA:31,174
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Time SCSSdkClient.Object.SCSTelemetry/Common::get_GameTime()
+DA:31,0
 FN:35,SCSSdkClient.Object.SCSTelemetry/Frequency SCSSdkClient.Object.SCSTelemetry/Common::get_NextRestStop()
-FNDA:232,SCSSdkClient.Object.SCSTelemetry/Frequency SCSSdkClient.Object.SCSTelemetry/Common::get_NextRestStop()
-DA:36,232
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Frequency SCSSdkClient.Object.SCSTelemetry/Common::get_NextRestStop()
+DA:36,0
 FN:53,SCSSdkClient.Object.SCSTelemetry/Time SCSSdkClient.Object.SCSTelemetry/Common::get_NextRestStopTime()
 FNDA:0,SCSSdkClient.Object.SCSTelemetry/Time SCSSdkClient.Object.SCSTelemetry/Common::get_NextRestStopTime()
 DA:54,0
 FN:66,System.Single SCSSdkClient.Object.SCSTelemetry/Common::get_Scale()
-FNDA:232,System.Single SCSSdkClient.Object.SCSTelemetry/Common::get_Scale()
-DA:67,232
+FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Common::get_Scale()
+DA:67,0
 LF:4
-LH:3
+LH:0
 BRF:0
 BRH:0
 FNF:4
-FNH:3
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\SCSSdkClient\Object\SCSTelemetry.Control.cs
 FN:11,SCSSdkClient.Object.SCSTelemetry/Control/Input SCSSdkClient.Object.SCSTelemetry/Control::get_InputValues()
-FNDA:58,SCSSdkClient.Object.SCSTelemetry/Control/Input SCSSdkClient.Object.SCSTelemetry/Control::get_InputValues()
-DA:12,58
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Control/Input SCSSdkClient.Object.SCSTelemetry/Control::get_InputValues()
+DA:12,0
 FN:16,SCSSdkClient.Object.SCSTelemetry/Control/Game SCSSdkClient.Object.SCSTelemetry/Control::get_GameValues()
-FNDA:174,SCSSdkClient.Object.SCSTelemetry/Control/Game SCSSdkClient.Object.SCSTelemetry/Control::get_GameValues()
-DA:17,174
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Control/Game SCSSdkClient.Object.SCSTelemetry/Control::get_GameValues()
+DA:17,0
 FN:46,System.Single SCSSdkClient.Object.SCSTelemetry/Control/Input::get_Steering()
 FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Control/Input::get_Steering()
 DA:47,0
@@ -7044,8 +7382,8 @@ FN:104,System.Single SCSSdkClient.Object.SCSTelemetry/Control/Game::get_Steering
 FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Control/Game::get_Steering()
 DA:105,0
 FN:113,System.Single SCSSdkClient.Object.SCSTelemetry/Control/Game::get_Throttle()
-FNDA:116,System.Single SCSSdkClient.Object.SCSTelemetry/Control/Game::get_Throttle()
-DA:114,116
+FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Control/Game::get_Throttle()
+DA:114,0
 FN:122,System.Single SCSSdkClient.Object.SCSTelemetry/Control/Game::get_Brake()
 FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Control/Game::get_Brake()
 DA:123,0
@@ -7053,25 +7391,25 @@ FN:131,System.Single SCSSdkClient.Object.SCSTelemetry/Control/Game::get_Clutch()
 FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Control/Game::get_Clutch()
 DA:132,0
 LF:10
-LH:3
+LH:0
 BRF:0
 BRH:0
 FNF:10
-FNH:3
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\SCSSdkClient\Object\SCSTelemetry.DPlacement.cs
 FN:11,SCSSdkClient.Object.SCSTelemetry/DVector SCSSdkClient.Object.SCSTelemetry/DPlacement::get_Position()
-FNDA:116,SCSSdkClient.Object.SCSTelemetry/DVector SCSSdkClient.Object.SCSTelemetry/DPlacement::get_Position()
-DA:12,116
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/DVector SCSSdkClient.Object.SCSTelemetry/DPlacement::get_Position()
+DA:12,0
 FN:16,SCSSdkClient.Object.SCSTelemetry/Euler SCSSdkClient.Object.SCSTelemetry/DPlacement::get_Orientation()
-FNDA:116,SCSSdkClient.Object.SCSTelemetry/Euler SCSSdkClient.Object.SCSTelemetry/DPlacement::get_Orientation()
-DA:17,116
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Euler SCSSdkClient.Object.SCSTelemetry/DPlacement::get_Orientation()
+DA:17,0
 LF:2
-LH:2
+LH:0
 BRF:0
 BRH:0
 FNF:2
-FNH:2
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\SCSSdkClient\Object\SCSTelemetry.DVector.cs
 FN:13,System.Double SCSSdkClient.Object.SCSTelemetry/DVector::get_X()
@@ -7109,22 +7447,22 @@ FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\SCSSdkClient\Object\SCSTelemetry.FPlacement.cs
 FN:11,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/FPlacement::get_Position()
-FNDA:116,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/FPlacement::get_Position()
-DA:12,116
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/FPlacement::get_Position()
+DA:12,0
 FN:16,SCSSdkClient.Object.SCSTelemetry/Euler SCSSdkClient.Object.SCSTelemetry/FPlacement::get_Orientation()
-FNDA:116,SCSSdkClient.Object.SCSTelemetry/Euler SCSSdkClient.Object.SCSTelemetry/FPlacement::get_Orientation()
-DA:17,116
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Euler SCSSdkClient.Object.SCSTelemetry/FPlacement::get_Orientation()
+DA:17,0
 LF:2
-LH:2
+LH:0
 BRF:0
 BRH:0
 FNF:2
-FNH:2
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\SCSSdkClient\Object\SCSTelemetry.Frequency.cs
 FN:17,System.Int32 SCSSdkClient.Object.SCSTelemetry/Frequency::get_Value()
-FNDA:290,System.Int32 SCSSdkClient.Object.SCSTelemetry/Frequency::get_Value()
-DA:18,290
+FNDA:0,System.Int32 SCSSdkClient.Object.SCSTelemetry/Frequency::get_Value()
+DA:18,0
 FN:22,System.DateTime SCSSdkClient.Object.SCSTelemetry/Frequency::get_Date()
 FNDA:0,System.DateTime SCSSdkClient.Object.SCSTelemetry/Frequency::get_Date()
 DA:23,0
@@ -7135,14 +7473,14 @@ FN:10,System.Void SCSSdkClient.Object.SCSTelemetry/Frequency::.ctor(System.Int32
 FNDA:0,System.Void SCSSdkClient.Object.SCSTelemetry/Frequency::.ctor(System.Int32)
 DA:11,0
 FN:12,System.Void SCSSdkClient.Object.SCSTelemetry/Frequency::.ctor()
-FNDA:348,System.Void SCSSdkClient.Object.SCSTelemetry/Frequency::.ctor()
-DA:13,348
+FNDA:0,System.Void SCSSdkClient.Object.SCSTelemetry/Frequency::.ctor()
+DA:13,0
 LF:5
-LH:2
+LH:0
 BRF:0
 BRH:0
 FNF:5
-FNH:2
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\SCSSdkClient\Object\SCSTelemetry.FVector.cs
 FN:13,System.Single SCSSdkClient.Object.SCSTelemetry/FVector::get_X()
@@ -7163,14 +7501,14 @@ FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\SCSSdkClient\Object\SCSTelemetry.GamePlayEvents.cs
 FN:13,System.Void SCSSdkClient.Object.SCSTelemetry/GamePlayEvents::.ctor()
-FNDA:58,System.Void SCSSdkClient.Object.SCSTelemetry/GamePlayEvents::.ctor()
-DA:14,58
-DA:15,58
-DA:16,58
-DA:17,58
-DA:18,58
-DA:19,58
-DA:20,58
+FNDA:0,System.Void SCSSdkClient.Object.SCSTelemetry/GamePlayEvents::.ctor()
+DA:14,0
+DA:15,0
+DA:16,0
+DA:17,0
+DA:18,0
+DA:19,0
+DA:20,0
 FN:22,System.Int64 SCSSdkClient.Object.SCSTelemetry/GamePlayEvents/Cancelled::get_Penalty()
 FNDA:0,System.Int64 SCSSdkClient.Object.SCSTelemetry/GamePlayEvents/Cancelled::get_Penalty()
 DA:23,0
@@ -7227,34 +7565,34 @@ FN:51,System.Int64 SCSSdkClient.Object.SCSTelemetry/GamePlayEvents/Transport::ge
 FNDA:0,System.Int64 SCSSdkClient.Object.SCSTelemetry/GamePlayEvents/Transport::get_PayAmount()
 DA:52,0
 FN:52,System.String SCSSdkClient.Object.SCSTelemetry/GamePlayEvents/Transport::get_SourceId()
-FNDA:116,System.String SCSSdkClient.Object.SCSTelemetry/GamePlayEvents/Transport::get_SourceId()
-DA:53,116
+FNDA:0,System.String SCSSdkClient.Object.SCSTelemetry/GamePlayEvents/Transport::get_SourceId()
+DA:53,0
 FN:53,System.String SCSSdkClient.Object.SCSTelemetry/GamePlayEvents/Transport::get_SourceName()
-FNDA:116,System.String SCSSdkClient.Object.SCSTelemetry/GamePlayEvents/Transport::get_SourceName()
-DA:54,116
+FNDA:0,System.String SCSSdkClient.Object.SCSTelemetry/GamePlayEvents/Transport::get_SourceName()
+DA:54,0
 FN:54,System.String SCSSdkClient.Object.SCSTelemetry/GamePlayEvents/Transport::get_TargetId()
-FNDA:116,System.String SCSSdkClient.Object.SCSTelemetry/GamePlayEvents/Transport::get_TargetId()
-DA:55,116
+FNDA:0,System.String SCSSdkClient.Object.SCSTelemetry/GamePlayEvents/Transport::get_TargetId()
+DA:55,0
 FN:55,System.String SCSSdkClient.Object.SCSTelemetry/GamePlayEvents/Transport::get_TargetName()
-FNDA:116,System.String SCSSdkClient.Object.SCSTelemetry/GamePlayEvents/Transport::get_TargetName()
-DA:56,116
+FNDA:0,System.String SCSSdkClient.Object.SCSTelemetry/GamePlayEvents/Transport::get_TargetName()
+DA:56,0
 FN:59,System.Single SCSSdkClient.Object.SCSTelemetry/GamePlayEvents/Refuel::get_Amount()
 FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/GamePlayEvents/Refuel::get_Amount()
 DA:60,0
 LF:29
-LH:11
+LH:0
 BRF:4
 BRH:0
 FNF:23
-FNH:5
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\SCSSdkClient\Object\SCSTelemetry.Job.cs
 FN:11,SCSSdkClient.Object.SCSTelemetry/Time SCSSdkClient.Object.SCSTelemetry/Job::get_DeliveryTime()
-FNDA:58,SCSSdkClient.Object.SCSTelemetry/Time SCSSdkClient.Object.SCSTelemetry/Job::get_DeliveryTime()
-DA:12,58
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Time SCSSdkClient.Object.SCSTelemetry/Job::get_DeliveryTime()
+DA:12,0
 FN:22,SCSSdkClient.Object.SCSTelemetry/Frequency SCSSdkClient.Object.SCSTelemetry/Job::get_RemainingDeliveryTime()
-FNDA:174,SCSSdkClient.Object.SCSTelemetry/Frequency SCSSdkClient.Object.SCSTelemetry/Job::get_RemainingDeliveryTime()
-DA:23,174
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Frequency SCSSdkClient.Object.SCSTelemetry/Job::get_RemainingDeliveryTime()
+DA:23,0
 FN:24,System.Boolean SCSSdkClient.Object.SCSTelemetry/Job::get_CargoLoaded()
 FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry/Job::get_CargoLoaded()
 DA:25,0
@@ -7262,50 +7600,50 @@ FN:25,System.Boolean SCSSdkClient.Object.SCSTelemetry/Job::get_SpecialJob()
 FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry/Job::get_SpecialJob()
 DA:26,0
 FN:26,SCSSdkClient.JobMarket SCSSdkClient.Object.SCSTelemetry/Job::get_Market()
-FNDA:58,SCSSdkClient.JobMarket SCSSdkClient.Object.SCSTelemetry/Job::get_Market()
-DA:27,58
+FNDA:0,SCSSdkClient.JobMarket SCSSdkClient.Object.SCSTelemetry/Job::get_Market()
+DA:27,0
 FN:32,System.UInt32 SCSSdkClient.Object.SCSTelemetry/Job::get_PlannedDistanceKm()
 FNDA:0,System.UInt32 SCSSdkClient.Object.SCSTelemetry/Job::get_PlannedDistanceKm()
 DA:33,0
 FN:39,SCSSdkClient.Object.SCSTelemetry/Job/Cargo SCSSdkClient.Object.SCSTelemetry/Job::get_CargoValues()
-FNDA:348,SCSSdkClient.Object.SCSTelemetry/Job/Cargo SCSSdkClient.Object.SCSTelemetry/Job::get_CargoValues()
-DA:40,348
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Job/Cargo SCSSdkClient.Object.SCSTelemetry/Job::get_CargoValues()
+DA:40,0
 FN:45,System.String SCSSdkClient.Object.SCSTelemetry/Job::get_CityDestinationId()
-FNDA:58,System.String SCSSdkClient.Object.SCSTelemetry/Job::get_CityDestinationId()
-DA:46,58
+FNDA:0,System.String SCSSdkClient.Object.SCSTelemetry/Job::get_CityDestinationId()
+DA:46,0
 FN:51,System.String SCSSdkClient.Object.SCSTelemetry/Job::get_CityDestination()
-FNDA:174,System.String SCSSdkClient.Object.SCSTelemetry/Job::get_CityDestination()
-DA:52,174
+FNDA:0,System.String SCSSdkClient.Object.SCSTelemetry/Job::get_CityDestination()
+DA:52,0
 FN:57,System.String SCSSdkClient.Object.SCSTelemetry/Job::get_CompanyDestinationId()
-FNDA:58,System.String SCSSdkClient.Object.SCSTelemetry/Job::get_CompanyDestinationId()
-DA:58,58
+FNDA:0,System.String SCSSdkClient.Object.SCSTelemetry/Job::get_CompanyDestinationId()
+DA:58,0
 FN:63,System.String SCSSdkClient.Object.SCSTelemetry/Job::get_CompanyDestination()
-FNDA:174,System.String SCSSdkClient.Object.SCSTelemetry/Job::get_CompanyDestination()
-DA:64,174
+FNDA:0,System.String SCSSdkClient.Object.SCSTelemetry/Job::get_CompanyDestination()
+DA:64,0
 FN:69,System.String SCSSdkClient.Object.SCSTelemetry/Job::get_CitySourceId()
-FNDA:58,System.String SCSSdkClient.Object.SCSTelemetry/Job::get_CitySourceId()
-DA:70,58
+FNDA:0,System.String SCSSdkClient.Object.SCSTelemetry/Job::get_CitySourceId()
+DA:70,0
 FN:75,System.String SCSSdkClient.Object.SCSTelemetry/Job::get_CitySource()
-FNDA:174,System.String SCSSdkClient.Object.SCSTelemetry/Job::get_CitySource()
-DA:76,174
+FNDA:0,System.String SCSSdkClient.Object.SCSTelemetry/Job::get_CitySource()
+DA:76,0
 FN:81,System.String SCSSdkClient.Object.SCSTelemetry/Job::get_CompanySourceId()
-FNDA:58,System.String SCSSdkClient.Object.SCSTelemetry/Job::get_CompanySourceId()
-DA:82,58
+FNDA:0,System.String SCSSdkClient.Object.SCSTelemetry/Job::get_CompanySourceId()
+DA:82,0
 FN:87,System.String SCSSdkClient.Object.SCSTelemetry/Job::get_CompanySource()
-FNDA:174,System.String SCSSdkClient.Object.SCSTelemetry/Job::get_CompanySource()
-DA:88,174
+FNDA:0,System.String SCSSdkClient.Object.SCSTelemetry/Job::get_CompanySource()
+DA:88,0
 FN:92,System.UInt64 SCSSdkClient.Object.SCSTelemetry/Job::get_Income()
-FNDA:116,System.UInt64 SCSSdkClient.Object.SCSTelemetry/Job::get_Income()
-DA:93,116
+FNDA:0,System.UInt64 SCSSdkClient.Object.SCSTelemetry/Job::get_Income()
+DA:93,0
 FN:101,System.Single SCSSdkClient.Object.SCSTelemetry/Job/Cargo::get_Mass()
-FNDA:116,System.Single SCSSdkClient.Object.SCSTelemetry/Job/Cargo::get_Mass()
-DA:102,116
+FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Job/Cargo::get_Mass()
+DA:102,0
 FN:107,System.String SCSSdkClient.Object.SCSTelemetry/Job/Cargo::get_Id()
-FNDA:58,System.String SCSSdkClient.Object.SCSTelemetry/Job/Cargo::get_Id()
-DA:108,58
+FNDA:0,System.String SCSSdkClient.Object.SCSTelemetry/Job/Cargo::get_Id()
+DA:108,0
 FN:113,System.String SCSSdkClient.Object.SCSTelemetry/Job/Cargo::get_Name()
-FNDA:116,System.String SCSSdkClient.Object.SCSTelemetry/Job/Cargo::get_Name()
-DA:114,116
+FNDA:0,System.String SCSSdkClient.Object.SCSTelemetry/Job/Cargo::get_Name()
+DA:114,0
 FN:118,System.UInt32 SCSSdkClient.Object.SCSTelemetry/Job/Cargo::get_UnitCount()
 FNDA:0,System.UInt32 SCSSdkClient.Object.SCSTelemetry/Job/Cargo::get_UnitCount()
 DA:119,0
@@ -7313,22 +7651,22 @@ FN:123,System.Single SCSSdkClient.Object.SCSTelemetry/Job/Cargo::get_UnitMass()
 FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Job/Cargo::get_UnitMass()
 DA:124,0
 FN:125,System.Single SCSSdkClient.Object.SCSTelemetry/Job/Cargo::get_CargoDamage()
-FNDA:116,System.Single SCSSdkClient.Object.SCSTelemetry/Job/Cargo::get_CargoDamage()
-DA:126,116
+FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Job/Cargo::get_CargoDamage()
+DA:126,0
 LF:22
-LH:17
+LH:0
 BRF:0
 BRH:0
 FNF:22
-FNH:17
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\SCSSdkClient\Object\SCSTelemetry.Movement.cs
 FN:15,System.Single SCSSdkClient.Object.SCSTelemetry/Movement::get_Value()
-FNDA:348,System.Single SCSSdkClient.Object.SCSTelemetry/Movement::get_Value()
-DA:16,348
+FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Movement::get_Value()
+DA:16,0
 FN:20,System.Single SCSSdkClient.Object.SCSTelemetry/Movement::get_Kph()
-FNDA:174,System.Single SCSSdkClient.Object.SCSTelemetry/Movement::get_Kph()
-DA:21,174
+FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Movement::get_Kph()
+DA:21,0
 FN:25,System.Single SCSSdkClient.Object.SCSTelemetry/Movement::get_Mph()
 FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Movement::get_Mph()
 DA:26,0
@@ -7339,34 +7677,34 @@ FN:8,System.Void SCSSdkClient.Object.SCSTelemetry/Movement::.ctor(System.Single)
 FNDA:0,System.Void SCSSdkClient.Object.SCSTelemetry/Movement::.ctor(System.Single)
 DA:9,0
 FN:10,System.Void SCSSdkClient.Object.SCSTelemetry/Movement::.ctor()
-FNDA:522,System.Void SCSSdkClient.Object.SCSTelemetry/Movement::.ctor()
-DA:11,522
+FNDA:0,System.Void SCSSdkClient.Object.SCSTelemetry/Movement::.ctor()
+DA:11,0
 LF:6
-LH:3
+LH:0
 BRF:0
 BRH:0
 FNF:6
-FNH:3
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\SCSSdkClient\Object\SCSTelemetry.Navigation.cs
 FN:19,System.Single SCSSdkClient.Object.SCSTelemetry/Navigation::get_NavigationDistance()
-FNDA:116,System.Single SCSSdkClient.Object.SCSTelemetry/Navigation::get_NavigationDistance()
-DA:20,116
+FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Navigation::get_NavigationDistance()
+DA:20,0
 FN:24,System.Single SCSSdkClient.Object.SCSTelemetry/Navigation::get_NavigationTime()
-FNDA:174,System.Single SCSSdkClient.Object.SCSTelemetry/Navigation::get_NavigationTime()
-DA:25,174
+FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Navigation::get_NavigationTime()
+DA:25,0
 FN:36,SCSSdkClient.Object.SCSTelemetry/Movement SCSSdkClient.Object.SCSTelemetry/Navigation::get_SpeedLimit()
-FNDA:174,SCSSdkClient.Object.SCSTelemetry/Movement SCSSdkClient.Object.SCSTelemetry/Navigation::get_SpeedLimit()
-DA:37,174
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Movement SCSSdkClient.Object.SCSTelemetry/Navigation::get_SpeedLimit()
+DA:37,0
 FN:11,System.Void SCSSdkClient.Object.SCSTelemetry/Navigation::.ctor()
-FNDA:116,System.Void SCSSdkClient.Object.SCSTelemetry/Navigation::.ctor()
-DA:12,116
+FNDA:0,System.Void SCSSdkClient.Object.SCSTelemetry/Navigation::.ctor()
+DA:12,0
 LF:4
-LH:4
+LH:0
 BRF:0
 BRH:0
 FNF:4
-FNH:4
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\SCSSdkClient\Object\SCSTelemetry.SpecialEvents.cs
 FN:11,System.Boolean SCSSdkClient.Object.SCSTelemetry/SpecialEvents::get_OnJob()
@@ -7422,8 +7760,8 @@ FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\SCSSdkClient\Object\SCSTelemetry.Time.cs
 FN:17,System.UInt32 SCSSdkClient.Object.SCSTelemetry/Time::get_Value()
-FNDA:116,System.UInt32 SCSSdkClient.Object.SCSTelemetry/Time::get_Value()
-DA:18,116
+FNDA:0,System.UInt32 SCSSdkClient.Object.SCSTelemetry/Time::get_Value()
+DA:18,0
 FN:22,System.DateTime SCSSdkClient.Object.SCSTelemetry/Time::get_Date()
 FNDA:0,System.DateTime SCSSdkClient.Object.SCSTelemetry/Time::get_Date()
 DA:23,0
@@ -7437,14 +7775,14 @@ FN:10,System.Void SCSSdkClient.Object.SCSTelemetry/Time::.ctor(System.UInt32)
 FNDA:0,System.Void SCSSdkClient.Object.SCSTelemetry/Time::.ctor(System.UInt32)
 DA:11,0
 FN:12,System.Void SCSSdkClient.Object.SCSTelemetry/Time::.ctor()
-FNDA:348,System.Void SCSSdkClient.Object.SCSTelemetry/Time::.ctor()
-DA:13,348
+FNDA:0,System.Void SCSSdkClient.Object.SCSTelemetry/Time::.ctor()
+DA:13,0
 LF:6
-LH:2
+LH:0
 BRF:0
 BRH:0
 FNF:6
-FNH:2
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\SCSSdkClient\Object\SCSTelemetry.Trailer.cs
 FN:26,SCSSdkClient.Object.SCSTelemetry/Trailer/Acceleration SCSSdkClient.Object.SCSTelemetry/Trailer::get_AccelerationValues()
@@ -7564,88 +7902,88 @@ FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\SCSSdkClient\Object\SCSTelemetry.Truck.cs
 FN:9,SCSSdkClient.Object.SCSTelemetry/Truck/Constants SCSSdkClient.Object.SCSTelemetry/Truck::get_ConstantsValues()
-FNDA:584,SCSSdkClient.Object.SCSTelemetry/Truck/Constants SCSSdkClient.Object.SCSTelemetry/Truck::get_ConstantsValues()
-DA:10,584
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Truck/Constants SCSSdkClient.Object.SCSTelemetry/Truck::get_ConstantsValues()
+DA:10,0
 FN:14,SCSSdkClient.Object.SCSTelemetry/Truck/Current SCSSdkClient.Object.SCSTelemetry/Truck::get_CurrentValues()
-FNDA:3596,SCSSdkClient.Object.SCSTelemetry/Truck/Current SCSSdkClient.Object.SCSTelemetry/Truck::get_CurrentValues()
-DA:15,3596
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Truck/Current SCSSdkClient.Object.SCSTelemetry/Truck::get_CurrentValues()
+DA:15,0
 FN:19,SCSSdkClient.Object.SCSTelemetry/PositionData SCSSdkClient.Object.SCSTelemetry/Truck::get_Positioning()
-FNDA:58,SCSSdkClient.Object.SCSTelemetry/PositionData SCSSdkClient.Object.SCSTelemetry/Truck::get_Positioning()
-DA:20,58
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/PositionData SCSSdkClient.Object.SCSTelemetry/Truck::get_Positioning()
+DA:20,0
 LF:3
-LH:3
+LH:0
 BRF:0
 BRH:0
 FNF:3
-FNH:3
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\SCSSdkClient\Object\SCSTelemetry.Truck.Constants.cs
 FN:11,SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_MotorValues()
-FNDA:352,SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_MotorValues()
-DA:12,352
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_MotorValues()
+DA:12,0
 FN:16,SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Capacity SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_CapacityValues()
-FNDA:58,SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Capacity SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_CapacityValues()
-DA:17,58
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Capacity SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_CapacityValues()
+DA:17,0
 FN:22,SCSSdkClient.Object.SCSTelemetry/Truck/Constants/WarningFactor SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_WarningFactorValues()
-FNDA:58,SCSSdkClient.Object.SCSTelemetry/Truck/Constants/WarningFactor SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_WarningFactorValues()
-DA:23,58
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Truck/Constants/WarningFactor SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_WarningFactorValues()
+DA:23,0
 FN:28,SCSSdkClient.Object.SCSTelemetry/WheelsConstants SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_WheelsValues()
-FNDA:58,SCSSdkClient.Object.SCSTelemetry/WheelsConstants SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_WheelsValues()
-DA:29,58
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/WheelsConstants SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_WheelsValues()
+DA:29,0
 FN:34,System.String SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_BrandId()
-FNDA:58,System.String SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_BrandId()
-DA:35,58
+FNDA:0,System.String SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_BrandId()
+DA:35,0
 FN:39,System.String SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_Brand()
-FNDA:174,System.String SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_Brand()
-DA:40,174
+FNDA:0,System.String SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_Brand()
+DA:40,0
 FN:45,System.String SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_Id()
-FNDA:58,System.String SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_Id()
-DA:46,58
+FNDA:0,System.String SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_Id()
+DA:46,0
 FN:51,System.String SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_Name()
-FNDA:174,System.String SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_Name()
-DA:52,174
+FNDA:0,System.String SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_Name()
+DA:52,0
 FN:53,System.String SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_LicensePlate()
-FNDA:58,System.String SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_LicensePlate()
-DA:54,58
+FNDA:0,System.String SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_LicensePlate()
+DA:54,0
 FN:54,System.String SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_LicensePlateCountryId()
-FNDA:58,System.String SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_LicensePlateCountryId()
-DA:55,58
+FNDA:0,System.String SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_LicensePlateCountryId()
+DA:55,0
 FN:55,System.String SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_LicensePlateCountry()
-FNDA:58,System.String SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_LicensePlateCountry()
-DA:56,58
+FNDA:0,System.String SCSSdkClient.Object.SCSTelemetry/Truck/Constants::get_LicensePlateCountry()
+DA:56,0
 FN:67,System.UInt32 SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_ForwardGearCount()
-FNDA:62,System.UInt32 SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_ForwardGearCount()
-DA:68,62
+FNDA:0,System.UInt32 SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_ForwardGearCount()
+DA:68,0
 FN:72,System.UInt32 SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_ReverseGearCount()
 FNDA:0,System.UInt32 SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_ReverseGearCount()
 DA:73,0
 FN:84,System.UInt32 SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_RetarderStepCount()
-FNDA:116,System.UInt32 SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_RetarderStepCount()
-DA:85,116
+FNDA:0,System.UInt32 SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_RetarderStepCount()
+DA:85,0
 FN:89,System.UInt32 SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_SelectorCount()
 FNDA:0,System.UInt32 SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_SelectorCount()
 DA:90,0
 FN:94,System.Int32[] SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_SlotGear()
-FNDA:58,System.Int32[] SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_SlotGear()
-DA:95,58
+FNDA:0,System.Int32[] SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_SlotGear()
+DA:95,0
 FN:102,System.UInt32[] SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_SlotHandlePosition()
-FNDA:58,System.UInt32[] SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_SlotHandlePosition()
-DA:103,58
+FNDA:0,System.UInt32[] SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_SlotHandlePosition()
+DA:103,0
 FN:108,System.UInt32[] SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_SlotSelectors()
-FNDA:58,System.UInt32[] SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_SlotSelectors()
-DA:109,58
+FNDA:0,System.UInt32[] SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_SlotSelectors()
+DA:109,0
 FN:113,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_EngineRpmMax()
-FNDA:116,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_EngineRpmMax()
-DA:114,116
+FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_EngineRpmMax()
+DA:114,0
 FN:118,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_DifferentialRation()
 FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_DifferentialRation()
 DA:119,0
 FN:123,System.Single[] SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_GearRatiosForward()
-FNDA:58,System.Single[] SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_GearRatiosForward()
-DA:124,58
+FNDA:0,System.Single[] SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_GearRatiosForward()
+DA:124,0
 FN:128,System.Single[] SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_GearRatiosReverse()
-FNDA:58,System.Single[] SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_GearRatiosReverse()
-DA:129,58
+FNDA:0,System.Single[] SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_GearRatiosReverse()
+DA:129,0
 FN:133,SCSSdkClient.ShifterType SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_ShifterTypeValue()
 FNDA:0,SCSSdkClient.ShifterType SCSSdkClient.Object.SCSTelemetry/Truck/Constants/Motor::get_ShifterTypeValue()
 DA:134,0
@@ -7677,11 +8015,11 @@ FN:189,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Constants/WarningFac
 FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Constants/WarningFactor::get_BatteryVoltage()
 DA:190,0
 LF:32
-LH:19
+LH:0
 BRF:0
 BRH:0
 FNF:32
-FNH:19
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\SCSSdkClient\Object\SCSTelemetry.Truck.Current.cs
 FN:11,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_ElectricEnabled()
@@ -7691,8 +8029,8 @@ FN:16,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_EngineE
 FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_EngineEnabled()
 DA:17,0
 FN:22,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_DifferentialLock()
-FNDA:58,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_DifferentialLock()
-DA:23,58
+FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_DifferentialLock()
+DA:23,0
 FN:27,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_LiftAxle()
 FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_LiftAxle()
 DA:28,0
@@ -7706,44 +8044,44 @@ FN:42,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_Trailer
 FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_TrailerLiftAxleIndicator()
 DA:43,0
 FN:48,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_MotorValues()
-FNDA:406,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_MotorValues()
-DA:49,406
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_MotorValues()
+DA:49,0
 FN:54,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_DashboardValues()
-FNDA:2088,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_DashboardValues()
-DA:55,2088
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_DashboardValues()
+DA:55,0
 FN:60,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_LightsValues()
-FNDA:754,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_LightsValues()
-DA:61,754
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_LightsValues()
+DA:61,0
 FN:66,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Wheels SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_WheelsValues()
-FNDA:58,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Wheels SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_WheelsValues()
-DA:67,58
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Wheels SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_WheelsValues()
+DA:67,0
 FN:71,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Damage SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_DamageValues()
-FNDA:464,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Damage SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_DamageValues()
-DA:72,464
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Damage SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_DamageValues()
+DA:72,0
 FN:77,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Acceleration SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_AccelerationValues()
-FNDA:58,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Acceleration SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_AccelerationValues()
-DA:78,58
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Acceleration SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_AccelerationValues()
+DA:78,0
 FN:82,SCSSdkClient.Object.SCSTelemetry/DPlacement SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_PositionValue()
-FNDA:58,SCSSdkClient.Object.SCSTelemetry/DPlacement SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_PositionValue()
-DA:83,58
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/DPlacement SCSSdkClient.Object.SCSTelemetry/Truck/Current::get_PositionValue()
+DA:83,0
 FN:91,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor/Gear SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor::get_GearValues()
-FNDA:174,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor/Gear SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor::get_GearValues()
-DA:92,174
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor/Gear SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor::get_GearValues()
+DA:92,0
 FN:96,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor/Brakes SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor::get_BrakeValues()
-FNDA:290,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor/Brakes SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor::get_BrakeValues()
-DA:97,290
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor/Brakes SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor::get_BrakeValues()
+DA:97,0
 FN:117,System.UInt32 SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor/Gear::get_HShifterSlot()
 FNDA:0,System.UInt32 SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor/Gear::get_HShifterSlot()
 DA:118,0
 FN:127,System.Int32 SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor/Gear::get_Selected()
-FNDA:116,System.Int32 SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor/Gear::get_Selected()
-DA:128,116
+FNDA:0,System.Int32 SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor/Gear::get_Selected()
+DA:128,0
 FN:132,System.Boolean[] SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor/Gear::get_HShifterSelector()
-FNDA:58,System.Boolean[] SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor/Gear::get_HShifterSelector()
-DA:133,58
+FNDA:0,System.Boolean[] SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor/Gear::get_HShifterSelector()
+DA:133,0
 FN:151,System.UInt32 SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor/Brakes::get_RetarderLevel()
-FNDA:116,System.UInt32 SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor/Brakes::get_RetarderLevel()
-DA:152,116
+FNDA:0,System.UInt32 SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor/Brakes::get_RetarderLevel()
+DA:152,0
 FN:156,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor/Brakes::get_AirPressure()
 FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor/Brakes::get_AirPressure()
 DA:157,0
@@ -7751,62 +8089,62 @@ FN:161,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor/Brakes
 FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor/Brakes::get_Temperature()
 DA:162,0
 FN:166,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor/Brakes::get_ParkingBrake()
-FNDA:116,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor/Brakes::get_ParkingBrake()
-DA:167,116
+FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor/Brakes::get_ParkingBrake()
+DA:167,0
 FN:171,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor/Brakes::get_MotorBrake()
 FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Motor/Brakes::get_MotorBrake()
 DA:172,0
 FN:194,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Fuel SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_FuelValue()
-FNDA:406,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Fuel SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_FuelValue()
-DA:195,406
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Fuel SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_FuelValue()
+DA:195,0
 FN:199,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Warnings SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_WarningValues()
-FNDA:638,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Warnings SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_WarningValues()
-DA:200,638
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Warnings SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_WarningValues()
+DA:200,0
 FN:210,System.Int32 SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_GearDashboards()
 FNDA:0,System.Int32 SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_GearDashboards()
 DA:211,0
 FN:218,SCSSdkClient.Object.SCSTelemetry/Movement SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_Speed()
-FNDA:174,SCSSdkClient.Object.SCSTelemetry/Movement SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_Speed()
-DA:219,174
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Movement SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_Speed()
+DA:219,0
 FN:226,SCSSdkClient.Object.SCSTelemetry/Movement SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_CruiseControlSpeed()
-FNDA:174,SCSSdkClient.Object.SCSTelemetry/Movement SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_CruiseControlSpeed()
-DA:227,174
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/Movement SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_CruiseControlSpeed()
+DA:227,0
 FN:231,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_AdBlue()
-FNDA:116,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_AdBlue()
-DA:232,116
+FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_AdBlue()
+DA:232,0
 FN:236,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_OilPressure()
-FNDA:116,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_OilPressure()
-DA:237,116
+FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_OilPressure()
+DA:237,0
 FN:241,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_OilTemperature()
-FNDA:116,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_OilTemperature()
-DA:242,116
+FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_OilTemperature()
+DA:242,0
 FN:246,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_WaterTemperature()
-FNDA:116,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_WaterTemperature()
-DA:247,116
+FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_WaterTemperature()
+DA:247,0
 FN:251,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_BatteryVoltage()
-FNDA:116,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_BatteryVoltage()
-DA:252,116
+FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_BatteryVoltage()
+DA:252,0
 FN:256,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_RPM()
-FNDA:116,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_RPM()
-DA:257,116
+FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_RPM()
+DA:257,0
 FN:261,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_Odometer()
 FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_Odometer()
 DA:262,0
 FN:266,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_Wipers()
-FNDA:58,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_Wipers()
-DA:267,58
+FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_Wipers()
+DA:267,0
 FN:271,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_CruiseControl()
-FNDA:116,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_CruiseControl()
-DA:272,116
+FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard::get_CruiseControl()
+DA:272,0
 FN:281,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Fuel::get_Amount()
-FNDA:116,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Fuel::get_Amount()
-DA:282,116
+FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Fuel::get_Amount()
+DA:282,0
 FN:286,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Fuel::get_AverageConsumption()
-FNDA:116,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Fuel::get_AverageConsumption()
-DA:287,116
+FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Fuel::get_AverageConsumption()
+DA:287,0
 FN:291,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Fuel::get_Range()
-FNDA:116,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Fuel::get_Range()
-DA:292,116
+FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Fuel::get_Range()
+DA:292,0
 FN:301,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Warnings::get_AirPressure()
 FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Warnings::get_AirPressure()
 DA:302,0
@@ -7814,26 +8152,26 @@ FN:306,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/W
 FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Warnings::get_AirPressureEmergency()
 DA:307,0
 FN:311,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Warnings::get_FuelW()
-FNDA:116,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Warnings::get_FuelW()
-DA:312,116
+FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Warnings::get_FuelW()
+DA:312,0
 FN:316,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Warnings::get_AdBlue()
-FNDA:116,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Warnings::get_AdBlue()
-DA:317,116
+FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Warnings::get_AdBlue()
+DA:317,0
 FN:321,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Warnings::get_OilPressure()
-FNDA:116,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Warnings::get_OilPressure()
-DA:322,116
+FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Warnings::get_OilPressure()
+DA:322,0
 FN:326,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Warnings::get_WaterTemperature()
-FNDA:116,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Warnings::get_WaterTemperature()
-DA:327,116
+FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Warnings::get_WaterTemperature()
+DA:327,0
 FN:331,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Warnings::get_BatteryVoltage()
-FNDA:116,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Warnings::get_BatteryVoltage()
-DA:332,116
+FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Dashboard/Warnings::get_BatteryVoltage()
+DA:332,0
 FN:348,SCSSdkClient.AuxLevel SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_AuxFront()
-FNDA:58,SCSSdkClient.AuxLevel SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_AuxFront()
-DA:349,58
+FNDA:0,SCSSdkClient.AuxLevel SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_AuxFront()
+DA:349,0
 FN:353,SCSSdkClient.AuxLevel SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_AuxRoof()
-FNDA:58,SCSSdkClient.AuxLevel SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_AuxRoof()
-DA:354,58
+FNDA:0,SCSSdkClient.AuxLevel SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_AuxRoof()
+DA:354,0
 FN:358,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_DashboardBacklight()
 FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_DashboardBacklight()
 DA:359,0
@@ -7841,23 +8179,23 @@ FN:369,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get
 FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_BlinkerLeftActive()
 DA:370,0
 FN:374,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_BlinkerLeftOn()
-FNDA:116,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_BlinkerLeftOn()
-DA:375,116
+FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_BlinkerLeftOn()
+DA:375,0
 FN:385,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_BlinkerRightActive()
 FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_BlinkerRightActive()
 DA:386,0
 FN:390,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_BlinkerRightOn()
-FNDA:116,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_BlinkerRightOn()
-DA:391,116
+FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_BlinkerRightOn()
+DA:391,0
 FN:395,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_Parking()
-FNDA:116,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_Parking()
-DA:396,116
+FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_Parking()
+DA:396,0
 FN:400,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_BeamLow()
-FNDA:116,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_BeamLow()
-DA:401,116
+FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_BeamLow()
+DA:401,0
 FN:405,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_BeamHigh()
-FNDA:116,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_BeamHigh()
-DA:406,116
+FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_BeamHigh()
+DA:406,0
 FN:410,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_Beacon()
 FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_Beacon()
 DA:411,0
@@ -7868,91 +8206,91 @@ FN:420,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get
 FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_Reverse()
 DA:421,0
 FN:430,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_HazardWarningLights()
-FNDA:116,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_HazardWarningLights()
-DA:431,116
+FNDA:0,System.Boolean SCSSdkClient.Object.SCSTelemetry/Truck/Current/Lights::get_HazardWarningLights()
+DA:431,0
 FN:467,System.UInt32[] SCSSdkClient.Object.SCSTelemetry/Truck/Current/Wheels::get_Substance()
-FNDA:58,System.UInt32[] SCSSdkClient.Object.SCSTelemetry/Truck/Current/Wheels::get_Substance()
-DA:468,58
+FNDA:0,System.UInt32[] SCSSdkClient.Object.SCSTelemetry/Truck/Current/Wheels::get_Substance()
+DA:468,0
 FN:472,System.Single[] SCSSdkClient.Object.SCSTelemetry/Truck/Current/Wheels::get_SuspDeflection()
-FNDA:58,System.Single[] SCSSdkClient.Object.SCSTelemetry/Truck/Current/Wheels::get_SuspDeflection()
-DA:473,58
+FNDA:0,System.Single[] SCSSdkClient.Object.SCSTelemetry/Truck/Current/Wheels::get_SuspDeflection()
+DA:473,0
 FN:480,System.Single[] SCSSdkClient.Object.SCSTelemetry/Truck/Current/Wheels::get_Velocity()
-FNDA:58,System.Single[] SCSSdkClient.Object.SCSTelemetry/Truck/Current/Wheels::get_Velocity()
-DA:481,58
+FNDA:0,System.Single[] SCSSdkClient.Object.SCSTelemetry/Truck/Current/Wheels::get_Velocity()
+DA:481,0
 FN:490,System.Single[] SCSSdkClient.Object.SCSTelemetry/Truck/Current/Wheels::get_Steering()
-FNDA:58,System.Single[] SCSSdkClient.Object.SCSTelemetry/Truck/Current/Wheels::get_Steering()
-DA:491,58
+FNDA:0,System.Single[] SCSSdkClient.Object.SCSTelemetry/Truck/Current/Wheels::get_Steering()
+DA:491,0
 FN:498,System.Single[] SCSSdkClient.Object.SCSTelemetry/Truck/Current/Wheels::get_Rotation()
-FNDA:58,System.Single[] SCSSdkClient.Object.SCSTelemetry/Truck/Current/Wheels::get_Rotation()
-DA:499,58
+FNDA:0,System.Single[] SCSSdkClient.Object.SCSTelemetry/Truck/Current/Wheels::get_Rotation()
+DA:499,0
 FN:511,System.Single[] SCSSdkClient.Object.SCSTelemetry/Truck/Current/Wheels::get_Lift()
-FNDA:58,System.Single[] SCSSdkClient.Object.SCSTelemetry/Truck/Current/Wheels::get_Lift()
-DA:512,58
+FNDA:0,System.Single[] SCSSdkClient.Object.SCSTelemetry/Truck/Current/Wheels::get_Lift()
+DA:512,0
 FN:521,System.Single[] SCSSdkClient.Object.SCSTelemetry/Truck/Current/Wheels::get_LiftOffset()
-FNDA:58,System.Single[] SCSSdkClient.Object.SCSTelemetry/Truck/Current/Wheels::get_LiftOffset()
-DA:522,58
+FNDA:0,System.Single[] SCSSdkClient.Object.SCSTelemetry/Truck/Current/Wheels::get_LiftOffset()
+DA:522,0
 FN:526,System.Boolean[] SCSSdkClient.Object.SCSTelemetry/Truck/Current/Wheels::get_OnGround()
-FNDA:58,System.Boolean[] SCSSdkClient.Object.SCSTelemetry/Truck/Current/Wheels::get_OnGround()
-DA:527,58
+FNDA:0,System.Boolean[] SCSSdkClient.Object.SCSTelemetry/Truck/Current/Wheels::get_OnGround()
+DA:527,0
 FN:536,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Damage::get_Engine()
-FNDA:116,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Damage::get_Engine()
-DA:537,116
+FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Damage::get_Engine()
+DA:537,0
 FN:541,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Damage::get_Transmission()
-FNDA:58,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Damage::get_Transmission()
-DA:542,58
+FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Damage::get_Transmission()
+DA:542,0
 FN:546,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Damage::get_Cabin()
-FNDA:116,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Damage::get_Cabin()
-DA:547,116
+FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Damage::get_Cabin()
+DA:547,0
 FN:551,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Damage::get_Chassis()
-FNDA:58,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Damage::get_Chassis()
-DA:552,58
+FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Damage::get_Chassis()
+DA:552,0
 FN:556,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Damage::get_WheelsAvg()
-FNDA:58,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Damage::get_WheelsAvg()
-DA:557,58
+FNDA:0,System.Single SCSSdkClient.Object.SCSTelemetry/Truck/Current/Damage::get_WheelsAvg()
+DA:557,0
 FN:563,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/Truck/Current/Acceleration::get_LinearVelocity()
-FNDA:58,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/Truck/Current/Acceleration::get_LinearVelocity()
-DA:564,58
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/Truck/Current/Acceleration::get_LinearVelocity()
+DA:564,0
 FN:568,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/Truck/Current/Acceleration::get_AngularVelocity()
-FNDA:58,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/Truck/Current/Acceleration::get_AngularVelocity()
-DA:569,58
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/Truck/Current/Acceleration::get_AngularVelocity()
+DA:569,0
 FN:573,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/Truck/Current/Acceleration::get_LinearAcceleration()
-FNDA:58,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/Truck/Current/Acceleration::get_LinearAcceleration()
-DA:574,58
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/Truck/Current/Acceleration::get_LinearAcceleration()
+DA:574,0
 FN:578,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/Truck/Current/Acceleration::get_AngularAcceleration()
-FNDA:58,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/Truck/Current/Acceleration::get_AngularAcceleration()
-DA:579,58
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/Truck/Current/Acceleration::get_AngularAcceleration()
+DA:579,0
 FN:583,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/Truck/Current/Acceleration::get_CabinAngularVelocity()
-FNDA:58,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/Truck/Current/Acceleration::get_CabinAngularVelocity()
-DA:584,58
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/Truck/Current/Acceleration::get_CabinAngularVelocity()
+DA:584,0
 FN:588,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/Truck/Current/Acceleration::get_CabinAngularAcceleration()
-FNDA:58,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/Truck/Current/Acceleration::get_CabinAngularAcceleration()
-DA:589,58
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/Truck/Current/Acceleration::get_CabinAngularAcceleration()
+DA:589,0
 LF:81
-LH:61
+LH:0
 BRF:0
 BRH:0
 FNF:81
-FNH:61
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\SCSSdkClient\Object\SCSTelemetry.Truck.Position.cs
 FN:25,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/PositionData::get_Cabin()
-FNDA:58,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/PositionData::get_Cabin()
-DA:26,58
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/PositionData::get_Cabin()
+DA:26,0
 FN:30,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/PositionData::get_Head()
-FNDA:58,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/PositionData::get_Head()
-DA:31,58
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/PositionData::get_Head()
+DA:31,0
 FN:35,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/PositionData::get_Hook()
-FNDA:58,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/PositionData::get_Hook()
-DA:36,58
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/PositionData::get_Hook()
+DA:36,0
 FN:41,SCSSdkClient.Object.SCSTelemetry/FPlacement SCSSdkClient.Object.SCSTelemetry/PositionData::get_HeadOffset()
-FNDA:58,SCSSdkClient.Object.SCSTelemetry/FPlacement SCSSdkClient.Object.SCSTelemetry/PositionData::get_HeadOffset()
-DA:42,58
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/FPlacement SCSSdkClient.Object.SCSTelemetry/PositionData::get_HeadOffset()
+DA:42,0
 FN:47,SCSSdkClient.Object.SCSTelemetry/FPlacement SCSSdkClient.Object.SCSTelemetry/PositionData::get_CabinOffset()
-FNDA:58,SCSSdkClient.Object.SCSTelemetry/FPlacement SCSSdkClient.Object.SCSTelemetry/PositionData::get_CabinOffset()
-DA:48,58
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/FPlacement SCSSdkClient.Object.SCSTelemetry/PositionData::get_CabinOffset()
+DA:48,0
 FN:50,SCSSdkClient.Object.SCSTelemetry/DPlacement SCSSdkClient.Object.SCSTelemetry/PositionData::get_TruckPosition()
-FNDA:58,SCSSdkClient.Object.SCSTelemetry/DPlacement SCSSdkClient.Object.SCSTelemetry/PositionData::get_TruckPosition()
-DA:51,58
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/DPlacement SCSSdkClient.Object.SCSTelemetry/PositionData::get_TruckPosition()
+DA:51,0
 FN:57,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/PositionData::get_HeadPositionInCabinSpace()
 FNDA:0,SCSSdkClient.Object.SCSTelemetry/FVector SCSSdkClient.Object.SCSTelemetry/PositionData::get_HeadPositionInCabinSpace()
 DA:58,0
@@ -7971,11 +8309,11 @@ FN:85,SCSSdkClient.Object.SCSTelemetry/DVector SCSSdkClient.Object.SCSTelemetry/
 FNDA:0,SCSSdkClient.Object.SCSTelemetry/DVector SCSSdkClient.Object.SCSTelemetry/PositionData::get_HookPositionInWorldSpace()
 DA:86,0
 LF:13
-LH:6
+LH:0
 BRF:0
 BRH:0
 FNF:11
-FNH:6
+FNH:0
 end_of_record
 SF:C:\0Code\HaddySimHub\SCSSdkClient\Object\SCSTelemetry.Version.cs
 FN:11,System.UInt32 SCSSdkClient.Object.SCSTelemetry/Version::get_Major()
@@ -7999,27 +8337,27 @@ FN:11,System.UInt32 SCSSdkClient.Object.SCSTelemetry/WheelsConstants::get_Count(
 FNDA:0,System.UInt32 SCSSdkClient.Object.SCSTelemetry/WheelsConstants::get_Count()
 DA:12,0
 FN:16,System.Single[] SCSSdkClient.Object.SCSTelemetry/WheelsConstants::get_Radius()
-FNDA:58,System.Single[] SCSSdkClient.Object.SCSTelemetry/WheelsConstants::get_Radius()
-DA:17,58
+FNDA:0,System.Single[] SCSSdkClient.Object.SCSTelemetry/WheelsConstants::get_Radius()
+DA:17,0
 FN:21,System.Boolean[] SCSSdkClient.Object.SCSTelemetry/WheelsConstants::get_Simulated()
-FNDA:58,System.Boolean[] SCSSdkClient.Object.SCSTelemetry/WheelsConstants::get_Simulated()
-DA:22,58
+FNDA:0,System.Boolean[] SCSSdkClient.Object.SCSTelemetry/WheelsConstants::get_Simulated()
+DA:22,0
 FN:26,System.Boolean[] SCSSdkClient.Object.SCSTelemetry/WheelsConstants::get_Powered()
-FNDA:58,System.Boolean[] SCSSdkClient.Object.SCSTelemetry/WheelsConstants::get_Powered()
-DA:27,58
+FNDA:0,System.Boolean[] SCSSdkClient.Object.SCSTelemetry/WheelsConstants::get_Powered()
+DA:27,0
 FN:31,System.Boolean[] SCSSdkClient.Object.SCSTelemetry/WheelsConstants::get_Liftable()
-FNDA:58,System.Boolean[] SCSSdkClient.Object.SCSTelemetry/WheelsConstants::get_Liftable()
-DA:32,58
+FNDA:0,System.Boolean[] SCSSdkClient.Object.SCSTelemetry/WheelsConstants::get_Liftable()
+DA:32,0
 FN:36,System.Boolean[] SCSSdkClient.Object.SCSTelemetry/WheelsConstants::get_Steerable()
-FNDA:58,System.Boolean[] SCSSdkClient.Object.SCSTelemetry/WheelsConstants::get_Steerable()
-DA:37,58
+FNDA:0,System.Boolean[] SCSSdkClient.Object.SCSTelemetry/WheelsConstants::get_Steerable()
+DA:37,0
 FN:42,SCSSdkClient.Object.SCSTelemetry/FVector[] SCSSdkClient.Object.SCSTelemetry/WheelsConstants::get_PositionValues()
-FNDA:58,SCSSdkClient.Object.SCSTelemetry/FVector[] SCSSdkClient.Object.SCSTelemetry/WheelsConstants::get_PositionValues()
-DA:43,58
+FNDA:0,SCSSdkClient.Object.SCSTelemetry/FVector[] SCSSdkClient.Object.SCSTelemetry/WheelsConstants::get_PositionValues()
+DA:43,0
 LF:7
-LH:6
+LH:0
 BRF:0
 BRH:0
 FNF:7
-FNH:6
+FNH:0
 end_of_record
