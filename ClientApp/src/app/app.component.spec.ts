@@ -5,10 +5,9 @@ import { AppComponentHarness } from './app.component.harness';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { DisplayType, SignalRService } from './signalr.service';
-import { describe, beforeEach, it, expect, MockedObject } from 'vitest';
+import { describe, beforeEach, it, expect, MockedObject, vi } from 'vitest';
 import { MockAppStore } from 'src/testing/mock-app.store';
 import { APP_STORE } from './state/app.store';
-import { mock } from 'vitest-mock-extended';
 
 describe('AppComponent tests', () => {
   let fixture: ComponentFixture<AppComponent>;
@@ -17,8 +16,9 @@ describe('AppComponent tests', () => {
 
   beforeEach(async () => {
     mockStore = new MockAppStore();
-    mockSignalRService = mock<SignalRService>();
-    mockSignalRService.connectionStatus.mockReturnValue({ status: 0 });
+    mockSignalRService = {
+      connectionStatus: vi.fn(() => ({ status: 0 })),
+    } as MockedObject<SignalRService>;
 
     await TestBed.configureTestingModule({
       providers: [
