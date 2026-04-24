@@ -2,18 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@
 import { SpeedometerComponent, LapTimePipe } from 'src/app/shared';
 import { APP_STORE } from 'src/app/state/app.store';
 
-export interface RallyData {
-  speed: number;
-  gear: string;
-  rpm: number;
-  rpmMax: number;
-  distanceTravelled: number;
-  completedPct: number;
-  sector1Time: number;
-  sector2Time: number;
-  lapTime: number;
-  position: number;
-}
+export type { RallyData } from './rally-data';
 
 @Component({
   selector: 'app-rally-display',

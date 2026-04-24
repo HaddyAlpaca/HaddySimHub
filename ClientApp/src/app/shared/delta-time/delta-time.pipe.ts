@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class DeltaTimePipe implements PipeTransform {
   public transform(value: number | undefined, fractionDigits = 3): string {
-    if (!value) {
+    if (value === undefined || value === null) {
       return '';
     }
 

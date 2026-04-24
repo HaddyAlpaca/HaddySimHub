@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit, signal } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 
@@ -15,9 +15,13 @@ export interface TelemetrySample {
   imports: [BaseChartDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TelemetryTraceComponent {
+export class TelemetryTraceComponent implements OnInit {
   private readonly _maxFrames = 1_000;
   private _frame = 0;
+  private readonly _labels: number[] = [];
+  private readonly _brakeData: number[] = [];
+  private readonly _throttleData: number[] = [];
+  private readonly _steeringData: number[] = [];
 
   @Input()
   public set telemetrySample(sample: TelemetrySample) {
@@ -28,39 +32,36 @@ export class TelemetryTraceComponent {
     this.addData(sample.throttlePct, sample.brakePct, sample.steeringPct);
   }
 
-  public constructor() {
-    // Initialize the chart with max frames
-    this._labels.set(Array.from({ length: this._maxFrames }, (_, i) => i));
-    this._brakeData.set(Array.from({ length: this._maxFrames }, (_, _i) => 0));
-    this._throttleData.set(Array.from({ length: this._maxFrames }, (_, _i) => 0));
-    this._steeringData.set(Array.from({ length: this._maxFrames }, (_, _i) => 50));
+  public ngOnInit(): void {
+    for (let i = 0; i < this._maxFrames; i++) {
+      this._labels[i] = i;
+      this._brakeData[i] = 0;
+      this._throttleData[i] = 0;
+      this._steeringData[i] = 50;
+    }
   }
 
-  private readonly _labels = signal<number[]>([]);
-  private readonly _brakeData = signal<number[]>([]);
-  private readonly _throttleData = signal<number[]>([]);
-  private readonly _steeringData = signal<number[]>([]);
   protected readonly chartType = 'line';
 
   protected readonly chartData = signal<ChartConfiguration<'line'>['data']>({
-    labels: this._labels(),
+    labels: [],
     datasets: [
       {
-        data: this._brakeData(),
+        data: [],
         label: 'Brake',
         borderColor: 'red',
         fill: false,
         pointRadius: 0,
       },
       {
-        data: this._throttleData(),
+        data: [],
         label: 'Throttle',
         borderColor: 'green',
         fill: false,
         pointRadius: 0,
       },
       {
-        data: this._steeringData(),
+        data: [],
         label: 'Steering',
         borderColor: 'yellow',
         fill: false,
@@ -102,23 +103,17 @@ export class TelemetryTraceComponent {
   };
 
   private addData(throttle: number, brake: number, steering: number): void {
-    const frame = this._frame++;
-    const labels = [...this._labels(), frame];
-    const brakeData = [...this._brakeData(), brake];
-    const throttleData = [...this._throttleData(), throttle];
-    const steeringData = [...this._steeringData(), steering];
+    const idx = this._frame % this._maxFrames;
+    this._brakeData[idx] = brake;
+    this._throttleData[idx] = throttle;
+    this._steeringData[idx] = steering;
+    this._frame++;
 
-    if (labels.length > this._maxFrames) {
-      labels.shift();
-      brakeData.shift();
-      throttleData.shift();
-      steeringData.shift();
-    }
-
-    this._labels.set(labels);
-    this._brakeData.set(brakeData);
-    this._throttleData.set(throttleData);
-    this._steeringData.set(steeringData);
+    const totalFrames = Math.min(this._frame, this._maxFrames);
+    const labels = this._labels.slice(0, totalFrames);
+    const brakeData = this._brakeData.slice(0, totalFrames);
+    const throttleData = this._throttleData.slice(0, totalFrames);
+    const steeringData = this._steeringData.slice(0, totalFrames);
 
     this.chartData.set({
       labels,
