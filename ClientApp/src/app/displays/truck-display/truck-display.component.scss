@@ -9,8 +9,7 @@ app-truck-display {
   }
 
   .gauge {
-    align-content: center;
-    justify-content: center;
+    place-content: center center;
     height: 430px !important;
   }
 
@@ -40,11 +39,9 @@ app-truck-display {
 
   .dashboard-lights {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-flow: row wrap;
     align-items: center;
-    align-content: center;
-    justify-content: space-evenly;
+    place-content: center space-evenly;
   }
 
   .dashboard-light {

@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, inject } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { DeltaTimePipe, LapTimePipe, SpeedometerComponent } from 'src/app/shared';
-import { TelemetrySample, TelemetryTraceComponent } from './telemetry-trace.component';
+import { TelemetryTraceComponent } from './telemetry-trace.component';
 import { TimePipe } from 'src/app/shared/time/time.pipe';
 import { APP_STORE } from 'src/app/state/app.store';
 
@@ -23,13 +23,11 @@ import { APP_STORE } from 'src/app/state/app.store';
 export class RaceDisplayComponent {
   private readonly _store = inject(APP_STORE);
   protected readonly data = this._store.raceData;
-
-  protected readonly telemetrySample = computed(() => {
-    const sample = {
+  protected get telemetrySample(): { brakePct: number; throttlePct: number; steeringPct: number } {
+    return {
       brakePct: this.data().brakePct,
       throttlePct: this.data().throttlePct,
       steeringPct: this.data().steeringPct,
-    } as TelemetrySample;
-    return sample;
-  });
+    };
+  }
 }

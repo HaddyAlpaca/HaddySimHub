@@ -14,14 +14,6 @@ namespace HaddySimHub.Displays
         private readonly IServiceProvider _serviceProvider;
         private readonly IOptions<TestDisplayOptions> _testDisplayOptions;
 
-        // Factory delegates for game displays (generic approach)
-        private delegate IDisplay GameDisplayFactory(
-            IGameDataProvider<object> provider,
-            IDataConverter<object, DisplayUpdate> converter,
-            IDisplayUpdateSender sender,
-            string processName,
-            string description);
-
         public DisplayFactory(IServiceProvider serviceProvider, IOptions<TestDisplayOptions> testDisplayOptions)
         {
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));

@@ -1,5 +1,5 @@
-import { inject, Injectable, signal } from '@angular/core';
-import { filter, interval, take, tap } from 'rxjs';
+import { inject, Injectable, OnDestroy, signal } from '@angular/core';
+import { filter, interval, Subscription, take, tap } from 'rxjs';
 import { HttpTransportType, HubConnection, HubConnectionBuilder, IHttpConnectionOptions, LogLevel } from '@microsoft/signalr';
 import { RaceData, RallyData, TruckData } from './displays';
 import { APP_STORE } from './state/app.store';
@@ -32,9 +32,10 @@ export interface DisplayUpdate {
 @Injectable({
   providedIn: 'root',
 })
-export class SignalRService {
+export class SignalRService implements OnDestroy {
   private readonly _store = inject(APP_STORE);
   private readonly _hubConnection: HubConnection;
+  private _reloadSubscription?: Subscription;
 
   private readonly _connectionStatus = signal<ConnectionInfo>({ status: ConnectionStatus.Disconnected });
   public readonly connectionStatus = this._connectionStatus.asReadonly();
@@ -74,9 +75,10 @@ export class SignalRService {
   }
 
   private startReloadSequence(): void {
+    this._reloadSubscription?.unsubscribe();
     let countDownSeconds = 10;
-    this._connectionStatus.update((value) => ({ ...value, reloadSeconds: countDownSeconds}));
-    interval(1000).pipe(
+    this._connectionStatus.update((value) => ({ ...value, reloadSeconds: countDownSeconds }));
+    this._reloadSubscription = interval(1000).pipe(
       take(countDownSeconds + 1),
       tap(() => {
         this._connectionStatus.update((value) => ({ ...value, reloadSeconds: countDownSeconds }));
@@ -85,5 +87,10 @@ export class SignalRService {
       filter(() => countDownSeconds <= 0),
       tap(() => window.location.reload()),
     ).subscribe();
+  }
+
+  public ngOnDestroy(): void {
+    this._reloadSubscription?.unsubscribe();
+    void this._hubConnection.stop();
   }
 }

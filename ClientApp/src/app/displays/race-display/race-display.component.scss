@@ -70,12 +70,12 @@ app-race-display {
 
   .group-border {
     border: white 4px solid;
-    padding: 10px 20px 10px 20px;
+    padding: 10px 20px;
     border-radius: 20px;
     height: 100%;
 
     &.border-blue {
-      border-color: rgba(0, 0, 255, 0.555);
+      border-color: rgb(0 0 255 / 55.5%);
     }
   
     &.border-yellow {
@@ -120,7 +120,7 @@ app-race-display {
     background-color: orange;
     font-size: 62pt;
     color: black;
-    padding: 5px 45px 5px 45px;
+    padding: 5px 45px;
     border-radius: 15px;
     animation: text-blinker 2s step-end infinite;
   }
