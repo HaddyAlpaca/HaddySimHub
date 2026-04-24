@@ -72,4 +72,90 @@ describe('TelemetryTraceComponent', () => {
       }).not.toThrow();
     });
   });
+
+  describe('chart line rendering', () => {
+    beforeEach(() => {
+      fixture.detectChanges();
+    });
+
+    it('should have brake dataset with red border color', () => {
+      const chartData = (fixture.componentInstance as unknown as { chartData: () => { datasets: { label: string; borderColor: string }[] } }).chartData();
+      const brakeDataset = chartData.datasets[0];
+      expect(brakeDataset.label).toBe('Brake');
+      expect(brakeDataset.borderColor).toBe('red');
+    });
+
+    it('should have throttle dataset with green border color', () => {
+      const chartData = (fixture.componentInstance as unknown as { chartData: () => { datasets: { label: string; borderColor: string }[] } }).chartData();
+      const throttleDataset = chartData.datasets[1];
+      expect(throttleDataset.label).toBe('Throttle');
+      expect(throttleDataset.borderColor).toBe('green');
+    });
+
+    it('should have steering dataset with yellow border color', () => {
+      const chartData = (fixture.componentInstance as unknown as { chartData: () => { datasets: { label: string; borderColor: string }[] } }).chartData();
+      const steeringDataset = chartData.datasets[2];
+      expect(steeringDataset.label).toBe('Steering');
+      expect(steeringDataset.borderColor).toBe('yellow');
+    });
+
+    it('should update brake line when telemetry sample is received', () => {
+      const component = fixture.componentInstance;
+      component.telemetrySample = { brakePct: 80, throttlePct: 20, steeringPct: 50 };
+      fixture.detectChanges();
+
+      const chartData = (fixture.componentInstance as unknown as { chartData: () => { datasets: { data: number[] }[] } }).chartData();
+      const brakeData = chartData.datasets[0].data;
+      expect(brakeData[brakeData.length - 1]).toBe(80);
+    });
+
+    it('should update throttle line when telemetry sample is received', () => {
+      const component = fixture.componentInstance;
+      component.telemetrySample = { brakePct: 30, throttlePct: 90, steeringPct: 50 };
+      fixture.detectChanges();
+
+      const chartData = (fixture.componentInstance as unknown as { chartData: () => { datasets: { data: number[] }[] } }).chartData();
+      const throttleData = chartData.datasets[1].data;
+      expect(throttleData[throttleData.length - 1]).toBe(90);
+    });
+
+    it('should update steering line when telemetry sample is received', () => {
+      const component = fixture.componentInstance;
+      component.telemetrySample = { brakePct: 0, throttlePct: 50, steeringPct: -25 };
+      fixture.detectChanges();
+
+      const chartData = (fixture.componentInstance as unknown as { chartData: () => { datasets: { data: number[] }[] } }).chartData();
+      const steeringData = chartData.datasets[2].data;
+      expect(steeringData[steeringData.length - 1]).toBe(-25);
+    });
+
+    it('should add multiple data points to all lines', () => {
+      const component = fixture.componentInstance;
+      component.telemetrySample = { brakePct: 10, throttlePct: 20, steeringPct: 30 };
+      fixture.detectChanges();
+      component.telemetrySample = { brakePct: 40, throttlePct: 50, steeringPct: 60 };
+      fixture.detectChanges();
+      component.telemetrySample = { brakePct: 70, throttlePct: 80, steeringPct: 90 };
+      fixture.detectChanges();
+
+      const chartData = (fixture.componentInstance as unknown as { chartData: () => { datasets: { data: number[] }[] } }).chartData();
+      expect(chartData.datasets[0].data.length).toBe(3);
+      expect(chartData.datasets[1].data.length).toBe(3);
+      expect(chartData.datasets[2].data.length).toBe(3);
+    });
+
+    it('should have all datasets configured with pointRadius 0 for line rendering', () => {
+      const chartData = (fixture.componentInstance as unknown as { chartData: () => { datasets: { pointRadius: number }[] } }).chartData();
+      chartData.datasets.forEach(dataset => {
+        expect(dataset.pointRadius).toBe(0);
+      });
+    });
+
+    it('should have all datasets configured with fill false', () => {
+      const chartData = (fixture.componentInstance as unknown as { chartData: () => { datasets: { fill: boolean }[] } }).chartData();
+      chartData.datasets.forEach(dataset => {
+        expect(dataset.fill).toBe(false);
+      });
+    });
+  });
 });

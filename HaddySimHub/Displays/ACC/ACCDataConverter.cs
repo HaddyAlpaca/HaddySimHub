@@ -65,8 +65,6 @@ public class ACCDataConverter : IDataConverter<ACCTelemetry, DisplayUpdate>
             CarNumber = "1",
             SteeringPct = (int)(Math.Abs(source.SteerAngle) * 100f),
             BrakeBias = source.BrakeBias,
-            PenaltyTime = (int)source.PenaltyTime,
-            DrsEnabled = source.DrsEnabled == 1
         };
 
         return new DisplayUpdate

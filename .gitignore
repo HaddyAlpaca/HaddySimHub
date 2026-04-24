@@ -276,3 +276,4 @@ cobertura.xml
 tmpclaude-*
 .claude-*
 *.claude
+HaddySimHub.Tests/coverage/coverage.info
