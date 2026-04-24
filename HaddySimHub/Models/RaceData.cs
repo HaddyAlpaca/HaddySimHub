@@ -77,25 +77,4 @@ public sealed record RaceData
 
     /// <summary>iRacing only: Safety Rating</summary>
     public int? SafetyRating { get; init; }
-
-    /// <summary>ACC only: Penalty count</summary>
-    public int? Penalties { get; init; }
-
-    /// <summary>ACC only: Penalty time in seconds</summary>
-    public int? PenaltyTime { get; init; }
-
-    /// <summary>F1, ACC: DRS remaining uses</summary>
-    public int? DrsRemaining { get; init; }
-
-    /// <summary>F1, ACC: DRS enabled status</summary>
-    public bool? DrsEnabled { get; init; }
-
-    /// <summary>F1 only: Left brake temperature</summary>
-    public int? BrakeTempLeft { get; init; }
-
-    /// <summary>F1 only: Right brake temperature</summary>
-    public int? BrakeTempRight { get; init; }
-
-    /// <summary>F1 only: Tyre compound</summary>
-    public string? TyreCompound { get; init; }
 }

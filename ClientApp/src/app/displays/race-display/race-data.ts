@@ -34,11 +34,4 @@ export interface RaceData {
   maxIncidents?: number; // iRacing only
   irating?: number; // iRacing only
   safetyRating?: number; // iRacing only
-  penalties?: number; // ACC only
-  penaltyTime?: number; // ACC only
-  drsRemaining?: number; // F1, ACC only
-  drsEnabled?: boolean; // F1, ACC only
-  brakeTempLeft?: number; // F1 only
-  brakeTempRight?: number; // F1 only
-  tyreCompound?: string; // F1 only
 }
