@@ -41,7 +41,6 @@ public class ACCGameDataProvider : SharedMemoryGameDataProviderBase<ACCSharedMem
             if (HasDataChanged(telemetry, LastTelemetry))
             {
                 LastTelemetry = telemetry;
-                Logger.Debug($"ACCGameDataProvider: telemetry changed (rpm {telemetry.Rpm}). Raising DataReceived.");
                 OnDataReceived(telemetry);
             }
         }

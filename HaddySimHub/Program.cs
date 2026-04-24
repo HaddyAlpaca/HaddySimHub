@@ -209,12 +209,20 @@ public class Program
         {
             if (process.Id != currentProcess.Id)
             {
-                Logger.Info($"Killing process {process.ProcessName} with ID {process.Id}.");
-                process.Kill();
-                process.WaitForExit(5000); // Wait for 5 seconds
-                if (!process.HasExited)
+                try
                 {
-                    Console.WriteLine($"Process {process.ProcessName} (PID {process.Id}) did not exit in time...");
+                    Logger.Info($"Sending close signal to existing process {process.ProcessName} (ID: {process.Id})...");
+                    process.CloseMainWindow();
+                    if (!process.WaitForExit(3000))
+                    {
+                        Logger.Info($"Process did not close gracefully, killing...");
+                        process.Kill();
+                        process.WaitForExit(2000);
+                    }
+                }
+                catch (InvalidOperationException)
+                {
+                    Logger.Info($"Process {process.Id} already exited.");
                 }
             }
         }
