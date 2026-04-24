@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, inject } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { DeltaTimePipe, LapTimePipe, SpeedometerComponent } from 'src/app/shared';
-import { TelemetrySample, TelemetryTraceComponent } from './telemetry-trace.component';
+import { TelemetryTraceComponent } from './telemetry-trace.component';
 import { TimePipe } from 'src/app/shared/time/time.pipe';
 import { APP_STORE } from 'src/app/state/app.store';
 
@@ -29,7 +29,7 @@ export class RaceDisplayComponent {
       brakePct: this.data().brakePct,
       throttlePct: this.data().throttlePct,
       steeringPct: this.data().steeringPct,
-    } as TelemetrySample;
+    };
     return sample;
   });
 }
