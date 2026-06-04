@@ -1,7 +1,7 @@
 import { enableProdMode, importProvidersFrom, provideZonelessChangeDetection } from '@angular/core';
 import { environment } from './environments/environment';
 import { AppComponent } from './app/app.component';
-import { withInterceptorsFromDi, provideHttpClient } from '@angular/common/http';
+import { withInterceptorsFromDi, provideHttpClient, withXhr } from '@angular/common/http';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
@@ -12,7 +12,7 @@ if (environment.production) {
 bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(BrowserModule),
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withXhr(), withInterceptorsFromDi()),
     provideZonelessChangeDetection(),
     provideCharts(withDefaultRegisterables()),
   ],
