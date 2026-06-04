@@ -1,9 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
     "module": "ES2022",
-    "ignoreDeprecations": "6.0",
     "outDir": "./dist/out-tsc",
     "esModuleInterop": true,
     "isolatedModules": true,

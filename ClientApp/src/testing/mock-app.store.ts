@@ -1,6 +1,6 @@
 import { signal } from '@angular/core';
-import { RaceData, RallyData, TruckData } from 'src/app/displays';
-import { DisplayType } from 'src/app/signalr.service';
+import { RaceData, RallyData, TruckData } from '../app/displays';
+import { DisplayType } from '../app/signalr.service';
 
 export class MockAppStore {
   public displayType = signal(DisplayType.None);

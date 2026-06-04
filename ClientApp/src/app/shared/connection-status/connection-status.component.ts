@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { ConnectionStatus, SignalRService } from 'src/app/signalr.service';
+import { ConnectionStatus, SignalRService } from '../../signalr.service';
 
 @Component({
   selector: 'app-connection-status',

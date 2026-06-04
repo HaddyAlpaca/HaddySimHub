@@ -1,5 +1,5 @@
 import { ComponentHarness } from '@angular/cdk/testing';
-import { SpeedometerComponentHarness } from 'src/app/shared/speedometer/speedometer.component.harness';
+import { SpeedometerComponentHarness } from '../../shared/speedometer/speedometer.component.harness';
 
 export class RaceDisplayComponentHarness extends ComponentHarness {
   public static hostSelector = 'app-race-display';

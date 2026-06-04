@@ -5,8 +5,8 @@ import { RallyDisplayComponentHarness } from './rally-display.component.harness'
 import { provideZonelessChangeDetection } from '@angular/core';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { describe, beforeEach, it, expect } from 'vitest';
-import { MockAppStore } from 'src/testing/mock-app.store';
-import { APP_STORE } from 'src/app/state/app.store';
+import { MockAppStore } from '../../../testing/mock-app.store';
+import { APP_STORE } from '../../state/app.store';
 
 describe('RallyDisplayComponent', () => {
   let fixture: ComponentFixture<RallyDisplayComponent>;
