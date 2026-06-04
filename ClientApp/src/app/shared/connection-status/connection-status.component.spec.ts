@@ -3,8 +3,8 @@ import { ConnectionStatusComponent } from './connection-status.component';
 import { ConnectionStatusComponentHarness } from './connection-status.component.harness';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { MockSignalRService } from 'src/testing/mock-signalr.service';
-import { ConnectionStatus, SignalRService } from 'src/app/signalr.service';
+import { MockSignalRService } from '../../../testing/mock-signalr.service';
+import { ConnectionStatus, SignalRService } from '../../signalr.service';
 import { describe, beforeEach, it, expect } from 'vitest';
 
 describe('ConnectionStatusComponent tests', () => {

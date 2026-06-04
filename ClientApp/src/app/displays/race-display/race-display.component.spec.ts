@@ -6,8 +6,8 @@ import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { RaceDisplayComponentHarness } from './race-display.component.harness';
 import { RaceDisplayComponent } from './race-display.component';
 import { describe, beforeEach, it, expect } from 'vitest';
-import { APP_STORE } from 'src/app/state/app.store';
-import { MockAppStore } from 'src/testing/mock-app.store';
+import { APP_STORE } from '../../state/app.store';
+import { MockAppStore } from '../../../testing/mock-app.store';
 
 describe('Race display component tests', () => {
   let fixture: ComponentFixture<RaceDisplayComponent>;

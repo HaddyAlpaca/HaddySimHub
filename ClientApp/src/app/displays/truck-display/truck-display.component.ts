@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { WaypointComponent } from './waypoint.component';
-import { TimespanPipe, NumberNlPipe, NumberFlexDigitPipe } from 'src/app/shared';
-import { GaugeComponent } from 'src/app/shared/gauge/gauge.component';
-import { APP_STORE } from 'src/app/state/app.store';
+import { TimespanPipe, NumberNlPipe, NumberFlexDigitPipe } from '../../shared';
+import { GaugeComponent } from '../../shared/gauge/gauge.component';
+import { APP_STORE } from '../../state/app.store';
 
 export type { TruckData } from './truck-data';
 

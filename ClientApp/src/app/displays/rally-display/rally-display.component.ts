@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
-import { SpeedometerComponent, LapTimePipe } from 'src/app/shared';
-import { APP_STORE } from 'src/app/state/app.store';
+import { SpeedometerComponent, LapTimePipe } from '../../shared';
+import { APP_STORE } from '../../state/app.store';
 
 export type { RallyData } from './rally-data';
 

@@ -3,8 +3,8 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { TruckData, TruckDisplayComponent } from './truck-display.component';
 import { TruckDashComponentHarness } from './truck-display.component.harness';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { MockAppStore } from 'src/testing/mock-app.store';
-import { APP_STORE } from 'src/app/state/app.store';
+import { MockAppStore } from '../../../testing/mock-app.store';
+import { APP_STORE } from '../../state/app.store';
 import { describe, beforeEach, it, expect } from 'vitest';
 
 describe('TruckDisplayComponent', () => {
