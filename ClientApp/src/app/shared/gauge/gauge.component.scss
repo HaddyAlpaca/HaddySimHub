@@ -4,59 +4,44 @@
   height: 30vw;
   left: 50%;
   transform: translateX(-50%);
-  background-image: conic-gradient(from 235deg, white, white 180deg, yellow 200deg, red 235deg, #27293d 250deg);
-  border-radius: 50%;
 
-  &::after {
-    position: absolute;
-    content: '';
-    background-color: #27293d;
-    width: 75%;
-    height: 75%;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
+  > svg {
+    display: block;
+    width: 100%;
+    height: 100%;
   }
 
   &.max-rpm {
-    animation: rpm-flash 0.3s infinite;
-  }
+    .needle-shape {
+      animation: needle-flash 0.3s infinite;
+    }
 
-  > .needle {
-    position: absolute;
-    width: 20px;
-    height: 50%;
-    background-image: linear-gradient(to bottom, #27293d, gray, transparent 45%);
-    border-top-left-radius: 40%;
-    border-top-right-radius: 40%;
-    left: calc(50% - 10px);
-    top: -10px;
-    transform-origin: bottom;
-    transform: rotate(var(--needle-deg, -125deg));
-    z-index: 2;
+    .red-zone {
+      animation: red-flash 0.3s infinite;
+    }
   }
 
   > .content {
-    position: relative;
-    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
     text-align: center;
-    display: inline-block;
-    z-index: 100;
-    margin-top: 20px;
+    pointer-events: none;
   }
 }
 
-@keyframes rpm-flash {
-    0% {
-        background-image: conic-gradient(from 235deg, red, red 235deg, #27293d 250deg);
-    }
+.needle-shape {
+  fill: url("#needleGrad");
+}
 
-    50% {
-        background-image: conic-gradient(from 235deg, white, white 235deg, #27293d 250deg);
-    }
+@keyframes needle-flash {
+  0%, 100% { fill: #f30; }
+  50% { fill: #fff; }
+}
 
-    100% {
-        background-image: conic-gradient(from 235deg, red, red 235deg, #27293d 250deg);
-    }
+@keyframes red-flash {
+  0%, 100% { stroke: #f30; }
+  50% { stroke: #f99; }
 }
