@@ -1,6 +1,38 @@
 <div class="ring" [class.max-rpm]="value() >= max()">
-    <div class="needle" [style.--needle-deg]="degrees()"></div>
-    <div class="content">
-        <ng-content />
-    </div>
+  <svg viewBox="0 0 200 200" class="gauge-svg">
+    <defs>
+      <linearGradient id="needleGrad" x1="0" y1="1" x2="0" y2="0">
+        <stop offset="0%" stop-color="#27293d" />
+        <stop offset="50%" stop-color="#888" />
+        <stop offset="100%" stop-color="white" />
+      </linearGradient>
+    </defs>
+
+    <path fill="none" stroke="#27293d" stroke-width="12" stroke-linecap="butt" [attr.d]="trackPath()" />
+
+    @for (zone of zones(); track $index) {
+      <path fill="none" stroke-width="12" stroke-linecap="butt" [attr.d]="zone.path" [attr.stroke]="zone.color"
+        [class.red-zone]="zone.color === '#ff3300'" />
+    }
+
+    @for (tick of ticks(); track $index) {
+      <line stroke="white" [attr.x1]="tick.x1" [attr.y1]="tick.y1" [attr.x2]="tick.x2" [attr.y2]="tick.y2"
+        [attr.stroke-width]="tick.major ? 2.5 : 1.5" />
+    }
+
+    @for (label of labels(); track $index) {
+      <text text-anchor="middle" dominant-baseline="central" fill="white" font-size="9" font-family="Poppins, sans-serif"
+        [attr.x]="label.x" [attr.y]="label.y">{{label.text}}</text>
+    }
+
+    <g class="needle-group" [attr.transform]="'rotate(' + degreesNum() + ', 100, 100)'">
+      <rect x="95" y="18" width="10" height="82" rx="4" class="needle-shape" />
+    </g>
+
+    <circle cx="100" cy="100" r="10" fill="#27293d" stroke="white" stroke-width="2" />
+  </svg>
+
+  <div class="content">
+    <ng-content />
+  </div>
 </div>

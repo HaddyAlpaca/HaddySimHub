@@ -174,17 +174,15 @@
   <div class="row">
     <div class="col-6">
       <div class="card gauge">
-        <app-gauge [value]="data().rpm" [max]="data().rpmMax">
+        <app-gauge [value]="data().rpm" [max]="data().rpmMax" [greenStart]="1250" [greenEnd]="2000">
+          <label class="unit text-center rpm-scale">x 100 RPM</label>
           <div class="gear text-center">{{data().gear}}</div>
-          <label class="unit text-center">Gear</label>
-            <div class="rpm-value text-center">{{ (data().rpm / 1000) | number:'1.1-1' }}</div>
-          <label class="unit text-center">x 1000 RPM</label>
         </app-gauge>
       </div>
     </div>
     <div class="col-6" style="padding-right: 10px;">
       <div class="card gauge">
-        <div class="gear text-center">{{data().speed}}</div>
+        <div class="speed text-center">{{data().speed}}</div>
         <label class="unit text-center">Km/h</label>
         <div class="speed-limit" [class.over-speed-limit]="data().speedLimit && data().speed > data().speedLimit">{{data().speedLimit ? data().speedLimit : '--'}}</div>
       </div>
