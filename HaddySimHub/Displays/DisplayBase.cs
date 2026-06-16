@@ -40,16 +40,17 @@ public abstract class DisplayBase<T> : IDisplay
                 return;
             }
 
-            _updateChannel = Channel.CreateBounded<DisplayUpdate>(new BoundedChannelOptions(256)
+            var updateChannel = Channel.CreateBounded<DisplayUpdate>(new BoundedChannelOptions(256)
             {
                 SingleReader = true,
                 SingleWriter = false,
                 FullMode = BoundedChannelFullMode.DropOldest
             });
+            _updateChannel = updateChannel;
 
             _gameDataProvider.DataReceived += HandleDataReceived;
             _gameDataProvider.Start();
-            _sendLoopTask = Task.Run(SendLoopAsync);
+            _sendLoopTask = Task.Run(() => SendLoopAsync(updateChannel));
             _isStarted = true;
         }
     }
@@ -89,14 +90,8 @@ public abstract class DisplayBase<T> : IDisplay
         }
     }
 
-    private async Task SendLoopAsync()
+    private async Task SendLoopAsync(Channel<DisplayUpdate> updateChannel)
     {
-        var updateChannel = _updateChannel;
-        if (updateChannel is null)
-        {
-            return;
-        }
-
         try
         {
             await foreach (var update in updateChannel.Reader.ReadAllAsync())
