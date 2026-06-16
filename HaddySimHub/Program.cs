@@ -8,7 +8,6 @@ using Logger = HaddySimHub.Logger;
 
 public class Program
 {
-    private static DisplaysRunner? _displaysRunner;
     public static string TestId { get; private set; } = string.Empty;
 
     public static async Task Main(string[] args)
@@ -69,8 +68,7 @@ public class Program
         WebApplication webServer = CreateWebServer();
 
         Task webServerTask = RunWebServerAsync(webServer, token);
-        Task processTask = RunProcessAsync(webServer, token);
-        await Task.WhenAll(webServerTask, processTask, keyInputTask);
+        await Task.WhenAll(webServerTask, keyInputTask);
 
         cancellationTokenSource.Cancel();
     }
@@ -141,6 +139,7 @@ public class Program
 
         // Register displays and runner for DI
         builder.Services.AddSingleton<DisplaysRunner>();
+        builder.Services.AddHostedService<DisplayRunnerHostedService>();
 
         // Register test displays via factory
         builder.Services.AddSingleton<HaddySimHub.Displays.IDisplay>(sp => sp.GetRequiredService<HaddySimHub.Displays.IDisplayFactory>().Create("Dirt2.TestDisplay"));
@@ -171,24 +170,6 @@ public class Program
         catch (Exception ex)
         {
             Logger.Fatal($"Web server error: {ex.Message}\n\n{ex.StackTrace}");
-        }
-    }
-
-    private static async Task RunProcessAsync(WebApplication webServer, CancellationToken token)
-    {
-        try
-        {
-            var displaysRunner = webServer.Services.GetRequiredService<DisplaysRunner>();
-            _displaysRunner = displaysRunner;
-            await _displaysRunner.RunAsync(token);
-        }
-        catch (OperationCanceledException)
-        {
-            // Expected cancellation, no action required.
-        }
-        catch (Exception ex)
-        {
-            Logger.Fatal($"Process runner error: {ex.Message}\n\n{ex.StackTrace}");
         }
     }
 
