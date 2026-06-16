@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
+import { Component, inject, ViewEncapsulation } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { WaypointComponent } from './waypoint.component';
 import { TimespanPipe, NumberNlPipe, NumberFlexDigitPipe } from '../../shared';
@@ -12,7 +12,6 @@ export type { TruckData } from './truck-data';
   templateUrl: 'truck-display.component.html',
   styleUrl: 'truck-display.component.scss',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DecimalPipe,
     TimespanPipe,

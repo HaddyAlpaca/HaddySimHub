@@ -96,9 +96,9 @@ export default tseslint.config(
                     'style': 'camelCase'
                 }
             ],
-            '@angular-eslint/no-conflicting-lifecycle': 'error',
+            '@angular-eslint/contextual-lifecycle': 'error',
             '@angular-eslint/use-lifecycle-interface': 'error',
-            '@angular-eslint/prefer-on-push-component-change-detection': 'error',
+            '@angular-eslint/prefer-on-push-component-change-detection': 'off',
 
             // @stylistic/ts
             '@stylistic/semi': ['error', 'always'],
@@ -264,6 +264,13 @@ export default tseslint.config(
                 {
                     'name': 'rxjs/Rx',
                     'message': 'Please import directly from \'rxjs\' instead'
+                }
+            ],
+            'no-restricted-syntax': [
+                'error',
+                {
+                    'selector': 'Decorator[expression.callee.name="Component"] ObjectExpression > Property[key.name="changeDetection"]',
+                    'message': 'Do not set changeDetection in component metadata; use Angular default change detection behavior.'
                 }
             ],
             'no-undef': 'error',

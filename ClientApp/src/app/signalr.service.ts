@@ -1,4 +1,4 @@
-import { inject, Injectable, OnDestroy, signal } from '@angular/core';
+import { inject, OnDestroy, Service, signal } from '@angular/core';
 import { filter, interval, Subscription, take, tap } from 'rxjs';
 import { HttpTransportType, HubConnection, HubConnectionBuilder, IHttpConnectionOptions, LogLevel } from '@microsoft/signalr';
 import { RaceData, RallyData, TruckData } from './displays';
@@ -29,9 +29,7 @@ export interface DisplayUpdate {
   data: TruckData | RaceData | RallyData | undefined;
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class SignalRService implements OnDestroy {
   private readonly _store = inject(APP_STORE);
   private readonly _hubConnection: HubConnection;

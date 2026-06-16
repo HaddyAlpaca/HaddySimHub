@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 
 @Component({
   selector: 'app-waypoint',
   template: '<div class="data-item">{{description()}}</div>',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WaypointComponent {
   public readonly city = input<string>();
