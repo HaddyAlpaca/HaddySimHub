@@ -9,8 +9,9 @@ namespace HaddySimHub.Displays
 {
     public abstract class TestDisplayBase : DisplayBase<DisplayUpdate>
     {
-        private readonly CancellationTokenSource _cancellationTokenSource = new();
-        private CancellationToken _cancellationToken;
+        private readonly object _sync = new();
+        private CancellationTokenSource? _cancellationTokenSource;
+        private Task? _generatorTask;
         protected static readonly Random _random = System.Random.Shared;
         private readonly string _id; // Store id as a field
 
@@ -29,35 +30,71 @@ namespace HaddySimHub.Displays
 
         public override void Start()
         {
-            _cancellationToken = _cancellationTokenSource.Token;
-            Task.Run(async () =>
+            lock (_sync)
             {
-                try
+                if (_generatorTask is { IsCompleted: false })
                 {
-                    while (!_cancellationToken.IsCancellationRequested)
-                    {
-                        // Directly invoke DataReceived event on the wrapped provider
-                        (_gameDataProvider as TestGameDataProviderWrapper)?.InvokeDataReceived(this.GenerateDisplayUpdate());
-                        await Task.Delay(TimeSpan.FromSeconds(.5), _cancellationToken);
-                    }
+                    return;
                 }
-                catch (TaskCanceledException)
-                {
-                    // Handle cancellation
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error($"{ex.Message}\n\n{ex.StackTrace}");
-                }
-            });
 
-            // Call base Start which will subscribe to DataReceived of the wrapped provider.
-            base.Start();
+                _cancellationTokenSource = new CancellationTokenSource();
+                var token = _cancellationTokenSource.Token;
+
+                // Call base Start which will subscribe to DataReceived of the wrapped provider.
+                base.Start();
+
+                _generatorTask = Task.Run(async () =>
+                {
+                    try
+                    {
+                        while (!token.IsCancellationRequested)
+                        {
+                            // Directly invoke DataReceived event on the wrapped provider
+                            (_gameDataProvider as TestGameDataProviderWrapper)?.InvokeDataReceived(this.GenerateDisplayUpdate());
+                            await Task.Delay(TimeSpan.FromSeconds(.5), token);
+                        }
+                    }
+                    catch (TaskCanceledException)
+                    {
+                        // Expected when stopping.
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        // Expected when stopping.
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error($"{ex.Message}\n\n{ex.StackTrace}");
+                    }
+                }, token);
+            }
         }
 
         public override void Stop()
         {
-            _cancellationTokenSource.Cancel();
+            CancellationTokenSource? cancellationTokenSource;
+            Task? generatorTask;
+
+            lock (_sync)
+            {
+                cancellationTokenSource = _cancellationTokenSource;
+                generatorTask = _generatorTask;
+                _cancellationTokenSource = null;
+                _generatorTask = null;
+            }
+
+            cancellationTokenSource?.Cancel();
+            if (generatorTask is not null)
+            {
+                try
+                {
+                    generatorTask.Wait(TimeSpan.FromSeconds(1));
+                }
+                catch (AggregateException ex) when (ex.InnerExceptions.All(e => e is TaskCanceledException || e is OperationCanceledException))
+                {
+                }
+            }
+            cancellationTokenSource?.Dispose();
             base.Stop();
         }
 

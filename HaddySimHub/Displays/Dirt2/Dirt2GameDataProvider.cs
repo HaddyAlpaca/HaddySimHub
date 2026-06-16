@@ -12,8 +12,9 @@ public class Dirt2GameDataProvider : IGameDataProvider<Packet>
     private const int PORT = 20777;
     private readonly IUdpClientFactory _udpClientFactory;
     private readonly ConcurrentQueue<Packet> _packetQueue = new();
-    private readonly CancellationTokenSource _cts = new();
-    private readonly Task _processingTask;
+    private readonly object _sync = new();
+    private CancellationTokenSource? _cts;
+    private Task? _processingTask;
     private UdpClient? _client;
     private IPEndPoint? _senderEndPoint;
 
@@ -22,26 +23,61 @@ public class Dirt2GameDataProvider : IGameDataProvider<Packet>
     public Dirt2GameDataProvider(IUdpClientFactory udpClientFactory)
     {
         _udpClientFactory = udpClientFactory ?? throw new ArgumentNullException(nameof(udpClientFactory));
-        _processingTask = Task.Run(ProcessPacketsAsync);
     }
 
     public void Start()
     {
-        if (_client is not null)
+        lock (_sync)
         {
-            return;
-        }
+            if (_client is not null)
+            {
+                return;
+            }
 
-        _client = _udpClientFactory.Create(PORT);
-        _senderEndPoint = new IPEndPoint(IPAddress.Any, PORT);
-        _client.BeginReceive(ReceiveCallback, null);
+            _cts = new CancellationTokenSource();
+            _processingTask = Task.Run(() => ProcessPacketsAsync(_cts.Token));
+            _client = _udpClientFactory.Create(PORT);
+            _senderEndPoint = new IPEndPoint(IPAddress.Any, PORT);
+            _client.BeginReceive(ReceiveCallback, null);
+        }
     }
 
     public void Stop()
     {
-        _cts.Cancel();
-        _client?.Close();
-        _client = null;
+        CancellationTokenSource? cts;
+        Task? processingTask;
+        UdpClient? client;
+
+        lock (_sync)
+        {
+            cts = _cts;
+            processingTask = _processingTask;
+            client = _client;
+
+            _cts = null;
+            _processingTask = null;
+            _client = null;
+            _senderEndPoint = null;
+        }
+
+        cts?.Cancel();
+        client?.Close();
+
+        if (processingTask is not null)
+        {
+            try
+            {
+                processingTask.Wait(TimeSpan.FromSeconds(1));
+            }
+            catch (AggregateException ex) when (ex.InnerExceptions.All(e => e is TaskCanceledException || e is OperationCanceledException))
+            {
+            }
+        }
+
+        cts?.Dispose();
+        while (_packetQueue.TryDequeue(out _))
+        {
+        }
     }
 
     private void ReceiveCallback(IAsyncResult result)
@@ -61,7 +97,7 @@ public class Dirt2GameDataProvider : IGameDataProvider<Packet>
             return;
         }
 
-        if (!_cts.Token.IsCancellationRequested)
+        if (!(_cts?.Token.IsCancellationRequested ?? true))
         {
             _client.BeginReceive(ReceiveCallback, null);
         }
@@ -83,9 +119,9 @@ public class Dirt2GameDataProvider : IGameDataProvider<Packet>
         }
     }
 
-    private async Task ProcessPacketsAsync()
+    private async Task ProcessPacketsAsync(CancellationToken token)
     {
-        while (!_cts.Token.IsCancellationRequested)
+        while (!token.IsCancellationRequested)
         {
             if (_packetQueue.TryDequeue(out var packet))
             {
@@ -93,7 +129,7 @@ public class Dirt2GameDataProvider : IGameDataProvider<Packet>
             }
             else
             {
-                await Task.Delay(1, _cts.Token);
+                await Task.Delay(1, token);
             }
         }
     }
