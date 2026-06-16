@@ -142,14 +142,6 @@ public class Program
         // Register displays and runner for DI
         builder.Services.AddSingleton<DisplaysRunner>();
 
-        // Register game displays via factory
-        builder.Services.AddSingleton<HaddySimHub.Displays.IDisplay>(sp => sp.GetRequiredService<HaddySimHub.Displays.IDisplayFactory>().Create("Dirt2.Display"));
-        builder.Services.AddSingleton<HaddySimHub.Displays.IDisplay>(sp => sp.GetRequiredService<HaddySimHub.Displays.IDisplayFactory>().Create("IRacing.Display"));
-        builder.Services.AddSingleton<HaddySimHub.Displays.IDisplay>(sp => sp.GetRequiredService<HaddySimHub.Displays.IDisplayFactory>().Create("ETS.Display"));
-        builder.Services.AddSingleton<HaddySimHub.Displays.IDisplay>(sp => sp.GetRequiredService<HaddySimHub.Displays.IDisplayFactory>().Create("AC.Display"));
-        builder.Services.AddSingleton<HaddySimHub.Displays.IDisplay>(sp => sp.GetRequiredService<HaddySimHub.Displays.IDisplayFactory>().Create("ACC.Display"));
-        builder.Services.AddSingleton<HaddySimHub.Displays.IDisplay>(sp => sp.GetRequiredService<HaddySimHub.Displays.IDisplayFactory>().Create("ACRally.Display"));
-
         // Register test displays via factory
         builder.Services.AddSingleton<HaddySimHub.Displays.IDisplay>(sp => sp.GetRequiredService<HaddySimHub.Displays.IDisplayFactory>().Create("Dirt2.TestDisplay"));
         builder.Services.AddSingleton<HaddySimHub.Displays.IDisplay>(sp => sp.GetRequiredService<HaddySimHub.Displays.IDisplayFactory>().Create("IRacing.TestDisplay"));
