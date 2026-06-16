@@ -15,7 +15,7 @@ namespace HaddySimHub
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Add("User-Agent", "HaddySimHub");
 
-            var response = client.GetAsync(UpdateConstants.ReleaseUrl).Result;
+            var response = await client.GetAsync(UpdateConstants.ReleaseUrl);
             response.EnsureSuccessStatusCode();
 
             var json = await response.Content.ReadAsStringAsync();

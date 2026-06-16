@@ -8,13 +8,14 @@ namespace HaddySimHub.Displays;
 /// </summary>
 /// <typeparam name="TReader">The type of shared memory reader</typeparam>
 /// <typeparam name="TTelemetry">The type of telemetry data</typeparam>
-public abstract class SharedMemoryGameDataProviderBase<TReader, TTelemetry> : IGameDataProvider<TTelemetry>
+public abstract class SharedMemoryGameDataProviderBase<TReader, TTelemetry> : IGameDataProvider<TTelemetry>, IDisposable
     where TReader : class
     where TTelemetry : struct
 {
     protected TReader? Reader { get; set; }
     protected Timer? UpdateTimer { get; set; }
     protected TTelemetry LastTelemetry { get; set; }
+    private bool _disposed;
 
     public event EventHandler<TTelemetry>? DataReceived;
 
@@ -25,6 +26,7 @@ public abstract class SharedMemoryGameDataProviderBase<TReader, TTelemetry> : IG
 
     public virtual void Start()
     {
+        ThrowIfDisposed();
         Reader = CreateReader();
         ConnectReader(Reader);
 
@@ -98,5 +100,24 @@ public abstract class SharedMemoryGameDataProviderBase<TReader, TTelemetry> : IG
     protected void OnDataReceived(TTelemetry telemetry)
     {
         DataReceived?.Invoke(this, telemetry);
+    }
+
+    public void Dispose()
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        _disposed = true;
+        Stop();
+        UpdateTimer?.Dispose();
+        UpdateTimer = null;
+        GC.SuppressFinalize(this);
+    }
+
+    protected void ThrowIfDisposed()
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
     }
 }
