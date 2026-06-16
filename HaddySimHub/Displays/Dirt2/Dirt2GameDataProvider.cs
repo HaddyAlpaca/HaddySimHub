@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 
 namespace HaddySimHub.Displays.Dirt2;
 
-public class Dirt2GameDataProvider : IGameDataProvider<Packet>
+public class Dirt2GameDataProvider : IGameDataProvider<Packet>, IDisposable
 {
     private const int PORT = 20777;
     private readonly IUdpClientFactory _udpClientFactory;
@@ -17,6 +17,7 @@ public class Dirt2GameDataProvider : IGameDataProvider<Packet>
     private Task? _processingTask;
     private UdpClient? _client;
     private IPEndPoint? _senderEndPoint;
+    private bool _disposed;
 
     public event EventHandler<Packet>? DataReceived;
 
@@ -27,6 +28,8 @@ public class Dirt2GameDataProvider : IGameDataProvider<Packet>
 
     public void Start()
     {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+
         lock (_sync)
         {
             if (_client is not null)
@@ -62,6 +65,7 @@ public class Dirt2GameDataProvider : IGameDataProvider<Packet>
 
         cts?.Cancel();
         client?.Close();
+        client?.Dispose();
 
         if (processingTask is not null)
         {
@@ -78,6 +82,18 @@ public class Dirt2GameDataProvider : IGameDataProvider<Packet>
         while (_packetQueue.TryDequeue(out _))
         {
         }
+    }
+
+    public void Dispose()
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        _disposed = true;
+        Stop();
+        GC.SuppressFinalize(this);
     }
 
     private void ReceiveCallback(IAsyncResult result)
