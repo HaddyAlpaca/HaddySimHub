@@ -1,0 +1,167 @@
+using HaddySimHub.Displays;
+using HaddySimHub.Extensions;
+using HaddySimHub.Interfaces;
+using HaddySimHub.Models;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace HaddySimHub.Tests;
+
+[TestClass]
+public class DisplayLifecycleTests
+{
+    [TestMethod]
+    public async Task DisplayBase_CanStartStopAndStartAgain_WithoutDuplicateSubscriptions()
+    {
+        var provider = new CountingGameDataProvider();
+        var sender = new RecordingDisplayUpdateSender();
+        var converter = new CountingDataConverter();
+        var display = new CountingDisplay(provider, converter, sender);
+
+        display.Start();
+        provider.Emit(100);
+        display.Stop();
+
+        display.Start();
+        provider.Emit(200);
+        display.Stop();
+
+        await Task.Delay(50);
+
+        Assert.AreEqual(2, provider.StartCount);
+        Assert.AreEqual(2, provider.StopCount);
+        Assert.AreEqual(0, provider.SubscriberCount);
+        Assert.AreEqual(2, sender.Updates.Count);
+        Assert.AreEqual(2, converter.ConvertCount);
+    }
+
+    [TestMethod]
+    public void RegisterGameDisplay_RegistersOneDisplayInstance_WhenUsedAsSingleRegistrationPath()
+    {
+        var services = new ServiceCollection();
+        services.AddSingleton<IDisplayFactory, FakeDisplayFactory>();
+
+        services.RegisterGameDisplay<FakeGameDataProvider, int, DisplayUpdate>(
+            typeof(FakeDataConverter),
+            "Fake.Display");
+
+        var serviceProvider = services.BuildServiceProvider();
+        var displays = serviceProvider.GetServices<IDisplay>().ToList();
+
+        Assert.AreEqual(1, displays.Count);
+        Assert.AreEqual("Fake", displays[0].Description);
+    }
+
+    private sealed class CountingDisplay : DisplayBase<int>
+    {
+        public CountingDisplay(
+            IGameDataProvider<int> gameDataProvider,
+            IDataConverter<int, DisplayUpdate> dataConverter,
+            IDisplayUpdateSender displayUpdateSender)
+            : base(gameDataProvider, dataConverter, displayUpdateSender)
+        {
+        }
+
+        public override string Description => "CountingDisplay";
+        public override bool IsActive => true;
+    }
+
+    private sealed class CountingGameDataProvider : IGameDataProvider<int>
+    {
+        private EventHandler<int>? _dataReceived;
+
+        public int StartCount { get; private set; }
+        public int StopCount { get; private set; }
+        public int SubscriberCount { get; private set; }
+
+        public event EventHandler<int>? DataReceived
+        {
+            add
+            {
+                _dataReceived += value;
+                SubscriberCount++;
+            }
+            remove
+            {
+                _dataReceived -= value;
+                SubscriberCount--;
+            }
+        }
+
+        public void Start()
+        {
+            StartCount++;
+        }
+
+        public void Stop()
+        {
+            StopCount++;
+        }
+
+        public void Emit(int value)
+        {
+            _dataReceived?.Invoke(this, value);
+        }
+    }
+
+    private sealed class CountingDataConverter : IDataConverter<int, DisplayUpdate>
+    {
+        public int ConvertCount { get; private set; }
+
+        public DisplayUpdate Convert(int input)
+        {
+            ConvertCount++;
+            return new DisplayUpdate { Type = DisplayType.RaceDashboard };
+        }
+    }
+
+    private sealed class RecordingDisplayUpdateSender : IDisplayUpdateSender
+    {
+        public List<DisplayUpdate> Updates { get; } = [];
+
+        public Task SendDisplayUpdate(DisplayUpdate displayUpdate)
+        {
+            Updates.Add(displayUpdate);
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class FakeGameDataProvider : IGameDataProvider<int>
+    {
+        public event EventHandler<int>? DataReceived
+        {
+            add { }
+            remove { }
+        }
+        public void Start() { }
+        public void Stop() { }
+    }
+
+    private sealed class FakeDataConverter : IDataConverter<int, DisplayUpdate>
+    {
+        public DisplayUpdate Convert(int input)
+        {
+            return new DisplayUpdate { Type = DisplayType.RaceDashboard };
+        }
+    }
+
+    private sealed class FakeDisplayFactory : IDisplayFactory
+    {
+        public IDisplay Create(string displayTypeName)
+        {
+            if (displayTypeName != "Fake.Display")
+            {
+                throw new InvalidOperationException($"Unknown display type: {displayTypeName}");
+            }
+
+            return new FakeDisplay();
+        }
+    }
+
+    private sealed class FakeDisplay : IDisplay
+    {
+        public string Description => "Fake";
+        public bool IsActive => false;
+        public void Start() { }
+        public void Stop() { }
+    }
+}
