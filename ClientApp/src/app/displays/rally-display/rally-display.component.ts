@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
+import { Component, inject, ViewEncapsulation } from '@angular/core';
 import { SpeedometerComponent, LapTimePipe } from '../../shared';
 import { APP_STORE } from '../../state/app.store';
 
@@ -13,7 +13,6 @@ export type { RallyData } from './rally-data';
     SpeedometerComponent,
     LapTimePipe,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RallyDisplayComponent {
   private readonly _store = inject(APP_STORE);

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ClockComponent, ConnectionStatusComponent } from './shared';
 import { RaceDisplayComponent, RallyDisplayComponent, TruckDisplayComponent } from './displays';
 import { DisplayType } from './signalr.service';
@@ -15,7 +15,6 @@ import { APP_STORE } from './state/app.store';
     ConnectionStatusComponent,
     ClockComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   private readonly _store = inject(APP_STORE);

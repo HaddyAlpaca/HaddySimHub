@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit, signal } from '@angular/core';
+import { Component, Input, OnInit, signal } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 
@@ -13,7 +13,6 @@ export interface TelemetrySample {
   templateUrl: './telemetry-trace.component.html',
   styleUrl: './telemetry-trace.component.scss',
   imports: [BaseChartDirective],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TelemetryTraceComponent implements OnInit {
   private readonly _maxFrames = 1_000;

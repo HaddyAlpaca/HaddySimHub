@@ -1,19 +1,19 @@
-import { computed, Injectable, signal } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { tap, timer } from 'rxjs';
+import { computed, OnDestroy, Service, signal } from '@angular/core';
+import { Subscription, tap, timer } from 'rxjs';
 
-@UntilDestroy()
-@Injectable({
-  providedIn: 'root',
-})
-export class ClockService {
+@Service()
+export class ClockService implements OnDestroy {
   private readonly _currentTime = signal(new Date());
+  private readonly _clockSubscription: Subscription;
   public readonly currentTime = computed(() => this._currentTime());
 
   public constructor() {
-    timer(0, 1000).pipe(
+    this._clockSubscription = timer(0, 1000).pipe(
       tap(() => this._currentTime.set(new Date())),
-      untilDestroyed(this),
     ).subscribe();
+  }
+
+  public ngOnDestroy(): void {
+    this._clockSubscription.unsubscribe();
   }
 }

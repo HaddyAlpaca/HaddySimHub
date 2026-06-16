@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, inject } from '@angular/core';
+import { Component, ViewEncapsulation, inject } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { DeltaTimePipe, LapTimePipe, SpeedometerComponent } from '../../shared';
 import { TelemetryTraceComponent } from './telemetry-trace.component';
@@ -9,7 +9,6 @@ import { APP_STORE } from '../../state/app.store';
   selector: 'app-race-display',
   templateUrl: 'race-display.component.html',
   styleUrl: 'race-display.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [
     DecimalPipe,

@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ConnectionStatus, SignalRService } from '../../signalr.service';
 
 @Component({
   selector: 'app-connection-status',
   templateUrl: './connection-status.component.html',
   styleUrl: './connection-status.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConnectionStatusComponent {
   private readonly _signalRService = inject(SignalRService);
