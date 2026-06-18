@@ -1,0 +1,68 @@
+name: Frontend Dependency Monthly Check
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Monthly on day 1 at 03:00 UTC
+    - cron: '0 3 1 * *'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  dependency-update:
+    name: Update frontend dependencies
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./ClientApp
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: ClientApp/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Update dependencies (non-breaking)
+        run: npm update
+
+      - name: Apply audit fixes
+        run: npm audit fix || true
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Run frontend tests
+        run: npm run test_ci
+
+      - name: Create pull request for dependency updates
+        id: create_pr
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: 'chore(clientapp): monthly frontend dependency updates'
+          branch: chore/monthly-frontend-dependency-updates
+          delete-branch: true
+          title: 'chore(clientapp): monthly frontend dependency updates'
+          body: |
+            Automated monthly frontend dependency update.
+
+            This PR was created automatically after:
+            - `npm update`
+            - `npm audit fix`
+            - successful `npm run test_ci`
+
+      - name: Enable auto-merge for dependency update PR
+        if: steps.create_pr.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh pr merge "${{ steps.create_pr.outputs.pull-request-number }}" --auto --delete-branch
