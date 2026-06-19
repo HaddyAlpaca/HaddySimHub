@@ -1,13 +1,11 @@
 namespace HaddySimHub.Displays
 {
     /// <summary>
-    /// Factory for creating display instances, particularly parameterized displays like test displays.
+    /// Factory for creating display instances.
     /// </summary>
     public interface IDisplayFactory
     {
-        /// <summary>
-        /// Create a display by its type name (e.g., "Dirt2.Display", "IRacing.TestDisplay.race").
-        /// </summary>
-        IDisplay Create(string displayTypeName);
+        IDisplay CreateGameDisplay<TTelemetry>(GameDisplayDefinition<TTelemetry> definition);
+        TDisplay CreateTestDisplay<TDisplay>(string id) where TDisplay : TestDisplayBase;
     }
 }

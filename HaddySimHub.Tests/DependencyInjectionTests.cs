@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using HaddySimHub.Displays;
+using HaddySimHub.Extensions;
 using HaddySimHub.Interfaces;
 using HaddySimHub.Models;
 
@@ -20,7 +21,6 @@ namespace HaddySimHub.Tests
         private IServiceCollection CreateServices()
         {
             var services = new ServiceCollection();
-            services.Configure<TestDisplayOptions>(options => options.Ids = new List<string> { "race", "rally", "truck" });
             services.AddSingleton<IUdpClientFactory, UdpClientFactory>();
             services.AddSingleton<ISCSTelemetryFactory, SCSSdkTelemetryFactory>();
             services.AddSingleton<IDisplayFactory, DisplayFactory>();
@@ -48,9 +48,9 @@ namespace HaddySimHub.Tests
             services.AddSingleton<IDisplay>(sp => sp.GetRequiredService<Displays.IRacing.Display>());
             services.AddSingleton<Displays.ETS.Display>();
             services.AddSingleton<IDisplay>(sp => sp.GetRequiredService<Displays.ETS.Display>());
-            services.AddSingleton<IDisplay>(sp => sp.GetRequiredService<IDisplayFactory>().Create("Dirt2.TestDisplay"));
-            services.AddSingleton<IDisplay>(sp => sp.GetRequiredService<IDisplayFactory>().Create("IRacing.TestDisplay"));
-            services.AddSingleton<IDisplay>(sp => sp.GetRequiredService<IDisplayFactory>().Create("ETS.TestDisplay"));
+            services.AddSingleton<IDisplay>(sp => sp.GetRequiredService<IDisplayFactory>().CreateTestDisplay<Displays.Dirt2.TestDisplay>(DisplayDefinitions.TestIds.Rally));
+            services.AddSingleton<IDisplay>(sp => sp.GetRequiredService<IDisplayFactory>().CreateTestDisplay<Displays.IRacing.TestDisplay>(DisplayDefinitions.TestIds.Race));
+            services.AddSingleton<IDisplay>(sp => sp.GetRequiredService<IDisplayFactory>().CreateTestDisplay<Displays.ETS.TestDisplay>(DisplayDefinitions.TestIds.Truck));
             return services;
         }
 
@@ -131,7 +131,7 @@ namespace HaddySimHub.Tests
         {
             var provider = CreateServices().BuildServiceProvider();
             var factory = provider.GetRequiredService<IDisplayFactory>();
-            var display = factory.Create("Dirt2.Display");
+            var display = factory.CreateGameDisplay(DisplayDefinitions.Game.Dirt2);
             Assert.IsNotNull(display);
             Assert.IsInstanceOfType(display, typeof(IDisplay));
         }
@@ -141,7 +141,7 @@ namespace HaddySimHub.Tests
         {
             var provider = CreateServices().BuildServiceProvider();
             var factory = provider.GetRequiredService<IDisplayFactory>();
-            var display = factory.Create("IRacing.Display");
+            var display = factory.CreateGameDisplay(DisplayDefinitions.Game.IRacing);
             Assert.IsNotNull(display);
             Assert.IsInstanceOfType(display, typeof(IDisplay));
         }
@@ -151,7 +151,7 @@ namespace HaddySimHub.Tests
         {
             var provider = CreateServices().BuildServiceProvider();
             var factory = provider.GetRequiredService<IDisplayFactory>();
-            var display = factory.Create("ETS.Display");
+            var display = factory.CreateGameDisplay(DisplayDefinitions.Game.Ets);
             Assert.IsNotNull(display);
             Assert.IsInstanceOfType(display, typeof(IDisplay));
         }
@@ -161,7 +161,7 @@ namespace HaddySimHub.Tests
         {
             var provider = CreateServices().BuildServiceProvider();
             var factory = provider.GetRequiredService<IDisplayFactory>();
-            var display = factory.Create("Dirt2.TestDisplay");
+            var display = factory.CreateTestDisplay<Displays.Dirt2.TestDisplay>(DisplayDefinitions.TestIds.Rally);
             Assert.IsNotNull(display);
             Assert.IsInstanceOfType(display, typeof(Displays.Dirt2.TestDisplay));
         }
@@ -171,7 +171,7 @@ namespace HaddySimHub.Tests
         {
             var provider = CreateServices().BuildServiceProvider();
             var factory = provider.GetRequiredService<IDisplayFactory>();
-            var display = factory.Create("IRacing.TestDisplay");
+            var display = factory.CreateTestDisplay<Displays.IRacing.TestDisplay>(DisplayDefinitions.TestIds.Race);
             Assert.IsNotNull(display);
             Assert.IsInstanceOfType(display, typeof(Displays.IRacing.TestDisplay));
         }
@@ -181,19 +181,56 @@ namespace HaddySimHub.Tests
         {
             var provider = CreateServices().BuildServiceProvider();
             var factory = provider.GetRequiredService<IDisplayFactory>();
-            var display = factory.Create("ETS.TestDisplay");
+            var display = factory.CreateTestDisplay<Displays.ETS.TestDisplay>(DisplayDefinitions.TestIds.Truck);
             Assert.IsNotNull(display);
             Assert.IsInstanceOfType(display, typeof(Displays.ETS.TestDisplay));
         }
 
         [TestMethod]
-        public void DisplayFactory_ThrowsOnUnknownDisplayType()
+        public void DisplayFactory_ThrowsOnInvalidGameDisplayDefinition()
         {
             var provider = CreateServices().BuildServiceProvider();
             var factory = provider.GetRequiredService<IDisplayFactory>();
             
-            var ex = Assert.Throws<InvalidOperationException>(() => factory.Create("Unknown.Display"));
-            StringAssert.Contains(ex.Message, "Unknown display type");
+            var ex = Assert.Throws<ArgumentException>(() =>
+                factory.CreateGameDisplay(new GameDisplayDefinition<Displays.Dirt2.Packet>(string.Empty, "Invalid")));
+            StringAssert.Contains(ex.Message, "Process name cannot be empty");
+        }
+
+        [TestMethod]
+        public void AddHaddySimHubApplication_RegistersCoreCompositionRootServices()
+        {
+            var services = new ServiceCollection();
+            services.AddLogging();
+            services.AddHaddySimHubApplication();
+            var provider = services.BuildServiceProvider();
+
+            Assert.IsNotNull(provider.GetRequiredService<IDisplayFactory>());
+            Assert.IsNotNull(provider.GetRequiredService<DisplaysRunner>());
+            Assert.IsNotNull(provider.GetRequiredService<IHubService>());
+            Assert.IsNotNull(provider.GetRequiredService<IDisplayUpdateSender>());
+        }
+
+        [TestMethod]
+        public void AddHaddySimHubApplication_RegistersExpectedDisplaySet()
+        {
+            var services = new ServiceCollection();
+            services.AddLogging();
+            services.AddHaddySimHubApplication();
+            var provider = services.BuildServiceProvider();
+
+            var displays = provider.GetRequiredService<IEnumerable<IDisplay>>().ToList();
+
+            Assert.AreEqual(9, displays.Count);
+            Assert.IsTrue(displays.Any(d => d.Description == "Dirt Rally 2"));
+            Assert.IsTrue(displays.Any(d => d.Description == "IRacing"));
+            Assert.IsTrue(displays.Any(d => d.Description == "Euro Truck Simulator 2"));
+            Assert.IsTrue(displays.Any(d => d.Description == "Assetto Corsa"));
+            Assert.IsTrue(displays.Any(d => d.Description == "Assetto Corsa Competizione"));
+            Assert.IsTrue(displays.Any(d => d.Description == "Assetto Corsa Rally"));
+            Assert.IsTrue(displays.Any(d => d.Description == $"Test display: {DisplayDefinitions.TestIds.Rally}"));
+            Assert.IsTrue(displays.Any(d => d.Description == $"Test display: {DisplayDefinitions.TestIds.Race}"));
+            Assert.IsTrue(displays.Any(d => d.Description == $"Test display: {DisplayDefinitions.TestIds.Truck}"));
         }
 
         [TestMethod]
