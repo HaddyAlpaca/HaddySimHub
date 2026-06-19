@@ -29,12 +29,8 @@ public abstract class SharedMemoryGameDataProviderBase<TReader, TTelemetry> : IG
         ThrowIfDisposed();
         Reader = CreateReader();
         ConnectReader(Reader);
-
-        if (IsConnected(Reader))
-        {
-            // Update at ~100Hz (10ms intervals)
-            UpdateTimer?.Change(TimeSpan.Zero, TimeSpan.FromMilliseconds(10));
-        }
+        // Keep polling even if the game starts after the app so shared memory can come up later.
+        UpdateTimer?.Change(TimeSpan.Zero, TimeSpan.FromMilliseconds(10));
     }
 
     public virtual void Stop()
@@ -79,9 +75,18 @@ public abstract class SharedMemoryGameDataProviderBase<TReader, TTelemetry> : IG
     /// </summary>
     protected virtual void UpdateTelemetry(object? state)
     {
-        if (Reader == null || !IsConnected(Reader))
+        if (Reader == null)
         {
             return;
+        }
+
+        if (!IsConnected(Reader))
+        {
+            ConnectReader(Reader);
+            if (!IsConnected(Reader))
+            {
+                return;
+            }
         }
 
         if (TryReadTelemetry(Reader, out var telemetry))

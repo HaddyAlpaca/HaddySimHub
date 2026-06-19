@@ -30,18 +30,28 @@ public class ACCGameDataProvider : SharedMemoryGameDataProviderBase<ACCSharedMem
 
     protected override void UpdateTelemetry(object? state)
     {
-        if (Reader == null || !IsConnected(Reader))
+        if (Reader == null)
+        {
+            return;
+        }
+
+        if (!IsConnected(Reader))
         {
             _missedReads++;
             if (_missedReads == 1 || _missedReads % 100 == 0)
             {
                 Logger.Debug($"[ACC] UpdateTelemetry: not connected ({_missedReads} consecutive misses)");
             }
-            return;
+
+            ConnectReader(Reader);
+            if (!IsConnected(Reader))
+            {
+                return;
+            }
         }
 
         _missedReads = 0;
-        
+
         if (TryReadTelemetry(Reader, out var telemetry))
         {
             if (HasDataChanged(telemetry, LastTelemetry))
