@@ -30,7 +30,7 @@ jobs:
     env:
       app_path: ./HaddySimHub
       dotnet_version: '10.0.201'
-      node_version: 24.12.0
+      node_version: 24.15.0
       clientapp_folder: './ClientApp/'
       dist_folder: './dist'
       RELEASE_VERSION: v0.1.${{github.run_number}}

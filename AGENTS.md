@@ -24,7 +24,7 @@
   - This means minimum SDK 10.0.201; rollForward will only accept 10.0.2xx patch versions
   - Verify your installed SDK: `dotnet --list-sdks`
 - Backend target: .NET 10.0 with ImplicitUsings and Nullable enabled
-- Frontend: Node.js 24.12.0+, npm 11.6.2+
+- Frontend: Node.js 24.15.0+, npm 11.6.2+
 - Backend Windows runtime identifiers: win-x64 (see HaddySimHub.csproj)
 
 ### .NET SDK Setup (Snap vs Native Install)
@@ -78,7 +78,7 @@ Then `dotnet build` will use the correct SDK version.
 - **Multiple directories**: Frontend commands must be run from ClientApp/; backend commands from repo root
 - **Linting failures block CI**: Frontend linting (ESLint + Stylelint) runs in CI; address all linting warnings
 - **Compiler warnings fail builds**: The backend has `TreatWarningsAsErrors` enabled, so unused variables or type issues will break the build
-- **Node version mismatch**: The frontend requires Node 24.12.0+ and npm 11.6.2+; older versions will cause unexpected failures
+- **Node version mismatch**: The frontend requires Node 24.15.0+ and npm 11.6.2+; older versions will cause unexpected failures
 - **Snap dotnet SDK mismatch**: Snap-installed dotnet may not include SDK 10.0.201 by default. See "Environment & Setup" section for how to install it to ~/.dotnet and update PATH.
 
 ## Security & Deployment
