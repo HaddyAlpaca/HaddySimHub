@@ -16,6 +16,7 @@ public abstract class SharedMemoryGameDataProviderBase<TReader, TTelemetry> : IG
     protected Timer? UpdateTimer { get; set; }
     protected TTelemetry LastTelemetry { get; set; }
     private bool _disposed;
+    private int _consecutiveMissedConnections;
 
     public event EventHandler<TTelemetry>? DataReceived;
 
@@ -71,6 +72,18 @@ public abstract class SharedMemoryGameDataProviderBase<TReader, TTelemetry> : IG
     protected abstract bool HasDataChanged(TTelemetry current, TTelemetry last);
 
     /// <summary>
+    /// Called each polling tick when the reader is not connected. Consecutive count starts at 1.
+    /// Override to add logging or metrics without duplicating the retry logic.
+    /// </summary>
+    protected virtual void OnMissedConnection(int consecutiveCount) { }
+
+    /// <summary>
+    /// Called when new telemetry is received and differs from the previous value.
+    /// Override to add per-provider logging without duplicating the polling loop.
+    /// </summary>
+    protected virtual void OnDataChanged(TTelemetry telemetry) { }
+
+    /// <summary>
     /// Called when telemetry update occurs. Can be overridden for logging.
     /// </summary>
     protected virtual void UpdateTelemetry(object? state)
@@ -82,6 +95,8 @@ public abstract class SharedMemoryGameDataProviderBase<TReader, TTelemetry> : IG
 
         if (!IsConnected(Reader))
         {
+            _consecutiveMissedConnections++;
+            OnMissedConnection(_consecutiveMissedConnections);
             ConnectReader(Reader);
             if (!IsConnected(Reader))
             {
@@ -89,12 +104,15 @@ public abstract class SharedMemoryGameDataProviderBase<TReader, TTelemetry> : IG
             }
         }
 
+        _consecutiveMissedConnections = 0;
+
         if (TryReadTelemetry(Reader, out var telemetry))
         {
             if (HasDataChanged(telemetry, LastTelemetry))
             {
                 LastTelemetry = telemetry;
                 OnDataReceived(telemetry);
+                OnDataChanged(telemetry);
             }
         }
     }
