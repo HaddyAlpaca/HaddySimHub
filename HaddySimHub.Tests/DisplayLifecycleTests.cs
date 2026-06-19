@@ -40,9 +40,8 @@ public class DisplayLifecycleTests
         var services = new ServiceCollection();
         services.AddSingleton<IDisplayFactory, FakeDisplayFactory>();
 
-        services.RegisterGameDisplay<FakeGameDataProvider, int, DisplayUpdate>(
-            typeof(FakeDataConverter),
-            "Fake.Display");
+        services.RegisterGameDisplay<FakeGameDataProvider, FakeDataConverter, int>(
+            new GameDisplayDefinition<int>("fake", "Fake"));
 
         var serviceProvider = services.BuildServiceProvider();
         var displays = serviceProvider.GetServices<IDisplay>().ToList();
@@ -146,14 +145,19 @@ public class DisplayLifecycleTests
 
     private sealed class FakeDisplayFactory : IDisplayFactory
     {
-        public IDisplay Create(string displayTypeName)
+        public IDisplay CreateGameDisplay<TTelemetry>(GameDisplayDefinition<TTelemetry> definition)
         {
-            if (displayTypeName != "Fake.Display")
+            if (definition.ProcessName != "fake")
             {
-                throw new InvalidOperationException($"Unknown display type: {displayTypeName}");
+                throw new InvalidOperationException($"Unknown display process: {definition.ProcessName}");
             }
 
             return new FakeDisplay();
+        }
+
+        public TDisplay CreateTestDisplay<TDisplay>(string id) where TDisplay : TestDisplayBase
+        {
+            throw new NotSupportedException("Not needed for this test.");
         }
     }
 

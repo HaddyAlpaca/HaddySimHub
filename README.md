@@ -23,3 +23,8 @@ Currently, HaddySimHub supports the following games:
 ## Referenced/cloned repositories
 * https://github.com/hfoxy/iRacingSDK.Net
 * https://github.com/RenCloud/scs-sdk-plugin
+
+## Releases
+
+- Changelog: [CHANGELOG.md](./CHANGELOG.md)
+- Release tags follow the `v0.1.<build>` pattern (for example `v0.1.498`).
