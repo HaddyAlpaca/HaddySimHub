@@ -18,6 +18,8 @@ jobs:
     defaults:
       run:
         working-directory: ./ClientApp
+    env:
+      node_version: 24.12.0
 
     steps:
       - name: Checkout
@@ -26,7 +28,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@1e60f620b9541d41e9a5fcca3fc78cbd3e51b44f # v4.1.1
         with:
-          node-version: 24.12.0
+          node-version: ${{ env.node_version }}
           cache: npm
           cache-dependency-path: ClientApp/package-lock.json
 
