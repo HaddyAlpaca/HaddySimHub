@@ -108,8 +108,9 @@ public class Dirt2GameDataProvider : IGameDataProvider<Packet>, IDisposable
         {
             data = _client.EndReceive(result, ref _senderEndPoint!);
         }
-        catch
+        catch (Exception ex)
         {
+            Logger.Debug($"[Dirt2] Failed to receive UDP packet: {ex.Message}");
             return;
         }
 
