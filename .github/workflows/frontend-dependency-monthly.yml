@@ -14,18 +14,19 @@ jobs:
   dependency-update:
     name: Update frontend dependencies
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     defaults:
       run:
         working-directory: ./ClientApp
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@8cd0fa63d2e928ffbf25a989be38cb6ec11dea52 # v4.2.0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@1e60f620b9541d41e9a5fcca3fc78cbd3e51b44f # v4.1.1
         with:
-          node-version: 24
+          node-version: 24.12.0
           cache: npm
           cache-dependency-path: ClientApp/package-lock.json
 
@@ -46,7 +47,7 @@ jobs:
 
       - name: Create pull request for dependency updates
         id: create_pr
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@5e914681df9dc70851f069ce08b45823eed0f47a # v7.0.5
         with:
           commit-message: 'chore(clientapp): monthly frontend dependency updates'
           branch: chore/monthly-frontend-dependency-updates
@@ -66,3 +67,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh pr merge "${{ steps.create_pr.outputs.pull-request-number }}" --auto --delete-branch
+
+      - name: Diagnostic info on failure
+        if: failure()
+        run: |
+          echo "::group::Environment"
+          node --version
+          npm --version
+          echo "::endgroup::"
