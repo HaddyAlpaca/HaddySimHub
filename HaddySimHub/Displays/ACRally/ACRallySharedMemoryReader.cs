@@ -24,8 +24,9 @@ public class ACRallySharedMemoryReader : IDisposable
             _viewAccessor = _memoryMappedFile.CreateViewAccessor(0, Marshal.SizeOf<ACRallyTelemetry>());
             IsConnected = true;
         }
-        catch
+        catch (Exception ex)
         {
+            Logger.Debug($"[ACRally] Failed to connect to shared memory: {ex.Message}");
             IsConnected = false;
         }
     }
@@ -44,8 +45,9 @@ public class ACRallySharedMemoryReader : IDisposable
             _viewAccessor.Read(0, out telemetry);
             return true;
         }
-        catch
+        catch (Exception ex)
         {
+            Logger.Debug($"[ACRally] Failed to read telemetry: {ex.Message}");
             return false;
         }
     }

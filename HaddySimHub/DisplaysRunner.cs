@@ -49,28 +49,33 @@ public class DisplaysRunner
                 _lastStateHadDisplays = true;
             }
 
-            activeDisplays.Where(g => !prevActiveDisplays.Any(x => x.Description == g.Description)).ForEach(d => {
+            var displaysToStart = activeDisplays.Where(g => !prevActiveDisplays.Any(x => x.Description == g.Description));
+            foreach (var display in displaysToStart)
+            {
                 try
                 {
-                    Logger.Info($"Start receiving data from {d.Description}");
-                    d.Start();
+                    Logger.Info($"Start receiving data from {display.Description}");
+                    display.Start();
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error($"Error starting datafeed of game {d.Description}: {ex.Message}\n\n{ex.StackTrace}");
+                    Logger.Error($"Error starting datafeed of game {display.Description}: {ex.Message}\n\n{ex.StackTrace}");
                 }
-            });
-            prevActiveDisplays.Where(g => !activeDisplays.Any(x => x.Description == g.Description)).ForEach(d => {
+            }
+
+            var displaysToStop = prevActiveDisplays.Where(g => !activeDisplays.Any(x => x.Description == g.Description));
+            foreach (var display in displaysToStop)
+            {
                 try
                 {
-                    Logger.Info($"Stop receiving data from {d.Description}");
-                    d.Stop();
+                    Logger.Info($"Stop receiving data from {display.Description}");
+                    display.Stop();
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error($"Error stopping datafeed of game {d.Description}: {ex.Message}\n\n{ex.StackTrace}");
+                    Logger.Error($"Error stopping datafeed of game {display.Description}: {ex.Message}\n\n{ex.StackTrace}");
                 }
-            });
+            }
             prevActiveDisplays = activeDisplays;
             this.CurrentDisplay = activeDisplays.FirstOrDefault();
 
