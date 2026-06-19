@@ -15,7 +15,7 @@ public class HubService : IHubService
 
     public async Task SendDisplayUpdateAsync(DisplayUpdate displayUpdate)
     {
-        if (displayUpdate == null) return;
+        ArgumentNullException.ThrowIfNull(displayUpdate);
         await _hubContext.Clients.All.SendAsync("displayUpdate", displayUpdate);
     }
 }
