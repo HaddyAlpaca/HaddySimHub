@@ -5,8 +5,7 @@ namespace HaddySimHub.Displays.ACC;
 public class ACCGameDataProvider : SharedMemoryGameDataProviderBase<ACCSharedMemoryReader, ACCTelemetry>
 {
     private DateTime _lastDataLog = DateTime.MinValue;
-    private int _missedReads;
-    
+
     public override void Start()
     {
         Logger.Info("[ACC] Starting game data provider");
@@ -28,33 +27,20 @@ public class ACCGameDataProvider : SharedMemoryGameDataProviderBase<ACCSharedMem
         base.Stop();
     }
 
-    protected override void UpdateTelemetry(object? state)
+    protected override void OnMissedConnection(int consecutiveCount)
     {
-        if (Reader == null || !IsConnected(Reader))
+        if (consecutiveCount == 1 || consecutiveCount % 100 == 0)
         {
-            _missedReads++;
-            if (_missedReads == 1 || _missedReads % 100 == 0)
-            {
-                Logger.Debug($"[ACC] UpdateTelemetry: not connected ({_missedReads} consecutive misses)");
-            }
-            return;
+            Logger.Debug($"[ACC] UpdateTelemetry: not connected ({consecutiveCount} consecutive misses)");
         }
+    }
 
-        _missedReads = 0;
-        
-        if (TryReadTelemetry(Reader, out var telemetry))
+    protected override void OnDataChanged(ACCTelemetry telemetry)
+    {
+        if ((DateTime.Now - _lastDataLog).TotalSeconds > 5)
         {
-            if (HasDataChanged(telemetry, LastTelemetry))
-            {
-                LastTelemetry = telemetry;
-                OnDataReceived(telemetry);
-                
-                if ((DateTime.Now - _lastDataLog).TotalSeconds > 5)
-                {
-                    Logger.Debug($"[ACC] Telemetry: RPM={telemetry.Rpms:F0} Speed={telemetry.SpeedKmh:F1} Gear={telemetry.Gear}");
-                    _lastDataLog = DateTime.Now;
-                }
-            }
+            Logger.Debug($"[ACC] Telemetry: RPM={telemetry.Rpms:F0} Speed={telemetry.SpeedKmh:F1} Gear={telemetry.Gear}");
+            _lastDataLog = DateTime.Now;
         }
     }
 

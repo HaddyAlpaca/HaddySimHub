@@ -2,6 +2,14 @@
 
 All notable changes to this project are documented in this file.
 
+## v0.1.499 - 2026-06-19
+
+### Fixed
+- ACC no longer fails to deliver data when the game starts after the app. The provider now retries connecting to shared memory on every polling tick, so telemetry begins flowing as soon as the game is available.
+
+### Tests
+- Added `SharedMemoryGameDataProviderTests` to verify that the provider retries until shared memory becomes available.
+
 ## v0.1.498 - 2026-06-19
 
 ### Changed
