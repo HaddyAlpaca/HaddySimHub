@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, inject } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
-import { DeltaTimePipe, LapTimePipe, SpeedometerComponent } from '../../shared';
+import { DeltaTimePipe, IRatingPipe, LapTimePipe, SpeedometerComponent } from '../../shared';
 import { TelemetryTraceComponent } from './telemetry-trace.component';
 import { TimePipe } from '../../shared/time/time.pipe';
 import { APP_STORE } from '../../state/app.store';
@@ -13,6 +13,7 @@ import { APP_STORE } from '../../state/app.store';
   imports: [
     DecimalPipe,
     DeltaTimePipe,
+    IRatingPipe,
     LapTimePipe,
     TimePipe,
     SpeedometerComponent,

@@ -198,6 +198,47 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
+        public void Convert_MapsPedalAndPitLimiterInputs()
+        {
+            // Arrange
+            var converter = new ACDataConverter();
+            var telemetry = CreateMockTelemetry(throttleInput: 0.5f, brakeInput: 0.25f, clutchInput: 1f, pitLimiterOn: 1);
+
+            // Act
+            var result = converter.Convert(telemetry);
+            var raceData = result.Data as RaceData;
+
+            // Assert
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual(50, raceData.ThrottlePct);
+            Assert.AreEqual(25, raceData.BrakePct);
+            Assert.AreEqual(100, raceData.ClutchPct);
+            Assert.IsTrue(raceData.PitLimiterOn);
+        }
+
+        [TestMethod]
+        public void Convert_UnavailableFieldsAreNull()
+        {
+            // Arrange
+            var converter = new ACDataConverter();
+            var telemetry = CreateMockTelemetry();
+
+            // Act
+            var result = converter.Convert(telemetry);
+            var raceData = result.Data as RaceData;
+
+            // Assert: AC shared memory does not expose these, so they must be null (hidden in the UI)
+            Assert.IsNotNull(raceData);
+            Assert.IsNull(raceData.Position);
+            Assert.IsNull(raceData.FuelRemaining);
+            Assert.IsNull(raceData.FuelAvgLap);
+            Assert.IsNull(raceData.FuelLastLap);
+            Assert.IsNull(raceData.BestLapTime);
+            Assert.IsNull(raceData.BestLapTimeDelta);
+            Assert.IsNull(raceData.LastLapTimeDelta);
+        }
+
+        [TestMethod]
         public void Convert_Temperature()
         {
             // Arrange
@@ -229,7 +270,11 @@ namespace HaddySimHub.Tests
             float roadTemp = 30,
             int sessionTimeLeft = 0,
             int currentLapTime = 0,
-            int lastLapTime = 0)
+            int lastLapTime = 0,
+            float throttleInput = 0,
+            float brakeInput = 0,
+            float clutchInput = 0,
+            float pitLimiterOn = 0)
         {
             return new ACTelemetry
             {
@@ -245,7 +290,11 @@ namespace HaddySimHub.Tests
                 RoadTemp = roadTemp,
                 SessionTimeLeft = sessionTimeLeft,
                 CurrentLapTime = currentLapTime,
-                LastLapTime = lastLapTime
+                LastLapTime = lastLapTime,
+                ThrottleInput = throttleInput,
+                BrakeInput = brakeInput,
+                ClutchInput = clutchInput,
+                PitLimiterOn = pitLimiterOn
             };
         }
 

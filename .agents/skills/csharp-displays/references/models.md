@@ -34,30 +34,30 @@ public sealed record RaceData
     public int CurrentLap { get; init; }
     public int TotalLaps { get; init; }
     public float SessionTimeRemaining { get; init; }
-    public int Position { get; init; }
+    public int? Position { get; init; }       // null when the sim doesn't expose it (e.g. AC)
     public int Speed { get; init; }
     public required string Gear { get; init; }
     public int Rpm { get; init; }
     public int RpmMax { get; init; }
     public float TrackTemp { get; init; }
     public float AirTemp { get; init; }
-    public float FuelRemaining { get; init; }
-    public float FuelAvgLap { get; init; }
-    public float FuelLastLap { get; init; }
+    public float? FuelRemaining { get; init; } // null when the sim doesn't expose it
+    public float? FuelAvgLap { get; init; }    // null when the sim doesn't expose it
+    public float? FuelLastLap { get; init; }   // null when the sim doesn't expose it
     public float FuelEstLaps { get; init; }
     public float CurrentLapTime { get; init; }
     public float LastLapTime { get; init; }
-    public float LastLapTimeDelta { get; init; }
-    public float BestLapTime { get; init; }
-    public float BestLapTimeDelta { get; init; }
+    public float? LastLapTimeDelta { get; init; } // null when the sim doesn't expose it
+    public float? BestLapTime { get; init; }      // null when the sim doesn't expose it (e.g. AC)
+    public float? BestLapTimeDelta { get; init; } // null when the sim doesn't expose it
     public int ClutchPct { get; init; }
     public int ThrottlePct { get; init; }
     public int BrakePct { get; init; }
     public bool PitLimiterOn { get; init; }
-    public required string CarNumber { get; init; }
     public int SteeringPct { get; init; }
 
     // Optional sim-specific fields
+    public string? ExpectedPosition { get; init; } // iRacing: expected finish position (from car number)
     public float? BrakeBias { get; init; }
     public int? StrengthOfField { get; init; }
     public long? Incidents { get; init; }
