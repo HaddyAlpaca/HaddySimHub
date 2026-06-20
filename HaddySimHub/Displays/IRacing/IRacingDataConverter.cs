@@ -101,7 +101,6 @@ public class IRacingDataConverter : IDataConverter<IDataSample, DisplayUpdate>
             ThrottlePct = (int)Math.Round(telemetry.Throttle * 100, 0),
             BrakePct = (int)Math.Round(telemetry.Brake * 100, 0),
             PitLimiterOn = telemetry.EngineWarnings.HasFlag(EngineWarnings.PitSpeedLimiter),
-            CarNumber = playerInfo?.CarNumber ?? string.Empty,
             // Convert steering angle to percentage (0-100).
             // SteeringWheelAngleMax represents the full span (e.g. 12), while SteeringWheelAngle ranges from -half to +half (e.g. -6..6).
             // Map angle [-half, +half] -> [0,100]. Handle divide-by-zero and clamp to 0-100.
@@ -110,10 +109,12 @@ public class IRacingDataConverter : IDataConverter<IDataSample, DisplayUpdate>
             : Math.Max(0, Math.Min(100, (int)Math.Round(((telemetry.SteeringWheelAngle + (telemetry.SteeringWheelAngleMax / 2.0)) / telemetry.SteeringWheelAngleMax) * 100))),
 
             // iRacing-specific fields
+            ExpectedPosition = playerInfo?.CarNumber,
             BrakeBias = telemetry.DcBrakeBias,
             StrengthOfField = telemetry.RaceCars.Count() > 1 ? (int)Math.Round(telemetry.RaceCars.Average(r => r.Details.Driver.IRating)) : 0,
             Incidents = (long)Math.Max(telemetry.PlayerCarDriverIncidentCount, 0),
             MaxIncidents = (long)Math.Max(Math.Min(sessionData!.WeekendInfo.WeekendOptions._IncidentLimit, 999), 0),
+            IRating = (int?)playerInfo?.IRating,
             SafetyRating = (int?)playerInfo?.LicLevel
         };
         

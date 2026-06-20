@@ -67,6 +67,22 @@ namespace HaddySimHub.Tests
         #region Gear Conversion Tests
 
         [TestMethod]
+        public void Convert_PopulatesIRatingFromDriverInfo()
+        {
+            // Arrange
+            var converter = new IRacingDataConverter();
+            var data = CreateMockDataSample(gear: 0, playerCarIdx: 0, carIdxLap: new int[64]);
+
+            // Act
+            var update = converter.Convert(data);
+            var raceData = update.Data as RaceData;
+
+            // Assert
+            Assert.IsNotNull(raceData);
+            Assert.AreEqual(1500, raceData.IRating);
+        }
+
+        [TestMethod]
         public void Convert_GearReverseConvertsToR()
         {
             // Arrange

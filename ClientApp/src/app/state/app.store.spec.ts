@@ -110,7 +110,6 @@ describe('MockAppStore', () => {
         lastLapTimeDelta: -250,
         bestLapTime: 94500,
         bestLapTimeDelta: 0,
-        carNumber: '22',
         brakeBias: 53.5,
         pitLimiterOn: false,
         brakePct: 0,

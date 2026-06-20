@@ -31,10 +31,7 @@ public class ACDataConverter : IDataConverter<ACTelemetry, DisplayUpdate>
             _ => "Practice"
         };
 
-        // Calculate fuel estimates if possible
-        float fuelAvgLap = source.FuelPressure > 0 ? source.FuelPressure * 0.1f : 0;
-        float fuelRemaining = source.CarDamage;  // Using damage as proxy for fuel percentage
-
+        // Calculate fuel estimate from the game's own value (AC exposes no fuel level here)
         var raceData = new RaceData
         {
             // Universal fields
@@ -44,27 +41,26 @@ public class ACDataConverter : IDataConverter<ACTelemetry, DisplayUpdate>
             CurrentLap = source.CurrentLap,
             TotalLaps = source.TotalLaps,
             SessionTimeRemaining = source.SessionTimeLeft / 1000f,
-            Position = 1,  // AC doesn't provide position directly
+            Position = null,  // AC shared memory (physics page) does not expose position
             Speed = speedKmh,
             Gear = gearString,
             Rpm = (int)source.Rpm,
             RpmMax = (int)source.MaxRpm,
             TrackTemp = source.RoadTemp,
             AirTemp = source.AirTemp,
-            FuelRemaining = fuelRemaining,
-            FuelAvgLap = fuelAvgLap,
-            FuelLastLap = fuelAvgLap,
+            FuelRemaining = null,  // Not exposed by AC shared memory
+            FuelAvgLap = null,  // Not exposed by AC shared memory
+            FuelLastLap = null,  // Not exposed by AC shared memory
             FuelEstLaps = source.FuelEstimatedLaps,
             CurrentLapTime = source.CurrentLapTime / 1000f,
             LastLapTime = source.LastLapTime / 1000f,
-            LastLapTimeDelta = 0,  // Not available
-            BestLapTime = 0,  // Not available
-            BestLapTimeDelta = 0,  // Not available
-            ClutchPct = 0,  // Not available
-            ThrottlePct = 0,  // Not available
-            BrakePct = 0,  // Not available
-            PitLimiterOn = false,
-            CarNumber = "1",  // AC doesn't provide car number
+            LastLapTimeDelta = null,  // Not exposed by AC shared memory
+            BestLapTime = null,  // Not exposed by AC shared memory
+            BestLapTimeDelta = null,  // Not exposed by AC shared memory
+            ClutchPct = (int)(source.ClutchInput * 100f),
+            ThrottlePct = (int)(source.ThrottleInput * 100f),
+            BrakePct = (int)(source.BrakeInput * 100f),
+            PitLimiterOn = source.PitLimiterOn == 1,
             SteeringPct = 0,  // Not available
         };
 

@@ -139,6 +139,33 @@ describe('Race display component tests', () => {
     expect(await harness.getElementText('#position')).toEqual('3');
   });
 
+  it('Position is hidden when not provided by the sim', async () => {
+    patchData({ speed: 100 });
+
+    expect(await harness.hasElement('#position')).toBe(false);
+  });
+
+  describe('iRating and Safety Rating tests', () => {
+    it('iRating is displayed when provided', async () => {
+      patchData({ irating: 2500 });
+
+      expect(await harness.getElementText('#irating')).toEqual('2.5k');
+    });
+
+    it('Safety Rating is displayed when provided', async () => {
+      patchData({ safetyRating: 4 });
+
+      expect(await harness.getElementText('#safetyRating')).toEqual('4');
+    });
+
+    it('iRating and Safety Rating are hidden when not provided', async () => {
+      patchData({ speed: 100 });
+
+      expect(await harness.hasElement('#irating')).toBe(false);
+      expect(await harness.hasElement('#safetyRating')).toBe(false);
+    });
+  });
+
   it('Fuel remaining is displayed', async () => {
     patchData({ fuelRemaining: 14.2 });
 

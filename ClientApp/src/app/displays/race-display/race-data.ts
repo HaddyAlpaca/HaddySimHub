@@ -6,28 +6,28 @@ export interface RaceData {
   currentLap: number;
   totalLaps: number;
   sessionTimeRemaining: number;
-  position: number;
+  position?: number; // not exposed by all sims (e.g. Assetto Corsa)
   speed: number;
   gear: string;
   rpm: number;
   rpmMax: number;
   trackTemp: number;
   airTemp: number;
-  fuelRemaining: number;
-  fuelAvgLap: number;
-  fuelLastLap: number;
+  fuelRemaining?: number; // not exposed by all sims
+  fuelAvgLap?: number; // not exposed by all sims
+  fuelLastLap?: number; // not exposed by all sims
   fuelEstLaps: number;
   lastLapTime: number;
-  lastLapTimeDelta: number;
-  bestLapTime: number;
-  bestLapTimeDelta: number;
+  lastLapTimeDelta?: number; // not exposed by all sims
+  bestLapTime?: number; // not exposed by all sims
+  bestLapTimeDelta?: number; // not exposed by all sims
   pitLimiterOn: boolean;
   brakePct: number;
   throttlePct: number;
   steeringPct: number;
-  carNumber: string;
 
   // Optional sim-specific fields
+  expectedPosition?: string; // iRacing only
   brakeBias?: number; // iRacing, ACC, etc.
   strengthOfField?: number; // iRacing only
   incidents?: number; // iRacing only

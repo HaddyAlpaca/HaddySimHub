@@ -82,7 +82,6 @@ public class TestDisplay : TestDisplayBase
                 FuelAvgLap = 3.5f,
                 CurrentLapTime = _random.NextSingle() * 100,
                 LastLapTime = _random.NextSingle() * 100,
-                CarNumber = "88",
                 ClutchPct = _random.Next(0, 100),
                 ThrottlePct = _random.Next(0, 100),
                 BrakePct = _random.Next(0, 100),

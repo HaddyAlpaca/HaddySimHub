@@ -40,10 +40,12 @@
         </div>
       </div>
       <div class="dashboard-row cols-2">
-        <div class="data-item">
-          <label>Position</label>
-          <div id="position">{{data().position}}</div>
-        </div>
+        @if (data().position !== undefined) {
+          <div class="data-item">
+            <label>Position</label>
+            <div id="position">{{data().position}}</div>
+          </div>
+        }
 
         @if (data().incidents !== undefined && data().maxIncidents !== undefined) {
           <div class="data-item">
@@ -56,28 +58,51 @@
           </div>
         }
       </div>
+
+      @if (data().irating !== undefined || data().safetyRating !== undefined) {
+        <div class="dashboard-row cols-2">
+          @if (data().irating !== undefined) {
+            <div class="data-item">
+              <label>iRating</label>
+              <div id="irating">{{data().irating | irating}}</div>
+            </div>
+          }
+          @if (data().safetyRating !== undefined) {
+            <div class="data-item">
+              <label>Safety Rating</label>
+              <div id="safetyRating">{{data().safetyRating}}</div>
+            </div>
+          }
+        </div>
+      }
     </div>
     <div class=" group-border border-yellow speedometer" [class.max-rpm]="data().rpm >= data().rpmMax">
       <app-speedometer [rpm]="data().rpm" [gear]="data().gear" [speed]="data().speed" />
     </div>
     <div class="group-border border-blue">
       <div class="dashboard-row cols-2">
-          <div class="data-item">
-              <label>Fuel last lap</label>
-              <div id="fuelLastLap">{{data().fuelLastLap |number:'1.1-1':'en-US'}} L</div>
-          </div>
-  
-          <div class="data-item">
-              <label>Fuel avg lap</label>
-              <div id="fuelAvgLap">{{data().fuelAvgLap |number:'1.1-1':'en-US'}} L</div>
-          </div>
+          @if (data().fuelLastLap !== undefined) {
+            <div class="data-item">
+                <label>Fuel last lap</label>
+                <div id="fuelLastLap">{{data().fuelLastLap |number:'1.1-1':'en-US'}} L</div>
+            </div>
+          }
+
+          @if (data().fuelAvgLap !== undefined) {
+            <div class="data-item">
+                <label>Fuel avg lap</label>
+                <div id="fuelAvgLap">{{data().fuelAvgLap |number:'1.1-1':'en-US'}} L</div>
+            </div>
+          }
       </div>
 
       <div class="dashboard-row cols-2">
-        <div class="data-item">
-          <label>Fuel remaining</label>
-          <div id="fuelRemaining">{{data().fuelRemaining |number:'1.1-1':'en-US'}} L</div>
-        </div>
+        @if (data().fuelRemaining !== undefined) {
+          <div class="data-item">
+            <label>Fuel remaining</label>
+            <div id="fuelRemaining">{{data().fuelRemaining |number:'1.1-1':'en-US'}} L</div>
+          </div>
+        }
     
         <div class="data-item">
           <label>Fuel est. laps</label>
@@ -85,12 +110,14 @@
         </div>
       </div>
 
-      <div class="dashboard-row">
-        <div class="data-item">
-          <label>Expected position</label>
-          <div>{{data().carNumber}}</div>
+      @if (data().expectedPosition !== undefined) {
+        <div class="dashboard-row">
+          <div class="data-item">
+            <label>Expected position</label>
+            <div id="expectedPosition">{{data().expectedPosition}}</div>
+          </div>
         </div>
-      </div>
+      }
     </div>
   </div>
   <div class="dashboard-row cols-3">
@@ -100,10 +127,13 @@
               <label>Last laptime</label>
               <div class="last-laptime" id="lastLapTime">{{data().lastLapTime | laptime}}</div>
           </div>
-          <div class="data-item">
-              <label>Delta</label>
-              <div id="lastLapTimeDelta" [class.text-green]="data().lastLapTimeDelta < 0" [class.text-red]="data().lastLapTimeDelta > 0">{{data().lastLapTimeDelta | deltatime}}</div>
-          </div>
+          @let lastDelta = data().lastLapTimeDelta;
+          @if (lastDelta !== undefined) {
+            <div class="data-item">
+                <label>Delta</label>
+                <div id="lastLapTimeDelta" [class.text-green]="lastDelta < 0" [class.text-red]="lastDelta > 0">{{lastDelta | deltatime}}</div>
+            </div>
+          }
       </div>
     </div>
 
@@ -120,14 +150,20 @@
 
     <div class="group-border border-blue">
       <div class="dashboard-row cols-2">
-          <div class="data-item">
-              <label>Best laptime</label>
-              <div class="best-laptime" id="bestLapTime">{{data().bestLapTime | laptime}}</div>
-          </div>
-          <div class="data-item">
-              <label>Delta</label>
-              <div id="bestLapTimeDelta" [class.text-green]="data().bestLapTimeDelta < 0" [class.text-red]="data().bestLapTimeDelta > 0">{{data().bestLapTimeDelta | deltatime}}</div>
-          </div>
+          @let bestLap = data().bestLapTime;
+          @if (bestLap !== undefined) {
+            <div class="data-item">
+                <label>Best laptime</label>
+                <div class="best-laptime" id="bestLapTime">{{bestLap | laptime}}</div>
+            </div>
+          }
+          @let bestDelta = data().bestLapTimeDelta;
+          @if (bestDelta !== undefined) {
+            <div class="data-item">
+                <label>Delta</label>
+                <div id="bestLapTimeDelta" [class.text-green]="bestDelta < 0" [class.text-red]="bestDelta > 0">{{bestDelta | deltatime}}</div>
+            </div>
+          }
       </div>
     </div>
   </div>

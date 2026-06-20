@@ -45,7 +45,7 @@ namespace HaddySimHub.Displays.IRacing
                     BrakePct = new Random().Next(20, 30),
                     ThrottlePct = new Random().Next(70, 80),
                     SteeringPct = new Random().Next(40, 50),
-                    CarNumber = "80",
+                    ExpectedPosition = "80",
                 }
             };
         }

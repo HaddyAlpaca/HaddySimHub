@@ -15,7 +15,8 @@ public sealed record RaceData
 
     public float SessionTimeRemaining { get; init; }
 
-    public int Position { get; init; }
+    /// <summary>Current race position. Null when the sim does not expose it (e.g. Assetto Corsa).</summary>
+    public int? Position { get; init; }
 
     public int Speed { get; init; }
 
@@ -29,11 +30,14 @@ public sealed record RaceData
 
     public float AirTemp { get; init; }
 
-    public float FuelRemaining { get; init; }
+    /// <summary>Fuel remaining in litres. Null when the sim does not expose it (e.g. Assetto Corsa).</summary>
+    public float? FuelRemaining { get; init; }
 
-    public float FuelAvgLap { get; init; }
+    /// <summary>Average fuel used per lap. Null when the sim does not expose it.</summary>
+    public float? FuelAvgLap { get; init; }
 
-    public float FuelLastLap { get; init; }
+    /// <summary>Fuel used on the last lap. Null when the sim does not expose it.</summary>
+    public float? FuelLastLap { get; init; }
 
     public float FuelEstLaps { get; init; }
 
@@ -41,11 +45,14 @@ public sealed record RaceData
 
     public float LastLapTime { get; init; }
 
-    public float LastLapTimeDelta { get; init; }
+    /// <summary>Delta of the last lap to the reference lap. Null when the sim does not expose it.</summary>
+    public float? LastLapTimeDelta { get; init; }
 
-    public float BestLapTime { get; init; }
+    /// <summary>Best lap time. Null when the sim does not expose it (e.g. Assetto Corsa).</summary>
+    public float? BestLapTime { get; init; }
 
-    public float BestLapTimeDelta { get; init; }
+    /// <summary>Delta to the best lap. Null when the sim does not expose it.</summary>
+    public float? BestLapTimeDelta { get; init; }
 
     public int ClutchPct { get; init; }
 
@@ -55,11 +62,12 @@ public sealed record RaceData
 
     public bool PitLimiterOn { get; init; }
 
-    public required string CarNumber { get; init; }
-
     public int SteeringPct { get; init; }
 
     // Optional sim-specific fields
+    /// <summary>iRacing only: Expected finish position (derived from the assigned car number)</summary>
+    public string? ExpectedPosition { get; init; }
+
     /// <summary>iRacing, ACC: Brake bias percentage</summary>
     public float? BrakeBias { get; init; }
 
