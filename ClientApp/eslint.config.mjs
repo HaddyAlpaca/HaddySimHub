@@ -20,7 +20,6 @@ import tseslint from 'typescript-eslint';
 import angulareslint from 'angular-eslint';
 
 import stylisticPlugin from '@stylistic/eslint-plugin';
-import deprecationPlugin from 'eslint-plugin-deprecation';
 import jsDocPlugin from 'eslint-plugin-jsdoc';
 import preferArrowPlugin from 'eslint-plugin-prefer-arrow';
 import pluginRxjs from 'eslint-plugin-rxjs';
@@ -36,8 +35,6 @@ export default tseslint.config(
       ],
       rules: {
         'quotes': ['error', 'single', { 'allowTemplateLiterals': true }],
-        // Disable type-aware rules
-        'deprecation/deprecation': 'off',
       }
     },
     {
@@ -53,7 +50,6 @@ export default tseslint.config(
             ...angulareslint.configs.tsRecommended,
         ],
         plugins: {
-            'deprecation': fixupPluginRules(deprecationPlugin),
             '@stylistic': stylisticPlugin,
             'jsdoc': fixupPluginRules(jsDocPlugin),
             'prefer-arrow': fixupPluginRules(preferArrowPlugin),
@@ -181,8 +177,8 @@ export default tseslint.config(
             '@typescript-eslint/unified-signatures': 'error',
             '@typescript-eslint/prefer-readonly': 'error',
 
-            // eslint-plugin-deprecation
-            'deprecation/deprecation': 'error',
+            // @typescript-eslint deprecation detection (replaces eslint-plugin-deprecation)
+            '@typescript-eslint/no-deprecated': 'error',
 
             // js-doc
             'jsdoc/tag-lines': 'error',
