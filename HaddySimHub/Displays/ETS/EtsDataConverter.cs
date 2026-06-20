@@ -6,6 +6,9 @@ namespace HaddySimHub.Displays.ETS;
 
 public class EtsDataConverter : IDataConverter<SCSTelemetry, DisplayUpdate>
 {
+    private const float GearAdviceTargetRpm = 1300f;
+    private const float GearAdviceMinSpeedKph = 15f;
+
     private float _fuelAverageConsumption = 0f;
 
     public DisplayUpdate Convert(SCSTelemetry data)
@@ -16,27 +19,11 @@ public class EtsDataConverter : IDataConverter<SCSTelemetry, DisplayUpdate>
             _fuelAverageConsumption = fuelAverageConsumption;
         }
 
-        string gear = string.Empty;
-        int selectedGear = data.TruckValues.CurrentValues.MotorValues.GearValues.Selected;
-        if (selectedGear == 0)
-        {
-            gear = "N";
-        }
-        else if (selectedGear < 0)
-        {
-            gear = "R" + Math.Abs(selectedGear).ToString();
-        }
-        else if (selectedGear > 0)
-        {
-            if (data.TruckValues.ConstantsValues.MotorValues.ForwardGearCount == 14)
-            {
-                gear = selectedGear == 1 ? "C1" : (selectedGear - 2).ToString();
-            }
-            else
-            {
-                gear = selectedGear.ToString();
-            }
-        }
+        uint forwardGearCount = data.TruckValues.ConstantsValues.MotorValues.ForwardGearCount;
+        string gear = FormatGear(data.TruckValues.CurrentValues.MotorValues.GearValues.Selected, forwardGearCount);
+
+        int? recommendedGear = RecommendForwardGear(data);
+        string recommendedGearText = recommendedGear.HasValue ? FormatGear(recommendedGear.Value, forwardGearCount) : string.Empty;
 
         var displayData = new TruckData()
         {
@@ -73,6 +60,7 @@ public class EtsDataConverter : IDataConverter<SCSTelemetry, DisplayUpdate>
 
             // Dashboard
             Gear = gear,
+            RecommendedGear = recommendedGearText,
             Rpm = (int)data.TruckValues.CurrentValues.DashboardValues.RPM,
             RpmMax = (int)data.TruckValues.ConstantsValues.MotorValues.EngineRpmMax,
             Speed = (short)Math.Round(Math.Max(data.TruckValues.CurrentValues.DashboardValues.Speed.Kph, 0)),
@@ -109,5 +97,79 @@ public class EtsDataConverter : IDataConverter<SCSTelemetry, DisplayUpdate>
         };
 
         return new DisplayUpdate { Type = DisplayType.TruckDashboard, Data = displayData };
+    }
+
+    private static string FormatGear(int gear, uint forwardGearCount)
+    {
+        if (gear == 0)
+        {
+            return "N";
+        }
+
+        if (gear < 0)
+        {
+            return "R" + Math.Abs(gear).ToString();
+        }
+
+        if (forwardGearCount == 14)
+        {
+            return gear == 1 ? "C1" : (gear - 2).ToString();
+        }
+
+        return gear.ToString();
+    }
+
+    private static int? RecommendForwardGear(SCSTelemetry data)
+    {
+        var motor = data.TruckValues.ConstantsValues.MotorValues;
+        float[] ratios = motor.GearRatiosForward;
+        float differential = motor.DifferentialRation;
+        float rpmMax = motor.EngineRpmMax;
+        float[] radii = data.TruckValues.ConstantsValues.WheelsValues.Radius;
+
+        if (ratios.Length == 0 || differential <= 0 || rpmMax <= 0 || radii.Length == 0)
+        {
+            return null;
+        }
+
+        float wheelRadius = radii.FirstOrDefault(r => r > 0);
+        if (wheelRadius <= 0)
+        {
+            return null;
+        }
+
+        float speedMps = Math.Abs(data.TruckValues.CurrentValues.DashboardValues.Speed.Value);
+        if (speedMps * 3.6f < GearAdviceMinSpeedKph)
+        {
+            return null;
+        }
+
+        float wheelRevsPerSecond = speedMps / (2f * (float)Math.PI * wheelRadius);
+
+        int bestGear = -1;
+        float bestScore = float.MaxValue;
+        for (int gear = 1; gear <= ratios.Length; gear++)
+        {
+            float ratio = ratios[gear - 1];
+            if (ratio <= 0)
+            {
+                continue;
+            }
+
+            float predictedRpm = wheelRevsPerSecond * 60f * differential * ratio;
+            if (predictedRpm > rpmMax * 0.98f)
+            {
+                continue;
+            }
+
+            float score = Math.Abs(predictedRpm - GearAdviceTargetRpm);
+            if (score < bestScore)
+            {
+                bestScore = score;
+                bestGear = gear;
+            }
+        }
+
+        return bestGear > 0 ? bestGear : null;
     }
 }

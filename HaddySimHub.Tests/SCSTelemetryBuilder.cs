@@ -101,6 +101,14 @@ namespace HaddySimHub.Tests
             return this;
         }
 
+        public SCSTelemetryBuilder WithTransmission(float[] forwardRatios, float differential, float wheelRadius)
+        {
+            _t.TruckValues.ConstantsValues.MotorValues.GearRatiosForward = forwardRatios;
+            _t.TruckValues.ConstantsValues.MotorValues.DifferentialRation = differential;
+            _t.TruckValues.ConstantsValues.WheelsValues.Radius = [wheelRadius];
+            return this;
+        }
+
         public SCSTelemetryBuilder WithDamage(float cabin = 0, float engine = 0)
         {
             _t.TruckValues.CurrentValues.DamageValues.Cabin = cabin;

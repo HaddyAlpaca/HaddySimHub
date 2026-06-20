@@ -22,6 +22,7 @@
                 @if (data().timeRemainingIrl > 0) {
                   <span>({{data().timeRemainingIrl | timespan}})</span>
                 }
+                <span class="arrival-time" id="arrivalTime">&rarr; aankomst {{arrivalTime()}}</span>
               </div>
             }
             @else {
@@ -31,7 +32,7 @@
           <div class="data-row">
             <div class="data-label">Volgend rustmoment</div>
             @if (data().restTimeRemaining) {
-              <div class="data-item">
+              <div class="data-item" id="nextRest" [class.rest-before-arrival]="restBeforeArrival()">
                 <span>{{data().restTimeRemaining | timespan}}&nbsp;</span>
                 @if (data().restTimeRemainingIrl > 0) {
                   <span>({{data().restTimeRemainingIrl | timespan}})</span>
@@ -107,28 +108,28 @@
             <div class="row">
               <div class="col-6">
                 <div class="data-label">Motor</div>
-                <div class="data-item">{{data().damageTruckEngine}} %</div>
+                <div class="data-item" id="damageTruckEngine" [class]="damageClass(data().damageTruckEngine)">{{data().damageTruckEngine}} %</div>
               </div>
               <div class="col-6">
                 <div class="data-label">Transmissie</div>
-                <div class="data-item">{{data().damageTruckTransmission}} %</div>
+                <div class="data-item" id="damageTruckTransmission" [class]="damageClass(data().damageTruckTransmission)">{{data().damageTruckTransmission}} %</div>
               </div>
             </div>
             <div class="row">
               <div class="col-6">
                 <div class="data-label">Cabine</div>
-                <div class="data-item">{{data().damageTruckCabin}} %</div>
+                <div class="data-item" id="damageTruckCabin" [class]="damageClass(data().damageTruckCabin)">{{data().damageTruckCabin}} %</div>
               </div>
               <div class="col-6">
                 <div class="data-label">Chassis</div>
-                <div class="data-item">{{data().damageTruckChassis}} %</div>
+                <div class="data-item" id="damageTruckChassis" [class]="damageClass(data().damageTruckChassis)">{{data().damageTruckChassis}} %</div>
               </div>
             </div>
 
             <div class="row">
               <div class="col-6">
                 <div class="data-label">Wielen</div>
-                <div class="data-item">{{data().damageTruckWheels}} %</div>
+                <div class="data-item" id="damageTruckWheels" [class]="damageClass(data().damageTruckWheels)">{{data().damageTruckWheels}} %</div>
               </div>
             </div>
           </div>
@@ -148,21 +149,21 @@
             <div class="row">
               <div class="col-6">
                 <div class="data-label">Chassis</div>
-                <div class="data-item">{{data().damageTrailerChassis}} %</div>
+                <div class="data-item" id="damageTrailerChassis" [class]="damageClass(data().damageTrailerChassis)">{{data().damageTrailerChassis}} %</div>
               </div>
               <div class="col-6">
                 <div class="data-label">Opbouw</div>
-                <div class="data-item">{{data().damageTrailerBody}} %</div>
+                <div class="data-item" id="damageTrailerBody" [class]="damageClass(data().damageTrailerBody)">{{data().damageTrailerBody}} %</div>
               </div>
             </div>
             <div class="row">
               <div class="col-6">
                 <div class="data-label">Wielen</div>
-                <div class="data-item">{{data().damageTrailerWheels}} %</div>
+                <div class="data-item" id="damageTrailerWheels" [class]="damageClass(data().damageTrailerWheels)">{{data().damageTrailerWheels}} %</div>
               </div>
               <div class="col-6">
                 <div class="data-label">Lading</div>
-                <div class="data-item">{{data().damageTrailerCargo}} %</div>
+                <div class="data-item" id="damageTrailerCargo" [class]="damageClass(data().damageTrailerCargo)">{{data().damageTrailerCargo}} %</div>
               </div>
             </div>
           </div>
@@ -174,9 +175,17 @@
   <div class="row">
     <div class="col-6">
       <div class="card gauge">
-        <app-gauge [value]="data().rpm" [max]="data().rpmMax" [greenStart]="1250" [greenEnd]="2000">
+        <app-gauge [value]="data().rpm" [max]="data().rpmMax" [greenStart]="rpmGreenZoneStart" [greenEnd]="rpmGreenZoneEnd">
           <label class="unit text-center rpm-scale">x 100 RPM</label>
           <div class="gear text-center">{{data().gear}}</div>
+          <div class="gear-advice text-center" id="gearAdvice" [class.hidden]="!gearAdvice()">
+            <span
+              class="shift-arrow"
+              id="shiftArrow"
+              [class.shift-arrow-up]="shiftDirection() === 'up'"
+              [class.shift-arrow-down]="shiftDirection() === 'down'"></span>
+            <span>Schakel naar {{gearAdvice()}}</span>
+          </div>
         </app-gauge>
       </div>
     </div>
@@ -210,7 +219,7 @@
         </div>
         <div class="icon-text-control" id="fuel">
           <img class="dashboard-light" src="/assets/images/fuel.svg" [class.filter-orange]="data().fuelWarningOn">
-          <div>{{data().fuelDistance | numberFlexDigit}} km ({{data().fuelAmount | numberFlexDigit}} l)</div>
+          <div [class.fuel-range-too-short]="fuelRangeTooShort()">{{data().fuelDistance | numberFlexDigit}} km ({{data().fuelAmount | numberFlexDigit}} l)</div>
         </div>
         <div class="icon-text-control"  id="adBlue">
           <img class="dashboard-light" src="/assets/images/adblue.svg" [class.filter-orange]="data().adBlueWarningOn">

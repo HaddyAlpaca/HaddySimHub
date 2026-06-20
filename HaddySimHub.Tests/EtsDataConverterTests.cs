@@ -121,6 +121,87 @@ namespace HaddySimHub.Tests
             Assert.AreEqual("12", truckData.Gear);
         }
 
+        [TestMethod]
+        public void Convert_RecommendedGear_PicksHigherGearAtCruisingSpeed()
+        {
+            // Arrange - at 20 m/s the lowest-revving drivable gear is closest to the economy target.
+            var converter = new EtsDataConverter();
+            var data = CreateMockTelemetry(
+                selectedGear: 2,
+                forwardGearCount: 4,
+                speed: 20,
+                rpmMax: 2500,
+                forwardRatios: [4f, 3f, 2f, 1f],
+                differential: 3f,
+                wheelRadius: 0.5f);
+
+            // Act
+            var truckData = converter.Convert(data).Data as TruckData;
+
+            // Assert
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual("4", truckData.RecommendedGear);
+        }
+
+        [TestMethod]
+        public void Convert_RecommendedGear_PicksLowerGearAtLowSpeed()
+        {
+            // Arrange - at 8 m/s a lower gear is needed to stay near the economy target.
+            var converter = new EtsDataConverter();
+            var data = CreateMockTelemetry(
+                selectedGear: 5,
+                forwardGearCount: 4,
+                speed: 8,
+                rpmMax: 2500,
+                forwardRatios: [4f, 3f, 2f, 1f],
+                differential: 3f,
+                wheelRadius: 0.5f);
+
+            // Act
+            var truckData = converter.Convert(data).Data as TruckData;
+
+            // Assert
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual("2", truckData.RecommendedGear);
+        }
+
+        [TestMethod]
+        public void Convert_RecommendedGear_EmptyWhenBelowMinimumSpeed()
+        {
+            // Arrange - 2 m/s (7.2 km/h) is below the advice threshold.
+            var converter = new EtsDataConverter();
+            var data = CreateMockTelemetry(
+                selectedGear: 1,
+                forwardGearCount: 4,
+                speed: 2,
+                rpmMax: 2500,
+                forwardRatios: [4f, 3f, 2f, 1f],
+                differential: 3f,
+                wheelRadius: 0.5f);
+
+            // Act
+            var truckData = converter.Convert(data).Data as TruckData;
+
+            // Assert
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(string.Empty, truckData.RecommendedGear);
+        }
+
+        [TestMethod]
+        public void Convert_RecommendedGear_EmptyWhenTransmissionDataMissing()
+        {
+            // Arrange - no gear ratios, differential or wheel radius available.
+            var converter = new EtsDataConverter();
+            var data = CreateMockTelemetry(selectedGear: 3, forwardGearCount: 4, speed: 20, rpmMax: 2500);
+
+            // Act
+            var truckData = converter.Convert(data).Data as TruckData;
+
+            // Assert
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(string.Empty, truckData.RecommendedGear);
+        }
+
         #endregion
 
         #region Speed Tests
@@ -858,7 +939,10 @@ namespace HaddySimHub.Tests
             bool cruiseControl = false,
             double cruiseControlSpeed = 0,
             int rpm = 0,
-            int rpmMax = 0)
+            int rpmMax = 0,
+            float[]? forwardRatios = null,
+            float differential = 0,
+            float wheelRadius = 0)
         {
             return new SCSTelemetryBuilder()
                 .WithScale(1f)
@@ -871,6 +955,7 @@ namespace HaddySimHub.Tests
                 .WithWarnings(fuelWarning, adBlueWarning, oilPressureWarning, waterTempWarning, batteryVoltageWarning)
                 .WithLights(parkingLights, lowBeam, highBeam, hazardLights, blinkerLeft, blinkerRight)
                 .WithMotor(selectedGear, parkingBrake, retarderLevel)
+                .WithTransmission(forwardRatios ?? [], differential, wheelRadius)
                 .WithDamage(cabinDamage, engineDamage)
                 .WithControl(throttle)
                 .WithTrailerEmpty()

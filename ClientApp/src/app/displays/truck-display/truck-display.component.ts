@@ -1,4 +1,4 @@
-import { Component, inject, ViewEncapsulation } from '@angular/core';
+import { Component, computed, inject, ViewEncapsulation } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { WaypointComponent } from './waypoint.component';
 import { TimespanPipe, NumberNlPipe, NumberFlexDigitPipe } from '../../shared';
@@ -6,6 +6,15 @@ import { GaugeComponent } from '../../shared/gauge/gauge.component';
 import { APP_STORE } from '../../state/app.store';
 
 export type { TruckData } from './truck-data';
+
+const damageWarningThreshold = 25;
+const damageCriticalThreshold = 50;
+
+const rpmGreenZoneStart = 1250;
+const rpmGreenZoneEnd = 2000;
+
+const minutesPerDay = 24 * 60;
+
 
 @Component({
   selector: 'app-truck-display',
@@ -24,4 +33,63 @@ export type { TruckData } from './truck-data';
 export class TruckDisplayComponent {
   private readonly _store = inject(APP_STORE);
   protected readonly data = this._store.truckData;
+
+  protected readonly rpmGreenZoneStart = rpmGreenZoneStart;
+  protected readonly rpmGreenZoneEnd = rpmGreenZoneEnd;
+
+  protected readonly fuelRangeTooShort = computed(() => {
+    const data = this.data();
+    return data.distanceRemaining > 0 && data.fuelDistance < data.distanceRemaining;
+  });
+
+  protected readonly arrivalTime = computed(() => {
+    const data = this.data();
+    if (data.timeRemaining <= 0) {
+      return '';
+    }
+
+    const minutesOfDay = (data.gameTime + data.timeRemaining) % minutesPerDay;
+    const hours = Math.floor(minutesOfDay / 60);
+    const minutes = minutesOfDay % 60;
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+  });
+
+  protected readonly restBeforeArrival = computed(() => {
+    const data = this.data();
+    return data.restTimeRemaining > 0 && data.timeRemaining > data.restTimeRemaining;
+  });
+
+  protected readonly gearAdvice = computed(() => {
+    const data = this.data();
+    const recommended = data.recommendedGear;
+    return recommended && recommended !== `${data.gear}` ? recommended : '';
+  });
+
+  protected readonly shiftDirection = computed(() => {
+    const data = this.data();
+    const recommended = this.gearAdvice();
+    if (!recommended) {
+      return '';
+    }
+
+    const recommendedGear = Number.parseInt(recommended, 10);
+    const currentGear = Number.parseInt(data.gear, 10);
+    if (Number.isNaN(recommendedGear) || Number.isNaN(currentGear)) {
+      return '';
+    }
+
+    return recommendedGear > currentGear ? 'up' : 'down';
+  });
+
+  protected damageClass(value: number): string {
+    if (value >= damageCriticalThreshold) {
+      return 'damage-critical';
+    }
+
+    if (value >= damageWarningThreshold) {
+      return 'damage-warning';
+    }
+
+    return '';
+  }
 }

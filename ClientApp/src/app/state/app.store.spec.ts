@@ -33,7 +33,8 @@ describe('MockAppStore', () => {
         jobCargoDamage: 0,
         rpm: 1500,
         rpmMax: 2400,
-        gear: 4,
+        gear: '4',
+        recommendedGear: '',
         speed: 85,
         speedLimit: 90,
         parkingLightsOn: false,
@@ -74,7 +75,7 @@ describe('MockAppStore', () => {
         damageTrailerWheels: 0,
         damageTrailerCargo: 0,
         damageTrailer: 0,
-        gameTime: new Date(),
+        gameTime: 0,
       };
 
       store.updateDisplay({ type: DisplayType.TruckDashboard, data: truckData });
