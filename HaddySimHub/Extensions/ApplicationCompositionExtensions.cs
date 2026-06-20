@@ -38,8 +38,8 @@ public static class ApplicationCompositionExtensions
         services.RegisterGameDisplay<Displays.ACRally.ACRallyGameDataProvider, Displays.ACRally.ACRallyDataConverter, Displays.ACRally.ACRallyTelemetry>(DisplayDefinitions.Game.AcRally);
 
         services.AddSingleton<IDataConverter<DisplayUpdate, DisplayUpdate>, IdentityDataConverter<DisplayUpdate>>();
-        services.RegisterTestDisplay<Displays.Dirt2.TestDisplay>(DisplayDefinitions.TestIds.Rally);
         services.RegisterTestDisplay<Displays.IRacing.TestDisplay>(DisplayDefinitions.TestIds.Race);
+        services.RegisterTestDisplay<Displays.Dirt2.TestDisplay>(DisplayDefinitions.TestIds.Rally);
         services.RegisterTestDisplay<Displays.ETS.TestDisplay>(DisplayDefinitions.TestIds.Truck);
 
         services.AddSingleton<DisplaysRunner>();
