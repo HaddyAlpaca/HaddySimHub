@@ -64,6 +64,9 @@ Then `dotnet build` will use the correct SDK version.
 - Backend settings: `TreatWarningsAsErrors` is enabled — fix all compiler warnings
 - Frontend uses ESLint with `eslint.config.mjs` and Stylelint for SCSS validation
 - Logging is excluded from HaddySimHub project (see Logging/** excludes in csproj)
+- **Game display pipeline**: every supported game follows a `provider → converter → display → hub` pattern, registered via `RegisterGameDisplay<>` in `Extensions/ApplicationCompositionExtensions.cs`. See [`HaddySimHub/Displays/README.md`](./HaddySimHub/Displays/README.md) for the full convention and how to add a new game.
+- **Console dashboard**: in an interactive terminal the backend renders a live Spectre.Console TUI (`HaddySimHub/Dashboard/`); console logs are routed into it via `DashboardLogTarget` instead of being written directly. Set `HADDYSIMHUB_NO_DASHBOARD=1` to fall back to plain coloured console logging (this also happens automatically when stdout/stdin is redirected, e.g. in CI). Set `HADDYSIMHUB_DEBUG=1` for debug-level logging plus per-frame data logs.
+- **Backend tests use MSTest**: assert exceptions with `Assert.Throws<T>()`, `Assert.ThrowsExactly<T>()`, or `Assert.ThrowsAsync<T>()`. The legacy `Assert.ThrowsException<T>()` does **not** exist in this MSTest version and will fail to compile.
 
 ## Do Not
 
@@ -80,6 +83,14 @@ Then `dotnet build` will use the correct SDK version.
 - **Compiler warnings fail builds**: The backend has `TreatWarningsAsErrors` enabled, so unused variables or type issues will break the build
 - **Node version mismatch**: The frontend requires Node 24.15.0+ and npm 11.6.2+; older versions will cause unexpected failures
 - **Snap dotnet SDK mismatch**: Snap-installed dotnet may not include SDK 10.0.201 by default. See "Environment & Setup" section for how to install it to ~/.dotnet and update PATH.
+
+## Git & Pull Requests
+
+- `main` is a protected branch. Direct pushes are rejected — land changes via a pull request.
+- Required status checks must pass before merge: **Server tests** and **Frontend tests** (both defined in `.github/workflows/ci.yml`).
+- Admin enforcement is on (`enforce_admins`), so even `gh pr merge --admin` still requires green checks. Auto-merge is not enabled for this repository.
+- No approving review is required (required review count is 0), but the checks above are mandatory.
+- GitHub Actions are pinned to commit SHAs with a trailing `# vX.Y.Z` comment in the workflow files. When updating an action, change both the SHA and the version comment.
 
 ## Security & Deployment
 

@@ -11,7 +11,7 @@ public class DisplaysRunner
     private readonly DisplayUpdate _idleDisplayUpdate = new() { Type = DisplayType.None };
     private readonly IEnumerable<IDisplay> _displays;
     private readonly IDisplayUpdateSender _displayUpdateSender;
-    private bool _lastStateHadDisplays = false;
+    private bool? _lastStateHadDisplays;
 
     public DisplaysRunner(IEnumerable<IDisplay> displays, IDisplayUpdateSender displayUpdateSender)
     {
@@ -29,9 +29,9 @@ public class DisplaysRunner
             var activeDisplays = _displays.Where(d => d.IsActive).ToList();
             if (activeDisplays.Count == 0)
             {
-                if (_lastStateHadDisplays)
+                if (_lastStateHadDisplays != false)
                 {
-                     Logger.Debug("No active displays found");
+                     Logger.Info("No active displays found");
                     _lastStateHadDisplays = false;
                 }
                 await _displayUpdateSender.SendDisplayUpdate(_idleDisplayUpdate);
