@@ -19,6 +19,9 @@
     "node": "^24.15.0",
     "npm": ">=11.6.2"
   },
+  "overrides": {
+    "esbuild": "0.28.1"
+  },
   "dependencies": {
     "@angular/animations": "^22.0.0",
     "@angular/cdk": "^22.0.0",
