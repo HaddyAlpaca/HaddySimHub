@@ -32,6 +32,11 @@ public class DisplaysRunner
                 if (_lastStateHadDisplays != false)
                 {
                      Logger.Info("No active displays found");
+                     if (Logger.IsDataLoggingEnabled)
+                     {
+                         var processNames = ProcessHelper.GetRunningProcessNames();
+                         Logger.Debug($"No game process detected. Running processes ({processNames.Count}): {string.Join(", ", processNames)}");
+                     }
                     _lastStateHadDisplays = false;
                 }
                 await _displayUpdateSender.SendDisplayUpdate(_idleDisplayUpdate);

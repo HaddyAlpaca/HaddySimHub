@@ -50,6 +50,27 @@ public class DisplayLifecycleTests
         Assert.AreEqual("Fake", displays[0].Description);
     }
 
+    [TestMethod]
+    public async Task DisplayBase_TracksLastUpdate_AndResetsOnStop()
+    {
+        var provider = new CountingGameDataProvider();
+        var sender = new RecordingDisplayUpdateSender();
+        var converter = new CountingDataConverter();
+        var display = new CountingDisplay(provider, converter, sender);
+
+        Assert.IsNull(display.LastUpdateUtc, "No data received yet, so LastUpdateUtc should be null.");
+
+        display.Start();
+        provider.Emit(1);
+        await Task.Delay(20);
+
+        Assert.IsNotNull(display.LastUpdateUtc, "Receiving telemetry should stamp LastUpdateUtc.");
+
+        display.Stop();
+
+        Assert.IsNull(display.LastUpdateUtc, "Stopping should clear LastUpdateUtc so a restarted game is not shown as live.");
+    }
+
     private sealed class CountingDisplay : DisplayBase<int>
     {
         public CountingDisplay(
@@ -165,6 +186,7 @@ public class DisplayLifecycleTests
     {
         public string Description => "Fake";
         public bool IsActive => false;
+        public DateTime? LastUpdateUtc => null;
         public void Start() { }
         public void Stop() { }
     }

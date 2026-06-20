@@ -22,7 +22,26 @@ public static class Logger
     /// <inheritdoc/>
     public static void Info(string message) => _logger.Info(message);
 
-    public static void LogData(object data) => _logger.Trace($"{JsonSerializer.Serialize(data)}\n");
+    /// <inheritdoc/>
+    public static void Warn(string message) => _logger.Warn(message);
+
+    /// <summary>
+    /// Gets a value indicating whether per-frame raw telemetry logging is enabled
+    /// (only when <c>HADDYSIMHUB_DEBUG=1</c>). Callers should check this before
+    /// serialising telemetry so the JSON cost is not paid on every frame when the
+    /// data log is disabled.
+    /// </summary>
+    public static bool IsDataLoggingEnabled { get; private set; }
+
+    public static void LogData(object data)
+    {
+        if (!IsDataLoggingEnabled)
+        {
+            return;
+        }
+
+        _logger.Trace($"{JsonSerializer.Serialize(data)}\n");
+    }
 
     private static bool _dashboardConsole;
 
@@ -52,6 +71,7 @@ public static class Logger
     {
         // Check environment variable voor debug logging
         var enableDebugLogging = Environment.GetEnvironmentVariable("HADDYSIMHUB_DEBUG") == "1";
+        IsDataLoggingEnabled = enableDebugLogging;
 
         var logConfig = new LoggingConfiguration();
 
