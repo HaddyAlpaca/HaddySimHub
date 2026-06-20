@@ -160,12 +160,7 @@ public sealed class ConsoleDashboard
 
         foreach (var display in _displays)
         {
-            var active = SafeIsActive(display);
-            var marker = active ? "[green]●[/]" : "[grey37]○[/]";
-            var name = active
-                ? $"[white]{Markup.Escape(display.Description)}[/]"
-                : $"[grey]{Markup.Escape(display.Description)}[/]";
-            grid.AddRow($"{marker} {name}");
+            grid.AddRow(BuildGameRow(display));
         }
 
         if (_displays.Count == 0)
@@ -180,6 +175,47 @@ public sealed class ConsoleDashboard
             BorderStyle = Style.Parse("grey"),
             Expand = true,
         };
+    }
+
+    /// <summary>
+    /// Renders a single game row with a tri-state indicator so an operator can
+    /// tell the difference between "game not running", "running but no telemetry"
+    /// (the typical broken-integration case), and "telemetry flowing".
+    /// </summary>
+    private static string BuildGameRow(IDisplay display)
+    {
+        var name = Markup.Escape(display.Description);
+
+        if (!SafeIsActive(display))
+        {
+            return $"[grey37]○[/] [grey]{name}[/]";
+        }
+
+        var lastUpdate = SafeLastUpdate(display);
+        if (lastUpdate is null)
+        {
+            return $"[yellow]◐[/] [white]{name}[/] [yellow](running · waiting for data)[/]";
+        }
+
+        var age = DateTime.UtcNow - lastUpdate.Value;
+        if (age > TimeSpan.FromSeconds(5))
+        {
+            return $"[yellow]◐[/] [white]{name}[/] [yellow](running · no data for {FormatAge(age)})[/]";
+        }
+
+        return $"[green]●[/] [white]{name}[/] [grey](live · {FormatAge(age)} ago)[/]";
+    }
+
+    private static string FormatAge(TimeSpan age)
+    {
+        if (age < TimeSpan.Zero)
+        {
+            age = TimeSpan.Zero;
+        }
+
+        return age.TotalSeconds < 60
+            ? $"{age.TotalSeconds:F1}s"
+            : $"{(int)age.TotalMinutes}m{age.Seconds:D2}s";
     }
 
     private IRenderable BuildLogPanel(int maxLines)
@@ -242,6 +278,18 @@ public sealed class ConsoleDashboard
         catch
         {
             return false;
+        }
+    }
+
+    private static DateTime? SafeLastUpdate(IDisplay display)
+    {
+        try
+        {
+            return display.LastUpdateUtc;
+        }
+        catch
+        {
+            return null;
         }
     }
 

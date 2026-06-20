@@ -55,6 +55,29 @@ Each game lives in its own folder under `Displays/` (e.g. `Displays/IRacing/`):
 5. Register it with `services.RegisterGameDisplay<TProvider, TConverter, T>(...)`
    in `ApplicationCompositionExtensions`.
 
+## Debugging a game that "doesn't work"
+
+The pipeline distinguishes two failure modes and surfaces both:
+
+- **Not detected** — `IsActive` is `false` because no process matches the
+  configured name. With `HADDYSIMHUB_DEBUG=1`, `DisplaysRunner` logs the list of
+  running process names when no display is active, so you can confirm the exact
+  executable name to put in `DisplayDefinitions`.
+- **Detected but no data** — the process runs (panel shows it) but no telemetry
+  arrives. The console dashboard's Games panel shows a tri-state marker:
+  `○` not running · `◐ running · waiting for data` · `● live · <age> ago`.
+  `DisplayBase` logs *"First telemetry received from …"* on the first frame and
+  shared-memory providers warn *"process detected but shared memory is not
+  connected"* via `SharedMemoryGameDataProviderBase`.
+
+Additional aids:
+
+- `Logger.Warn` is used for missed connections and dropped telemetry frames
+  (visible without debug mode).
+- With `HADDYSIMHUB_DEBUG=1`, every raw telemetry frame is serialised to
+  `log/<date>-HaddySimHub-data.log` via `Logger.LogData`, wired centrally in
+  `DisplayBase`, so converter mapping issues can be diagnosed offline.
+
 ## Test displays
 
 Test displays push sample data so the frontend can be exercised without a game

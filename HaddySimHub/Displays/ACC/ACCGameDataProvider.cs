@@ -6,34 +6,7 @@ public class ACCGameDataProvider : SharedMemoryGameDataProviderBase<ACCSharedMem
 {
     private DateTime _lastDataLog = DateTime.MinValue;
 
-    public override void Start()
-    {
-        Logger.Info("[ACC] Starting game data provider");
-        base.Start();
-
-        if (IsConnected(Reader))
-        {
-            Logger.Info("[ACC] Connected to ACC shared memory, starting data updates (10ms intervals)");
-        }
-        else
-        {
-            Logger.Info("[ACC] Not connected to shared memory. Will retry when game is detected...");
-        }
-    }
-
-    public override void Stop()
-    {
-        Logger.Info("[ACC] Stopping game data provider");
-        base.Stop();
-    }
-
-    protected override void OnMissedConnection(int consecutiveCount)
-    {
-        if (consecutiveCount == 1 || consecutiveCount % 100 == 0)
-        {
-            Logger.Debug($"[ACC] UpdateTelemetry: not connected ({consecutiveCount} consecutive misses)");
-        }
-    }
+    protected override string ProviderName => "ACC";
 
     protected override void OnDataChanged(ACCTelemetry telemetry)
     {

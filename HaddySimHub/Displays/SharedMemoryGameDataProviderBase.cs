@@ -30,6 +30,16 @@ public abstract class SharedMemoryGameDataProviderBase<TReader, TTelemetry> : IG
         ThrowIfDisposed();
         Reader = CreateReader();
         ConnectReader(Reader);
+
+        if (IsConnected(Reader))
+        {
+            Logger.Info($"[{ProviderName}] Connected to shared memory, polling for telemetry");
+        }
+        else
+        {
+            Logger.Warn($"[{ProviderName}] Shared memory not available yet - will keep retrying while the game is running");
+        }
+
         // Keep polling even if the game starts after the app so shared memory can come up later.
         UpdateTimer?.Change(TimeSpan.Zero, TimeSpan.FromMilliseconds(10));
     }
@@ -72,10 +82,29 @@ public abstract class SharedMemoryGameDataProviderBase<TReader, TTelemetry> : IG
     protected abstract bool HasDataChanged(TTelemetry current, TTelemetry last);
 
     /// <summary>
-    /// Called each polling tick when the reader is not connected. Consecutive count starts at 1.
-    /// Override to add logging or metrics without duplicating the retry logic.
+    /// A short tag identifying this provider in log output (e.g. "ACC").
+    /// Defaults to the type name with any "GameDataProvider" suffix trimmed.
     /// </summary>
-    protected virtual void OnMissedConnection(int consecutiveCount) { }
+    protected virtual string ProviderName =>
+        GetType().Name.Replace("GameDataProvider", string.Empty);
+
+    /// <summary>
+    /// Called each polling tick when the reader is not connected. Consecutive count starts at 1.
+    /// The default logs the first miss at warning level (so a "running but no data" game is
+    /// visible without debug logging) and every 100th miss thereafter at debug level.
+    /// Override and call <c>base.OnMissedConnection</c> to add metrics.
+    /// </summary>
+    protected virtual void OnMissedConnection(int consecutiveCount)
+    {
+        if (consecutiveCount == 1)
+        {
+            Logger.Warn($"[{ProviderName}] Game process detected but shared memory is not connected - retrying...");
+        }
+        else if (consecutiveCount % 100 == 0)
+        {
+            Logger.Debug($"[{ProviderName}] Still not connected to shared memory ({consecutiveCount} consecutive misses)");
+        }
+    }
 
     /// <summary>
     /// Called when new telemetry is received and differs from the previous value.
@@ -102,6 +131,11 @@ public abstract class SharedMemoryGameDataProviderBase<TReader, TTelemetry> : IG
             {
                 return;
             }
+        }
+
+        if (_consecutiveMissedConnections > 0)
+        {
+            Logger.Info($"[{ProviderName}] Reconnected to shared memory after {_consecutiveMissedConnections} missed attempts");
         }
 
         _consecutiveMissedConnections = 0;
