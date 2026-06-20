@@ -90,6 +90,55 @@ describe('TruckDisplayComponent', () => {
     });
   });
 
+  describe('Damage highlight', () => {
+    it('No severity class below the warning threshold', async () => {
+      patchData({ damageTruckEngine: 10 });
+
+      const elm = await harness.locatorForElement('#damageTruckEngine');
+      expect(await elm.hasClass('damage-warning')).toBe(false);
+      expect(await elm.hasClass('damage-critical')).toBe(false);
+    });
+
+    it('Warning class between the warning and critical thresholds', async () => {
+      patchData({ damageTruckEngine: 30 });
+
+      const elm = await harness.locatorForElement('#damageTruckEngine');
+      expect(await elm.hasClass('damage-warning')).toBe(true);
+      expect(await elm.hasClass('damage-critical')).toBe(false);
+    });
+
+    it('Critical class at or above the critical threshold', async () => {
+      patchData({ damageTrailerCargo: 80 });
+
+      const elm = await harness.locatorForElement('#damageTrailerCargo');
+      expect(await elm.hasClass('damage-warning')).toBe(false);
+      expect(await elm.hasClass('damage-critical')).toBe(true);
+    });
+  });
+
+  describe('Fuel reachability', () => {
+    it('No warning when fuel range covers the remaining distance', async () => {
+      patchData({ fuelDistance: 800, distanceRemaining: 500 });
+
+      const elm = await harness.locatorForElement('#fuel > div');
+      expect(await elm.hasClass('fuel-range-too-short')).toBe(false);
+    });
+
+    it('Warning when fuel range is below the remaining distance', async () => {
+      patchData({ fuelDistance: 200, distanceRemaining: 500 });
+
+      const elm = await harness.locatorForElement('#fuel > div');
+      expect(await elm.hasClass('fuel-range-too-short')).toBe(true);
+    });
+
+    it('No warning when there is no active route', async () => {
+      patchData({ fuelDistance: 0, distanceRemaining: 0 });
+
+      const elm = await harness.locatorForElement('#fuel > div');
+      expect(await elm.hasClass('fuel-range-too-short')).toBe(false);
+    });
+  });
+
   const patchData = (value: Record<string, unknown>): void => {
     mockStore.truckData.set(value as unknown as TruckData);
   };

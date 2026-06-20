@@ -114,6 +114,21 @@ app-truck-display {
     font-size: 1.2vw;
   }
 
+  .damage-warning {
+    color: orange;
+    font-weight: 600;
+  }
+
+  .damage-critical {
+    color: red;
+    font-weight: 600;
+  }
+
+  .fuel-range-too-short {
+    color: red;
+    font-weight: 600;
+  }
+
   .card-header {
     border: none;
     padding-bottom: 0;

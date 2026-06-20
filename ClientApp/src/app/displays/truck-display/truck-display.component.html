@@ -107,28 +107,28 @@
             <div class="row">
               <div class="col-6">
                 <div class="data-label">Motor</div>
-                <div class="data-item">{{data().damageTruckEngine}} %</div>
+                <div class="data-item" id="damageTruckEngine" [class]="damageClass(data().damageTruckEngine)">{{data().damageTruckEngine}} %</div>
               </div>
               <div class="col-6">
                 <div class="data-label">Transmissie</div>
-                <div class="data-item">{{data().damageTruckTransmission}} %</div>
+                <div class="data-item" id="damageTruckTransmission" [class]="damageClass(data().damageTruckTransmission)">{{data().damageTruckTransmission}} %</div>
               </div>
             </div>
             <div class="row">
               <div class="col-6">
                 <div class="data-label">Cabine</div>
-                <div class="data-item">{{data().damageTruckCabin}} %</div>
+                <div class="data-item" id="damageTruckCabin" [class]="damageClass(data().damageTruckCabin)">{{data().damageTruckCabin}} %</div>
               </div>
               <div class="col-6">
                 <div class="data-label">Chassis</div>
-                <div class="data-item">{{data().damageTruckChassis}} %</div>
+                <div class="data-item" id="damageTruckChassis" [class]="damageClass(data().damageTruckChassis)">{{data().damageTruckChassis}} %</div>
               </div>
             </div>
 
             <div class="row">
               <div class="col-6">
                 <div class="data-label">Wielen</div>
-                <div class="data-item">{{data().damageTruckWheels}} %</div>
+                <div class="data-item" id="damageTruckWheels" [class]="damageClass(data().damageTruckWheels)">{{data().damageTruckWheels}} %</div>
               </div>
             </div>
           </div>
@@ -148,21 +148,21 @@
             <div class="row">
               <div class="col-6">
                 <div class="data-label">Chassis</div>
-                <div class="data-item">{{data().damageTrailerChassis}} %</div>
+                <div class="data-item" id="damageTrailerChassis" [class]="damageClass(data().damageTrailerChassis)">{{data().damageTrailerChassis}} %</div>
               </div>
               <div class="col-6">
                 <div class="data-label">Opbouw</div>
-                <div class="data-item">{{data().damageTrailerBody}} %</div>
+                <div class="data-item" id="damageTrailerBody" [class]="damageClass(data().damageTrailerBody)">{{data().damageTrailerBody}} %</div>
               </div>
             </div>
             <div class="row">
               <div class="col-6">
                 <div class="data-label">Wielen</div>
-                <div class="data-item">{{data().damageTrailerWheels}} %</div>
+                <div class="data-item" id="damageTrailerWheels" [class]="damageClass(data().damageTrailerWheels)">{{data().damageTrailerWheels}} %</div>
               </div>
               <div class="col-6">
                 <div class="data-label">Lading</div>
-                <div class="data-item">{{data().damageTrailerCargo}} %</div>
+                <div class="data-item" id="damageTrailerCargo" [class]="damageClass(data().damageTrailerCargo)">{{data().damageTrailerCargo}} %</div>
               </div>
             </div>
           </div>
@@ -210,7 +210,7 @@
         </div>
         <div class="icon-text-control" id="fuel">
           <img class="dashboard-light" src="/assets/images/fuel.svg" [class.filter-orange]="data().fuelWarningOn">
-          <div>{{data().fuelDistance | numberFlexDigit}} km ({{data().fuelAmount | numberFlexDigit}} l)</div>
+          <div [class.fuel-range-too-short]="fuelRangeTooShort()">{{data().fuelDistance | numberFlexDigit}} km ({{data().fuelAmount | numberFlexDigit}} l)</div>
         </div>
         <div class="icon-text-control"  id="adBlue">
           <img class="dashboard-light" src="/assets/images/adblue.svg" [class.filter-orange]="data().adBlueWarningOn">

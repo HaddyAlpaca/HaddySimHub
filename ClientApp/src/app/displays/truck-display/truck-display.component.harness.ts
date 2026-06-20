@@ -1,4 +1,4 @@
-import { ComponentHarness } from '@angular/cdk/testing';
+import { ComponentHarness, TestElement } from '@angular/cdk/testing';
 import { SpeedometerComponentHarness } from '../../shared/speedometer/speedometer.component.harness';
 
 export class TruckDashComponentHarness extends ComponentHarness {
@@ -20,5 +20,10 @@ export class TruckDashComponentHarness extends ComponentHarness {
     const elm = await this.locatorFor(selector)();
     const text = await elm.text();
     return text;
+  }
+
+  public async locatorForElement(selector: string): Promise<TestElement> {
+    const elm = await this.locatorFor(selector)();
+    return elm;
   }
 }
