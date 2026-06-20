@@ -1,5 +1,7 @@
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using HaddySimHub;
+using HaddySimHub.Dashboard;
 using HaddySimHub.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
@@ -24,14 +26,20 @@ public class Program
 
         Console.CancelKeyPress += (sender, eventArgs) =>
         {
+            // Cancel cooperatively so the web host (and the live dashboard it
+            // hosts) can shut down gracefully and restore the terminal.
             eventArgs.Cancel = true;
-            cancellationTokenSource.Cancel();
             Logger.Info("Ctrl+C pressed. Exiting application...");
-            Environment.Exit(0);
+            cancellationTokenSource.Cancel();
         };
         
         var keyInputTask = Task.Run(async () =>
         {
+            if (Console.IsInputRedirected)
+            {
+                return;
+            }
+
             while (!token.IsCancellationRequested)
             {
                 if (Console.KeyAvailable)
@@ -56,7 +64,7 @@ public class Program
                             TestId = string.Empty;
                         }
 
-                        Console.WriteLine(string.IsNullOrEmpty(TestId) ? "Test mode disabled." : $"Test mode:'{TestId}'.");
+                        Logger.Info(string.IsNullOrEmpty(TestId) ? "Test mode disabled." : $"Test mode:'{TestId}'.");
                     }
                 }
 
@@ -78,6 +86,13 @@ public class Program
         var builder = WebApplication.CreateBuilder(options);
 
         builder.WebHost.UseKestrel(options => options.ListenAnyIP(3333));
+
+        // Avoid the default ASP.NET console logger corrupting the live dashboard.
+        if (ConsoleDashboard.IsSupported)
+        {
+            builder.Logging.ClearProviders();
+        }
+
         builder.Services.AddHaddySimHubApplication();
 
         var app = builder.Build();
@@ -98,6 +113,12 @@ public class Program
         catch (Exception ex)
         {
             Logger.Fatal($"Web server error: {ex.Message}\n\n{ex.StackTrace}");
+        }
+        finally
+        {
+            // Stop hosted services (including the live dashboard) so they can
+            // restore the terminal before the process exits.
+            await webServer.StopAsync(CancellationToken.None);
         }
     }
 
