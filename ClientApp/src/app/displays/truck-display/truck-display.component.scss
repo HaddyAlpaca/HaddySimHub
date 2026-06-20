@@ -129,6 +129,40 @@ app-truck-display {
     font-weight: 600;
   }
 
+  .arrival-time {
+    color: gray;
+  }
+
+  .rest-before-arrival {
+    color: orange;
+    font-weight: 600;
+  }
+
+  .shift-arrow {
+    width: 0;
+    height: 0;
+    border-left: 0.7vw solid transparent;
+    border-right: 0.7vw solid transparent;
+  }
+
+  .shift-arrow-up {
+    border-bottom: 0.9vw solid #0c6;
+  }
+
+  .shift-arrow-down {
+    border-top: 0.9vw solid orange;
+  }
+
+  .gear-advice {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5vw;
+    color: orange;
+    font-size: 1.2vw;
+    font-weight: 600;
+  }
+
   .card-header {
     border: none;
     padding-bottom: 0;

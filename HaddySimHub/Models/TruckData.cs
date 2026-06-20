@@ -129,6 +129,12 @@ public sealed record TruckData
     public required string Gear { get; init; }
 
     /// <summary>
+    /// Gets the gear advised for the current speed to keep the engine in its efficient rev range.
+    /// Empty when no advice is available (e.g. stationary, neutral or missing transmission data).
+    /// </summary>
+    public string RecommendedGear { get; init; } = string.Empty;
+
+    /// <summary>
     /// Gets a value indicating whether cruise control is active.
     /// </summary>
     public bool CruiseControlOn { get; init; }

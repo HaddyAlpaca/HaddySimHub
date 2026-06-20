@@ -35,7 +35,8 @@ export interface TruckData {
   rpmMax: number;
   cruiseControlOn: boolean;
   cruiseControlSpeed: number;
-  gear: number;
+  gear: string;
+  recommendedGear: string;
   parkingLightsOn: boolean;
   lowBeamOn: boolean;
   highBeamOn: boolean;
@@ -47,7 +48,7 @@ export interface TruckData {
   fuelWarningOn: boolean;
   blinkerLeftOn: boolean;
   blinkerRightOn: boolean;
-  gameTime: Date;
+  gameTime: number;
   wipersOn: boolean;
   fuelAverageConsumption: number;
   throttle: number;

@@ -22,6 +22,7 @@
                 @if (data().timeRemainingIrl > 0) {
                   <span>({{data().timeRemainingIrl | timespan}})</span>
                 }
+                <span class="arrival-time" id="arrivalTime">&rarr; aankomst {{arrivalTime()}}</span>
               </div>
             }
             @else {
@@ -31,7 +32,7 @@
           <div class="data-row">
             <div class="data-label">Volgend rustmoment</div>
             @if (data().restTimeRemaining) {
-              <div class="data-item">
+              <div class="data-item" id="nextRest" [class.rest-before-arrival]="restBeforeArrival()">
                 <span>{{data().restTimeRemaining | timespan}}&nbsp;</span>
                 @if (data().restTimeRemainingIrl > 0) {
                   <span>({{data().restTimeRemainingIrl | timespan}})</span>
@@ -174,9 +175,17 @@
   <div class="row">
     <div class="col-6">
       <div class="card gauge">
-        <app-gauge [value]="data().rpm" [max]="data().rpmMax" [greenStart]="1250" [greenEnd]="2000">
+        <app-gauge [value]="data().rpm" [max]="data().rpmMax" [greenStart]="rpmGreenZoneStart" [greenEnd]="rpmGreenZoneEnd">
           <label class="unit text-center rpm-scale">x 100 RPM</label>
           <div class="gear text-center">{{data().gear}}</div>
+          <div class="gear-advice text-center" id="gearAdvice" [class.hidden]="!gearAdvice()">
+            <span
+              class="shift-arrow"
+              id="shiftArrow"
+              [class.shift-arrow-up]="shiftDirection() === 'up'"
+              [class.shift-arrow-down]="shiftDirection() === 'down'"></span>
+            <span>Schakel naar {{gearAdvice()}}</span>
+          </div>
         </app-gauge>
       </div>
     </div>
