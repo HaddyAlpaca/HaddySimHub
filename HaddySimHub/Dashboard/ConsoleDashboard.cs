@@ -44,6 +44,10 @@ public sealed class ConsoleDashboard
     {
         try
         {
+            // Clear any startup output so the dashboard renders from the top of
+            // a clean screen instead of being pushed below earlier log lines.
+            AnsiConsole.Clear();
+
             await AnsiConsole.Live(BuildLayout())
                 .AutoClear(true)
                 .Overflow(VerticalOverflow.Crop)
@@ -78,15 +82,32 @@ public sealed class ConsoleDashboard
         }
     }
 
-    private IRenderable BuildLayout()
-    {
-        var rows = new Rows(
-            BuildHeader(),
-            new Columns(BuildStatusPanel(), BuildGamesPanel()).Expand(),
-            BuildLogPanel(),
-            BuildFooter());
+    private IRenderable BuildLayout() => BuildLayout(GetWindowHeight());
 
-        return rows;
+    /// <summary>
+    /// Builds the full-screen dashboard layout for a terminal of the given
+    /// height. A Spectre <see cref="Layout"/> is used (rather than stacked
+    /// <c>Rows</c>) so the log panel expands to fill the complete vertical
+    /// space, btop-style, instead of leaving the terminal partially blank.
+    /// </summary>
+    internal IRenderable BuildLayout(int windowHeight)
+    {
+        // Status panel always shows three rows; the games panel shows one row
+        // per registered game (minimum one). The taller of the two, plus the
+        // rounded panel border, determines the body height.
+        var bodyContentRows = Math.Max(3, Math.Max(1, _displays.Count));
+        var bodyHeight = bodyContentRows + 2;
+
+        // header rule (1) + footer (1) + log panel border (2).
+        const int chrome = 4;
+        var logCapacity = Math.Max(5, windowHeight - bodyHeight - chrome);
+
+        return new Layout("root").SplitRows(
+            new Layout("header").Size(1).Update(BuildHeader()),
+            new Layout("body").Size(bodyHeight)
+                .Update(new Columns(BuildStatusPanel(), BuildGamesPanel()).Expand()),
+            new Layout("log").Ratio(1).Update(BuildLogPanel(logCapacity)),
+            new Layout("footer").Size(1).Update(BuildFooter()));
     }
 
     private IRenderable BuildHeader()
@@ -161,9 +182,8 @@ public sealed class ConsoleDashboard
         };
     }
 
-    private IRenderable BuildLogPanel()
+    private IRenderable BuildLogPanel(int maxLines)
     {
-        var maxLines = Math.Max(5, GetWindowHeight() - 16);
         var entries = _logStore.Snapshot(maxLines);
 
         var lines = new List<IRenderable>();
@@ -186,13 +206,6 @@ public sealed class ConsoleDashboard
         if (lines.Count == 0)
         {
             lines.Add(new Markup("[grey]Waiting for activity...[/]"));
-        }
-
-        // Pad with blank rows so the log panel always fills the remaining
-        // terminal height instead of shrinking to fit a few log lines.
-        while (lines.Count < maxLines)
-        {
-            lines.Add(new Markup(string.Empty));
         }
 
         return new Panel(new Rows(lines))
