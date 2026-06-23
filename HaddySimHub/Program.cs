@@ -16,6 +16,8 @@ public class Program
         VerifySingleInstance();
         Logger.Setup();
 
+        ApplyTestModeArgument(args);
+
         if (!args.Contains("--no-update"))
         {
             await CheckForUpdates();
@@ -78,6 +80,49 @@ public class Program
         await Task.WhenAll(webServerTask, keyInputTask);
 
         cancellationTokenSource.Cancel();
+    }
+
+    private static void ApplyTestModeArgument(string[] args)
+    {
+        // Allow starting directly in a test mode, e.g. `--test race`, so the
+        // mode does not have to be cycled through manually with Ctrl+T.
+        var index = Array.FindIndex(args, a => a == "--test" || a == "--test-mode");
+        string? value = null;
+
+        if (index >= 0 && index + 1 < args.Length)
+        {
+            value = args[index + 1];
+        }
+        else
+        {
+            var inline = args.FirstOrDefault(a => a.StartsWith("--test=", StringComparison.Ordinal));
+            if (inline is not null)
+            {
+                value = inline["--test=".Length..];
+            }
+        }
+
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return;
+        }
+
+        var normalized = value.Trim().ToLowerInvariant();
+        var validIds = new[]
+        {
+            HaddySimHub.Displays.DisplayDefinitions.TestIds.Race,
+            HaddySimHub.Displays.DisplayDefinitions.TestIds.Rally,
+            HaddySimHub.Displays.DisplayDefinitions.TestIds.Truck,
+        };
+
+        if (Array.IndexOf(validIds, normalized) < 0)
+        {
+            Logger.Warn($"Unknown test mode '{value}'. Valid values: {string.Join(", ", validIds)}.");
+            return;
+        }
+
+        TestId = normalized;
+        Logger.Info($"Test mode:'{TestId}' (set via command-line argument).");
     }
 
     private static WebApplication CreateWebServer()
