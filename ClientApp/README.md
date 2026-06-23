@@ -1,50 +1,43 @@
 # HaddySimHub Client (Angular)
 
-## Snelle dev-loop met hot-reload (aanbevolen)
+## Fast dev loop with hot-reload (recommended)
 
-In plaats van `ng build` → bestanden naar `wwwroot` kopiëren → backend herstarten,
-draai je de backend één keer en de frontend via de Angular dev-server met HMR.
+Instead of `ng build` → copying files to `wwwroot` → restarting the backend,
+run the backend once and the frontend using the Angular dev-server with HMR.
 
-1. **Start de backend** (vanuit de repo-root) en zet desgewenst direct een test mode:
+1. **Start the backend** (from the repository root) and optionally set a test mode directly:
 
    ```bash
-   dotnet run --project HaddySimHub --test race    # of: rally / truck
+   dotnet run --project HaddySimHub --test race    # or: rally / truck
    ```
 
-   De backend luistert op `http://localhost:3333` (incl. de SignalR-hub `/display-data`).
+   The backend listens on `http://localhost:3333` (including the SignalR hub `/display-data`).
 
-2. **Start de frontend dev-server** (vanuit `ClientApp/`):
+2. **Start the frontend dev server** (from `ClientApp/`):
 
    ```bash
    npm start
    ```
 
-   Open `http://localhost:4200`. Wijzigingen in `src/` worden direct hot-reloaded —
-   geen rebuild, copy of backend-herstart meer nodig.
+   Open `http://localhost:4200`. Changes in `src/` are hot-reloaded — no rebuild, copy or backend restart required.
 
-De dev-server proxyt `/display-data` (inclusief de WebSocket-upgrade) naar de backend
-op poort 3333; zie [`proxy.conf.json`](./proxy.conf.json).
+The dev server proxies `/display-data` (including the WebSocket upgrade) to the backend on port 3333; see [`proxy.conf.json`](./proxy.conf.json).
 
-## Test mode kiezen
+## Selecting a test mode
 
-- Via CLI bij het starten van de backend: `--test race`, `--test rally` of `--test truck`
-  (ook `--test=race` werkt). Een onbekende waarde wordt genegeerd met een waarschuwing.
-- Tijdens runtime in de backend-console: druk op `Ctrl+T` om te cyclen door
-  geen test mode → race → rally → truck.
+- Via CLI when starting the backend: `--test race`, `--test rally` or `--test truck` (also `--test=race` works). An unknown value is ignored with a warning.
+- At runtime in the backend console: press `Ctrl+T` to cycle through none → race → rally → truck.
 
-## Productie-build naar wwwroot
+## Production build to wwwroot
 
-De frontend wordt automatisch meegebouwd bij `dotnet publish` — de
-`PublishClientApp`-target in `HaddySimHub/HaddySimHub.csproj` draait
-`npm run build` en plaatst de output in de `wwwroot` van de publish-output.
-Dit is dezelfde stap die de CD-workflow gebruikt; je hoeft dus niets handmatig
-te kopiëren:
+The frontend is automatically built as part of `dotnet publish` — the
+`PublishClientApp` MSBuild target in `HaddySimHub/HaddySimHub.csproj` runs
+`npm run build` and places the output into the publish output's `wwwroot`.
+This is the same step used by the CD workflow, so no manual copy is required:
 
 ```bash
 dotnet publish ./HaddySimHub -r win-x64 --output ./dist
-# ./dist/wwwroot bevat nu de productie-frontend
+# ./dist/wwwroot now contains the production frontend
 ```
 
-Een gewone `dotnet build` of `dotnet test` triggert dit bewust niet (blijft snel
-en vereist geen Node). Skip de frontend-build expliciet met
-`-p:BuildClientAppOnPublish=false` (bv. publishen op een machine zonder Node).
+A plain `dotnet build` or `dotnet test` will intentionally not trigger this (keeps them fast and Node-free). Skip the frontend build explicitly with `-p:BuildClientAppOnPublish=false` (for example when publishing on a machine without Node).
