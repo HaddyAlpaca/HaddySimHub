@@ -54,15 +54,6 @@ jobs:
       with:
         dotnet-version: ${{ env.dotnet_version }}
 
-    - name: Restore dependencies
-      run: dotnet restore ${{ env.solution_file }} --runtime win-x64
-
-    - name: Publish server app
-      run: dotnet publish ./HaddySimHub -r win-x64 --output ${{ env.dist_folder }} --no-restore
-    
-    - name: Publish updater app
-      run: dotnet publish ./HaddySimHubUpdater -r win-x64 --output ${{ env.dist_folder }}/Updater --no-restore
-    
     - name: Cache node modules
       uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4.2.0
       with:
@@ -75,19 +66,22 @@ jobs:
       uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
       with:
         node-version: ${{ env.node_version }}
-    
+
     - name: Install client app dependencies
       working-directory: ${{ env.clientapp_folder }}
       run: npm ci
 
-    - name: Build client app
-      working-directory: ${{ env.clientapp_folder }}
-      run: npm run build --omit=dev
+    - name: Restore dependencies
+      run: dotnet restore ${{ env.solution_file }} --runtime win-x64
 
-    - name: Copy client app to distribution folder
-      run: |
-        mkdir -p ${{ env.dist_folder }}/wwwroot
-        cp -r ${{ env.clientapp_folder }}dist/haddy-sim-hub-client/browser/* ${{ env.dist_folder }}/wwwroot/
+    # `dotnet publish` builds the Angular client (production) and places it in
+    # the app's wwwroot via the PublishClientApp target in HaddySimHub.csproj,
+    # so no separate "build client" / "copy to wwwroot" steps are needed here.
+    - name: Publish server app
+      run: dotnet publish ./HaddySimHub -r win-x64 --output ${{ env.dist_folder }} --no-restore
+
+    - name: Publish updater app
+      run: dotnet publish ./HaddySimHubUpdater -r win-x64 --output ${{ env.dist_folder }}/Updater --no-restore
 
     - name: Zip build result
       run: |
