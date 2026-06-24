@@ -2,6 +2,7 @@
     <div class="card">
       <div class="card-header">
         <h2 class="card-title">Route</h2>
+        <span class="game-time" id="gameTime">{{gameTimeFormatted()}}</span>
       </div>
       <div class="card-body">
         <div class="data-row">
@@ -35,6 +36,9 @@
               @if (data().restTimeRemainingIrl > 0) {
                 <span>({{data().restTimeRemainingIrl | timespan}})</span>
               }
+              <div class="rest-bar-track">
+                <div class="rest-bar-fill" [style.width.%]="restRatio() * 100" [class.rest-critical]="restRatio() < 1" [class.rest-ok]="restRatio() >= 1"></div>
+              </div>
             </div>
           }
           @else {
@@ -88,6 +92,15 @@
           }
           @else {
             <div class="data-item" id="jobCargoName">-</div>
+          }
+        </div>
+        <div class="data-row">
+          <div class="data-label">Laadingschade</div>
+          @if (data().jobCargoDamage >= 0) {
+            <div class="data-item" id="jobCargoDamage" [class]="damageClass(data().jobCargoDamage)">{{data().jobCargoDamage}} %</div>
+          }
+          @else {
+            <div class="data-item" id="jobCargoDamage">-</div>
           }
         </div>
       </div>
@@ -184,7 +197,7 @@
     </div>
   </div>
 
-  <div class="bottom-row">
+  <div class="bottom-row lights-full-row">
     <div class="card lights-card">
       <img class="dashboard-light" id="parking-lights" src="/assets/images/parking-lights.svg" [class.filter-green]="data().parkingLightsOn">
       <img class="dashboard-light" id="low-beam" src="/assets/images/low-beam.svg" [class.filter-green]="data().lowBeamOn">
@@ -195,6 +208,48 @@
       <img class="dashboard-light" id="brake-warning" src="/assets/images/brake-warning.svg" [class.filter-red]="data().parkingBrakeOn">
       <img class="dashboard-light" id="wipers" src="/assets/images/wipers.svg" [class.filter-blue]="data().wipersOn">
       <img class="dashboard-light" id="differentialLock" src="/assets/images/diff-lock.svg" [class.filter-orange]="data().differentialLock">
+      <img class="dashboard-light" id="engine" src="/assets/images/engine.svg" [class.filter-green]="data().engineOn">
+      <img class="dashboard-light" id="motor-brake" src="/assets/images/motor-brake.svg" [class.filter-orange]="data().motorBrakeOn">
+      <img class="dashboard-light" id="beacon" src="/assets/images/beacon.svg" [class.filter-orange]="data().beaconOn">
+      <img class="dashboard-light" id="lift-axle" src="/assets/images/lift-axle.svg" [class.filter-orange]="data().liftAxleIndicatorOn">
+      <img class="dashboard-light" id="air-pressure" src="/assets/images/air-pressure.svg" [class.filter-orange]="data().airPressureWarningOn" [class.filter-red]="data().airPressureEmergencyOn">
+      <img class="dashboard-light" id="air-pressure-emergency" src="/assets/images/air-pressure-emergency.svg" [class.filter-red]="data().airPressureEmergencyOn">
+    </div>
+  </div>
+
+  <div class="bottom-row">
+    <div class="card combined-controls-card">
+      <div class="controls-grid">
+        <div class="icon-text-control fuel-control" id="fuel">
+          <div class="fuel-info">
+            <img class="dashboard-light" src="/assets/images/fuel.svg" [class.filter-orange]="data().fuelWarningOn">
+            <div [class.fuel-range-too-short]="fuelRangeTooShort()">{{data().fuelDistance | numberFlexDigit}} km ({{data().fuelAmount | numberFlexDigit}} l)</div>
+          </div>
+          <div class="fuel-bar-track">
+            <div class="fuel-bar-fill" [style.width.%]="fuelPct()" [class.fuel-low]="fuelPct() < 25" [class.fuel-critical]="fuelPct() < 10"></div>
+          </div>
+        </div>
+        <div class="icon-text-control adblue-control" id="adBlue">
+          <div class="fuel-info">
+            <img class="dashboard-light" src="/assets/images/adblue.svg" [class.filter-orange]="data().adBlueWarningOn">
+            <div>{{data().adBlueAmount  | numberFlexDigit}} l</div>
+          </div>
+          <div class="adblue-bar-track">
+            <div class="adblue-bar-fill" [style.width.%]="adBluePct()" [class.adblue-low]="adBluePct() < 25" [class.adblue-critical]="adBluePct() < 10"></div>
+          </div>
+        </div>
+        <div class="icon-text-control throttle-control" id="acceleration">
+          <img class="dashboard-light" src="/assets/images/throttle.svg">
+          <div class="throttle-info">{{data().throttle}} %</div>
+          <div class="throttle-bar-track">
+            <div class="throttle-bar-fill" [style.width.%]="data().throttle"></div>
+          </div>
+        </div>
+        <div class="icon-text-control" id="fuelAverageConsumption">
+          <img class="dashboard-light" src="/assets/images/fuel.svg">
+          <div>{{data().fuelAverageConsumption | number: '1.1-1'}} l/100 km</div>
+        </div>
+      </div>
     </div>
 
     <div class="card lights-card">
@@ -202,29 +257,6 @@
         <img class="dashboard-light" src="/assets/images/cruise-control.png">
         <div>{{data().cruiseControlSpeed}} km/h</div>
       </div>
-      <div class="icon-text-control fuel-control" id="fuel">
-        <div class="fuel-info">
-          <img class="dashboard-light" src="/assets/images/fuel.svg" [class.filter-orange]="data().fuelWarningOn">
-          <div [class.fuel-range-too-short]="fuelRangeTooShort()">{{data().fuelDistance | numberFlexDigit}} km ({{data().fuelAmount | numberFlexDigit}} l)</div>
-        </div>
-        <div class="fuel-bar-track">
-          <div class="fuel-bar-fill" [style.width.%]="fuelPct()" [class.fuel-low]="fuelPct() < 25" [class.fuel-critical]="fuelPct() < 10"></div>
-        </div>
-      </div>
-      <div class="icon-text-control adblue-control" id="adBlue">
-        <div class="fuel-info">
-          <img class="dashboard-light" src="/assets/images/adblue.svg" [class.filter-orange]="data().adBlueWarningOn">
-          <div>{{data().adBlueAmount  | numberFlexDigit}} l</div>
-        </div>
-        <div class="adblue-bar-track">
-          <div class="adblue-bar-fill" [style.width.%]="adBluePct()" [class.adblue-low]="adBluePct() < 25" [class.adblue-critical]="adBluePct() < 10"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="bottom-row">
-    <div class="card lights-card">
       <div class="icon-text-control" id="batteryVoltage">
         <img class="dashboard-light" src="/assets/images/battery.svg" [class.filter-red]="data().batteryVoltageWarningOn">
         <div>{{data().batteryVoltage | number: '1.1-1'}} V</div>
@@ -241,20 +273,9 @@
         <img class="dashboard-light" src="/assets/images/oil-temp.svg">
         <div>{{data().oilTemp | number: '1.1-1'}} &deg;C</div>
       </div>
-    </div>
-
-    <div class="card lights-card">
       <div class="icon-text-control" [class.hidden]="!data().retarderStepCount">
         <img class="dashboard-light" src="/assets/images/retarder.svg" [class.filter-orange]="data().retarderLevel">
         <div>{{data().retarderLevel}}/{{data().retarderStepCount}}</div>
-      </div>
-      <div class="icon-text-control" id="acceleration">
-        <img class="dashboard-light" src="/assets/images/throttle.svg">
-        <div>{{data().throttle}} %</div>
-      </div>
-      <div class="icon-text-control" id="fuelAverageConsumption">
-        <img class="dashboard-light" src="/assets/images/fuel.svg">
-        <div>{{data().fuelAverageConsumption | number: '1.1-1'}} l/100 km</div>
       </div>
     </div>
   </div>

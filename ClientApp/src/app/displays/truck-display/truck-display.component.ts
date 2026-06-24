@@ -44,14 +44,34 @@ export class TruckDisplayComponent {
 
   protected readonly fuelPct = computed(() => {
     const data = this.data();
-    if (data.fuelCapacity <= 0) return 0;
+    if (data.fuelCapacity <= 0) {
+      return 0;
+    }
     return Math.round((data.fuelAmount / data.fuelCapacity) * 100);
   });
 
   protected readonly adBluePct = computed(() => {
     const data = this.data();
-    if (data.adBlueCapacity <= 0) return 0;
+    if (data.adBlueCapacity <= 0) {
+      return 0;
+    }
     return Math.round((data.adBlueAmount / data.adBlueCapacity) * 100);
+  });
+
+  protected readonly gameTimeFormatted = computed(() => {
+    const data = this.data();
+    const minutes = data.gameTime % minutesPerDay;
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+  });
+
+  protected readonly restRatio = computed(() => {
+    const data = this.data();
+    if (data.timeRemaining <= 0) {
+      return 1;
+    }
+    return Math.min(data.restTimeRemaining / data.timeRemaining, 1);
   });
 
   protected readonly arrivalTime = computed(() => {

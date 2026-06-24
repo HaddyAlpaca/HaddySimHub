@@ -78,6 +78,12 @@ describe('MockAppStore', () => {
         damageTrailerCargo: 0,
         damageTrailer: 0,
         gameTime: 0,
+        airPressureWarningOn: false,
+        airPressureEmergencyOn: false,
+        engineOn: true,
+        motorBrakeOn: false,
+        beaconOn: false,
+        liftAxleIndicatorOn: false,
       };
 
       store.updateDisplay({ type: DisplayType.TruckDashboard, data: truckData });

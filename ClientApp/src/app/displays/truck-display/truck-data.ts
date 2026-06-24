@@ -62,4 +62,10 @@ export interface TruckData {
   waterTempWarningOn: boolean;
   retarderLevel: number;
   retarderStepCount: number;
+  airPressureWarningOn: boolean;
+  airPressureEmergencyOn: boolean;
+  engineOn: boolean;
+  motorBrakeOn: boolean;
+  beaconOn: boolean;
+  liftAxleIndicatorOn: boolean;
 }

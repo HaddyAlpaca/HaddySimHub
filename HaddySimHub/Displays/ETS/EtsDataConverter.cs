@@ -94,6 +94,12 @@ public class EtsDataConverter : IDataConverter<SCSTelemetry, DisplayUpdate>
             WaterTempWarningOn = data.TruckValues.CurrentValues.DashboardValues.WarningValues.WaterTemperature,
             BatteryVoltageWarningOn = data.TruckValues.CurrentValues.DashboardValues.WarningValues.BatteryVoltage,
             BatteryVoltage = data.TruckValues.CurrentValues.DashboardValues.BatteryVoltage,
+            AirPressureWarningOn = data.TruckValues.CurrentValues.DashboardValues.WarningValues.AirPressure,
+            AirPressureEmergencyOn = data.TruckValues.CurrentValues.DashboardValues.WarningValues.AirPressureEmergency,
+            EngineOn = data.TruckValues.CurrentValues.EngineEnabled,
+            MotorBrakeOn = data.TruckValues.CurrentValues.MotorValues.BrakeValues.MotorBrake,
+            BeaconOn = data.TruckValues.CurrentValues.LightsValues.Beacon,
+            LiftAxleIndicatorOn = data.TruckValues.CurrentValues.LiftAxleIndicator,
             RetarderLevel = data.TruckValues.CurrentValues.MotorValues.BrakeValues.RetarderLevel,
             RetarderStepCount = data.TruckValues.ConstantsValues.MotorValues.RetarderStepCount,
         };
