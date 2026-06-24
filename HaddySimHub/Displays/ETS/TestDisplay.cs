@@ -27,6 +27,12 @@ namespace HaddySimHub.Displays.ETS
             }
 
             var speed = (short)(_currentRpm * 0.08);
+            var recommendedGear = _currentRpm switch
+            {
+                > 2000 => "6",
+                < 1000 => "4",
+                _ => string.Empty,
+            };
 
             return new DisplayUpdate
             {
@@ -35,6 +41,7 @@ namespace HaddySimHub.Displays.ETS
                 {
                     Speed = speed,
                     Gear = "5",
+                    RecommendedGear = recommendedGear,
                     Rpm = (short)_currentRpm,
                     RpmMax = RpmMax,
                     FuelAverageConsumption = 25.5F,

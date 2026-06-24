@@ -1,22 +1,33 @@
 <div class="container">
   <div class="group-border border-blue">
-    <label>Completed</label>
-    <div>{{data().completedPct}} %</div>
-
-    <label>Travelled</label>
-    <div>{{data().distanceTravelled}} m</div>
+    <div class="sectors-row">
+      <div class="sector-item">
+        <label>Completed</label>
+        <div>{{data().completedPct}} %</div>
+      </div>
+      <div class="sector-item">
+        <label>Travelled</label>
+        <div>{{data().distanceTravelled}} m</div>
+      </div>
+    </div>
   </div>
   <div class="group-border border-yellow speedometer" [class.max-rpm]="data().rpm >= data().rpmMax">
     <app-speedometer [rpm]="data().rpm" [gear]="data().gear" [speed]="data().speed" />
   </div>
   <div class="group-border border-blue">
-    <label>Sector 1</label>
-    <div>{{data().sector1Time | laptime}}</div>
-
-    <label>Sector 2</label>
-    <div>{{data().sector2Time | laptime}}</div>
-
-    <label>Stage running</label>
-    <div>{{data().lapTime | laptime}}</div>
+    <div class="sectors-row">
+      <div class="sector-item">
+        <label>Sector 1</label>
+        <div>{{data().sector1Time | laptime}}</div>
+      </div>
+      <div class="sector-item">
+        <label>Sector 2</label>
+        <div>{{data().sector2Time | laptime}}</div>
+      </div>
+      <div class="sector-item">
+        <label>Stage running</label>
+        <div>{{data().lapTime | laptime}}</div>
+      </div>
+    </div>
   </div>
 </div>

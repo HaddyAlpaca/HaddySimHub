@@ -173,15 +173,15 @@ describe('TruckDisplayComponent', () => {
     it('Shows advice when the recommended gear differs from the current gear', async () => {
       patchData({ gear: '7', recommendedGear: '9' });
 
-      expect(await harness.getElementText('#gearAdvice')).toContain('9');
-      const elm = await harness.locatorForElement('#gearAdvice');
+      expect(await harness.getElementText('#gear-advice')).toContain('9');
+      const elm = await harness.locatorForElement('#gear-advice');
       expect(await elm.hasClass('hidden')).toBe(false);
     });
 
     it('Shows an up arrow when the recommended gear is higher', async () => {
       patchData({ gear: '7', recommendedGear: '9' });
 
-      const arrow = await harness.locatorForElement('#shiftArrow');
+      const arrow = await harness.locatorForElement('#shift-arrow');
       expect(await arrow.hasClass('shift-arrow-up')).toBe(true);
       expect(await arrow.hasClass('shift-arrow-down')).toBe(false);
     });
@@ -189,7 +189,7 @@ describe('TruckDisplayComponent', () => {
     it('Shows a down arrow when the recommended gear is lower', async () => {
       patchData({ gear: '9', recommendedGear: '7' });
 
-      const arrow = await harness.locatorForElement('#shiftArrow');
+      const arrow = await harness.locatorForElement('#shift-arrow');
       expect(await arrow.hasClass('shift-arrow-up')).toBe(false);
       expect(await arrow.hasClass('shift-arrow-down')).toBe(true);
     });
@@ -197,7 +197,7 @@ describe('TruckDisplayComponent', () => {
     it('Shows no arrow direction when the current gear is not numeric', async () => {
       patchData({ gear: 'C1', recommendedGear: '2' });
 
-      const arrow = await harness.locatorForElement('#shiftArrow');
+      const arrow = await harness.locatorForElement('#shift-arrow');
       expect(await arrow.hasClass('shift-arrow-up')).toBe(false);
       expect(await arrow.hasClass('shift-arrow-down')).toBe(false);
     });
@@ -205,14 +205,14 @@ describe('TruckDisplayComponent', () => {
     it('Hides advice when the recommended gear matches the current gear', async () => {
       patchData({ gear: '9', recommendedGear: '9' });
 
-      const elm = await harness.locatorForElement('#gearAdvice');
+      const elm = await harness.locatorForElement('#gear-advice');
       expect(await elm.hasClass('hidden')).toBe(true);
     });
 
     it('Hides advice when there is no recommendation', async () => {
       patchData({ gear: '9', recommendedGear: '' });
 
-      const elm = await harness.locatorForElement('#gearAdvice');
+      const elm = await harness.locatorForElement('#gear-advice');
       expect(await elm.hasClass('hidden')).toBe(true);
     });
   });
