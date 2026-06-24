@@ -4,12 +4,12 @@ export class RallyDisplayComponentHarness extends ComponentHarness {
   public static hostSelector = 'app-rally-display';
 
   public async getCompletedText(): Promise<string> {
-    const element = await this.locatorFor(':contains("Completed")')();
+    const element = await this.locatorFor(':contains("Stage Progress")')();
     return element.text();
   }
 
   public async getTravelledText(): Promise<string> {
-    const element = await this.locatorFor(':contains("Travelled")')();
+    const element = await this.locatorFor(':contains("Distance")')();
     return element.text();
   }
 
@@ -24,7 +24,7 @@ export class RallyDisplayComponentHarness extends ComponentHarness {
   }
 
   public async hasMaxRpmClass(): Promise<boolean> {
-    const element = await this.locatorFor('.speedometer')();
+    const element = await this.locatorFor('.speedometer-section')();
     return element.hasClass('max-rpm');
   }
 }

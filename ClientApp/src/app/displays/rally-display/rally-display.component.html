@@ -1,33 +1,38 @@
 <div class="container">
-  <div class="group-border border-blue">
-    <div class="sectors-row">
-      <div class="sector-item">
-        <label>Completed</label>
-        <div>{{data().completedPct}} %</div>
-      </div>
-      <div class="sector-item">
-        <label>Travelled</label>
-        <div>{{data().distanceTravelled}} m</div>
-      </div>
+  <!-- Progress Section -->
+  <div class="progress-section">
+    <div class="progress-header">
+      <label>Stage Progress</label>
+      <span class="completion-percentage">{{data().completedPct}}%</span>
+    </div>
+    <div class="progress-bar-container">
+      <div class="progress-bar" [style.width.%]="data().completedPct"></div>
+      <div class="progress-bar-glow"></div>
+    </div>
+    <div class="distance-info">
+      <span class="label">Distance</span>
+      <span class="value">{{data().distanceTravelled}} m</span>
     </div>
   </div>
-  <div class="group-border border-yellow speedometer" [class.max-rpm]="data().rpm >= data().rpmMax">
+
+  <!-- Speedometer Section -->
+  <div class="speedometer-section" [class.max-rpm]="data().rpm >= data().rpmMax">
     <app-speedometer [rpm]="data().rpm" [gear]="data().gear" [speed]="data().speed" />
   </div>
-  <div class="group-border border-blue">
-    <div class="sectors-row">
-      <div class="sector-item">
-        <label>Sector 1</label>
-        <div>{{data().sector1Time | laptime}}</div>
-      </div>
-      <div class="sector-item">
-        <label>Sector 2</label>
-        <div>{{data().sector2Time | laptime}}</div>
-      </div>
-      <div class="sector-item">
-        <label>Stage running</label>
-        <div>{{data().lapTime | laptime}}</div>
-      </div>
+
+  <!-- Sectors Section -->
+  <div class="sectors-section">
+    <div class="sector-card">
+      <label>Sector 1</label>
+      <div class="sector-time">{{data().sector1Time | laptime}}</div>
+    </div>
+    <div class="sector-card">
+      <label>Sector 2</label>
+      <div class="sector-time">{{data().sector2Time | laptime}}</div>
+    </div>
+    <div class="sector-card stage-running">
+      <label>Stage Running</label>
+      <div class="sector-time">{{data().lapTime | laptime}}</div>
     </div>
   </div>
 </div>
