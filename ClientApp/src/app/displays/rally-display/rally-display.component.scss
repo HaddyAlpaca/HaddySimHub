@@ -1,74 +1,295 @@
 app-rally-display {
   height: 100%;
-  padding-top: 4vh;
+  padding-top: 2vh;
+  box-sizing: border-box;
 
   .container {
     max-width: unset;
     color: white;
     font-size: clamp(1.4rem, 3.5vh, 2.2rem);
-    text-align: center;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.6vh;
-  }
-
-  .speedometer {
     display: flex;
     flex-direction: column;
+    gap: 1.6vh;
+    padding: 0 2vw;
+    height: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
 
-    &.max-rpm {
-      background-color: red;
+  /* Progress Section */
+  .progress-section {
+    background: linear-gradient(135deg, rgb(0 150 255 / 10%) 0%, rgb(0 220 255 / 5%) 100%);
+    border: 1px solid rgb(0 220 255 / 40%);
+    border-radius: 1.2vh;
+    padding: 2vh 2.5vh;
+    backdrop-filter: blur(10px);
+    animation: slide-in-down 0.6s ease-out;
+    flex: 0 0 auto;
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5vh;
+
+      label {
+        text-transform: uppercase;
+        font-size: clamp(0.9rem, 1.8vh, 1.2rem);
+        letter-spacing: 1px;
+        color: #6db3d8;
+        font-weight: 600;
+      }
+
+      .completion-percentage {
+        font-size: clamp(1.2rem, 2.5vh, 1.8rem);
+        color: #7dd3c0;
+        font-weight: 700;
+        text-shadow: 0 0 10px rgb(125 211 192 / 30%);
+      }
+    }
+
+    .progress-bar-container {
+      position: relative;
+      width: 100%;
+      height: 3vh;
+      background: rgb(0 0 0 / 30%);
+      border-radius: 1.5vh;
+      overflow: hidden;
+      margin-bottom: 1.5vh;
+      border: 1px solid rgb(0 220 255 / 20%);
+
+      .progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #4a90e2 0%, #7dd3c0 50%, #f5a623 100%);
+        border-radius: 1.5vh;
+        transition: width 0.3s ease-out;
+        box-shadow: 0 0 15px rgb(125 211 192 / 40%);
+        animation: progress-pulse 2s ease-in-out infinite;
+      }
+
+      .progress-bar-glow {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 20%;
+        height: 100%;
+        background: radial-gradient(circle, rgb(125 211 192 / 30%) 0%, transparent 70%);
+        pointer-events: none;
+      }
+    }
+
+    .distance-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: clamp(0.95rem, 2vh, 1.3rem);
+
+      .label {
+        color: rgb(109 179 216 / 70%);
+        text-transform: uppercase;
+        font-size: clamp(0.85rem, 1.6vh, 1.1rem);
+        letter-spacing: 0.5px;
+      }
+
+      .value {
+        color: #7dd3c0;
+        font-weight: 600;
+      }
     }
   }
 
-  .group-border {
-    border: white 0.3vh solid;
-    padding: 2vh;
-    border-radius: 1.4vh;
+  /* Speedometer Section */
+  .speedometer-section {
+    background: linear-gradient(135deg, rgb(255 200 0 / 8%) 0%, rgb(255 100 0 / 5%) 100%);
+    border: 2px solid rgb(255 215 0 / 40%);
+    border-radius: 1.5vh;
+    padding: 0.5vh 2.5vh;
+    flex: 0 0 32vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    will-change: auto;
+    box-sizing: border-box;
 
-    &.border-blue {
-      border-color: rgb(0 0 255 / 55.5%);
-    }
+    &.max-rpm {
+      background: linear-gradient(135deg, rgb(255 0 0 / 15%) 0%, rgb(255 100 0 / 10%) 100%);
+      border-color: rgb(255 0 0 / 80%);
+      box-shadow: 0 0 30px rgb(255 0 0 / 40%), inset 0 0 30px rgb(255 0 0 / 10%);
 
-    &.border-yellow {
-      border-color: yellow;
-    }
-
-    label {
-      text-transform: uppercase;
-      font-size: clamp(0.9rem, 2vh, 1.2rem);
-      text-align: right;
-      color: gold;
+      app-speedometer {
+        > label {
+          color: #e94f37;
+          text-shadow: 0 0 20px rgb(233 79 55 / 40%);
+        }
+      }
     }
 
     app-speedometer {
+      text-align: center;
+      width: 100%;
+
       > label {
         text-transform: uppercase;
-        text-align: center;
-        width: 100%;
-        font-size: clamp(1.4rem, 3.5vh, 2.2rem);
-        color: gold;
+        font-size: clamp(1.2rem, 3vh, 1.8rem);
+        color: #f5a623;
+        font-weight: 600;
+        letter-spacing: 2px;
+        margin-bottom: 1.5vh;
+        text-shadow: 0 0 10px rgb(245 166 35 / 30%);
       }
 
       .rpm, .speed {
         font-size: clamp(2.6rem, 6vh, 5rem);
+        color: #fff;
+        font-weight: 700;
+        text-shadow: 0 0 20px rgb(255 255 255 / 20%);
       }
 
       .gear {
-        text-align: center;
         font-size: clamp(5rem, 12vh, 10rem);
+        color: #fff;
+        text-align: center;
+        font-weight: 900;
+        text-shadow: 0 0 30px rgb(255 255 255 / 20%);
+        margin: 1vh 0;
       }
     }
   }
 
-  .sectors-row {
-    display: flex;
-    justify-content: center;
-    gap: 2vh;
+  /* Sectors Section */
+  .sectors-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.8vh;
+    animation: slide-in-up 0.8s ease-out;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    padding-bottom: 2vh;
+
+    .sector-card {
+      background: linear-gradient(135deg, rgb(100 50 255 / 10%) 0%, rgb(50 100 255 / 5%) 100%);
+      border: 1px solid rgb(100 150 255 / 40%);
+      border-radius: 1.2vh;
+    padding: 1.5vh 1.2vh;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: default;
+
+      &:hover {
+        border-color: rgb(100 150 255 / 80%);
+        box-shadow: 0 8px 24px rgb(100 150 255 / 30%);
+        transform: translateY(-4px);
+        background: linear-gradient(135deg, rgb(100 50 255 / 20%) 0%, rgb(50 100 255 / 10%) 100%);
+      }
+
+      label {
+        display: block;
+        text-transform: uppercase;
+        font-size: clamp(0.8rem, 1.6vh, 1.1rem);
+        letter-spacing: 1px;
+        color: #6db3d8;
+        margin-bottom: 0.8vh;
+        font-weight: 600;
+      }
+
+      .sector-time {
+        font-size: clamp(1.8rem, 4vh, 3rem);
+        color: #7dd3c0;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        text-shadow: 0 0 15px rgb(125 211 192 / 25%);
+      }
+
+      &.stage-running {
+        border-color: rgb(245 166 35 / 50%);
+        background: linear-gradient(135deg, rgb(245 166 35 / 10%) 0%, rgb(233 79 55 / 5%) 100%);
+        animation: pulse 2s ease-in-out infinite;
+
+        label {
+          color: #f5a623;
+        }
+
+        .sector-time {
+          color: #f5a623;
+          text-shadow: 0 0 15px rgb(245 166 35 / 30%);
+        }
+
+        &:hover {
+          border-color: rgb(245 166 35 / 80%);
+          box-shadow: 0 8px 24px rgb(245 166 35 / 25%);
+        }
+      }
+    }
   }
 
-  .sector-item {
-    text-align: center;
-    flex: 1;
+  /* Animations */
+  @keyframes slide-in-down {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slide-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.7;
+    }
+  }
+
+  @keyframes progress-pulse {
+    0%, 100% {
+      box-shadow: 0 0 15px rgb(125 211 192 / 40%);
+    }
+
+    50% {
+      box-shadow: 0 0 25px rgb(125 211 192 / 60%);
+    }
+  }
+
+  @keyframes max-rpm-warning {
+    0%, 100% {
+      box-shadow: 0 0 20px rgb(233 79 55 / 30%), inset 0 0 20px rgb(233 79 55 / 5%);
+    }
+
+    50% {
+      box-shadow: 0 0 35px rgb(233 79 55 / 50%), inset 0 0 20px rgb(233 79 55 / 10%);
+    }
+  }
+
+  /* Responsive */
+  @media (aspect-ratio <= 16 / 9) {
+    .container {
+      gap: 1.6vh;
+      padding: 0 1vw;
+    }
+
+    .sectors-section {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.4vh;
+    }
   }
 }
