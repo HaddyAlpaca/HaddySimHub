@@ -1,127 +1,124 @@
 app-truck-display {
-  height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  height: 100%;
+  padding: 1.2vh;
+  gap: 1.5vh;
   font-family: Poppins, sans-serif;
   color: white;
+  background: radial-gradient(ellipse at 50% 30%, #252840 0%, #1e1e2f 70%);
 
-  app-gauge {
-    padding-top: 20px;
-    overflow: hidden;
+  .top-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1vh;
+    min-height: 0;
   }
 
-  .gauge {
-    place-content: center center;
-    height: 430px !important;
+  .metrics-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1vh;
+    min-height: 0;
   }
 
-  .gear {
-    text-align: center;
-    font-size: 6vw;
-    line-height: 1;
-    padding-top: 100px;
+  .bottom-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1vh;
+    min-height: 0;
   }
 
-  .rpm-scale {
-    margin: 0;
-    padding-top: 45px;
+  .damage-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6vh;
   }
 
-  .speed {
-    text-align: center;
-    font-size: 8vw;
-    line-height: 1;
-    padding-top: 65px;
+  .top-cards > .card:nth-child(1) {
+    border-top: 3px solid #4a8fe7;
   }
 
-  .text-center {
-    text-align: center;
+  .top-cards > .card:nth-child(2) {
+    border-top: 3px solid #2ecc71;
   }
 
-  .unit {
-    font-size: 1.3vw;
-    color: gray;
-    line-height: 1;
-    margin-bottom: 50px;
+  .top-cards > .card:nth-child(3) {
+    border-top: 3px solid #f39c12;
   }
 
-  .rpm-value {
-    font-size: 2vw;
-    line-height: 1;
-    padding-bottom: 13px;
+  .top-cards > .card:nth-child(4) {
+    border-top: 3px solid #e74c3c;
   }
 
-  .dashboard-lights {
-    display: flex;
-    flex-flow: row wrap;
-    align-items: center;
-    place-content: center space-evenly;
+  .metrics-row > .card:nth-child(1) {
+    border-top: 3px solid #5dade2;
   }
 
-  .dashboard-light {
-    width: 3vw;
-    height: auto;
-  }
-
-  .speed-limit {
-    display: inline-block;
-    border:.5rem solid red;
-    border-radius: 50%;
-    background-color: white;
-    color:black;
-    font-size: 1.6vw;
-    font-weight: 600;
-    width: 5vw;
-    height: 5vw;
-    text-align: center;
-    padding-top: .9vw;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .over-speed-limit {
-    color: red;
-  }
-
-  .icon-text-control {
-    display: flex;
-    gap: 10px;
-    padding: 10px;
-    align-items: center;
-    font-size: 1.8vw;
-  }
-
-  .row {
-    margin-top: .75rem;
-
-    > *:not(:last-child) {
-      padding-right: 0;
-    }
+  .metrics-row > .card:nth-child(2) {
+    border-top: 3px solid #5dade2;
   }
 
   .card {
-    background-color: #27293d;
-    border-radius: 20px;
-    height: 100%;
-    padding: 5px;
+    background: linear-gradient(145deg, #2e3148 0%, #27293d 100%);
+    border-radius: 16px;
+    border-top-left-radius: 14px;
+    border-top-right-radius: 14px;
+    padding: 1.2vh 1.4vh;
+    overflow: hidden;
+    border: 1px solid rgb(255 255 255 / 6%);
+    box-shadow: 0 2px 12px rgb(0 0 0 / 30%);
+  }
+
+  .card-header {
+    border: none;
+    padding: 0;
+    margin-bottom: 0.6vh;
+  }
+
+  .card-title {
+    font-size: clamp(0.85rem, 2.2vh, 1.6rem);
+    margin: 0;
+    color: #aab;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .card-body {
+    padding: 0;
+  }
+
+  .data-row {
+    margin-bottom: 0.5vh;
   }
 
   .data-label {
-    color: gray;
-    font-size: 1vw;
+    color: #889;
+    font-size: clamp(0.7rem, 1.8vh, 1.2rem);
+    line-height: 1.3;
   }
 
   .data-item {
-    font-size: 1.2vw;
+    font-size: clamp(0.8rem, 2vh, 1.4rem);
+    line-height: 1.4;
   }
 
   .damage-warning {
-    color: orange;
+    color: #ffa500;
     font-weight: 600;
+    background: rgb(255 165 0 / 12%);
+    border-radius: 4px;
+    padding: 0.1vh 0.6vh;
+    display: inline-block;
   }
 
   .damage-critical {
-    color: red;
+    color: #f33;
     font-weight: 600;
+    background: rgb(255 0 0 / 12%);
+    border-radius: 4px;
+    padding: 0.1vh 0.6vh;
+    display: inline-block;
   }
 
   .fuel-range-too-short {
@@ -130,7 +127,7 @@ app-truck-display {
   }
 
   .arrival-time {
-    color: gray;
+    color: #889;
   }
 
   .rest-before-arrival {
@@ -138,61 +135,208 @@ app-truck-display {
     font-weight: 600;
   }
 
-  .shift-arrow {
-    width: 0;
-    height: 0;
-    border-left: 0.7vw solid transparent;
-    border-right: 0.7vw solid transparent;
+  .hidden {
+    visibility: hidden;
   }
 
-  .shift-arrow-up {
-    border-bottom: 0.9vw solid #0c6;
-  }
-
-  .shift-arrow-down {
-    border-top: 0.9vw solid orange;
-  }
-
-  .gear-advice {
+  .gauge-card {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5vw;
+    overflow: hidden;
+    padding: 0.5vh;
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+  .speed-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+  }
+
+  app-gauge {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .ring {
+      height: 100% !important;
+      max-width: 100%;
+      left: unset !important;
+      transform: unset !important;
+      margin: auto;
+    }
+
+    .content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      transform: none;
+    }
+  }
+
+  .gauge-content {
+    position: relative;
+    width: 70%;
+    height: 78%;
+  }
+
+  .gear-row {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .gear {
+    text-align: center;
+    font-size: clamp(2rem, 6vh, 6rem);
+    line-height: 1;
+    text-shadow: 0 0 20px rgb(255 255 255 / 15%);
+    background: rgb(255 255 255 / 6%);
+    border-radius: 8px;
+    padding: 0.2vh 1.5vh;
+    display: inline-block;
+  }
+
+  .rpm-scale {
+    position: absolute;
+    top: 18%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+  }
+
+  .gear-advice {
+    position: absolute;
+    left: calc(100% + 0.8vh);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.5vh;
     color: orange;
-    font-size: 1.2vw;
+    font-size: clamp(0.9rem, 2.6vh, 1.8rem);
     font-weight: 600;
+    white-space: nowrap;
   }
 
-  .card-header {
-    border: none;
-    padding-bottom: 0;
+  .speed {
+    text-align: center;
+    font-size: clamp(2.5rem, 9vh, 9rem);
+    line-height: 1;
+    color: white;
   }
 
-  .card-title {
-    font-size: 1.4vw;
+  .unit {
+    font-size: clamp(0.7rem, 1.8vh, 1.4rem);
+    color: gray;
+    line-height: 1;
   }
 
-  .filter-white{
+  .text-center {
+    text-align: center;
+  }
+
+  .speed-limit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    border: 0.6vh solid red;
+    border-radius: 50%;
+    background-color: white;
+    color: black;
+    font-size: clamp(0.8rem, 2.4vh, 2rem);
+    font-weight: 600;
+    width: clamp(3rem, 7vh, 7rem);
+    height: clamp(3rem, 7vh, 7rem);
+    margin-top: 1vh;
+    transition: box-shadow 0.3s, border-color 0.3s, background-color 0.3s;
+  }
+
+  .over-speed-limit {
+    color: red;
+    background-color: #fee;
+    border-color: #f44;
+  }
+
+  .dashboard-lights {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    place-content: center space-evenly;
+    gap: 0.3vh;
+  }
+
+  .lights-card {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    place-content: center space-evenly;
+    gap: 0.3vh;
+    padding: 0.4vh 0.6vh;
+  }
+
+  .dashboard-light {
+    width: clamp(1.5rem, 3vh, 3rem);
+    height: auto;
+    transition: filter 0.2s, opacity 0.2s;
+  }
+
+  .icon-text-control {
+    display: flex;
+    gap: 0.5vh;
+    padding: 0.3vh 0.5vh;
+    align-items: center;
+    font-size: clamp(0.7rem, 1.8vh, 1.4rem);
+  }
+
+  .shift-arrow {
+    width: 0;
+    height: 0;
+    border-left: 1vh solid transparent;
+    border-right: 1vh solid transparent;
+  }
+
+  .shift-arrow-up {
+    border-bottom: 1.2vh solid #0c6;
+  }
+
+  .shift-arrow-down {
+    border-top: 1.2vh solid orange;
+  }
+
+  .filter-white {
     filter: invert(100%) sepia(24%) saturate(2%) hue-rotate(284deg) brightness(103%) contrast(101%);
   }
 
-  .filter-green{
+  .filter-green {
     filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%);
   }
 
-  .filter-blue{
+  .filter-blue {
     filter: invert(8%) sepia(99%) saturate(7448%) hue-rotate(247deg) brightness(92%) contrast(145%);
   }
 
-  .filter-red{
+  .filter-red {
     filter: invert(16%) sepia(97%) saturate(6444%) hue-rotate(358deg) brightness(100%) contrast(110%);
   }
 
-  .filter-orange{
+  .filter-orange {
     filter: brightness(0) saturate(100%) invert(56%) sepia(31%) saturate(3171%) hue-rotate(1deg) brightness(104%) contrast(104%);
-  }
-
-  .hidden {
-    visibility: hidden;
   }
 }
