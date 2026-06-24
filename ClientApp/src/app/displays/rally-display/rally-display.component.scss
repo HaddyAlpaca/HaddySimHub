@@ -5,12 +5,11 @@ app-rally-display {
   .container {
     max-width: unset;
     color: white;
-    font-size: clamp(1.2rem, 2.8vh, 2rem);
-    text-align: right;
+    font-size: clamp(1.4rem, 3.5vh, 2.2rem);
+    text-align: center;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr;
     gap: 1.6vh;
-    height: 100%;
   }
 
   .speedometer {
@@ -24,9 +23,8 @@ app-rally-display {
 
   .group-border {
     border: white 0.3vh solid;
-    padding: 1vh 1.4vh;
+    padding: 2vh;
     border-radius: 1.4vh;
-    height: 100%;
 
     &.border-blue {
       border-color: rgb(0 0 255 / 55.5%);
@@ -38,7 +36,7 @@ app-rally-display {
 
     label {
       text-transform: uppercase;
-      font-size: clamp(0.7rem, 1.6vh, 1rem);
+      font-size: clamp(0.9rem, 2vh, 1.2rem);
       text-align: right;
       color: gold;
     }
@@ -48,18 +46,29 @@ app-rally-display {
         text-transform: uppercase;
         text-align: center;
         width: 100%;
-        font-size: clamp(0.8rem, 1.8vh, 1.2rem);
+        font-size: clamp(1.4rem, 3.5vh, 2.2rem);
         color: gold;
       }
 
       .rpm, .speed {
-        font-size: clamp(1.5rem, 3.5vh, 2.5rem);
+        font-size: clamp(2.6rem, 6vh, 5rem);
       }
 
       .gear {
         text-align: center;
-        font-size: clamp(2.5rem, 7vh, 5rem);
+        font-size: clamp(5rem, 12vh, 10rem);
       }
     }
+  }
+
+  .sectors-row {
+    display: flex;
+    justify-content: center;
+    gap: 2vh;
+  }
+
+  .sector-item {
+    text-align: center;
+    flex: 1;
   }
 }

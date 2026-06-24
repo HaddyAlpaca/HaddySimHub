@@ -6,7 +6,7 @@ app-race-display {
     grid-template-rows: auto auto auto 1fr;
     gap: 1.2vh;
     color: white;
-    font-size: clamp(1rem, 2.5vh, 1.5rem);
+    font-size: clamp(1.2rem, 3.2vh, 2rem);
     height: 100%;
   }
 
@@ -43,22 +43,22 @@ app-race-display {
       text-transform: uppercase;
       text-align: center;
       width: 100%;
-      font-size: clamp(0.7rem, 1.6vh, 1rem);
+      font-size: clamp(0.9rem, 2vh, 1.2rem);
     }
 
     .rpm, .speed {
-      font-size: clamp(1.2rem, 2.5vh, 2rem);
+      font-size: clamp(1.5rem, 3.2vh, 2.5rem);
     }
 
     .gear {
       text-align: center;
-      font-size: clamp(2rem, 5vh, 4rem);
+      font-size: clamp(2.5rem, 6vh, 5rem);
     }
   }
 
   label {
     text-transform: uppercase;
-    font-size: clamp(0.6rem, 1.4vh, 0.9rem);
+    font-size: clamp(0.8rem, 1.8vh, 1.1rem);
     text-align: right;
     color: gold;
   }
