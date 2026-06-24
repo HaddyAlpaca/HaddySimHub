@@ -1,6 +1,7 @@
 app-rally-display {
   height: 100%;
   padding-top: 2vh;
+  box-sizing: border-box;
 
   .container {
     max-width: unset;
@@ -11,6 +12,8 @@ app-rally-display {
     gap: 1.6vh;
     padding: 0 2vw;
     height: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
   }
 
   /* Progress Section */
@@ -21,6 +24,7 @@ app-rally-display {
     padding: 2vh 2.5vh;
     backdrop-filter: blur(10px);
     animation: slide-in-down 0.6s ease-out;
+    flex: 0 0 auto;
 
     .progress-header {
       display: flex;
@@ -98,21 +102,20 @@ app-rally-display {
     background: linear-gradient(135deg, rgb(255 200 0 / 8%) 0%, rgb(255 100 0 / 5%) 100%);
     border: 2px solid rgb(255 215 0 / 40%);
     border-radius: 1.5vh;
-    padding: 1.2vh 2.5vh;
-    flex: 0 0 28vh;
+    padding: 0.5vh 2.5vh;
+    flex: 0 0 32vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     backdrop-filter: blur(10px);
-    animation: slide-in-up 0.6s ease-out;
-    transition: all 0.3s ease;
+    will-change: auto;
+    box-sizing: border-box;
 
     &.max-rpm {
       background: linear-gradient(135deg, rgb(255 0 0 / 15%) 0%, rgb(255 100 0 / 10%) 100%);
       border-color: rgb(255 0 0 / 80%);
       box-shadow: 0 0 30px rgb(255 0 0 / 40%), inset 0 0 30px rgb(255 0 0 / 10%);
-      animation: max-rpm-warning 0.5s ease-in-out infinite;
 
       app-speedometer {
         > label {
@@ -138,14 +141,14 @@ app-rally-display {
 
       .rpm, .speed {
         font-size: clamp(2.6rem, 6vh, 5rem);
-        color: #ffffff;
+        color: #fff;
         font-weight: 700;
         text-shadow: 0 0 20px rgb(255 255 255 / 20%);
       }
 
       .gear {
         font-size: clamp(5rem, 12vh, 10rem);
-        color: #ffffff;
+        color: #fff;
         text-align: center;
         font-weight: 900;
         text-shadow: 0 0 30px rgb(255 255 255 / 20%);
@@ -160,6 +163,10 @@ app-rally-display {
     grid-template-columns: repeat(3, 1fr);
     gap: 1.8vh;
     animation: slide-in-up 0.8s ease-out;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    padding-bottom: 2vh;
 
     .sector-card {
       background: linear-gradient(135deg, rgb(100 50 255 / 10%) 0%, rgb(50 100 255 / 5%) 100%);
