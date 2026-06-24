@@ -86,6 +86,8 @@ describe('MockAppStore', () => {
         liftAxleIndicatorOn: false,
         brakeTemp: 120,
         brakeAirPressure: 120,
+        odometer: 142537,
+        dashboardBacklight: 0.75,
       };
 
       store.updateDisplay({ type: DisplayType.TruckDashboard, data: truckData });

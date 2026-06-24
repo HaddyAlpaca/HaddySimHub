@@ -895,6 +895,62 @@ namespace HaddySimHub.Tests
 
         #endregion
 
+        #region Odometer Tests
+
+        [TestMethod]
+        public void Convert_Odometer()
+        {
+            // Arrange
+            var converter = new EtsDataConverter();
+            var data = CreateMockTelemetry(odometer: 123456.7f);
+
+            // Act
+            var update = converter.Convert(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(123456.7f, truckData.Odometer);
+        }
+
+        #endregion
+
+        #region Dashboard Backlight Tests
+
+        [TestMethod]
+        public void Convert_DashboardBacklight()
+        {
+            // Arrange
+            var converter = new EtsDataConverter();
+            var data = CreateMockTelemetry(dashboardBacklight: 0.75f);
+
+            // Act
+            var update = converter.Convert(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(0.75f, truckData.DashboardBacklight);
+        }
+
+        [TestMethod]
+        public void Convert_DashboardBacklight_DefaultZero()
+        {
+            // Arrange
+            var converter = new EtsDataConverter();
+            var data = CreateMockTelemetry();
+
+            // Act
+            var update = converter.Convert(data);
+            var truckData = update.Data as TruckData;
+
+            // Assert
+            Assert.IsNotNull(truckData);
+            Assert.AreEqual(0f, truckData.DashboardBacklight);
+        }
+
+        #endregion
+
         #region Helper Methods
 
         private SCSTelemetry CreateMockTelemetry(
@@ -942,7 +998,9 @@ namespace HaddySimHub.Tests
             int rpmMax = 0,
             float[]? forwardRatios = null,
             float differential = 0,
-            float wheelRadius = 0)
+            float wheelRadius = 0,
+            float odometer = 0,
+            float dashboardBacklight = 0)
         {
             return new SCSTelemetryBuilder()
                 .WithScale(1f)
@@ -951,9 +1009,10 @@ namespace HaddySimHub.Tests
                 .WithNavigation(navDistance, navTime, speedLimit)
                 .WithJob(sourceCity, sourceCompany, destCity, destCompany, jobIncome, cargoMass, cargoDamage)
                 .WithTruckConstants(forwardGearCount: forwardGearCount, engineRpmMax: rpmMax, retarderStepCount: retarderStepCount)
-                .WithDashboard(speed: speed, cruiseControl: cruiseControl, cruiseSpeed: cruiseControlSpeed, fuelAvg: fuelAverageConsumption, fuelAmount: fuelAmount, fuelRange: fuelDistance, oilPressure: oilPressure, oilTemp: oilTemp, waterTemp: waterTemp, batteryVoltage: batteryVoltage, rpm: rpm)
+                .WithDashboard(speed: speed, cruiseControl: cruiseControl, cruiseSpeed: cruiseControlSpeed, fuelAvg: fuelAverageConsumption, fuelAmount: fuelAmount, fuelRange: fuelDistance, oilPressure: oilPressure, oilTemp: oilTemp, waterTemp: waterTemp, batteryVoltage: batteryVoltage, rpm: rpm, odometer: odometer)
                 .WithWarnings(fuelWarning, adBlueWarning, oilPressureWarning, waterTempWarning, batteryVoltageWarning)
                 .WithLights(parkingLights, lowBeam, highBeam, hazardLights, blinkerLeft, blinkerRight)
+                .WithDashboardBacklight(dashboardBacklight)
                 .WithMotor(selectedGear, parkingBrake, retarderLevel)
                 .WithTransmission(forwardRatios ?? [], differential, wheelRadius)
                 .WithDamage(cabinDamage, engineDamage)

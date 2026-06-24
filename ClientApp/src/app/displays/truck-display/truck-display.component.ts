@@ -1,4 +1,4 @@
-import { Component, computed, inject, ViewEncapsulation } from '@angular/core';
+import { Component, computed, effect, ElementRef, inject, ViewEncapsulation } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { WaypointComponent } from './waypoint.component';
 import { TimespanPipe, NumberNlPipe, NumberFlexDigitPipe } from '../../shared';
@@ -32,7 +32,25 @@ const minutesPerDay = 24 * 60;
 })
 export class TruckDisplayComponent {
   private readonly _store = inject(APP_STORE);
+  private readonly _elementRef = inject(ElementRef);
   protected readonly data = this._store.truckData;
+
+  private static readonly _minBrightness = 0.3;
+
+  protected readonly dashboardBrightness = computed(() => {
+    const backlight = this.data().dashboardBacklight;
+    if (!backlight || backlight <= 0) {
+      return TruckDisplayComponent._minBrightness;
+    }
+    return Math.max(TruckDisplayComponent._minBrightness, Math.min(backlight, 1));
+  });
+
+  public constructor() {
+    effect(() => {
+      const el = this._elementRef.nativeElement as HTMLElement;
+      el.style.setProperty('--dashboard-brightness', `${this.dashboardBrightness()}`);
+    });
+  }
 
   protected readonly rpmGreenZoneStart = rpmGreenZoneStart;
   protected readonly rpmGreenZoneEnd = rpmGreenZoneEnd;

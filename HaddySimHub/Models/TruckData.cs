@@ -243,4 +243,14 @@ public sealed record TruckData
     public bool LiftAxleIndicatorOn { get; init; }
     public uint RetarderLevel { get; init; }
     public uint RetarderStepCount { get; init; }
+
+    /// <summary>
+    /// Total distance traveled (km).
+    /// </summary>
+    public float Odometer { get; init; }
+
+    /// <summary>
+    /// Dashboard backlight intensity (0.0 = dark, 1.0 = full brightness).
+    /// </summary>
+    public float DashboardBacklight { get; init; }
 }
