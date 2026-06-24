@@ -60,6 +60,8 @@ export interface TruckData {
   oilTemp: number;
   waterTemp: number;
   waterTempWarningOn: boolean;
+  brakeTemp: number;
+  brakeAirPressure: number;
   retarderLevel: number;
   retarderStepCount: number;
   airPressureWarningOn: boolean;

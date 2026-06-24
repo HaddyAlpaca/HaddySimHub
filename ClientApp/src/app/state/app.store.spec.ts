@@ -84,6 +84,8 @@ describe('MockAppStore', () => {
         motorBrakeOn: false,
         beaconOn: false,
         liftAxleIndicatorOn: false,
+        brakeTemp: 120,
+        brakeAirPressure: 120,
       };
 
       store.updateDisplay({ type: DisplayType.TruckDashboard, data: truckData });

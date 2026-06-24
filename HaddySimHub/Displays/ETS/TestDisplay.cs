@@ -52,6 +52,8 @@ namespace HaddySimHub.Displays.ETS
                     AdBlueCapacity = 80,
                     SpeedLimit = 80,
                     EngineOn = true,
+                    BrakeTemp = 120,
+                    BrakeAirPressure = 120,
                 }
             };
         }

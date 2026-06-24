@@ -273,6 +273,14 @@
         <img class="dashboard-light" src="/assets/images/oil-temp.svg">
         <div>{{data().oilTemp | number: '1.1-1'}} &deg;C</div>
       </div>
+      <div class="icon-text-control" id="brakeTemp">
+        <img class="dashboard-light" src="/assets/images/brake-temp.svg">
+        <div>{{data().brakeTemp | number: '1.1-1'}} &deg;C</div>
+      </div>
+      <div class="icon-text-control" id="brakeAirPressure">
+        <img class="dashboard-light" src="/assets/images/air-pressure.svg">
+        <div>{{data().brakeAirPressure | number: '1.1-1'}} PSI</div>
+      </div>
       <div class="icon-text-control" [class.hidden]="!data().retarderStepCount">
         <img class="dashboard-light" src="/assets/images/retarder.svg" [class.filter-orange]="data().retarderLevel">
         <div>{{data().retarderLevel}}/{{data().retarderStepCount}}</div>

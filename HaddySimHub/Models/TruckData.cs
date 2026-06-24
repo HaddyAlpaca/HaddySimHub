@@ -233,6 +233,8 @@ public sealed record TruckData
     public float WaterTemp { get; init; }
 
     public bool WaterTempWarningOn { get; init; }
+    public float BrakeTemp { get; init; }
+    public float BrakeAirPressure { get; init; }
     public bool AirPressureWarningOn { get; init; }
     public bool AirPressureEmergencyOn { get; init; }
     public bool EngineOn { get; init; }
