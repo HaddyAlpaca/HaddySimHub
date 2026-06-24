@@ -51,8 +51,10 @@ describe('MockAppStore', () => {
         fuelWarningOn: false,
         fuelDistance: 350,
         fuelAmount: 45,
+        fuelCapacity: 800,
         adBlueWarningOn: false,
         adBlueAmount: 25,
+        adBlueCapacity: 80,
         batteryVoltageWarningOn: false,
         batteryVoltage: 24.5,
         waterTempWarningOn: false,
@@ -76,6 +78,14 @@ describe('MockAppStore', () => {
         damageTrailerCargo: 0,
         damageTrailer: 0,
         gameTime: 0,
+        airPressureWarningOn: false,
+        airPressureEmergencyOn: false,
+        engineOn: true,
+        motorBrakeOn: false,
+        beaconOn: false,
+        liftAxleIndicatorOn: false,
+        brakeTemp: 120,
+        brakeAirPressure: 120,
       };
 
       store.updateDisplay({ type: DisplayType.TruckDashboard, data: truckData });

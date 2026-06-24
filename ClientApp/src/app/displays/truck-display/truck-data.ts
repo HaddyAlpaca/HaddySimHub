@@ -10,7 +10,9 @@ export interface TruckData {
   restTimeRemainingIrl: number;
   fuelDistance: number;
   fuelAmount: number;
+  fuelCapacity: number;
   adBlueAmount: number;
+  adBlueCapacity: number;
   adBlueWarningOn: boolean;
   jobTimeRemaining: number;
   jobTimeRemainingIrl: number;
@@ -58,6 +60,14 @@ export interface TruckData {
   oilTemp: number;
   waterTemp: number;
   waterTempWarningOn: boolean;
+  brakeTemp: number;
+  brakeAirPressure: number;
   retarderLevel: number;
   retarderStepCount: number;
+  airPressureWarningOn: boolean;
+  airPressureEmergencyOn: boolean;
+  engineOn: boolean;
+  motorBrakeOn: boolean;
+  beaconOn: boolean;
+  liftAxleIndicatorOn: boolean;
 }

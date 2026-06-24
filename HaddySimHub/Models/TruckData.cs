@@ -54,9 +54,19 @@ public sealed record TruckData
     public float FuelAmount { get; init; }
 
     /// <summary>
+    /// Fuel tank capacity in liters (0 if unknown).
+    /// </summary>
+    public float FuelCapacity { get; init; }
+
+    /// <summary>
     /// Amount of AdBlue in liters
     /// </summary>
     public float AdBlueAmount { get; init; }
+
+    /// <summary>
+    /// AdBlue tank capacity in liters (0 if unknown).
+    /// </summary>
+    public float AdBlueCapacity { get; init; }
 
     public bool AdBlueWarningOn { get; init; }
 
@@ -223,6 +233,14 @@ public sealed record TruckData
     public float WaterTemp { get; init; }
 
     public bool WaterTempWarningOn { get; init; }
+    public float BrakeTemp { get; init; }
+    public float BrakeAirPressure { get; init; }
+    public bool AirPressureWarningOn { get; init; }
+    public bool AirPressureEmergencyOn { get; init; }
+    public bool EngineOn { get; init; }
+    public bool MotorBrakeOn { get; init; }
+    public bool BeaconOn { get; init; }
+    public bool LiftAxleIndicatorOn { get; init; }
     public uint RetarderLevel { get; init; }
     public uint RetarderStepCount { get; init; }
 }

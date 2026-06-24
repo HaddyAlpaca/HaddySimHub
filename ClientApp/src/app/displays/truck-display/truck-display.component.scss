@@ -29,6 +29,16 @@ app-truck-display {
     min-height: 0;
   }
 
+  .lights-full-row {
+    grid-template-columns: 1fr;
+  }
+
+  .controls-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6vh;
+  }
+
   .damage-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -74,6 +84,15 @@ app-truck-display {
     border: none;
     padding: 0;
     margin-bottom: 0.6vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .game-time {
+    font-size: clamp(0.7rem, 1.8vh, 1.3rem);
+    color: #667;
+    font-variant-numeric: tabular-nums;
   }
 
   .card-title {
@@ -133,6 +152,29 @@ app-truck-display {
   .rest-before-arrival {
     color: orange;
     font-weight: 600;
+  }
+
+  .rest-bar-track {
+    height: 0.8vh;
+    border-radius: 0.4vh;
+    background: rgb(255 255 255 / 10%);
+    overflow: hidden;
+    margin-top: 0.3vh;
+  }
+
+  .rest-bar-fill {
+    height: 100%;
+    border-radius: 0.4vh;
+    transition: width 0.3s ease;
+    background: #2ecc71;
+
+    &.rest-critical {
+      background: #f39c12;
+    }
+
+    &.rest-ok {
+      background: #2ecc71;
+    }
   }
 
   .hidden {
@@ -305,6 +347,68 @@ app-truck-display {
     font-size: clamp(0.7rem, 1.8vh, 1.4rem);
   }
 
+  .fuel-control {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.4vh;
+  }
+
+  .adblue-control {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.4vh;
+  }
+
+  .fuel-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5vh;
+  }
+
+  .fuel-bar-track {
+    height: 1.2vh;
+    border-radius: 0.6vh;
+    background: rgb(255 255 255 / 10%);
+    overflow: hidden;
+  }
+
+  .fuel-bar-fill {
+    height: 100%;
+    border-radius: 0.6vh;
+    background: #2ecc71;
+    transition: width 0.3s ease;
+
+    &.fuel-low {
+      background: #f39c12;
+    }
+
+    &.fuel-critical {
+      background: #e74c3c;
+    }
+  }
+
+  .adblue-bar-track {
+    height: 1.2vh;
+    border-radius: 0.6vh;
+    background: rgb(255 255 255 / 10%);
+    overflow: hidden;
+  }
+
+  .adblue-bar-fill {
+    height: 100%;
+    border-radius: 0.6vh;
+    background: #3498db;
+    transition: width 0.3s ease;
+
+    &.adblue-low {
+      background: #f39c12;
+    }
+
+    &.adblue-critical {
+      background: #e74c3c;
+    }
+  }
+
   .shift-arrow {
     width: 0;
     height: 0;
@@ -338,5 +442,31 @@ app-truck-display {
 
   .filter-orange {
     filter: brightness(0) saturate(100%) invert(56%) sepia(31%) saturate(3171%) hue-rotate(1deg) brightness(104%) contrast(104%);
+  }
+
+  .throttle-control {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.3vh;
+  }
+
+  .throttle-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5vh;
+  }
+
+  .throttle-bar-track {
+    height: 1vh;
+    border-radius: 0.5vh;
+    background: rgb(255 255 255 / 10%);
+    overflow: hidden;
+  }
+
+  .throttle-bar-fill {
+    height: 100%;
+    border-radius: 0.5vh;
+    background: #5dade2;
+    transition: width 0.15s ease;
   }
 }

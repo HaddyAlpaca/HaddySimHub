@@ -46,8 +46,14 @@ namespace HaddySimHub.Displays.ETS
                     RpmMax = RpmMax,
                     FuelAverageConsumption = 25.5F,
                     FuelAmount = 300,
+                    FuelCapacity = 800,
                     FuelDistance = (int)(300 / 25.5 * 100),
+                    AdBlueAmount = 60,
+                    AdBlueCapacity = 80,
                     SpeedLimit = 80,
+                    EngineOn = true,
+                    BrakeTemp = 120,
+                    BrakeAirPressure = 120,
                 }
             };
         }
