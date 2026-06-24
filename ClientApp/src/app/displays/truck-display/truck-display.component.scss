@@ -7,6 +7,7 @@ app-truck-display {
   font-family: Poppins, sans-serif;
   color: white;
   background: radial-gradient(ellipse at 50% 30%, #252840 0%, #1e1e2f 70%);
+  filter: brightness(var(--dashboard-brightness, 1));
 
   .top-cards {
     display: grid;
@@ -198,6 +199,24 @@ app-truck-display {
     justify-content: center;
     height: 100%;
     width: 100%;
+  }
+
+  .cruise-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5vh;
+    margin-top: 0.8vh;
+
+    img {
+      width: clamp(1.5rem, 2.5vh, 2.5rem);
+      height: auto;
+    }
+
+    span {
+      font-size: clamp(0.85rem, 2vh, 1.6rem);
+      font-weight: 600;
+      color: #2ecc71;
+    }
   }
 
   app-gauge {

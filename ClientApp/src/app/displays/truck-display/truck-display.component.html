@@ -88,19 +88,10 @@
         <div class="data-row">
           <div class="data-label">Lading</div>
           @if (data().jobCargoName) {
-            <div class="data-item" id="jobCargoName">{{data().jobCargoName}} ({{data().jobCargoMass | numbernl}} kg)</div>
+            <div class="data-item" id="jobCargoName">{{data().jobCargoName}} ({{data().jobCargoMass | numbernl}} kg) <span id="jobCargoDamage" [class]="damageClass(data().jobCargoDamage)">&middot; {{data().jobCargoDamage}}% schade</span></div>
           }
           @else {
             <div class="data-item" id="jobCargoName">-</div>
-          }
-        </div>
-        <div class="data-row">
-          <div class="data-label">Laadingschade</div>
-          @if (data().jobCargoDamage >= 0) {
-            <div class="data-item" id="jobCargoDamage" [class]="damageClass(data().jobCargoDamage)">{{data().jobCargoDamage}} %</div>
-          }
-          @else {
-            <div class="data-item" id="jobCargoDamage">-</div>
           }
         </div>
       </div>
@@ -132,6 +123,15 @@
             <div class="data-label">Wielen</div>
             <div class="data-item" id="damageTruckWheels" [class]="damageClass(data().damageTruckWheels)">{{data().damageTruckWheels}} %</div>
           </div>
+        </div>
+        <div class="data-row" style="margin-top: 0.8vh">
+          <div class="data-label">Kilometerteller</div>
+          @if (data().odometer > 0) {
+            <div id="odometer" class="data-item">{{data().odometer | numberFlexDigit}} km</div>
+          }
+          @else {
+            <div id="odometer" class="data-item">-</div>
+          }
         </div>
       </div>
     </div>
@@ -193,6 +193,10 @@
         <div class="speed text-center">{{data().speed}}</div>
         <label class="unit text-center">Km/h</label>
         <div class="speed-limit" [class.over-speed-limit]="data().speedLimit && data().speed > data().speedLimit">{{data().speedLimit ? data().speedLimit : '--'}}</div>
+        <div class="cruise-info" [class.hidden]="!data().cruiseControlOn">
+          <img class="dashboard-light" src="/assets/images/cruise-control.png">
+          <span>{{data().cruiseControlSpeed}} km/h</span>
+        </div>
       </div>
     </div>
   </div>
@@ -253,10 +257,6 @@
     </div>
 
     <div class="card lights-card">
-      <div class="icon-text-control" [class.hidden]="!data().cruiseControlOn">
-        <img class="dashboard-light" src="/assets/images/cruise-control.png">
-        <div>{{data().cruiseControlSpeed}} km/h</div>
-      </div>
       <div class="icon-text-control" id="batteryVoltage">
         <img class="dashboard-light" src="/assets/images/battery.svg" [class.filter-red]="data().batteryVoltageWarningOn">
         <div>{{data().batteryVoltage | number: '1.1-1'}} V</div>

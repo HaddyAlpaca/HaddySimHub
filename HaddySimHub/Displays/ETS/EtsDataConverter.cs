@@ -104,6 +104,8 @@ public class EtsDataConverter : IDataConverter<SCSTelemetry, DisplayUpdate>
             LiftAxleIndicatorOn = data.TruckValues.CurrentValues.LiftAxleIndicator,
             RetarderLevel = data.TruckValues.CurrentValues.MotorValues.BrakeValues.RetarderLevel,
             RetarderStepCount = data.TruckValues.ConstantsValues.MotorValues.RetarderStepCount,
+            Odometer = data.TruckValues.CurrentValues.DashboardValues.Odometer,
+            DashboardBacklight = data.TruckValues.CurrentValues.LightsValues.DashboardBacklight,
         };
 
         return new DisplayUpdate { Type = DisplayType.TruckDashboard, Data = displayData };

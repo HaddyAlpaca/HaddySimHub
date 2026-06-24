@@ -70,4 +70,6 @@ export interface TruckData {
   motorBrakeOn: boolean;
   beaconOn: boolean;
   liftAxleIndicatorOn: boolean;
+  odometer: number;
+  dashboardBacklight: number;
 }

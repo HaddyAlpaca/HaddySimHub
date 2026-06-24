@@ -55,7 +55,7 @@ namespace HaddySimHub.Tests
             return this;
         }
 
-        public SCSTelemetryBuilder WithDashboard(double speed = 0, bool cruiseControl = false, double cruiseSpeed = 0, float fuelAvg = 0, float fuelAmount = 0, float fuelRange = 0, float adBlue = 0, float oilPressure = 0, float oilTemp = 0, float waterTemp = 0, float batteryVoltage = 0, int rpm = 0)
+        public SCSTelemetryBuilder WithDashboard(double speed = 0, bool cruiseControl = false, double cruiseSpeed = 0, float fuelAvg = 0, float fuelAmount = 0, float fuelRange = 0, float adBlue = 0, float oilPressure = 0, float oilTemp = 0, float waterTemp = 0, float batteryVoltage = 0, int rpm = 0, float odometer = 0)
         {
             _t.TruckValues.CurrentValues.DashboardValues.Speed.Value = (float)speed;
             _t.TruckValues.CurrentValues.DashboardValues.CruiseControl = cruiseControl;
@@ -69,6 +69,13 @@ namespace HaddySimHub.Tests
             _t.TruckValues.CurrentValues.DashboardValues.WaterTemperature = waterTemp;
             _t.TruckValues.CurrentValues.DashboardValues.BatteryVoltage = batteryVoltage;
             _t.TruckValues.CurrentValues.DashboardValues.RPM = rpm;
+            _t.TruckValues.CurrentValues.DashboardValues.Odometer = odometer;
+            return this;
+        }
+
+        public SCSTelemetryBuilder WithDashboardBacklight(float backlight)
+        {
+            _t.TruckValues.CurrentValues.LightsValues.DashboardBacklight = backlight;
             return this;
         }
 
