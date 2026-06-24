@@ -305,6 +305,68 @@ app-truck-display {
     font-size: clamp(0.7rem, 1.8vh, 1.4rem);
   }
 
+  .fuel-control {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.4vh;
+  }
+
+  .adblue-control {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.4vh;
+  }
+
+  .fuel-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5vh;
+  }
+
+  .fuel-bar-track {
+    height: 1.2vh;
+    border-radius: 0.6vh;
+    background: rgb(255 255 255 / 10%);
+    overflow: hidden;
+  }
+
+  .fuel-bar-fill {
+    height: 100%;
+    border-radius: 0.6vh;
+    background: #2ecc71;
+    transition: width 0.3s ease;
+
+    &.fuel-low {
+      background: #f39c12;
+    }
+
+    &.fuel-critical {
+      background: #e74c3c;
+    }
+  }
+
+  .adblue-bar-track {
+    height: 1.2vh;
+    border-radius: 0.6vh;
+    background: rgb(255 255 255 / 10%);
+    overflow: hidden;
+  }
+
+  .adblue-bar-fill {
+    height: 100%;
+    border-radius: 0.6vh;
+    background: #3498db;
+    transition: width 0.3s ease;
+
+    &.adblue-low {
+      background: #f39c12;
+    }
+
+    &.adblue-critical {
+      background: #e74c3c;
+    }
+  }
+
   .shift-arrow {
     width: 0;
     height: 0;

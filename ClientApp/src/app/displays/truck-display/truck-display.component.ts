@@ -42,6 +42,18 @@ export class TruckDisplayComponent {
     return data.distanceRemaining > 0 && data.fuelDistance < data.distanceRemaining;
   });
 
+  protected readonly fuelPct = computed(() => {
+    const data = this.data();
+    if (data.fuelCapacity <= 0) return 0;
+    return Math.round((data.fuelAmount / data.fuelCapacity) * 100);
+  });
+
+  protected readonly adBluePct = computed(() => {
+    const data = this.data();
+    if (data.adBlueCapacity <= 0) return 0;
+    return Math.round((data.adBlueAmount / data.adBlueCapacity) * 100);
+  });
+
   protected readonly arrivalTime = computed(() => {
     const data = this.data();
     if (data.timeRemaining <= 0) {

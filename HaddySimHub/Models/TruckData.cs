@@ -54,9 +54,19 @@ public sealed record TruckData
     public float FuelAmount { get; init; }
 
     /// <summary>
+    /// Fuel tank capacity in liters (0 if unknown).
+    /// </summary>
+    public float FuelCapacity { get; init; }
+
+    /// <summary>
     /// Amount of AdBlue in liters
     /// </summary>
     public float AdBlueAmount { get; init; }
+
+    /// <summary>
+    /// AdBlue tank capacity in liters (0 if unknown).
+    /// </summary>
+    public float AdBlueCapacity { get; init; }
 
     public bool AdBlueWarningOn { get; init; }
 

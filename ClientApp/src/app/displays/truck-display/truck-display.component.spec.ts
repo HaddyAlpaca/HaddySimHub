@@ -120,21 +120,21 @@ describe('TruckDisplayComponent', () => {
     it('No warning when fuel range covers the remaining distance', async () => {
       patchData({ fuelDistance: 800, distanceRemaining: 500 });
 
-      const elm = await harness.locatorForElement('#fuel > div');
+      const elm = await harness.locatorForElement('#fuel .fuel-info > div');
       expect(await elm.hasClass('fuel-range-too-short')).toBe(false);
     });
 
     it('Warning when fuel range is below the remaining distance', async () => {
       patchData({ fuelDistance: 200, distanceRemaining: 500 });
 
-      const elm = await harness.locatorForElement('#fuel > div');
+      const elm = await harness.locatorForElement('#fuel .fuel-info > div');
       expect(await elm.hasClass('fuel-range-too-short')).toBe(true);
     });
 
     it('No warning when there is no active route', async () => {
       patchData({ fuelDistance: 0, distanceRemaining: 0 });
 
-      const elm = await harness.locatorForElement('#fuel > div');
+      const elm = await harness.locatorForElement('#fuel .fuel-info > div');
       expect(await elm.hasClass('fuel-range-too-short')).toBe(false);
     });
   });

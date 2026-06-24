@@ -11,7 +11,7 @@ export class TruckDashComponentHarness extends ComponentHarness {
   }
 
   public async getWarning(selector: string): Promise<boolean> {
-    const elm = await this.locatorFor(`${selector} > img`)();
+    const elm = await this.locatorFor(`${selector} img`)();
     const warning = await elm.hasClass('filter-orange');
     return warning;
   }

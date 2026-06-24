@@ -202,13 +202,23 @@
         <img class="dashboard-light" src="/assets/images/cruise-control.png">
         <div>{{data().cruiseControlSpeed}} km/h</div>
       </div>
-      <div class="icon-text-control" id="fuel">
-        <img class="dashboard-light" src="/assets/images/fuel.svg" [class.filter-orange]="data().fuelWarningOn">
-        <div [class.fuel-range-too-short]="fuelRangeTooShort()">{{data().fuelDistance | numberFlexDigit}} km ({{data().fuelAmount | numberFlexDigit}} l)</div>
+      <div class="icon-text-control fuel-control" id="fuel">
+        <div class="fuel-info">
+          <img class="dashboard-light" src="/assets/images/fuel.svg" [class.filter-orange]="data().fuelWarningOn">
+          <div [class.fuel-range-too-short]="fuelRangeTooShort()">{{data().fuelDistance | numberFlexDigit}} km ({{data().fuelAmount | numberFlexDigit}} l)</div>
+        </div>
+        <div class="fuel-bar-track">
+          <div class="fuel-bar-fill" [style.width.%]="fuelPct()" [class.fuel-low]="fuelPct() < 25" [class.fuel-critical]="fuelPct() < 10"></div>
+        </div>
       </div>
-      <div class="icon-text-control" id="adBlue">
-        <img class="dashboard-light" src="/assets/images/adblue.svg" [class.filter-orange]="data().adBlueWarningOn">
-        <div>{{data().adBlueAmount  | numberFlexDigit}} l</div>
+      <div class="icon-text-control adblue-control" id="adBlue">
+        <div class="fuel-info">
+          <img class="dashboard-light" src="/assets/images/adblue.svg" [class.filter-orange]="data().adBlueWarningOn">
+          <div>{{data().adBlueAmount  | numberFlexDigit}} l</div>
+        </div>
+        <div class="adblue-bar-track">
+          <div class="adblue-bar-fill" [style.width.%]="adBluePct()" [class.adblue-low]="adBluePct() < 25" [class.adblue-critical]="adBluePct() < 10"></div>
+        </div>
       </div>
     </div>
   </div>

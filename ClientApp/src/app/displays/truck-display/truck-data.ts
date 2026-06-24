@@ -10,7 +10,9 @@ export interface TruckData {
   restTimeRemainingIrl: number;
   fuelDistance: number;
   fuelAmount: number;
+  fuelCapacity: number;
   adBlueAmount: number;
+  adBlueCapacity: number;
   adBlueWarningOn: boolean;
   jobTimeRemaining: number;
   jobTimeRemainingIrl: number;
