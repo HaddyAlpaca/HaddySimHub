@@ -75,32 +75,32 @@ describe('Race display component tests', () => {
     it('brake bias is displayed', async () => {
       patchData({ brakeBias: 56.2 });
 
-      expect(await harness.getElementText('#brakeBias')).toEqual('56.2');
+      expect(await harness.getElementText('#brakeBias')).toEqual('56.2%');
     });
 
     it('brake bias without decimal places is displayed with one decimal place', async () => {
       patchData({ brakeBias: 56 });
 
-      expect(await harness.getElementText('#brakeBias')).toEqual('56.0');
+      expect(await harness.getElementText('#brakeBias')).toEqual('56.0%');
     });
 
     it('brake bias with 2 decimal places is displayed with one decimal place', async () => {
       patchData({ brakeBias: 56.28 });
 
-      expect(await harness.getElementText('#brakeBias')).toEqual('56.3');
+      expect(await harness.getElementText('#brakeBias')).toEqual('56.3%');
     });
   });
 
   it('Air temp is displayed', async () => {
     patchData({ airTemp: 25.3 });
 
-    expect(await harness.getElementText('#air-temp')).toEqual('25.3 °C');
+    expect(await harness.getElementText('#air-temp')).toEqual('25.3°');
   });
 
   it('Track temp are displayed', async () => {
     patchData({ trackTemp: 32 });
 
-    expect(await harness.getElementText('#track-temp')).toEqual('32.0 °C');
+    expect(await harness.getElementText('#track-temp')).toEqual('32.0°');
   });
 
   describe('Last laptime tests', () => {
@@ -136,7 +136,7 @@ describe('Race display component tests', () => {
   it('Position is displayed', async () => {
     patchData({ position: 3 });
 
-    expect(await harness.getElementText('#position')).toEqual('3');
+    expect(await harness.getElementText('#position')).toEqual('P3');
   });
 
   it('Position is hidden when not provided by the sim', async () => {
@@ -169,7 +169,7 @@ describe('Race display component tests', () => {
   it('Fuel remaining is displayed', async () => {
     patchData({ fuelRemaining: 14.2 });
 
-    expect(await harness.getElementText('#fuelRemaining')).toEqual('14.2 L');
+    expect(await harness.getElementText('#fuelRemaining')).toEqual('14.2L');
   });
 
   describe('Fuel estimated laps warning', () => {
@@ -177,42 +177,42 @@ describe('Race display component tests', () => {
       // totalLaps - currentLap = 5, fuelEstLaps = 3 -> remaining laps (5) > est (3)
       patchData({ currentLap: 2, totalLaps: 7, fuelEstLaps: 3 });
 
-      expect(await harness.elementHasClass('#fuelEstLaps', 'text-red')).toBe(true);
+      expect(await harness.elementHasClass('#fuelEstLaps', 'text-danger')).toBe(true);
     });
 
     it('Does not show red when estimated laps covers remaining laps', async () => {
       // totalLaps - currentLap = 3, fuelEstLaps = 4 -> remaining laps (3) <= est (4)
       patchData({ currentLap: 2, totalLaps: 5, fuelEstLaps: 4 });
 
-      expect(await harness.elementHasClass('#fuelEstLaps', 'text-red')).toBe(false);
+      expect(await harness.elementHasClass('#fuelEstLaps', 'text-danger')).toBe(false);
     });
   });
 
   describe('Best lap delta time', () => {
     it('Delta time is displayed', async () => {
-      patchData({ bestLapTimeDelta: 0.231 });
+      patchData({ bestLapTime: 92.876, bestLapTimeDelta: 0.231 });
 
       expect(await harness.getElementText('#bestLapTimeDelta')).toEqual('+0.231');
     });
 
-    it('Delta time is not green and not red when 0', async () => {
-      patchData({ bestLapTimeDelta: 0 });
+    it('Delta time is not positive and not negative when 0', async () => {
+      patchData({ bestLapTime: 92.876, bestLapTimeDelta: 0 });
 
-      expect(await harness.elementHasClass('#bestLapTimeDelta', 'text-green')).toBe(false);
-      expect(await harness.elementHasClass('#bestLapTimeDelta', 'text-red')).toBe(false);
+      expect(await harness.elementHasClass('#bestLapTimeDelta', 'text-positive')).toBe(false);
+      expect(await harness.elementHasClass('#bestLapTimeDelta', 'text-negative')).toBe(false);
 
     });
 
-    it('Delta time is red when > 0', async () => {
-      patchData({ bestLapTimeDelta: 0.234 });
+    it('Delta time is negative when > 0', async () => {
+      patchData({ bestLapTime: 92.876, bestLapTimeDelta: 0.234 });
 
-      expect(await harness.elementHasClass('#bestLapTimeDelta', 'text-red')).toBe(true);
+      expect(await harness.elementHasClass('#bestLapTimeDelta', 'text-negative')).toBe(true);
     });
 
-    it('Delta time is green when < 0', async () => {
-      patchData({ bestLapTimeDelta: -0.234 });
+    it('Delta time is positive when < 0', async () => {
+      patchData({ bestLapTime: 92.876, bestLapTimeDelta: -0.234 });
 
-      expect(await harness.elementHasClass('#bestLapTimeDelta', 'text-green')).toBe(true);
+      expect(await harness.elementHasClass('#bestLapTimeDelta', 'text-positive')).toBe(true);
     });
   });
 

@@ -118,6 +118,7 @@ describe('MockAppStore', () => {
         fuelAvgLap: 3.1,
         fuelRemaining: 85,
         fuelEstLaps: 25,
+        currentLapTime: 92000,
         lastLapTime: 95000,
         lastLapTimeDelta: -250,
         bestLapTime: 94500,

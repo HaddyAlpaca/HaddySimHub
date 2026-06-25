@@ -1,175 +1,150 @@
 <div class="dashboard-container">
-  <div class="dashboard-row cols-3">
-    <div class="group-border border-blue">
-      <div class="dashboard-row cols-2">
-        <div class="data-item">
-          <label>Session Type</label>
-          <div>{{data().sessionType}}</div>
-        </div>
-        @if (data().strengthOfField !== undefined) {
-          <div class="data-item">
-            <label>SOF</label>
-            <div>{{data().strengthOfField}}</div>
-          </div>
-        }
-      </div>
-      <div class="dashboard-row cols-2">
-        <div class="data-item">
-          <label>Air</label>
-          <div id="air-temp">{{data().airTemp |number:'1.1-1':'en-US'}} &deg;C</div>
-        </div>
-        <div class="data-item">
-          <label>Track</label>
-          <div id="track-temp">{{data().trackTemp |number:'1.1-1':'en-US'}} &deg;C</div>
-        </div>
-      </div>
-      <div class="dashboard-row cols-2">
-        <div class="data-item">
-        <label>Lap</label>
-            @if (data().isLimitedTime && !data().isLimitedSessionLaps) {
-                <div id="laps">{{data().currentLap}}</div>
-            } @else if (data().totalLaps > 0) {
-                <div id="laps">{{data().currentLap}}/{{data().totalLaps}}</div>
-            } @else {
-                <div id="laps">{{data().currentLap}}</div>
-            }
-        </div>
-        <div class="data-item">
-          <label>Time remaining</label>
-          <div>{{data().sessionTimeRemaining | time}}</div>
-        </div>
-      </div>
-      <div class="dashboard-row cols-2">
-        @if (data().position !== undefined) {
-          <div class="data-item">
-            <label>Position</label>
-            <div id="position">{{data().position}}</div>
-          </div>
-        }
-
-        @if (data().incidents !== undefined && data().maxIncidents !== undefined) {
-          <div class="data-item">
-              <label>Incidents</label>
-              @if (data().maxIncidents === 999) {
-                  <div id="incidents">{{data().incidents}}</div>
-              } @else {
-                  <div id="incidents">{{data().incidents}}/{{data().maxIncidents}}</div>
-              }
-          </div>
-        }
-      </div>
-
-      @if (data().irating !== undefined || data().safetyRating !== undefined) {
-        <div class="dashboard-row cols-2">
-          @if (data().irating !== undefined) {
-            <div class="data-item">
-              <label>iRating</label>
-              <div id="irating">{{data().irating | irating}}</div>
-            </div>
-          }
-          @if (data().safetyRating !== undefined) {
-            <div class="data-item">
-              <label>Safety Rating</label>
-              <div id="safetyRating">{{data().safetyRating}}</div>
-            </div>
-          }
-        </div>
-      }
+  <div class="top-bar">
+    <div class="top-bar-item">
+      <label>Session</label>
+      <span>{{data().sessionType}}</span>
     </div>
-    <div class=" group-border border-yellow speedometer" [class.max-rpm]="data().rpm >= data().rpmMax">
-      <app-speedometer [rpm]="data().rpm" [gear]="data().gear" [speed]="data().speed" />
-    </div>
-    <div class="group-border border-blue">
-      <div class="dashboard-row cols-2">
-          @if (data().fuelLastLap !== undefined) {
-            <div class="data-item">
-                <label>Fuel last lap</label>
-                <div id="fuelLastLap">{{data().fuelLastLap |number:'1.1-1':'en-US'}} L</div>
-            </div>
-          }
-
-          @if (data().fuelAvgLap !== undefined) {
-            <div class="data-item">
-                <label>Fuel avg lap</label>
-                <div id="fuelAvgLap">{{data().fuelAvgLap |number:'1.1-1':'en-US'}} L</div>
-            </div>
-          }
-      </div>
-
-      <div class="dashboard-row cols-2">
-        @if (data().fuelRemaining !== undefined) {
-          <div class="data-item">
-            <label>Fuel remaining</label>
-            <div id="fuelRemaining">{{data().fuelRemaining |number:'1.1-1':'en-US'}} L</div>
-          </div>
-        }
-    
-        <div class="data-item">
-          <label>Fuel est. laps</label>
-          <div id="fuelEstLaps" [class.text-red]="data().totalLaps > 0 && ((data().totalLaps - data().currentLap) > data().fuelEstLaps)">{{data().fuelEstLaps |number:'1.1-1':'en-US'}}</div>
-        </div>
-      </div>
-
-      @if (data().expectedPosition !== undefined) {
-        <div class="dashboard-row">
-          <div class="data-item">
-            <label>Expected position</label>
-            <div id="expectedPosition">{{data().expectedPosition}}</div>
-          </div>
-        </div>
-      }
-    </div>
-  </div>
-  <div class="dashboard-row cols-3">
-    <div class="group-border border-blue">
-      <div class="dashboard-row cols-2">
-          <div class="data-item">
-              <label>Last laptime</label>
-              <div class="last-laptime" id="lastLapTime">{{data().lastLapTime | laptime}}</div>
-          </div>
-          @let lastDelta = data().lastLapTimeDelta;
-          @if (lastDelta !== undefined) {
-            <div class="data-item">
-                <label>Delta</label>
-                <div id="lastLapTimeDelta" [class.text-green]="lastDelta < 0" [class.text-red]="lastDelta > 0">{{lastDelta | deltatime}}</div>
-            </div>
-          }
-      </div>
-    </div>
-
-    @if (data().brakeBias !== undefined) {
-      <div class="group-border border-blue">
-          <div class="dashboard-row">
-              <div class="data-item brake-bias-item">
-                <label>Brake bias</label>
-                <div id="brakeBias">{{data().brakeBias |number:'1.1-1':'en-US'}}</div>
-              </div>
-          </div>
+    @if (data().strengthOfField !== undefined && data().strengthOfField !== null) {
+      <div class="top-bar-item">
+        <label>SOF</label>
+        <span>{{data().strengthOfField}}</span>
       </div>
     }
-
-    <div class="group-border border-blue">
-      <div class="dashboard-row cols-2">
-          @let bestLap = data().bestLapTime;
-          @if (bestLap !== undefined) {
-            <div class="data-item">
-                <label>Best laptime</label>
-                <div class="best-laptime" id="bestLapTime">{{bestLap | laptime}}</div>
-            </div>
-          }
-          @let bestDelta = data().bestLapTimeDelta;
-          @if (bestDelta !== undefined) {
-            <div class="data-item">
-                <label>Delta</label>
-                <div id="bestLapTimeDelta" [class.text-green]="bestDelta < 0" [class.text-red]="bestDelta > 0">{{bestDelta | deltatime}}</div>
-            </div>
-          }
+    @if (data().safetyRating !== undefined && data().safetyRating !== null) {
+      <div class="top-bar-item">
+        <label>Safety Rating</label>
+        <span id="safetyRating">{{data().safetyRating}}</span>
       </div>
+    }
+    <div class="top-bar-item">
+      <label>Time left</label>
+      <span>{{data().sessionTimeRemaining | time}}</span>
+    </div>
+    <div class="top-bar-item">
+      <label>Air</label>
+      <span id="air-temp">{{data().airTemp |number:'1.1-1':'en-US'}}&deg;</span>
+    </div>
+    <div class="top-bar-item">
+      <label>Track</label>
+      <span id="track-temp">{{data().trackTemp |number:'1.1-1':'en-US'}}&deg;</span>
     </div>
   </div>
-  <app-telemetry-trace [telemetrySample]="telemetrySample" />
+
+  <div class="main-area">
+    <div class="main-grid">
+      <div class="panel info-panel">
+        @if (data().incidents !== undefined) {
+          <div class="info-row">
+            <label>Incidents</label>
+            @if (data().maxIncidents !== undefined && data().maxIncidents !== 999) {
+              <span id="incidents">{{data().incidents}}/{{data().maxIncidents}}</span>
+            } @else {
+              <span id="incidents">{{data().incidents}}</span>
+            }
+          </div>
+        }
+        @if (data().irating !== undefined) {
+          <div class="info-row">
+            <label>iR</label>
+            <span id="irating">{{data().irating | irating}}</span>
+          </div>
+        }
+        @if (data().position !== undefined) {
+          <div class="info-row">
+            <label>Pos</label>
+            <span id="position" class="text-accent">P{{data().position}}</span>
+          </div>
+        }
+        @if (data().expectedPosition !== undefined) {
+          <div class="info-row">
+            <label>Expected pos</label>
+            <span id="expectedPosition" class="text-accent">P{{data().expectedPosition}}</span>
+          </div>
+        }
+        <div class="info-row">
+          <label>Lap</label>
+          @if (data().isLimitedTime && !data().isLimitedSessionLaps) {
+            <span id="laps">{{data().currentLap}}</span>
+          } @else if (data().totalLaps > 0) {
+            <span id="laps">{{data().currentLap}}/{{data().totalLaps}}</span>
+          } @else {
+            <span id="laps">{{data().currentLap}}</span>
+          }
+        </div>
+        @if (data().currentLapTime) {
+          <div class="lap-row">
+            <label>Current lap</label>
+            <span class="lap-values">
+              <span class="lap-value" id="currentLapTime">{{data().currentLapTime | laptime}}</span>
+              <span class="delta-value delta-placeholder"></span>
+            </span>
+          </div>
+        }
+        <div class="lap-row">
+          <label>Last lap</label>
+          <span class="lap-values">
+            <span class="lap-value" id="lastLapTime">{{data().lastLapTime | laptime}}</span>
+            @let lastDelta = data().lastLapTimeDelta;
+            @if (lastDelta !== undefined) {
+              <span class="delta-value" id="lastLapTimeDelta" [class.text-positive]="lastDelta < 0" [class.text-negative]="lastDelta > 0">{{lastDelta | deltatime}}</span>
+            }
+          </span>
+        </div>
+        @let bestLap = data().bestLapTime;
+        @if (bestLap !== undefined) {
+          <div class="lap-row">
+            <label>Best lap</label>
+            <span class="lap-values">
+              <span class="lap-value best" id="bestLapTime">{{bestLap | laptime}}</span>
+              @let bestDelta = data().bestLapTimeDelta;
+              @if (bestDelta !== undefined) {
+                <span class="delta-value" id="bestLapTimeDelta" [class.text-positive]="bestDelta < 0" [class.text-negative]="bestDelta > 0">{{bestDelta | deltatime}}</span>
+              }
+            </span>
+          </div>
+        }
+      </div>
+
+      <div class="panel speedometer-panel" [class.max-rpm]="data().rpm >= data().rpmMax">
+        <app-speedometer [rpm]="data().rpm" [gear]="data().gear" [speed]="data().speed" />
+      </div>
+
+      <div class="panel fuel-panel">
+        @if (data().fuelRemaining !== undefined) {
+          <div class="fuel-primary">
+            <label>Fuel</label>
+            <span id="fuelRemaining">{{data().fuelRemaining |number:'1.1-1':'en-US'}}<small>L</small></span>
+          </div>
+        }
+        <div class="info-row">
+          <label>Est. laps</label>
+          <span id="fuelEstLaps" [class.text-danger]="data().totalLaps > 0 && ((data().totalLaps - data().currentLap) > data().fuelEstLaps)">{{data().fuelEstLaps |number:'1.1-1':'en-US'}}</span>
+        </div>
+        @if (data().fuelLastLap !== undefined) {
+          <div class="info-row">
+            <label>Last lap</label>
+            <span id="fuelLastLap">{{data().fuelLastLap |number:'1.1-1':'en-US'}}L</span>
+          </div>
+        }
+        @if (data().fuelAvgLap !== undefined) {
+          <div class="info-row">
+            <label>Avg lap</label>
+            <span id="fuelAvgLap">{{data().fuelAvgLap |number:'1.1-1':'en-US'}}L</span>
+          </div>
+        }
+        @if (data().brakeBias !== undefined) {
+          <div class="fuel-primary">
+            <label>Brake bias</label>
+            <span id="brakeBias">{{data().brakeBias |number:'1.1-1':'en-US'}}<small>%</small></span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <app-telemetry-trace [telemetrySample]="telemetrySample" />
+  </div>
 </div>
 
 @if (data().pitLimiterOn) {
-  <div class="pit-limiter blink-text">Pit Limiter</div>
+  <div class="pit-limiter">PIT LIMITER</div>
 }

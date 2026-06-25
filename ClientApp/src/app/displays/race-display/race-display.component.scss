@@ -1,214 +1,252 @@
 app-race-display {
+  --panel-bg: rgb(255 255 255 / 4%);
+  --panel-border: rgb(255 255 255 / 8%);
+  --label-color: rgb(180 190 210 / 70%);
+  --accent: #4fc3f7;
+  --positive: #4caf50;
+  --negative: #ef5350;
+  --danger: #ff5722;
+  --warning: #ffc107;
+
   height: 100%;
+  font-variant-numeric: tabular-nums;
 
   .dashboard-container {
     display: grid;
-    grid-template-rows: auto auto auto 1fr;
-    gap: 1.2vh;
-    color: white;
-    font-size: clamp(1.2rem, 3.2vh, 2rem);
+    grid-template-rows: auto 1fr;
+    gap: 0.8vh;
     height: 100%;
-  }
-
-  .dashboard-row {
-    display: grid;
-    gap: 1vh;
-    width: calc(100% - 1.2vh);
-    margin-left: 0.6vh;
-
-    &.cols-2 {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    &.cols-3 {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  .speedometer {
-    display: flex;
-    flex-direction: column;
-
-    &.max-rpm {
-      background-color: red;
-    }
-  }
-
-  app-speedometer {
-    * {
-      color: white;
-    }
-
-    label {
-      text-transform: uppercase;
-      text-align: center;
-      width: 100%;
-      font-size: clamp(0.9rem, 2vh, 1.2rem);
-    }
-
-    .rpm, .speed {
-      font-size: clamp(1.5rem, 3.2vh, 2.5rem);
-    }
-
-    .gear {
-      text-align: center;
-      font-size: clamp(2.5rem, 6vh, 5rem);
-    }
+    padding: 0.8vh;
+    box-sizing: border-box;
   }
 
   label {
     text-transform: uppercase;
-    font-size: clamp(0.8rem, 1.8vh, 1.1rem);
-    text-align: right;
-    color: gold;
+    font-size: clamp(0.65rem, 1.4vh, 0.85rem);
+    color: var(--label-color);
+    letter-spacing: 0.05em;
+    font-weight: 500;
   }
 
-  .text-center {
-    text-align: center;
-  }
+  .text-positive { color: var(--positive); }
+  .text-negative { color: var(--negative); }
+  .text-danger { color: var(--danger); }
+  .text-accent { color: var(--accent); }
 
-  .best-laptime {
-    color: purple;
-  }
+  /* ─── Top bar ─── */
+  .top-bar {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 2vh;
+    padding: 0.8vh 1.4vh;
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 1vh;
+    align-items: center;
+    backdrop-filter: blur(8px);
 
-  .group-border {
-    border: white 0.3vh solid;
-    padding: 1vh 1.4vh;
-    border-radius: 1.4vh;
-    height: 100%;
+    .top-bar-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2vh;
 
-    &.border-blue {
-      border-color: rgb(0 0 255 / 55.5%);
+      > span {
+        font-size: clamp(0.95rem, 2vh, 1.4rem);
+        font-weight: 600;
+        color: #fff;
+      }
     }
-
-    &.border-yellow {
-      border-color: yellow;
-    }
-
-    &:has(.flag) {
-      padding: 0;
-      margin: 0;
-      overflow: hidden;
-    }
   }
 
-  .center-column {
+  /* ─── Main area (panels + telemetry) ─── */
+  .main-area {
     display: grid;
-    grid-template-rows: 8fr 2fr;
-    gap: 1vh;
+    grid-template-rows: 3fr 2fr;
+    gap: 0.8vh;
+    min-height: 0;
   }
 
-  .hidden {
-    visibility: hidden;
+  /* ─── Main 3-column grid ─── */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 0.8vh;
+    min-height: 0;
   }
 
-  .text-red {
-    color: red;
+  .panel {
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 1.2vh;
+    padding: 1.2vh 1.4vh;
+    backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    gap: 0.4vh;
+    transition: border-color 0.3s, background 0.3s;
   }
 
-  .text-green {
-    color: green;
+  /* ─── Left info panel ─── */
+  .info-panel {
+    justify-content: center;
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.15vh 0;
+
+      > span {
+        font-size: clamp(0.95rem, 2vh, 1.3rem);
+        font-weight: 500;
+        color: #fff;
+      }
+    }
   }
 
-  .brake-bias-item {
-    margin-left: auto;
-    margin-right: auto;
+  .lap-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.6vh;
+    align-items: baseline;
+    padding: 0.15vh 0;
+    border-top: 1px solid rgb(255 255 255 / 6%);
+    margin-top: 0.3vh;
+    padding-top: 0.5vh;
+
+    .lap-values {
+      display: flex;
+      align-items: baseline;
+      gap: 0.6vh;
+      justify-content: flex-end;
+    }
+
+    .lap-value {
+      font-size: clamp(1rem, 2.2vh, 1.5rem);
+      font-weight: 600;
+      color: #fff;
+
+      &.best {
+        color: #ce93d8;
+      }
+    }
+
+    .delta-value {
+      font-size: clamp(0.8rem, 1.6vh, 1.1rem);
+      font-weight: 600;
+      min-width: 7ch;
+    }
+
+    .delta-placeholder {
+      visibility: hidden;
+    }
   }
 
+  /* ─── Center speedometer ─── */
+  .speedometer-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6vh 1.4vh;
+
+    &.max-rpm {
+      border-color: var(--danger);
+      background: rgb(255 50 0 / 10%);
+      box-shadow: 0 0 3vh rgb(255 50 0 / 15%);
+    }
+
+    app-speedometer {
+      text-align: center;
+      width: 100%;
+
+      > label {
+        text-transform: uppercase;
+        font-size: clamp(0.75rem, 1.6vh, 1rem);
+        width: 100%;
+        text-align: center;
+        display: block;
+      }
+
+      .rpm, .speed {
+        font-size: clamp(1.6rem, 3.5vh, 2.8rem);
+        color: #fff;
+        font-weight: 700;
+        transition: color 0.15s;
+      }
+
+      .gear {
+        font-size: clamp(3rem, 7vh, 6rem);
+        font-weight: 900;
+        text-align: center;
+        color: #fff;
+        text-shadow: 0 0 2vh rgb(255 255 255 / 15%);
+        line-height: 1.1;
+      }
+    }
+  }
+
+  /* ─── Right fuel panel ─── */
+  .fuel-panel {
+    justify-content: center;
+
+    .fuel-primary {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 0.4vh 0;
+
+      > span {
+        font-size: clamp(1.4rem, 3vh, 2.2rem);
+        font-weight: 700;
+        color: #fff;
+
+        small {
+          font-size: 0.55em;
+          font-weight: 400;
+          color: var(--label-color);
+          margin-left: 0.2em;
+        }
+      }
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.15vh 0;
+
+      > span {
+        font-size: clamp(0.9rem, 1.8vh, 1.2rem);
+        color: #fff;
+      }
+    }
+  }
+
+
+
+  /* ─── Telemetry trace ─── */
+  app-telemetry-trace {
+    min-height: 60px;
+  }
+
+  /* ─── Pit limiter overlay ─── */
   .pit-limiter {
     position: absolute;
-    top: 20%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: orange;
-    font-size: clamp(2rem, 6vh, 4rem);
-    color: black;
-    padding: 0.5vh 3vh;
-    border-radius: 1.2vh;
-    animation: text-blinker 2s step-end infinite;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgb(0 0 0 / 60%);
+    color: #ff9800;
+    font-size: clamp(3rem, 8vh, 6rem);
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    animation: pit-pulse 1.2s ease-in-out infinite;
+    z-index: 10;
   }
 
-  .flag {
-    width: 100%;
-    height: 100%;
-    position: relative;
-
-    &.yellow {
-      background-color: yellow;
-    }
-
-    &.green {
-      background-color: green;
-    }
-
-    &.white {
-      background-color: white;
-    }
-
-    &.blue {
-      background-color: blue;
-    }
-
-    &.red {
-      background-color: red;
-    }
-
-    &.black {
-      background-color: black;
-    }
-
-    &.black-orange {
-      background-color: black;
-    }
-
-    &.black-orange::after {
-      content: '';
-      border-radius: 50%;
-      background-color: orange;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      height: 75%;
-      aspect-ratio: 1;
-    }
-
-    &.checkered {
-      width: 100%;
-      height: 100%;
-      background: repeating-conic-gradient(
-        #000 0% 25%,
-        #fff 0% 50%
-      );
-      background-size: 6vh 6vh;
-    }
-
-    &.red-yellow {
-      background-image: repeating-linear-gradient(
-        to right,
-        yellow 0%,
-        yellow 10%,
-        red 10%,
-        red 20%
-      );
-      background-size: 100% 100%;
-    }
-  }
-
-  @keyframes text-blinker {
-    50% {
-      color: transparent;
-    }
-  }
-
-  app-track-positions {
-    width: calc(100% - 1.2vh);
-    margin-left: 0.6vh;
-  }
-
-  app-telemetry-trace {
-    width: calc(100% - 1.2vh);
-    margin-left: 0.6vh;
-    height: 100%;
+  @keyframes pit-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
   }
 }
