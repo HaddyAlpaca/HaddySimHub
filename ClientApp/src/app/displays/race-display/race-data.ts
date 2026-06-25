@@ -17,6 +17,7 @@ export interface RaceData {
   fuelAvgLap?: number; // not exposed by all sims
   fuelLastLap?: number; // not exposed by all sims
   fuelEstLaps: number;
+  currentLapTime: number;
   lastLapTime: number;
   lastLapTimeDelta?: number; // not exposed by all sims
   bestLapTime?: number; // not exposed by all sims
