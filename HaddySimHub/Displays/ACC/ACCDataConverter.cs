@@ -64,6 +64,10 @@ public class ACCDataConverter : IDataConverter<ACCTelemetry, DisplayUpdate>
             PitLimiterOn = source.PitLimiterOn == 1,
             SteeringPct = (int)(Math.Abs(source.SteerAngle) * 100f),
             BrakeBias = source.BrakeBias,
+            RainIntensity = source.RainIntensity,
+            WindSpeed = source.WindSpeed,
+            WindDirection = source.WindDirection,
+            TrackGripStatus = source.TrackGripStatus,
         };
 
         return new DisplayUpdate

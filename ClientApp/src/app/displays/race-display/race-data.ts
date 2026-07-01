@@ -35,4 +35,10 @@ export interface RaceData {
   maxIncidents?: number; // iRacing only
   irating?: number; // iRacing only
   safetyRating?: number; // iRacing only
+
+  // Weather / track condition fields (ACC)
+  rainIntensity?: number; // 0=no rain, 1=light, 2=medium, 3=heavy
+  windSpeed?: number; // m/s
+  windDirection?: number; // radians
+  trackGripStatus?: number; // 0=green, 1=fast, 2=optimum, 3=wet
 }

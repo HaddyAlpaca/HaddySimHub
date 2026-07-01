@@ -85,4 +85,17 @@ public sealed record RaceData
 
     /// <summary>iRacing only: Safety Rating</summary>
     public int? SafetyRating { get; init; }
+
+    // Weather / track condition fields (ACC)
+    /// <summary>ACC only: Rain intensity (0=no rain, 1=light, 2=medium, 3=heavy)</summary>
+    public int? RainIntensity { get; init; }
+
+    /// <summary>ACC only: Wind speed in m/s</summary>
+    public float? WindSpeed { get; init; }
+
+    /// <summary>ACC only: Wind direction in radians</summary>
+    public float? WindDirection { get; init; }
+
+    /// <summary>ACC only: Track grip status (0=green, 1=fast, 2=optimum, 3=wet)</summary>
+    public int? TrackGripStatus { get; init; }
 }

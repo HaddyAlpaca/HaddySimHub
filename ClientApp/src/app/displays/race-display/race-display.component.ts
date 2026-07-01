@@ -30,4 +30,24 @@ export class RaceDisplayComponent {
       steeringPct: this.data().steeringPct,
     };
   }
+
+  protected rainLabel(intensity: number): string {
+    if (intensity >= 3) {
+      return 'Heavy';
+    }
+    if (intensity >= 2) {
+      return 'Medium';
+    }
+    return 'Light';
+  }
+
+  protected gripLabel(status: number): string {
+    switch (status) {
+      case 0: return 'Green';
+      case 1: return 'Fast';
+      case 2: return 'Optimum';
+      case 3: return 'Wet';
+      default: return 'Unknown';
+    }
+  }
 }

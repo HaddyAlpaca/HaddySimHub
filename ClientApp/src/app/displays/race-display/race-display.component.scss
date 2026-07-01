@@ -32,6 +32,8 @@ app-race-display {
   .text-negative { color: var(--negative); }
   .text-danger { color: var(--danger); }
   .text-accent { color: var(--accent); }
+  .text-warning { color: var(--warning); }
+  .text-rain { color: #64b5f6; }
 
   /* ─── Top bar ─── */
   .top-bar {
@@ -54,6 +56,13 @@ app-race-display {
         font-size: clamp(0.95rem, 2vh, 1.4rem);
         font-weight: 600;
         color: #fff;
+
+        small {
+          font-size: 0.55em;
+          font-weight: 400;
+          color: var(--label-color);
+          margin-left: 0.15em;
+        }
       }
     }
   }
