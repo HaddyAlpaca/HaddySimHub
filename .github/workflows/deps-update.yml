@@ -42,6 +42,24 @@ jobs:
           dotnet tool install --global dotnet-outdated-tool
           dotnet outdated --upgrade
 
+      - name: Detect latest .NET SDK version
+        id: dotnet-sdk
+        run: |
+          RELEASES=$(curl -sL https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json)
+          # Find the latest LTS or current-major channel, preferring the highest major
+          CHANNEL=$(echo "$RELEASES" | jq -r '[.channels[] | select(.release-type == "LTS" or .channel-version == "10.0")] | sort_by(.channel-version | split(".") | map(tonumber)) | last')
+          LATEST_SDK=$(echo "$CHANNEL" | jq -r '.["latest-sdk"] // empty')
+          CHANNEL_VER=$(echo "$CHANNEL" | jq -r '.["channel-version"] // empty')
+
+          if [ -z "$LATEST_SDK" ]; then
+            echo "Could not determine latest SDK, keeping current: ${{ env.dotnet_version }}"
+            echo "full_version=${{ env.dotnet_version }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "full_version=$LATEST_SDK" >> "$GITHUB_OUTPUT"
+            echo "channel=$CHANNEL_VER" >> "$GITHUB_OUTPUT"
+            echo "Latest .NET SDK: $LATEST_SDK (channel $CHANNEL_VER)"
+          fi
+
       - name: Detect latest LTS Node.js version
         id: node-lts
         run: |
@@ -101,6 +119,37 @@ jobs:
           # Update node_version in all workflow files
           for f in .github/workflows/*.yml; do
             sed -i "s/^\\([[:space:]]*node_version:\\) .*$/\\1 $NEW_NODE/" "$f"
+          done
+
+      - name: Bump .NET SDK version to latest
+        run: |
+          NEW_SDK="${{ steps.dotnet-sdk.outputs.full_version }}"
+          OLD_SDK="${{ env.dotnet_version }}"
+
+          if [ "$NEW_SDK" = "$OLD_SDK" ]; then
+            echo "Already at latest SDK $OLD_SDK, skipping bump"
+            exit 0
+          fi
+
+          # Compare versions — only bump if new is actually newer
+          HIGHER=$(printf '%s\n' "$OLD_SDK" "$NEW_SDK" | sort -V | tail -1)
+          if [ "$HIGHER" = "$OLD_SDK" ]; then
+            echo "Current SDK $OLD_SDK is newer than $NEW_SDK, skipping bump"
+            exit 0
+          fi
+
+          echo "Bumping .NET SDK from $OLD_SDK to $NEW_SDK"
+
+          # Update global.json
+          node -e "
+            const g = require('./global.json');
+            g.sdk.version = '$NEW_SDK';
+            require('fs').writeFileSync('./global.json', JSON.stringify(g, null, 2) + '\n');
+          "
+
+          # Update dotnet_version in all workflow files
+          for f in .github/workflows/*.yml; do
+            sed -i "s/^\\([[:space:]]*dotnet_version:\\) .*$/\\1 '$NEW_SDK'/" "$f"
           done
 
       - name: Commit and push
