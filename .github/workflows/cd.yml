@@ -80,8 +80,8 @@ jobs:
     - name: Publish server app
       run: dotnet publish ./HaddySimHub -r win-x64 --output ${{ env.dist_folder }} --no-restore
 
-    - name: Publish updater app
-      run: dotnet publish ./HaddySimHubUpdater -r win-x64 --output ${{ env.dist_folder }}/Updater --no-restore
+    - name: Publish updater app (native AOT, no .NET runtime required)
+      run: dotnet publish ./HaddySimHubUpdater -r win-x64 -c Release --output ${{ env.dist_folder }}/Updater --no-restore
 
     - name: Zip build result
       run: |

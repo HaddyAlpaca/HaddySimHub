@@ -1,6 +1,6 @@
-﻿using System.Net.Http.Json;
-using System.IO.Compression;
+﻿using System.IO.Compression;
 using System.Diagnostics;
+using System.Text.Json;
 using HaddySimHub.Shared;
 
 if (args.Length == 0)
@@ -23,7 +23,8 @@ try
     client.DefaultRequestHeaders.Add("User-Agent", "HaddySimHub Updater");
 
     // Fetch the latest release information
-    var release = await client.GetFromJsonAsync<Release>(UpdateConstants.ReleaseUrl);
+    var json = await client.GetStringAsync(UpdateConstants.ReleaseUrl);
+    var release = JsonSerializer.Deserialize(json, ReleaseContext.Default.Release);
     if (release == null)
     {
         Console.WriteLine("Failed to fetch release information.");
