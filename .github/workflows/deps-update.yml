@@ -42,11 +42,66 @@ jobs:
           dotnet tool install --global dotnet-outdated-tool
           dotnet outdated --upgrade
 
+      - name: Detect latest LTS Node.js version
+        id: node-lts
+        run: |
+          LTS_INFO=$(curl -sL https://nodejs.org/dist/index.json | jq '[.[] | select(.lts != false)] | first')
+          if [ -z "$LTS_INFO" ] || [ "$LTS_INFO" = "null" ]; then
+            echo "No LTS release found, keeping current: ${{ env.node_version }}"
+            echo "full_version=${{ env.node_version }}" >> "$GITHUB_OUTPUT"
+          else
+            LTS_FULL=$(echo "$LTS_INFO" | jq -r '.version' | sed 's/^v//')
+            echo "full_version=$LTS_FULL" >> "$GITHUB_OUTPUT"
+            echo "Latest Node LTS: $LTS_FULL"
+          fi
+
       - name: Update npm dependencies
         working-directory: ./ClientApp
         run: |
+          SAVED_ENGINES=$(node -e "
+            try {
+              const p = require('./package.json');
+              console.log(JSON.stringify({ node: p.engines?.node, npm: p.engines?.npm }));
+            } catch { console.log('{}'); }
+          ")
+
           npx npm-check-updates@latest -u 2>/dev/null || true
           npm install --package-lock-only
+
+          node -e "
+            const p = require('./package.json');
+            const saved = $SAVED_ENGINES;
+            if (saved.node) p.engines = p.engines || {};
+            if (saved.node) p.engines.node = saved.node;
+            if (saved.npm) p.engines.npm = saved.npm;
+            require('fs').writeFileSync('./package.json', JSON.stringify(p, null, 2) + '\n');
+          "
+
+      - name: Bump Node.js version to latest LTS
+        run: |
+          NEW_NODE="${{ steps.node-lts.outputs.full_version }}"
+          OLD_NODE="${{ env.node_version }}"
+
+          # Only bump if the new LTS version is actually newer (major.minor compare)
+          if [ "$(printf '%s\n' "$OLD_NODE" "$NEW_NODE" | sort -t. -k1,1n -k2,2n | tail -1)" = "$OLD_NODE" ]; then
+            echo "Current Node $OLD_NODE is already at or above LTS $NEW_NODE, skipping bump"
+            exit 0
+          fi
+
+          echo "Bumping Node.js version from $OLD_NODE to $NEW_NODE"
+
+          # Update engines.node in package.json
+          node -e "
+            const p = require('./ClientApp/package.json');
+            const prefix = (p.engines?.node || '').replace(/[\\d.]+$/, '');
+            p.engines.node = prefix + '$NEW_NODE';
+            require('fs').writeFileSync('./ClientApp/package.json', JSON.stringify(p, null, 2) + '\n');
+          "
+
+          # Update node_version in all workflow files
+          for f in .github/workflows/*.yml; do
+            sed -i "s/^\\([[:space:]]*node_version:\\) .*$/\\1 $NEW_NODE/" "$f"
+          done
 
       - name: Commit and push
         run: |
