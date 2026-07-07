@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponentHarness } from './app.component.harness';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
-import { DisplayType, SignalRService } from './signalr.service';
+import { DisplayType, SseService } from './sse.service';
 import { describe, beforeEach, it, expect, MockedObject, vi } from 'vitest';
 import { MockAppStore } from '../testing/mock-app.store';
 import { APP_STORE } from './state/app.store';
@@ -12,20 +12,20 @@ import { APP_STORE } from './state/app.store';
 describe('AppComponent tests', () => {
   let fixture: ComponentFixture<AppComponent>;
   let mockStore: MockAppStore;
-  let mockSignalRService: MockedObject<SignalRService>;
+  let mockSseService: MockedObject<SseService>;
 
   beforeEach(async () => {
     mockStore = new MockAppStore();
-    mockSignalRService = {
+    mockSseService = {
       connectionStatus: vi.fn(() => ({ status: 0 })),
-    } as MockedObject<SignalRService>;
+    } as MockedObject<SseService>;
 
     await TestBed.configureTestingModule({
       providers: [
         provideCharts(withDefaultRegisterables()),
         provideZonelessChangeDetection(),
         { provide: APP_STORE, useValue: mockStore },
-        { provide: SignalRService, useValue: mockSignalRService },
+        { provide: SseService, useValue: mockSseService },
       ],
     }).compileComponents();
 

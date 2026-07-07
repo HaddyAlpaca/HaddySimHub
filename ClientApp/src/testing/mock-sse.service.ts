@@ -1,6 +1,6 @@
 import { signal } from '@angular/core';
-import { ConnectionInfo, ConnectionStatus } from '../app/signalr.service';
+import { ConnectionInfo, ConnectionStatus } from '../app/sse.service';
 
-export class MockSignalRService {
+export class MockSseService {
   public readonly connectionStatus = signal<ConnectionInfo>({ status: ConnectionStatus.Disconnected });
 }

@@ -1,6 +1,5 @@
 import { inject, OnDestroy, Service, signal } from '@angular/core';
 import { filter, interval, Subscription, take, tap } from 'rxjs';
-import { HttpTransportType, HubConnection, HubConnectionBuilder, IHttpConnectionOptions, LogLevel } from '@microsoft/signalr';
 import { RaceData, RallyData, TruckData } from './displays';
 import { APP_STORE } from './state/app.store';
 
@@ -30,46 +29,41 @@ export interface DisplayUpdate {
 }
 
 @Service()
-export class SignalRService implements OnDestroy {
+export class SseService implements OnDestroy {
   private readonly _store = inject(APP_STORE);
-  private readonly _hubConnection: HubConnection;
+  private _eventSource?: EventSource;
   private _reloadSubscription?: Subscription;
 
   private readonly _connectionStatus = signal<ConnectionInfo>({ status: ConnectionStatus.Disconnected });
   public readonly connectionStatus = this._connectionStatus.asReadonly();
 
   public constructor() {
-    const connectionOptions: IHttpConnectionOptions = {
-      transport: HttpTransportType.WebSockets,
-      skipNegotiation: false,
-      logMessageContent: false,
+    this.connect();
+  }
+
+  private connect(): void {
+    this._connectionStatus.set({ status: ConnectionStatus.Connecting });
+
+    this._eventSource = new EventSource('/display-data/stream');
+
+    this._eventSource.onopen = (): void => {
+      this._connectionStatus.set({ status: ConnectionStatus.Connected });
     };
 
-    this._hubConnection = new HubConnectionBuilder()
-      .withUrl('display-data', connectionOptions)
-      .configureLogging(LogLevel.Error) // Warning => then if the frontend receives messages but isn't subscribed to a topic shows a warning.
-      .withAutomaticReconnect()
-      .build();
-
-    this._connectionStatus.set({ status: ConnectionStatus.Connecting });
-    this._hubConnection.start().then(() => {
-      this._connectionStatus.set({ status: ConnectionStatus.Connected });
-    }).catch((error) => {
-      this._connectionStatus.set({ status: ConnectionStatus.ConnectionError, message: error as string });
-      this.startReloadSequence();
-    });
-
-    this._hubConnection.onreconnecting((error) => this._connectionStatus.set({ status: ConnectionStatus.Connecting, message: error?.message }));
-    this._hubConnection.onreconnected(() => this._connectionStatus.set({ status: ConnectionStatus.Connected }));
-    this._hubConnection.onclose((error) => {
-      this._connectionStatus.set({ status: ConnectionStatus.Disconnected, message: error?.message });
-      this.startReloadSequence();
-    });
-
-    //Monitor emmited data
-    this._hubConnection.on('displayUpdate', (update: DisplayUpdate) => {
+    this._eventSource.onmessage = (event: MessageEvent): void => {
+      const data = event.data as string;
+      const update = JSON.parse(data) as DisplayUpdate;
       this._store.updateDisplay(update);
-    });
+    };
+
+    this._eventSource.onerror = (): void => {
+      if (this._eventSource?.readyState === EventSource.CONNECTING) {
+        this._connectionStatus.set({ status: ConnectionStatus.Connecting, message: 'Reconnecting...' });
+        return;
+      }
+      this._connectionStatus.set({ status: ConnectionStatus.ConnectionError, message: 'Connection lost' });
+      this.startReloadSequence();
+    };
   }
 
   private startReloadSequence(): void {
@@ -89,6 +83,6 @@ export class SignalRService implements OnDestroy {
 
   public ngOnDestroy(): void {
     this._reloadSubscription?.unsubscribe();
-    void this._hubConnection.stop();
+    this._eventSource?.close();
   }
 }

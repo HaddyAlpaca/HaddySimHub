@@ -86,8 +86,8 @@ jobs:
         with:
           node-version: ${{ env.node_version }}
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Install dependencies (with Safe Chain supply chain protection)
+        run: npm run ci
       
       - name: Lint
         run: npm run lint

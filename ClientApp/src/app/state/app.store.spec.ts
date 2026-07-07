@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DisplayType } from '../signalr.service';
+import { DisplayType } from '../sse.service';
 import { TruckData, RaceData, RallyData } from '../displays';
 import { MockAppStore } from '../../testing/mock-app.store';
 

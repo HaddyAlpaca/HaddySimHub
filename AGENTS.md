@@ -100,6 +100,44 @@ Then `dotnet build` will use the correct SDK version.
 - **Node version mismatch**: The frontend requires Node 24.15.0+ and npm 11.6.2+; older versions will cause unexpected failures
 - **Snap dotnet SDK mismatch**: Snap-installed dotnet may not include SDK 10.0.201 by default. See "Environment & Setup" section for how to install it to ~/.dotnet and update PATH.
 
+## Supply Chain Security (Aikido Safe Chain)
+
+Frontend package downloads (`npm install`/`npm ci`) are protected by [Aikido Safe Chain](https://github.com/AikidoSec/safe-chain) — a local proxy that checks every downloaded package against Aikido's real-time malware database.
+
+### How it works in CI
+
+Both `ci.yml` and `cd.yml` call `npm run ci` instead of `npm ci` directly. This runs `ClientApp/scripts/safe-chain-wrapper.sh`, which:
+
+1. Checks if Safe Chain is already installed (binary at `~/.safe-chain/bin/safe-chain`)
+2. If not, downloads the installer from a pinned GitHub release and **verifies it against a hardcoded SHA256 checksum** before executing it — preventing tampering with the installer itself
+3. Adds Safe Chain shims to `PATH`
+4. Delegates to `npm ci`
+
+The Safe Chain binary's own checksum is also verified during its installation (the release pipeline bakes SHA256 hashes into the installer script).
+
+### For local development
+
+Install Safe Chain once on your machine to protect all npm/pnpm/yarn operations:
+
+```bash
+# From ClientApp/ directory:
+npm run safe-chain:install
+
+# Restart your terminal, then verify:
+npm safe-chain-verify
+```
+
+This downloads the installer, verifies its checksum against `ClientApp/scripts/safe-chain-checksums.txt`, then runs it. After installation, all `npm install`, `npm ci`, `pnpm install`, etc. are automatically wrapped by Safe Chain.
+
+### Upgrading Safe Chain
+
+1. Download the new installer: `curl -fsSL https://github.com/AikidoSec/safe-chain/releases/download/<version>/install-safe-chain.sh | sha256sum`
+2. Update the version and hash in:
+   - `ClientApp/scripts/safe-chain-checksums.txt`
+   - `ClientApp/scripts/safe-chain-wrapper.sh` (the `SAFE_CHAIN_VERSION` variable)
+   - `ClientApp/scripts/install-safe-chain.sh` (the `SAFE_CHAIN_VERSION` variable)
+3. Commit with a note about the version bump
+
 ## Git & Pull Requests
 
 - `main` is a protected branch. Direct pushes are rejected — land changes via a pull request.
@@ -111,7 +149,7 @@ Then `dotnet build` will use the correct SDK version.
 ## Security & Deployment
 
 - **Deployment architecture**: iRacingSDK integration for race data (Windows-only runtime)
-- **Authentication model**: Uses SignalR hubs for real-time game data updates (GameDataHub.cs)
+- **Authentication model**: Uses SSE (Server-Sent Events) for real-time game data updates (endpoint `/display-data/stream`)
 - **Data handling**: Game telemetry data from iRacing is piped through DisplayBase implementations; no external API calls
 - **Trust boundaries**: Backend is trusted; frontend displays are renderer processes that trust GameDataHub updates
 - **CI/CD**: GitHub Actions workflows in .github/workflows/ handle build, test, and deployment automation

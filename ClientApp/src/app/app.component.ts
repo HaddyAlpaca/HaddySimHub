@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { ClockComponent, ConnectionStatusComponent } from './shared';
 import { RaceDisplayComponent, RallyDisplayComponent, TruckDisplayComponent } from './displays';
-import { DisplayType } from './signalr.service';
+import { DisplayType } from './sse.service';
 import { APP_STORE } from './state/app.store';
 
 @Component({

@@ -1,6 +1,6 @@
 import { computed } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
-import { DisplayUpdate, DisplayType } from '../signalr.service';
+import { DisplayUpdate, DisplayType } from '../sse.service';
 import { RaceData, RallyData, TruckData } from '../displays';
 
 export const APP_STORE = signalStore(

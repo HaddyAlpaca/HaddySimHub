@@ -1,5 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
-import { ConnectionStatus, SignalRService } from '../../signalr.service';
+import { ConnectionStatus, SseService } from '../../sse.service';
 
 @Component({
   selector: 'app-connection-status',
@@ -7,7 +7,7 @@ import { ConnectionStatus, SignalRService } from '../../signalr.service';
   styleUrl: './connection-status.component.scss',
 })
 export class ConnectionStatusComponent {
-  private readonly _signalRService = inject(SignalRService);
+  private readonly _sseService = inject(SseService);
 
   protected readonly connectionStatusDescription = computed(() => {
     const statusDescriptions: Record<ConnectionStatus, string> = {
@@ -17,10 +17,10 @@ export class ConnectionStatusComponent {
       [ConnectionStatus.Connected]: 'Connected, waiting for game...',
     };
 
-    return statusDescriptions[this._signalRService.connectionStatus().status] || 'Unknown';
+    return statusDescriptions[this._sseService.connectionStatus().status] || 'Unknown';
   });
 
-  protected readonly connectionMessage = computed(() => this._signalRService.connectionStatus().message);
+  protected readonly connectionMessage = computed(() => this._sseService.connectionStatus().message);
 
-  protected readonly reloadSeconds = computed(() => this._signalRService.connectionStatus().reloadSeconds);
+  protected readonly reloadSeconds = computed(() => this._sseService.connectionStatus().reloadSeconds);
 }
