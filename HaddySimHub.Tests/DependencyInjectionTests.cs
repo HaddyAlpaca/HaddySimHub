@@ -3,19 +3,18 @@ using HaddySimHub.Displays;
 using HaddySimHub.Extensions;
 using HaddySimHub.Interfaces;
 using HaddySimHub.Models;
+using System.Threading.Channels;
 
 namespace HaddySimHub.Tests
 {
     [TestClass]
     public class DependencyInjectionTests
     {
-        // Simple mock implementation of IHubService for testing
-        private class MockHubService : IHubService
+        private class MockSseBroadcastService : ISseBroadcastService
         {
-            public Task SendDisplayUpdateAsync(DisplayUpdate displayUpdate)
-            {
-                return Task.CompletedTask;
-            }
+            public void SetClient(ChannelWriter<DisplayUpdate> writer) { }
+            public void ClearClient() { }
+            public Task BroadcastAsync(DisplayUpdate displayUpdate) => Task.CompletedTask;
         }
 
         private IServiceCollection CreateServices()
@@ -25,8 +24,8 @@ namespace HaddySimHub.Tests
             services.AddSingleton<ISCSTelemetryFactory, SCSSdkTelemetryFactory>();
             services.AddSingleton<IDisplayFactory, DisplayFactory>();
 
-            // Register mock IHubService for testing
-            services.AddSingleton<IHubService, MockHubService>();
+            // Register mock SSE broadcast service for testing
+            services.AddSingleton<ISseBroadcastService, MockSseBroadcastService>();
 
             // Register IDisplayUpdateSender
             services.AddSingleton<IDisplayUpdateSender, HaddySimHub.Services.DisplayUpdateSender>();
@@ -207,7 +206,7 @@ namespace HaddySimHub.Tests
 
             Assert.IsNotNull(provider.GetRequiredService<IDisplayFactory>());
             Assert.IsNotNull(provider.GetRequiredService<DisplaysRunner>());
-            Assert.IsNotNull(provider.GetRequiredService<IHubService>());
+            Assert.IsNotNull(provider.GetRequiredService<ISseBroadcastService>());
             Assert.IsNotNull(provider.GetRequiredService<IDisplayUpdateSender>());
         }
 

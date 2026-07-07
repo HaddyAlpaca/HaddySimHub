@@ -28,6 +28,27 @@
       <label>Track</label>
       <span id="track-temp">{{data().trackTemp |number:'1.1-1':'en-US'}}&deg;</span>
     </div>
+    @let ws = data().windSpeed;
+    @if (ws !== undefined && ws !== null) {
+      <div class="top-bar-item">
+        <label>Wind</label>
+        <span id="wind-speed">{{ws |number:'1.0-1':'en-US'}}<small>m/s</small></span>
+      </div>
+    }
+    @let ri = data().rainIntensity;
+    @if (ri !== undefined && ri !== null && ri > 0) {
+      <div class="top-bar-item">
+        <label>Rain</label>
+        <span id="rain-intensity" class="text-rain">{{rainLabel(ri)}}</span>
+      </div>
+    }
+    @let tg = data().trackGripStatus;
+    @if (tg !== undefined && tg !== null) {
+      <div class="top-bar-item">
+        <label>Grip</label>
+        <span id="track-grip" [class.text-warning]="tg === 3">{{gripLabel(tg)}}</span>
+      </div>
+    }
   </div>
 
   <div class="main-area">

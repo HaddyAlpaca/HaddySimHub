@@ -2,7 +2,6 @@
   "/display-data": {
     "target": "http://localhost:3333",
     "secure": false,
-    "ws": true,
     "logLevel": "debug"
   }
 }

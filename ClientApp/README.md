@@ -11,7 +11,7 @@ run the backend once and the frontend using the Angular dev-server with HMR.
    dotnet run --project HaddySimHub --test race    # or: rally / truck
    ```
 
-   The backend listens on `http://localhost:3333` (including the SignalR hub `/display-data`).
+   The backend listens on `http://localhost:3333` (including the SSE endpoint `/display-data/stream`).
 
 2. **Start the frontend dev server** (from `ClientApp/`):
 
@@ -21,7 +21,7 @@ run the backend once and the frontend using the Angular dev-server with HMR.
 
    Open `http://localhost:4200`. Changes in `src/` are hot-reloaded — no rebuild, copy or backend restart required.
 
-The dev server proxies `/display-data` (including the WebSocket upgrade) to the backend on port 3333; see [`proxy.conf.json`](./proxy.conf.json).
+The dev server proxies `/display-data` (SSE endpoint) to the backend on port 3333; see [`proxy.conf.json`](./proxy.conf.json).
 
 ## Selecting a test mode
 

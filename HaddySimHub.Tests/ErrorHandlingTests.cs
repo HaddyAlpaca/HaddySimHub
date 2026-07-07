@@ -3,22 +3,12 @@ using HaddySimHub.Displays;
 using HaddySimHub.Interfaces;
 using HaddySimHub.Models;
 using HaddySimHub.Services;
-using Microsoft.AspNetCore.SignalR;
 
 namespace HaddySimHub.Tests;
 
 [TestClass]
 public class ErrorHandlingTests
 {
-    [TestMethod]
-    public async Task HubService_SendDisplayUpdateAsync_NullUpdate_ThrowsArgumentNullException()
-    {
-        var service = new HubService(new StubHubContext());
-
-        await Assert.ThrowsAsync<ArgumentNullException>(
-            () => service.SendDisplayUpdateAsync(null!));
-    }
-
     [TestMethod]
     public async Task DisplayBase_ConverterThrows_DoesNotCrashAndRecoversOnNextData()
     {
@@ -141,12 +131,5 @@ public class ErrorHandlingTests
     {
         public Task SendDisplayUpdate(DisplayUpdate displayUpdate)
             => throw new InvalidOperationException("Send failed");
-    }
-
-    private sealed class StubHubContext : IHubContext<GameDataHub>
-    {
-        public IHubClients Clients => throw new NotSupportedException();
-
-        public IGroupManager Groups => throw new NotSupportedException();
     }
 }

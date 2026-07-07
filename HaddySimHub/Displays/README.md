@@ -4,8 +4,8 @@ Each supported simulator is wired up the same way. Understanding this one
 pattern is enough to read, debug, or extend any game integration.
 
 ```
-IGameDataProvider<T>  →  IDataConverter<T, DisplayUpdate>  →  DisplayBase<T>  →  IDisplayUpdateSender  →  GameDataHub (SignalR)  →  frontend
-        (raw telemetry T)        (maps to DisplayUpdate)       (channel + send loop)      ("displayUpdate")
+IGameDataProvider<T>  →  IDataConverter<T, DisplayUpdate>  →  DisplayBase<T>  →  IDisplayUpdateSender  →  SSE  →  frontend
+        (raw telemetry T)        (maps to DisplayUpdate)       (channel + send loop)     (/display-data/stream)
 ```
 
 ## The pieces
@@ -15,7 +15,7 @@ IGameDataProvider<T>  →  IDataConverter<T, DisplayUpdate>  →  DisplayBase<T>
 | Provider | `IGameDataProvider<T>` | Acquires raw telemetry from the running game (shared memory, UDP, SDK) and raises `DataReceived` with a payload of type `T`. |
 | Converter | `IDataConverter<T, DisplayUpdate>` | `Convert(T)` maps the game-specific telemetry into the shared `DisplayUpdate` model the frontend understands. |
 | Display | `DisplayBase<T>` / `SimpleGameDisplay<T>` | Subscribes to the provider, runs the converter, and pushes each `DisplayUpdate` through a bounded channel + send loop. Exposes `Description` and `IsActive`. |
-| Sender | `IDisplayUpdateSender` → `HubService` | Forwards each `DisplayUpdate` to all SignalR clients on the `"displayUpdate"` event (hub mapped at `/display-data`). |
+| Sender | `IDisplayUpdateSender` → `SseBroadcastService` | Forwards each `DisplayUpdate` to all SSE clients via a `Channel<DisplayUpdate>` per connection (endpoint at `/display-data/stream`). |
 | Runner | `DisplaysRunner` | Polls every display's `IsActive` every ~2s and starts/stops data feeds as games come and go. |
 
 `SimpleGameDisplay<T>` reports `IsActive` via `ProcessHelper.IsProcessRunning(processName)`,
