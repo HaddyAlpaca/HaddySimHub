@@ -6,8 +6,6 @@ namespace HaddySimHub.Displays.ACC;
 
 public sealed class Display : DisplayBase<ACCTelemetry>
 {
-    private static readonly string[] ACCProcessNames = { "acc", "ACC", "Acc" };
-    
     public override string Description => "Assetto Corsa Competizione";
     
     public override bool IsActive

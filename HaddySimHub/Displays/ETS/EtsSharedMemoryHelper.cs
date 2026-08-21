@@ -1,4 +1,5 @@
 using System.IO.MemoryMappedFiles;
+using HaddySimHub;
 
 namespace HaddySimHub.Displays.ETS;
 
@@ -22,8 +23,21 @@ public static class EtsSharedMemoryHelper
 #pragma warning restore CA1416
             return true;
         }
-        catch
+        catch (FileNotFoundException)
         {
+            // Expected when game is not running
+            return false;
+        }
+        catch (UnauthorizedAccessException)
+        {
+            // Expected when insufficient permissions
+            Logger.Debug("[ETS] Insufficient permissions to access shared memory");
+            return false;
+        }
+        catch (Exception ex)
+        {
+            // Unexpected error - log it for debugging
+            Logger.Error($"[ETS] Unexpected error checking shared memory: {ex.GetType().Name}: {ex.Message}");
             return false;
         }
     }
