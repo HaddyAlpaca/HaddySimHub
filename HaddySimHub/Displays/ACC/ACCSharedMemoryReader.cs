@@ -25,6 +25,38 @@ public class ACCSharedMemoryReader : IDisposable
     public bool IsPhysicsConnected => _physicsConnected;
     public bool IsGraphicsConnected => _graphicsConnected;
 
+    /// <summary>
+    /// Check if ACC shared memory is available without fully connecting.
+    /// This is faster and more reliable than process detection.
+    /// </summary>
+    public static bool IsSharedMemoryAvailable()
+    {
+        try
+        {
+#pragma warning disable CA1416
+            using var testFile = MemoryMappedFile.OpenExisting(PhysicsMemoryName);
+#pragma warning restore CA1416
+            return true;
+        }
+        catch (FileNotFoundException)
+        {
+            // Expected when game is not running
+            return false;
+        }
+        catch (UnauthorizedAccessException)
+        {
+            // Expected when insufficient permissions
+            Logger.Debug("[ACC] Insufficient permissions to access shared memory");
+            return false;
+        }
+        catch (Exception ex)
+        {
+            // Unexpected error - log it for debugging
+            Logger.Error($"[ACC] Unexpected error checking shared memory: {ex.GetType().Name}: {ex.Message}");
+            return false;
+        }
+    }
+
     public void Connect()
     {
         if (IsConnected) return;

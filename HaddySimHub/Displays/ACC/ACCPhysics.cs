@@ -16,7 +16,7 @@ public struct ACCPhysics
     public ACCVector3 Velocity;
     public ACCVector3 AccG;
     public ACCWheelData WheelSlip;
-    public ACCWheelData WheelLoad;
+    public ACCWheelData WheelLoad;  // This field MUST be here even though ACC doesn't use it - memory layout requires it
     public ACCWheelData WheelsPressure;
     public ACCWheelData WheelAngularSpeed;
     public ACCWheelData TyreWear;

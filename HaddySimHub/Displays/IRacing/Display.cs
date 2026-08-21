@@ -8,7 +8,9 @@ namespace HaddySimHub.Displays.IRacing;
 public sealed class Display : DisplayBase<IDataSample>
 {
     public override string Description => "IRacing";
-    public override bool IsActive => ProcessHelper.IsProcessRunning("iracingui");
+    // Use iRacing SDK's connection status instead of process detection
+    // This is more reliable as it checks if the sim is actually connected and ready
+    public override bool IsActive => iRacingSDK.iRacing.IsConnected;
 
     public Display(
         IGameDataProvider<IDataSample> gameDataProvider,

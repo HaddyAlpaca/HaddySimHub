@@ -10,7 +10,7 @@ namespace HaddySimHub.Displays.AC;
 public sealed class Display : DisplayBase<ACTelemetry>
 {
     public override string Description => "Assetto Corsa";
-    public override bool IsActive => ProcessHelper.IsProcessRunning("ac");
+    public override bool IsActive => ACSharedMemoryReader.IsSharedMemoryAvailable();
 
     public Display(
         IGameDataProvider<ACTelemetry> gameDataProvider,

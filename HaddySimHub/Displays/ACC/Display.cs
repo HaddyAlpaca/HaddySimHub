@@ -6,20 +6,20 @@ namespace HaddySimHub.Displays.ACC;
 
 public sealed class Display : DisplayBase<ACCTelemetry>
 {
-    private static readonly string[] ACCProcessNames = { "acc", "ACC", "Acc" };
-    
     public override string Description => "Assetto Corsa Competizione";
     
     public override bool IsActive
     {
         get
         {
-            var isRunning = ACCProcessNames.Any(name => ProcessHelper.IsProcessRunning(name));
-            if (!isRunning)
+            // Use shared memory detection instead of process detection
+            // This is more reliable and doesn't depend on process names
+            var isAvailable = ACCSharedMemoryReader.IsSharedMemoryAvailable();
+            if (!isAvailable)
             {
-                Logger.Debug($"[ACC] Game not detected (checked: {string.Join(", ", ACCProcessNames)})");
+                Logger.Debug("[ACC] Shared memory not available");
             }
-            return isRunning;
+            return isAvailable;
         }
     }
 
