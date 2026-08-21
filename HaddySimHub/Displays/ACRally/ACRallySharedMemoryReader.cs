@@ -14,6 +14,24 @@ public class ACRallySharedMemoryReader : IDisposable
 
     public bool IsConnected { get; private set; }
 
+    /// <summary>
+    /// Check if AC Rally shared memory is available without fully connecting.
+    /// </summary>
+    public static bool IsSharedMemoryAvailable()
+    {
+        try
+        {
+#pragma warning disable CA1416
+            using var testFile = MemoryMappedFile.OpenExisting(SharedMemoryName);
+#pragma warning restore CA1416
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     public void Connect()
     {
         try
