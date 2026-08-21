@@ -85,8 +85,9 @@ public struct ACCGraphics
     public int CurrentSectorIndex;
     public int LastSectorTime;
     public int NumberOfLaps;
-    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 33)]
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 34)]  // 33 chars + 1 char for 2-byte padding
     public string TyreCompound;
+    public float ReplayTimeMultiplier;  // Unused in ACC but required for memory layout
     public float NormalizedCarPosition;
     public int ActiveCars;
     [MarshalAs(UnmanagedType.ByValArray, SizeConst = 60)]
@@ -99,6 +100,7 @@ public struct ACCGraphics
     public ACCPenaltyType Penalty;
     public int IdealLineOn;
     public int IsInPitLane;
+    public float SurfaceGrip;  // Unused in ACC but required for memory layout
     public int MandatoryPitDone;
     public float WindSpeed;
     public float WindDirection;
@@ -120,20 +122,20 @@ public struct ACCGraphics
     public int RainTyres;
     public int SessionIndex;
     public float UsedFuel;
-    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 15)]
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]  // 15 chars + 1 for 2-byte padding
     public string DeltaLapTimeStr;
     public int DeltaLapTime;
-    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 15)]
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]  // 15 chars + 1 for 2-byte padding
     public string EstimatedLapTimeStr;
     public int EstimatedLapTime;
     public int IsDeltaPositive;
     public int LastSectorTime2;
     public int IsValidLap;
     public float FuelEstimatedLaps;
-    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 33)]
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 34)]  // 33 chars + 1 for 2-byte padding
     public string TrackStatus;
     public int MissingMandatoryPits;
-    public int Clock;
+    public float Clock;  // Clock is float, not int
     public int DirectionLightLeft;
     public int DirectionLightRight;
     public int GlobalYellow;
