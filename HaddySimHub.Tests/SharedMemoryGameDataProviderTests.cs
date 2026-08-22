@@ -1,6 +1,4 @@
 using HaddySimHub.Displays;
-using HaddySimHub.Interfaces;
-using HaddySimHub.Models;
 
 namespace HaddySimHub.Tests;
 
@@ -10,8 +8,8 @@ public class SharedMemoryGameDataProviderTests
     [TestMethod]
     public async Task Start_RetriesUntilSharedMemoryBecomesAvailable()
     {
-        var reader = new TestReader { Value = 42 };
-        var provider = new RetryingProvider(reader, connectSuccessAttempt: 2);
+        var reader = new TestReader(connectSuccessAttempt: 2) { Value = 42 };
+        var provider = new TestProvider(reader);
         var received = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
 
         provider.DataReceived += (_, telemetry) => received.TrySetResult(telemetry);
@@ -26,60 +24,59 @@ public class SharedMemoryGameDataProviderTests
         Assert.IsTrue(reader.ConnectAttempts >= 2);
     }
 
-    private sealed class TestReader
+    [TestMethod]
+    public void Stop_DisposesTheReader()
     {
-        public int ConnectAttempts { get; set; }
-        public bool IsConnected { get; set; }
-        public int Value { get; set; }
+        var reader = new TestReader(connectSuccessAttempt: 1);
+        var provider = new TestProvider(reader);
+
+        provider.Start();
+        provider.Stop();
+
+        Assert.IsTrue(reader.Disposed);
     }
 
-    private sealed class RetryingProvider : SharedMemoryGameDataProviderBase<TestReader, int>
+    private sealed class TestReader(int connectSuccessAttempt) : ISharedMemoryTelemetryReader<int>
     {
-        private readonly TestReader _reader;
-        private readonly int _connectSuccessAttempt;
+        public int ConnectAttempts { get; private set; }
 
-        public RetryingProvider(TestReader reader, int connectSuccessAttempt)
-        {
-            _reader = reader;
-            _connectSuccessAttempt = connectSuccessAttempt;
-        }
+        public bool IsConnected { get; private set; }
 
-        protected override TestReader CreateReader()
-        {
-            return _reader;
-        }
+        public bool Disposed { get; private set; }
 
-        protected override void ConnectReader(TestReader reader)
+        public int Value { get; set; }
+
+        public void Connect()
         {
-            reader.ConnectAttempts++;
-            if (reader.ConnectAttempts >= _connectSuccessAttempt)
+            ConnectAttempts++;
+            if (ConnectAttempts >= connectSuccessAttempt)
             {
-                reader.IsConnected = true;
+                IsConnected = true;
             }
         }
 
-        protected override void DisconnectReader(TestReader? reader)
+        public void Disconnect()
         {
-            if (reader != null)
-            {
-                reader.IsConnected = false;
-            }
+            IsConnected = false;
         }
 
-        protected override bool IsConnected(TestReader? reader)
+        public bool TryReadTelemetry(out int telemetry)
         {
-            return reader?.IsConnected ?? false;
+            telemetry = Value;
+            return IsConnected;
         }
 
-        protected override bool TryReadTelemetry(TestReader reader, out int telemetry)
+        public void Dispose()
         {
-            telemetry = reader.Value;
-            return reader.IsConnected;
+            Disposed = true;
+            Disconnect();
         }
+    }
 
-        protected override bool HasDataChanged(int current, int last)
-        {
-            return current != last;
-        }
+    private sealed class TestProvider(TestReader reader) : SharedMemoryGameDataProviderBase<TestReader, int>
+    {
+        protected override TestReader CreateReader() => reader;
+
+        protected override bool HasDataChanged(int current, int last) => current != last;
     }
 }

@@ -158,9 +158,11 @@ public sealed class ConsoleDashboard
         var grid = new Grid();
         grid.AddColumn();
 
+        var current = _displaysRunner.CurrentDisplay;
+
         foreach (var display in _displays)
         {
-            grid.AddRow(BuildGameRow(display));
+            grid.AddRow(BuildGameRow(display, ReferenceEquals(display, current)));
         }
 
         if (_displays.Count == 0)
@@ -178,17 +180,25 @@ public sealed class ConsoleDashboard
     }
 
     /// <summary>
-    /// Renders a single game row with a tri-state indicator so an operator can
-    /// tell the difference between "game not running", "running but no telemetry"
-    /// (the typical broken-integration case), and "telemetry flowing".
+    /// Renders a single game row with an indicator so an operator can tell the
+    /// difference between "game not running", "running but not the one on screen",
+    /// "running but no telemetry" (the typical broken-integration case), and
+    /// "telemetry flowing".
     /// </summary>
-    private static string BuildGameRow(IDisplay display)
+    private static string BuildGameRow(IDisplay display, bool isCurrent)
     {
         var name = Markup.Escape(display.Description);
 
         if (!SafeIsActive(display))
         {
             return $"[grey37]○[/] [grey]{name}[/]";
+        }
+
+        if (!isCurrent)
+        {
+            // Only one game feeds the dashboard at a time, so a second running game
+            // is idle by design rather than failing to deliver telemetry.
+            return $"[grey37]◌[/] [grey]{name}[/] [grey37](running · standing by)[/]";
         }
 
         var lastUpdate = SafeLastUpdate(display);

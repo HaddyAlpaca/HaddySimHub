@@ -11,7 +11,7 @@ namespace HaddySimHub.Displays.ACRally;
 /// Assetto Corsa family is running. Deciding that is the display's job; this
 /// class only supplies the data.
 /// </remarks>
-public sealed class ACRallySharedMemoryReader : IDisposable
+public sealed class ACRallySharedMemoryReader : ISharedMemoryTelemetryReader<ACRallyTelemetry>
 {
     private const string PhysicsMemoryName = "Local\\acpmf_physics";
     private const string GraphicsMemoryName = "Local\\acpmf_graphics";

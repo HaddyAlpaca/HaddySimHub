@@ -12,9 +12,14 @@ namespace HaddySimHub.Tests
     {
         private class MockSseBroadcastService : ISseBroadcastService
         {
-            public void SetClient(ChannelWriter<DisplayUpdate> writer) { }
-            public void ClearClient() { }
+            public void AddClient(ChannelWriter<DisplayUpdate> writer) { }
+            public void RemoveClient(ChannelWriter<DisplayUpdate> writer) { }
             public Task BroadcastAsync(DisplayUpdate displayUpdate) => Task.CompletedTask;
+        }
+
+        private class MockDisplayUpdateSender : IDisplayUpdateSender
+        {
+            public Task SendDisplayUpdate(DisplayUpdate displayUpdate) => Task.CompletedTask;
         }
 
         private IServiceCollection CreateServices()
@@ -28,7 +33,7 @@ namespace HaddySimHub.Tests
             services.AddSingleton<ISseBroadcastService, MockSseBroadcastService>();
 
             // Register IDisplayUpdateSender
-            services.AddSingleton<IDisplayUpdateSender, HaddySimHub.Services.DisplayUpdateSender>();
+            services.AddSingleton<IDisplayUpdateSender, MockDisplayUpdateSender>();
 
             // Register IGameDataProvider implementations
             services.AddSingleton<IGameDataProvider<Displays.Dirt2.Packet>, Displays.Dirt2.Dirt2GameDataProvider>();
