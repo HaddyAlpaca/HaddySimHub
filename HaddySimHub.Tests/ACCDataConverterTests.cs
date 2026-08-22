@@ -1,11 +1,26 @@
 using HaddySimHub.Displays.ACC;
 using HaddySimHub.Models;
+using System.Runtime.InteropServices;
 
 namespace HaddySimHub.Tests
 {
     [TestClass]
     public class ACCDataConverterTests
     {
+        [TestMethod]
+        public void Physics_MatchesSharedMemoryPageSize()
+        {
+            // The page is read as a raw memory image, so a layout change that alters the
+            // size means every field past the change is being read from the wrong offset.
+            Assert.AreEqual(800, Marshal.SizeOf<ACCPhysics>());
+        }
+
+        [TestMethod]
+        public void Graphics_MatchesSharedMemoryPageSize()
+        {
+            Assert.AreEqual(1588, Marshal.SizeOf<ACCGraphics>());
+        }
+
         [TestMethod]
         public void Convert_ReturnsRaceDashboard()
         {
@@ -22,7 +37,7 @@ namespace HaddySimHub.Tests
         public void Convert_GearNeutral()
         {
             var converter = new ACCDataConverter();
-            var telemetry = CreateMockTelemetry(gear: 0);
+            var telemetry = CreateMockTelemetry(gear: 1);
 
             var result = converter.Convert(telemetry);
             var raceData = result.Data as RaceData;
@@ -35,7 +50,7 @@ namespace HaddySimHub.Tests
         public void Convert_GearReverse()
         {
             var converter = new ACCDataConverter();
-            var telemetry = CreateMockTelemetry(gear: -1);
+            var telemetry = CreateMockTelemetry(gear: 0);
 
             var result = converter.Convert(telemetry);
             var raceData = result.Data as RaceData;
@@ -48,7 +63,7 @@ namespace HaddySimHub.Tests
         public void Convert_GearForward()
         {
             var converter = new ACCDataConverter();
-            var telemetry = CreateMockTelemetry(gear: 2);
+            var telemetry = CreateMockTelemetry(gear: 3);
 
             var result = converter.Convert(telemetry);
             var raceData = result.Data as RaceData;
@@ -126,13 +141,14 @@ namespace HaddySimHub.Tests
         public void Convert_CurrentLap()
         {
             var converter = new ACCDataConverter();
+            // The graphics page reports laps finished, so lap 8 is being driven.
             var telemetry = CreateMockTelemetry(currentLap: 7);
 
             var result = converter.Convert(telemetry);
             var raceData = result.Data as RaceData;
 
             Assert.IsNotNull(raceData);
-            Assert.AreEqual(7, raceData.CurrentLap);
+            Assert.AreEqual(8, raceData.CurrentLap);
         }
 
         [TestMethod]

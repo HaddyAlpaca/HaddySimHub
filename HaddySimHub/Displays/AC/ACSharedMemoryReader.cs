@@ -1,64 +1,42 @@
-using System.IO.MemoryMappedFiles;
-using System.Runtime.InteropServices;
-
 namespace HaddySimHub.Displays.AC;
 
 /// <summary>
-/// Reads Assetto Corsa telemetry from shared memory
+/// Reads Assetto Corsa telemetry from the three shared memory pages the game publishes.
 /// </summary>
-public class ACSharedMemoryReader : IDisposable
+/// <remarks>
+/// The page names are shared with Assetto Corsa Competizione and Assetto Corsa Rally,
+/// so their presence does not identify the title; the display decides that from the
+/// running process. See <c>Displays/README.md</c>.
+/// </remarks>
+public sealed class ACSharedMemoryReader : IDisposable
 {
-    private const string SharedMemoryName = "Local\\assettocorsa";
-    private MemoryMappedFile? _memoryMappedFile;
-    private MemoryMappedViewAccessor? _viewAccessor;
+    private const string PhysicsMemoryName = "Local\\acpmf_physics";
+    private const string GraphicsMemoryName = "Local\\acpmf_graphics";
+    private const string StaticMemoryName = "Local\\acpmf_static";
 
-    public bool IsConnected { get; private set; }
+    private readonly SharedMemoryPage<ACPhysics> _physics = new(PhysicsMemoryName, "[AC] physics");
+    private readonly SharedMemoryPage<ACGraphics> _graphics = new(GraphicsMemoryName, "[AC] graphics");
+    private readonly SharedMemoryPage<ACStatic> _static = new(StaticMemoryName, "[AC] static");
+
+    private bool _staticLogged;
 
     /// <summary>
-    /// Check if AC shared memory is available without fully connecting.
+    /// True once the pages carrying live telemetry are mapped. The static page is
+    /// best-effort: it only supplies the rev limit and tank size.
     /// </summary>
-    public static bool IsSharedMemoryAvailable()
-    {
-        try
-        {
-#pragma warning disable CA1416
-            using var testFile = MemoryMappedFile.OpenExisting(SharedMemoryName);
-#pragma warning restore CA1416
-            return true;
-        }
-        catch (FileNotFoundException)
-        {
-            // Expected when game is not running
-            return false;
-        }
-        catch (UnauthorizedAccessException)
-        {
-            // Expected when insufficient permissions
-            Logger.Debug("[AC] Insufficient permissions to access shared memory");
-            return false;
-        }
-        catch (Exception ex)
-        {
-            // Unexpected error - log it for debugging
-            Logger.Error($"[AC] Unexpected error checking shared memory: {ex.GetType().Name}: {ex.Message}");
-            return false;
-        }
-    }
+    public bool IsConnected => _physics.IsConnected && _graphics.IsConnected;
 
     public void Connect()
     {
-        try
+        var wasConnected = IsConnected;
+
+        _physics.TryOpen();
+        _graphics.TryOpen();
+        _static.TryOpen();
+
+        if (IsConnected && !wasConnected)
         {
-#pragma warning disable CA1416 // Validate platform compatibility
-            _memoryMappedFile = MemoryMappedFile.OpenExisting(SharedMemoryName);
-#pragma warning restore CA1416 // Validate platform compatibility
-            _viewAccessor = _memoryMappedFile.CreateViewAccessor(0, Marshal.SizeOf<ACTelemetry>());
-            IsConnected = true;
-        }
-        catch (Exception ex)
-        {
-            Logger.Debug($"[AC] Failed to connect to shared memory: {ex.Message}");
-            IsConnected = false;
+            Logger.Info("[AC] Connected to shared memory");
         }
     }
 
@@ -66,28 +44,86 @@ public class ACSharedMemoryReader : IDisposable
     {
         telemetry = default;
 
-        if (_viewAccessor == null || !IsConnected)
+        if (!IsConnected)
         {
             return false;
         }
 
         try
         {
-            _viewAccessor.Read(0, out telemetry);
+            var physics = _physics.Read();
+            var graphics = _graphics.Read();
+
+            // The static page is written once per session, so keep trying for it
+            // while the live pages already stream.
+            if (!_static.IsConnected)
+            {
+                _static.TryOpen();
+            }
+
+            var staticInfo = _static.IsConnected ? _static.Read() : default;
+
+            if (_static.IsConnected && !_staticLogged)
+            {
+                _staticLogged = true;
+                Logger.Info(
+                    $"[AC] Session: car '{staticInfo.CarModel}' on '{staticInfo.Track}' " +
+                    $"(shared memory {staticInfo.SmVersion}, game {staticInfo.AcVersion})");
+            }
+
+            telemetry = new ACTelemetry
+            {
+                PacketId = physics.PacketId,
+                Gas = physics.Gas,
+                Brake = physics.Brake,
+                Clutch = physics.Clutch,
+                SteerAngle = physics.SteerAngle,
+                Gear = physics.Gear,
+                Rpms = physics.Rpms,
+                SpeedKmh = physics.SpeedKmh,
+                Fuel = physics.Fuel,
+                AirTemp = physics.AirTemp,
+                RoadTemp = physics.RoadTemp,
+                BrakeBias = physics.BrakeBias,
+                PitLimiterOn = physics.PitLimiterOn,
+
+                Status = graphics.Status,
+                SessionType = graphics.SessionType,
+                CompletedLaps = graphics.CompletedLaps,
+                NumberOfLaps = graphics.NumberOfLaps,
+                Position = graphics.Position,
+                CurrentTime = graphics.CurrentTime,
+                LastTime = graphics.LastTime,
+                BestTime = graphics.BestTime,
+                SessionTimeLeft = graphics.SessionTimeLeft,
+                NormalizedCarPosition = graphics.NormalizedCarPosition,
+                DistanceTraveled = graphics.DistanceTraveled,
+
+                MaxRpm = staticInfo.MaxRpm,
+                MaxFuel = staticInfo.MaxFuel,
+                CarModel = staticInfo.CarModel ?? string.Empty,
+                Track = staticInfo.Track ?? string.Empty,
+                SmVersion = staticInfo.SmVersion ?? string.Empty,
+                AcVersion = staticInfo.AcVersion ?? string.Empty,
+            };
+
             return true;
         }
         catch (Exception ex)
         {
-            Logger.Debug($"[AC] Failed to read telemetry: {ex.Message}");
+            Logger.Error($"[AC] Error reading telemetry: {ex.GetType().Name}: {ex.Message}");
+            Logger.Debug(ex.ToString());
+            Disconnect();
             return false;
         }
     }
 
     public void Disconnect()
     {
-        _viewAccessor?.Dispose();
-        _memoryMappedFile?.Dispose();
-        IsConnected = false;
+        _physics.Close();
+        _graphics.Close();
+        _static.Close();
+        _staticLogged = false;
     }
 
     public void Dispose()

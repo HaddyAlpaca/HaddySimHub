@@ -8,11 +8,12 @@ public class ACCDataConverter : IDataConverter<ACCTelemetry, DisplayUpdate>
 {
     public DisplayUpdate Convert(ACCTelemetry source)
     {
+        // Assetto Corsa encodes gears as 0 = reverse, 1 = neutral, 2 = first gear.
         string gearString = source.Gear switch
         {
-            < 0 => "R",
-            0 => "N",
-            _ => source.Gear.ToString()
+            <= 0 => "R",
+            1 => "N",
+            _ => (source.Gear - 1).ToString()
         };
 
         string sessionType = source.SessionType switch
@@ -39,7 +40,8 @@ public class ACCDataConverter : IDataConverter<ACCTelemetry, DisplayUpdate>
             SessionType = sessionType,
             IsLimitedTime = source.SessionTimeLeftMs > 0,
             IsLimitedSessionLaps = source.NumberOfLaps > 0,
-            CurrentLap = source.CurrentLap,
+            // The graphics page counts laps finished, so the lap being driven is one further on.
+            CurrentLap = source.CurrentLap + 1,
             TotalLaps = source.NumberOfLaps,
             SessionTimeRemaining = source.SessionTimeLeftMs / 1000f,
             Position = source.Position,

@@ -33,6 +33,8 @@ public class ACRallyGameDataProvider : SharedMemoryGameDataProviderBase<ACRallyS
 
     protected override bool HasDataChanged(ACRallyTelemetry current, ACRallyTelemetry last)
     {
-        return current.Rpm != last.Rpm;
+        // The physics page bumps its packet id on every frame, which also catches
+        // changes the dashboard cares about while the engine sits at a steady rpm.
+        return current.PacketId != last.PacketId;
     }
 }
