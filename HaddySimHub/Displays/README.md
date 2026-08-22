@@ -31,10 +31,24 @@ publish under the same names — `Local\acpmf_physics`, `Local\acpmf_graphics` a
 presence of a page cannot tell the three titles apart and would activate every
 Assetto Corsa display at once.
 
-The process name is what distinguishes them (`acr` for Assetto Corsa Rally), so
-detection stays process-based and shared memory answers the separate question of
-whether telemetry is flowing. That split is what the `◐ running · waiting for
-data` state in the console dashboard reports.
+The process name is what distinguishes them, so detection stays process-based and
+shared memory answers the separate question of whether telemetry is flowing. That
+split is what the `◐ running · waiting for data` state in the console dashboard
+reports.
+
+| Title | Process |
+|---|---|
+| Assetto Corsa | `acs` |
+| Assetto Corsa Competizione | `AC2-Win64-Shipping` |
+| Assetto Corsa Rally | `acr` |
+
+Assetto Corsa also ships a 32-bit build that runs as `acs_x86`; only the 64-bit
+build is detected.
+
+The three titles do not share a page *layout*, only the names. Each game folder
+therefore carries its own structs, and each has a test pinning the size of every
+page it maps, so a change that shifts a field fails the build instead of silently
+reading from the wrong offset.
 
 ## Registration
 

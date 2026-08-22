@@ -1,137 +1,34 @@
-using System.IO.MemoryMappedFiles;
-using System.Runtime.InteropServices;
-using HaddySimHub;
-
 namespace HaddySimHub.Displays.ACC;
 
-public class ACCSharedMemoryReader : IDisposable
+/// <summary>
+/// Reads Assetto Corsa Competizione telemetry from the shared memory pages the
+/// game publishes.
+/// </summary>
+/// <remarks>
+/// The page names are shared with Assetto Corsa and Assetto Corsa Rally, so their
+/// presence does not identify the title; the display decides that from the running
+/// process. See <c>Displays/README.md</c>.
+/// </remarks>
+public sealed class ACCSharedMemoryReader : IDisposable
 {
-    private const string PhysicsMemoryName = "Local\\assettocorsa_competizione";
-    private const string GraphicsMemoryName = "Local\\assettocorsa_competizione_gfx";
-    
-    private MemoryMappedFile? _physicsFile;
-    private MemoryMappedViewAccessor? _physicsAccessor;
-    private MemoryMappedFile? _graphicsFile;
-    private MemoryMappedViewAccessor? _graphicsAccessor;
-    
-    private int _connectionAttempts;
-    private DateTime _lastConnectionAttempt = DateTime.MinValue;
-    private static readonly TimeSpan ReconnectCooldown = TimeSpan.FromSeconds(2);
-    
-    private bool _physicsConnected;
-    private bool _graphicsConnected;
+    private const string PhysicsMemoryName = "Local\\acpmf_physics";
+    private const string GraphicsMemoryName = "Local\\acpmf_graphics";
 
-    public bool IsConnected => _physicsConnected && _graphicsConnected;
-    public bool IsPhysicsConnected => _physicsConnected;
-    public bool IsGraphicsConnected => _graphicsConnected;
+    private readonly SharedMemoryPage<ACCPhysics> _physics = new(PhysicsMemoryName, "[ACC] physics");
+    private readonly SharedMemoryPage<ACCGraphics> _graphics = new(GraphicsMemoryName, "[ACC] graphics");
 
-    /// <summary>
-    /// Check if ACC shared memory is available without fully connecting.
-    /// This is faster and more reliable than process detection.
-    /// </summary>
-    public static bool IsSharedMemoryAvailable()
-    {
-        try
-        {
-#pragma warning disable CA1416
-            using var testFile = MemoryMappedFile.OpenExisting(PhysicsMemoryName);
-#pragma warning restore CA1416
-            return true;
-        }
-        catch (FileNotFoundException)
-        {
-            // Expected when game is not running
-            return false;
-        }
-        catch (UnauthorizedAccessException)
-        {
-            // Expected when insufficient permissions
-            Logger.Debug("[ACC] Insufficient permissions to access shared memory");
-            return false;
-        }
-        catch (Exception ex)
-        {
-            // Unexpected error - log it for debugging
-            Logger.Error($"[ACC] Unexpected error checking shared memory: {ex.GetType().Name}: {ex.Message}");
-            return false;
-        }
-    }
+    public bool IsConnected => _physics.IsConnected && _graphics.IsConnected;
 
     public void Connect()
     {
-        if (IsConnected) return;
-        
-        var now = DateTime.Now;
-        if ((now - _lastConnectionAttempt) < ReconnectCooldown && _connectionAttempts > 0) return;
-        _lastConnectionAttempt = now;
-        _connectionAttempts++;
-        
-        TryConnectPhysics();
-        TryConnectGraphics();
-        
-        if (IsConnected)
-        {
-            Logger.Info($"[ACC] Connected to shared memory (Physics: {_physicsConnected}, Graphics: {_graphicsConnected})");
-        }
-        else if (_connectionAttempts <= 3)
-        {
-            Logger.Debug($"[ACC] Connecting... (Physics: {_physicsConnected}, Graphics: {_graphicsConnected})");
-        }
-    }
+        var wasConnected = IsConnected;
 
-    private void TryConnectPhysics()
-    {
-        if (_physicsConnected) return;
-        
-        try
-        {
-            var size = Marshal.SizeOf<ACCPhysics>();
-#pragma warning disable CA1416
-            _physicsFile = MemoryMappedFile.OpenExisting(PhysicsMemoryName);
-#pragma warning restore CA1416
-            _physicsAccessor = _physicsFile.CreateViewAccessor(0, size);
-            _physicsConnected = true;
-            Logger.Debug($"[ACC] Physics page connected ({size} bytes)");
-        }
-        catch (FileNotFoundException)
-        {
-            Logger.Debug($"[ACC] Physics shared memory not found: {PhysicsMemoryName}");
-        }
-        catch (UnauthorizedAccessException)
-        {
-            Logger.Error($"[ACC] Access denied to physics shared memory. Run as administrator.");
-        }
-        catch (Exception ex)
-        {
-            Logger.Debug($"[ACC] Failed to connect to physics shared memory: {ex.Message}");
-        }
-    }
+        _physics.TryOpen();
+        _graphics.TryOpen();
 
-    private void TryConnectGraphics()
-    {
-        if (_graphicsConnected) return;
-        
-        try
+        if (IsConnected && !wasConnected)
         {
-            var size = Marshal.SizeOf<ACCGraphics>();
-#pragma warning disable CA1416
-            _graphicsFile = MemoryMappedFile.OpenExisting(GraphicsMemoryName);
-#pragma warning restore CA1416
-            _graphicsAccessor = _graphicsFile.CreateViewAccessor(0, size);
-            _graphicsConnected = true;
-            Logger.Debug($"[ACC] Graphics page connected ({size} bytes)");
-        }
-        catch (FileNotFoundException)
-        {
-            Logger.Debug($"[ACC] Graphics shared memory not found: {GraphicsMemoryName}");
-        }
-        catch (UnauthorizedAccessException)
-        {
-            Logger.Error($"[ACC] Access denied to graphics shared memory. Run as administrator.");
-        }
-        catch (Exception ex)
-        {
-            Logger.Debug($"[ACC] Failed to connect to graphics shared memory: {ex.Message}");
+            Logger.Info("[ACC] Connected to shared memory");
         }
     }
 
@@ -139,30 +36,16 @@ public class ACCSharedMemoryReader : IDisposable
     {
         telemetry = default;
 
-        if (!_physicsConnected || !_graphicsConnected)
+        if (!IsConnected)
         {
-            Connect();
             return false;
         }
 
         try
         {
-            ACCPhysics physics = default;
-            ACCGraphics graphics = default;
-            
-            if (_physicsAccessor != null && _physicsConnected)
-            {
-                _physicsAccessor.Read(0, out physics);
-                if (physics.CarDamage == null) physics.CarDamage = new float[5];
-                if (physics.RideHeight == null) physics.RideHeight = new float[2];
-            }
-            
-            if (_graphicsAccessor != null && _graphicsConnected)
-            {
-                _graphicsAccessor.Read(0, out graphics);
-                graphics.TyreCompound ??= string.Empty;
-            }
-            
+            var physics = _physics.Read();
+            var graphics = _graphics.Read();
+
             telemetry = new ACCTelemetry
             {
                 PacketId = physics.PacketId,
@@ -333,28 +216,22 @@ public class ACCSharedMemoryReader : IDisposable
                 TrackGripStatus = graphics.TrackGripStatus,
                 RainIntensity = graphics.RainIntensity
             };
-            
+
             return true;
         }
         catch (Exception ex)
         {
             Logger.Error($"[ACC] Error reading telemetry: {ex.GetType().Name}: {ex.Message}");
             Logger.Debug(ex.ToString());
-            _physicsConnected = false;
-            _graphicsConnected = false;
+            Disconnect();
             return false;
         }
     }
 
     public void Disconnect()
     {
-        _physicsAccessor?.Dispose();
-        _physicsFile?.Dispose();
-        _graphicsAccessor?.Dispose();
-        _graphicsFile?.Dispose();
-        _physicsConnected = false;
-        _graphicsConnected = false;
-        Logger.Info("[ACC] Disconnected from shared memory");
+        _physics.Close();
+        _graphics.Close();
     }
 
     public void Dispose()

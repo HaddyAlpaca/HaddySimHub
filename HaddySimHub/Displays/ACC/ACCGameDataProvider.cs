@@ -45,6 +45,8 @@ public class ACCGameDataProvider : SharedMemoryGameDataProviderBase<ACCSharedMem
 
     protected override bool HasDataChanged(ACCTelemetry current, ACCTelemetry last)
     {
-        return current.Rpms != last.Rpms;
+        // The physics page bumps its packet id on every frame, which also catches
+        // changes the dashboard cares about while the engine sits at a steady rpm.
+        return current.PacketId != last.PacketId;
     }
 }

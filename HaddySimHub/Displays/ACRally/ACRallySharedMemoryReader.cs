@@ -1,6 +1,3 @@
-using System.IO.MemoryMappedFiles;
-using System.Runtime.InteropServices;
-
 namespace HaddySimHub.Displays.ACRally;
 
 /// <summary>
@@ -20,9 +17,9 @@ public sealed class ACRallySharedMemoryReader : IDisposable
     private const string GraphicsMemoryName = "Local\\acpmf_graphics";
     private const string StaticMemoryName = "Local\\acpmf_static";
 
-    private readonly SharedMemoryPage<ACRallyPhysics> _physics = new(PhysicsMemoryName, "physics");
-    private readonly SharedMemoryPage<ACRallyGraphics> _graphics = new(GraphicsMemoryName, "graphics");
-    private readonly SharedMemoryPage<ACRallyStatic> _static = new(StaticMemoryName, "static");
+    private readonly SharedMemoryPage<ACRallyPhysics> _physics = new(PhysicsMemoryName, "[ACRally] physics");
+    private readonly SharedMemoryPage<ACRallyGraphics> _graphics = new(GraphicsMemoryName, "[ACRally] graphics");
+    private readonly SharedMemoryPage<ACRallyStatic> _static = new(StaticMemoryName, "[ACRally] static");
 
     private bool _staticLogged;
 
@@ -145,87 +142,5 @@ public sealed class ACRallySharedMemoryReader : IDisposable
     public void Dispose()
     {
         Disconnect();
-    }
-
-    /// <summary>
-    /// One memory mapped page, marshalled into <typeparamref name="T"/>.
-    /// </summary>
-    /// <remarks>
-    /// The pages contain fixed-size arrays and UTF-16 strings, so they have to be
-    /// marshalled rather than copied with <see cref="MemoryMappedViewAccessor.Read{T}"/>,
-    /// which rejects any struct holding references.
-    /// </remarks>
-    private sealed class SharedMemoryPage<T>(string mapName, string label)
-        where T : struct
-    {
-        private static readonly TimeSpan RetryInterval = TimeSpan.FromSeconds(1);
-
-        private readonly int _size = Marshal.SizeOf<T>();
-        private MemoryMappedFile? _file;
-        private MemoryMappedViewAccessor? _accessor;
-        private DateTime _lastAttemptUtc = DateTime.MinValue;
-
-        public bool IsConnected => _accessor is not null;
-
-        public void TryOpen()
-        {
-            // Opening a page that is not published throws, and the provider polls at
-            // 100 Hz, so back off between attempts rather than paying for it per frame.
-            if (IsConnected || DateTime.UtcNow - _lastAttemptUtc < RetryInterval)
-            {
-                return;
-            }
-
-            _lastAttemptUtc = DateTime.UtcNow;
-
-            try
-            {
-#pragma warning disable CA1416 // Validate platform compatibility
-                _file = MemoryMappedFile.OpenExisting(mapName, MemoryMappedFileRights.Read);
-#pragma warning restore CA1416 // Validate platform compatibility
-                _accessor = _file.CreateViewAccessor(0, _size, MemoryMappedFileAccess.Read);
-            }
-            catch (FileNotFoundException)
-            {
-                // The game is not running, or has not published this page yet.
-                Close();
-            }
-            catch (UnauthorizedAccessException)
-            {
-                Logger.Debug($"[ACRally] Access denied to the {label} page ({mapName})");
-                Close();
-            }
-            catch (Exception ex)
-            {
-                Logger.Debug($"[ACRally] Failed to map the {label} page: {ex.GetType().Name}: {ex.Message}");
-                Close();
-            }
-        }
-
-        public T Read()
-        {
-            var accessor = _accessor ?? throw new InvalidOperationException($"The {label} page is not mapped.");
-
-            var buffer = new byte[_size];
-            accessor.ReadArray(0, buffer, 0, buffer.Length);
-
-            var handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
-            try
-            {
-                return Marshal.PtrToStructure<T>(handle.AddrOfPinnedObject());
-            }
-            finally
-            {
-                handle.Free();
-            }
-        }
-
-        public void Close()
-        {
-            _accessor?.Dispose();
-            _accessor = null;
-            _file?.Dispose();
-            _file = null;
-        }
     }
 }
