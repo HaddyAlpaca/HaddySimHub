@@ -34,8 +34,9 @@ public static class ApplicationCompositionExtensions
         services.AddSingleton<IUdpClientFactory, UdpClientFactory>();
         services.AddSingleton<ISCSTelemetryFactory, SCSSdkTelemetryFactory>();
         services.AddSingleton<IDisplayFactory, DisplayFactory>();
-        services.AddSingleton<ISseBroadcastService, SseBroadcastService>();
-        services.AddSingleton<IDisplayUpdateSender, DisplayUpdateSender>();
+        services.AddSingleton<SseBroadcastService>();
+        services.AddSingleton<ISseBroadcastService>(sp => sp.GetRequiredService<SseBroadcastService>());
+        services.AddSingleton<IDisplayUpdateSender>(sp => sp.GetRequiredService<SseBroadcastService>());
 
         services.RegisterGameDisplay<Displays.Dirt2.Dirt2GameDataProvider, Displays.Dirt2.Dirt2DataConverter, Displays.Dirt2.Packet>(DisplayDefinitions.Game.Dirt2);
         services.RegisterGameDisplay<Displays.ETS.EtsGameDataProvider, Displays.ETS.EtsDataConverter, SCSSdkClient.Object.SCSTelemetry>(DisplayDefinitions.Game.Ets);
@@ -74,7 +75,7 @@ public static class ApplicationCompositionExtensions
                 FullMode = BoundedChannelFullMode.DropOldest,
             });
 
-            broadcastService.SetClient(channel.Writer);
+            broadcastService.AddClient(channel.Writer);
 
             try
             {
@@ -93,7 +94,7 @@ public static class ApplicationCompositionExtensions
             }
             finally
             {
-                broadcastService.ClearClient();
+                broadcastService.RemoveClient(channel.Writer);
                 channel.Writer.TryComplete();
             }
         });

@@ -69,7 +69,7 @@ public static class Logger
 
     private static void Configure(bool useDashboardConsole)
     {
-        // Check environment variable voor debug logging
+        // Per-frame telemetry logging is opt-in through the environment.
         var enableDebugLogging = Environment.GetEnvironmentVariable("HADDYSIMHUB_DEBUG") == "1";
         IsDataLoggingEnabled = enableDebugLogging;
 
@@ -92,10 +92,14 @@ public static class Logger
         if (enableDebugLogging)
         {
             // Setup data logging
+            // One line per telemetry frame at the provider's polling rate fills a
+            // disk quickly, so this log is capped rather than left to grow.
             var debugTarget = new FileTarget
             {
                 FileName = "log/${date:format=yyyy-MM-dd}-${logger}-data.log",
                 Layout = @"${message}",
+                ArchiveAboveSize = 50 * 1024 * 1024,
+                MaxArchiveFiles = 3,
             };
 
             logConfig.LoggingRules.Add(new LoggingRule(
@@ -111,6 +115,8 @@ public static class Logger
         {
             FileName = "log/${date:format=yyyy-MM-dd}.log",
             Layout = @"${longdate} ${uppercase:${level}}: ${message}",
+            ArchiveEvery = FileArchivePeriod.Day,
+            MaxArchiveFiles = 14,
         };
 
         logConfig.LoggingRules.Add(new LoggingRule(
