@@ -82,6 +82,7 @@ Then `dotnet build` will use the correct SDK version.
   HADDYSIMHUB_NO_DASHBOARD=1 dotnet run --project HaddySimHub -- --test race --no-update
   ```
   Then open http://localhost:4200/ to see the display live. Press `Ctrl+T` while the backend is running to cycle test modes (`"" → race → rally → truck → ""`).
+- **Dependency updates**: CI installs npm packages through Safe Chain (`ClientApp/scripts/safe-chain-wrapper.sh`), which refuses any package below a minimum age of roughly two days. A blocked install fails the **Frontend tests** check with `403 Forbidden - blocked by safe-chain direct download minimum package age` — that is the policy working, not a test failure, so hold the version back instead of skipping the check. Every version held back goes in [`ClientApp/DEPENDENCY-PINS.md`](./ClientApp/DEPENDENCY-PINS.md) with the reason and a removal condition; `overrides` entries especially, because the scheduled `deps-update.yml` workflow preserves that block and `npm outdated` never reveals it. Read that file at the start of every dependency update and drop the entries whose condition has been met.
 - **Backend tests use MSTest**: assert exceptions with `Assert.Throws<T>()`, `Assert.ThrowsExactly<T>()`, or `Assert.ThrowsAsync<T>()`. The legacy `Assert.ThrowsException<T>()` does **not** exist in this MSTest version and will fail to compile.
 
 ## Do Not
