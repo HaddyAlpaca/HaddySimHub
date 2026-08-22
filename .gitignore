@@ -271,9 +271,15 @@ htmlcov/
 coverage.xml
 cobertura.xml
 
-# Claude Code IDE temporary files
-.claude/
+# Claude Code IDE temporary files and personal settings.
+# Project skills under .claude/skills/ are shared with the team, so they are
+# re-included below. Note the ordering: git cannot re-include a path whose parent
+# directory is excluded, so `.claude` itself must stay un-excluded and only its
+# contents are ignored.
 tmpclaude-*
 .claude-*
 *.claude
+!.claude
+.claude/*
+!.claude/skills/
 HaddySimHub.Tests/coverage/coverage.info
