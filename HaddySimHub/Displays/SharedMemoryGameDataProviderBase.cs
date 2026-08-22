@@ -9,7 +9,7 @@ namespace HaddySimHub.Displays;
 /// <typeparam name="TReader">The type of shared memory reader</typeparam>
 /// <typeparam name="TTelemetry">The type of telemetry data</typeparam>
 public abstract class SharedMemoryGameDataProviderBase<TReader, TTelemetry> : IGameDataProvider<TTelemetry>, IDisposable
-    where TReader : class
+    where TReader : class, ISharedMemoryTelemetryReader<TTelemetry>
     where TTelemetry : struct
 {
     protected TReader? Reader { get; set; }
@@ -29,9 +29,9 @@ public abstract class SharedMemoryGameDataProviderBase<TReader, TTelemetry> : IG
     {
         ThrowIfDisposed();
         Reader = CreateReader();
-        ConnectReader(Reader);
+        Reader.Connect();
 
-        if (IsConnected(Reader))
+        if (Reader.IsConnected)
         {
             Logger.Info($"[{ProviderName}] Connected to shared memory, polling for telemetry");
         }
@@ -47,7 +47,7 @@ public abstract class SharedMemoryGameDataProviderBase<TReader, TTelemetry> : IG
     public virtual void Stop()
     {
         UpdateTimer?.Change(Timeout.Infinite, Timeout.Infinite);
-        DisconnectReader(Reader);
+        Reader?.Dispose();
         Reader = null;
     }
 
@@ -55,26 +55,6 @@ public abstract class SharedMemoryGameDataProviderBase<TReader, TTelemetry> : IG
     /// Creates a new instance of the reader
     /// </summary>
     protected abstract TReader CreateReader();
-
-    /// <summary>
-    /// Connects the reader to the shared memory
-    /// </summary>
-    protected abstract void ConnectReader(TReader reader);
-
-    /// <summary>
-    /// Disconnects and disposes the reader
-    /// </summary>
-    protected abstract void DisconnectReader(TReader? reader);
-
-    /// <summary>
-    /// Checks if the reader is connected
-    /// </summary>
-    protected abstract bool IsConnected(TReader? reader);
-
-    /// <summary>
-    /// Attempts to read telemetry data from the reader
-    /// </summary>
-    protected abstract bool TryReadTelemetry(TReader reader, out TTelemetry telemetry);
 
     /// <summary>
     /// Determines if the telemetry data has changed (used for throttling events)
@@ -122,12 +102,12 @@ public abstract class SharedMemoryGameDataProviderBase<TReader, TTelemetry> : IG
             return;
         }
 
-        if (!IsConnected(Reader))
+        if (!Reader.IsConnected)
         {
             _consecutiveMissedConnections++;
             OnMissedConnection(_consecutiveMissedConnections);
-            ConnectReader(Reader);
-            if (!IsConnected(Reader))
+            Reader.Connect();
+            if (!Reader.IsConnected)
             {
                 return;
             }
@@ -140,7 +120,7 @@ public abstract class SharedMemoryGameDataProviderBase<TReader, TTelemetry> : IG
 
         _consecutiveMissedConnections = 0;
 
-        if (TryReadTelemetry(Reader, out var telemetry))
+        if (Reader.TryReadTelemetry(out var telemetry))
         {
             if (HasDataChanged(telemetry, LastTelemetry))
             {

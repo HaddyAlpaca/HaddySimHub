@@ -8,7 +8,7 @@ namespace HaddySimHub.Displays.AC;
 /// so their presence does not identify the title; the display decides that from the
 /// running process. See <c>Displays/README.md</c>.
 /// </remarks>
-public sealed class ACSharedMemoryReader : IDisposable
+public sealed class ACSharedMemoryReader : ISharedMemoryTelemetryReader<ACTelemetry>
 {
     private const string PhysicsMemoryName = "Local\\acpmf_physics";
     private const string GraphicsMemoryName = "Local\\acpmf_graphics";

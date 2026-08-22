@@ -28,23 +28,78 @@ namespace HaddySimHub.Tests
             public void Stop() { }
         }
 
-        private static string Render(IDisplay display)
+        private static string Render(IDisplay display) => Render([display]);
+
+        private static string Render(IReadOnlyList<IDisplay> displays)
         {
-            var displays = new List<IDisplay> { display };
             var runner = new DisplaysRunner(displays, new MockDisplayUpdateSender());
             var dashboard = new ConsoleDashboard(displays, runner, new DashboardLogStore(), 3333);
 
-            var writer = new StringWriter();
-            var console = AnsiConsole.Create(new AnsiConsoleSettings
+            using var cancellation = new CancellationTokenSource();
+            var running = runner.RunAsync(cancellation.Token);
+
+            try
             {
-                Ansi = AnsiSupport.No,
-                ColorSystem = ColorSystemSupport.NoColors,
-                Out = new AnsiConsoleOutput(writer),
-            });
-            console.Profile.Width = 120;
-            console.Profile.Height = 40;
-            console.Write(dashboard.BuildLayout(40));
-            return writer.ToString();
+                // The games panel distinguishes the game feeding the dashboard from
+                // one that is only running, so render while a display is selected.
+                WaitForSelection(runner, displays);
+
+                var writer = new StringWriter();
+                var console = AnsiConsole.Create(new AnsiConsoleSettings
+                {
+                    Ansi = AnsiSupport.No,
+                    ColorSystem = ColorSystemSupport.NoColors,
+                    Out = new AnsiConsoleOutput(writer),
+                });
+                console.Profile.Width = 120;
+                console.Profile.Height = 40;
+                console.Write(dashboard.BuildLayout(40));
+                return writer.ToString();
+            }
+            finally
+            {
+                cancellation.Cancel();
+                try
+                {
+                    running.GetAwaiter().GetResult();
+                }
+                catch (OperationCanceledException)
+                {
+                }
+            }
+        }
+
+        private static void WaitForSelection(DisplaysRunner runner, IReadOnlyList<IDisplay> displays)
+        {
+            if (!displays.Any(d => d.IsActive))
+            {
+                return;
+            }
+
+            var deadline = DateTime.UtcNow.AddSeconds(3);
+            while (runner.CurrentDisplay is null && DateTime.UtcNow < deadline)
+            {
+                Thread.Sleep(10);
+            }
+
+            Assert.IsNotNull(runner.CurrentDisplay, "The runner did not select a display in time.");
+        }
+
+        [TestMethod]
+        public void GamesPanel_RunningButNotSelected_ShowsStandingBy()
+        {
+            // Only one game feeds the dashboard, so a second running game is idle by
+            // design and must not be reported as a game that fails to deliver data.
+            var output = Render(
+            [
+                new ConfigurableDisplay("Assetto Corsa", isActive: true, lastUpdateUtc: DateTime.UtcNow),
+                new ConfigurableDisplay("Euro Truck Simulator 2", isActive: true, lastUpdateUtc: null),
+            ]);
+
+            StringAssert.Contains(output, "standing by");
+            Assert.IsFalse(
+                output.Contains("waiting for data"),
+                "A running game that is not the selected one must not show the waiting state.");
         }
 
         [TestMethod]

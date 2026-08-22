@@ -13,8 +13,10 @@ public class Program
 
     public static async Task Main(string[] args)
     {
-        VerifySingleInstance();
+        // Set logging up first: replacing an already running instance is worth a
+        // log line, and the checks involved report why a process was left alone.
         Logger.Setup();
+        VerifySingleInstance();
 
         ApplyTestModeArgument(args);
 
@@ -70,16 +72,28 @@ public class Program
                     }
                 }
 
-                await Task.Delay(100);
+                await Task.Delay(100, token);
             }
-        });
+        }, token);
 
         WebApplication webServer = CreateWebServer();
 
-        Task webServerTask = RunWebServerAsync(webServer, token);
-        await Task.WhenAll(webServerTask, keyInputTask);
+        await RunWebServerAsync(webServer, token);
 
-        cancellationTokenSource.Cancel();
+        // The web server owns the application lifetime. Cancelling here rather than
+        // waiting on both tasks together means a web server that stops on its own —
+        // a failure to bind the port, for instance — still releases the key loop
+        // instead of leaving the process running with nothing left to do.
+        await cancellationTokenSource.CancelAsync();
+
+        try
+        {
+            await keyInputTask;
+        }
+        catch (OperationCanceledException)
+        {
+            // Expected: the key loop is cancelled as part of shutting down.
+        }
     }
 
     private static void ApplyTestModeArgument(string[] args)
@@ -171,10 +185,11 @@ public class Program
     {
         var currentProcess = System.Diagnostics.Process.GetCurrentProcess();
         var processes = System.Diagnostics.Process.GetProcessesByName(currentProcess.ProcessName);
+        var currentPath = GetExecutablePath(currentProcess);
 
         foreach (var process in processes)
         {
-            if (process.Id != currentProcess.Id)
+            if (process.Id != currentProcess.Id && IsSameExecutable(process, currentPath))
             {
                 try
                 {
@@ -192,6 +207,37 @@ public class Program
                     Logger.Info($"Process {process.Id} already exited.");
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// Matching on the process name alone is not enough to identify another copy of
+    /// this application: launched through <c>dotnet HaddySimHub.dll</c> the process
+    /// is named <c>dotnet</c>, and every unrelated .NET process would match. When the
+    /// path of either process cannot be read, the process is left alone.
+    /// </summary>
+    private static bool IsSameExecutable(System.Diagnostics.Process process, string? currentPath)
+    {
+        if (currentPath is null)
+        {
+            return false;
+        }
+
+        var path = GetExecutablePath(process);
+        return path is not null && string.Equals(path, currentPath, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string? GetExecutablePath(System.Diagnostics.Process process)
+    {
+        try
+        {
+            return process.MainModule?.FileName;
+        }
+        catch (Exception ex)
+        {
+            // Reading another process's module list needs privileges we may not have.
+            Logger.Debug($"Could not read the executable path of process {process.Id}: {ex.GetType().Name}");
+            return null;
         }
     }
 

@@ -16,10 +16,15 @@ IGameDataProvider<T>  →  IDataConverter<T, DisplayUpdate>  →  DisplayBase<T>
 | Converter | `IDataConverter<T, DisplayUpdate>` | `Convert(T)` maps the game-specific telemetry into the shared `DisplayUpdate` model the frontend understands. |
 | Display | `DisplayBase<T>` / `SimpleGameDisplay<T>` | Subscribes to the provider, runs the converter, and pushes each `DisplayUpdate` through a bounded channel + send loop. Exposes `Description` and `IsActive`. |
 | Sender | `IDisplayUpdateSender` → `SseBroadcastService` | Forwards each `DisplayUpdate` to all SSE clients via a `Channel<DisplayUpdate>` per connection (endpoint at `/display-data/stream`). |
-| Runner | `DisplaysRunner` | Polls every display's `IsActive` every ~2s and starts/stops data feeds as games come and go. |
+| Runner | `DisplaysRunner` | Polls every display's `IsActive` every ~2s and keeps exactly one data feed running as games come and go. |
 
 `SimpleGameDisplay<T>` reports `IsActive` via `ProcessHelper.IsProcessRunning(processName)`,
 so a display becomes active when the game's process is detected.
+
+Every display writes to the same stream, so `DisplaysRunner` feeds only one of them
+at a time. The display already running keeps its turn for as long as its game is up,
+and the rest report `standing by` in the console dashboard. Without that, two open
+games would interleave frames of different types on one screen.
 
 ### Why detection uses the process and not the shared memory
 
@@ -93,8 +98,9 @@ The pipeline distinguishes two failure modes and surfaces both:
   running process names when no display is active, so you can confirm the exact
   executable name to put in `DisplayDefinitions`.
 - **Detected but no data** — the process runs (panel shows it) but no telemetry
-  arrives. The console dashboard's Games panel shows a tri-state marker:
-  `○` not running · `◐ running · waiting for data` · `● live · <age> ago`.
+  arrives. The console dashboard's Games panel marks each game:
+  `○` not running · `◌ running · standing by` · `◐ running · waiting for data` ·
+  `● live · <age> ago`.
   `DisplayBase` logs *"First telemetry received from …"* on the first frame and
   shared-memory providers warn *"process detected but shared memory is not
   connected"* via `SharedMemoryGameDataProviderBase`.
