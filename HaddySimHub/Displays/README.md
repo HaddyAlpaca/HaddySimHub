@@ -21,6 +21,21 @@ IGameDataProvider<T>  →  IDataConverter<T, DisplayUpdate>  →  DisplayBase<T>
 `SimpleGameDisplay<T>` reports `IsActive` via `ProcessHelper.IsProcessRunning(processName)`,
 so a display becomes active when the game's process is detected.
 
+### Why detection uses the process and not the shared memory
+
+For most games the shared memory name identifies the title, so "is the page
+there?" would answer "is the game running?". The Assetto Corsa family is the
+exception: Assetto Corsa, Assetto Corsa Competizione and Assetto Corsa Rally all
+publish under the same names — `Local\acpmf_physics`, `Local\acpmf_graphics` and
+`Local\acpmf_static`. Their page layouts differ, but the names do not, so the
+presence of a page cannot tell the three titles apart and would activate every
+Assetto Corsa display at once.
+
+The process name is what distinguishes them (`acr` for Assetto Corsa Rally), so
+detection stays process-based and shared memory answers the separate question of
+whether telemetry is flowing. That split is what the `◐ running · waiting for
+data` state in the console dashboard reports.
+
 ## Registration
 
 Displays are registered in
