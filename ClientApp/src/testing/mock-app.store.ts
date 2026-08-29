@@ -1,5 +1,5 @@
 import { signal } from '@angular/core';
-import { RaceData, RallyData, TruckData } from '../app/displays';
+import { FlightData, RaceData, RallyData, TruckData } from '../app/displays';
 import { DisplayType } from '../app/sse.service';
 
 export class MockAppStore {
@@ -7,6 +7,7 @@ export class MockAppStore {
   public truckData = signal<TruckData>({} as TruckData);
   public raceData = signal<RaceData>({} as RaceData);
   public rallyData = signal<RallyData>({} as RallyData);
+  public flightData = signal<FlightData>({} as FlightData);
 
   public updateDisplay(displayUpdate: { type: DisplayType; data: unknown }): void {
     this.displayType.set(displayUpdate.type);
@@ -19,6 +20,9 @@ export class MockAppStore {
         break;
       case DisplayType.RallyDashboard:
         this.rallyData.set(displayUpdate.data as RallyData);
+        break;
+      case DisplayType.FlightDashboard:
+        this.flightData.set(displayUpdate.data as FlightData);
         break;
     }
   }

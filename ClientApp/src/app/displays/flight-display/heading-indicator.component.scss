@@ -1,0 +1,53 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.heading-tape {
+  display: block;
+  width: 100%;
+  height: auto;
+
+  .tape-bg {
+    fill: rgb(0 0 0 / 35%);
+    stroke: rgb(0 220 255 / 25%);
+    stroke-width: 1;
+  }
+
+  .tick {
+    stroke: rgb(255 255 255 / 45%);
+    stroke-width: 1;
+
+    &.major {
+      stroke: rgb(255 255 255 / 85%);
+      stroke-width: 1.6;
+    }
+  }
+
+  .tick-label {
+    fill: #cfe8f5;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .centre-pointer { fill: #f5a623; }
+
+  .centre-line {
+    stroke: rgb(245 166 35 / 65%);
+    stroke-width: 1.4;
+  }
+
+  .bug-marker {
+    fill: #7dd3c0;
+
+    &.clamped { fill-opacity: 0.45; }
+  }
+
+  .track-marker {
+    fill: none;
+    stroke: #e94f37;
+    stroke-width: 1.8;
+
+    &.clamped { stroke-opacity: 0.45; }
+  }
+}

@@ -12,6 +12,7 @@ public static class DisplayDefinitions
         public static readonly GameDisplayDefinition<Displays.AC.ACTelemetry> Ac = new("acs", "Assetto Corsa");
         public static readonly GameDisplayDefinition<Displays.ACC.ACCTelemetry> Acc = new("AC2-Win64-Shipping", "Assetto Corsa Competizione");
         public static readonly GameDisplayDefinition<Displays.ACRally.ACRallyTelemetry> AcRally = new("acr", "Assetto Corsa Rally");
+        public static readonly GameDisplayDefinition<Displays.Msfs.MsfsTelemetry> Msfs = new("FlightSimulator", "Microsoft Flight Simulator 2020");
     }
 
     public static class TestIds
@@ -19,5 +20,6 @@ public static class DisplayDefinitions
         public const string Rally = "rally";
         public const string Race = "race";
         public const string Truck = "truck";
+        public const string Flight = "flight";
     }
 }

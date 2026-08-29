@@ -1,0 +1,24 @@
+<svg viewBox="0 0 600 64" class="heading-tape" role="img" aria-label="Heading indicator">
+  <rect x="0" y="14" width="600" height="34" rx="4" class="tape-bg" />
+
+  @for (tick of ticks(); track tick.x) {
+    <line y1="16" class="tick" [attr.x1]="tick.x" [attr.x2]="tick.x"
+          [attr.y2]="tick.major ? 26 : 22" [class.major]="tick.major" />
+    @if (tick.label) {
+      <text y="40" class="tick-label" text-anchor="middle" [attr.x]="tick.x">{{tick.label}}</text>
+    }
+  }
+
+  @if (trackMarker(); as track) {
+    <polygon points="0,43 6,49 0,55 -6,49"
+             class="track-marker" [attr.transform]="'translate(' + track.x + ' 0)'" [class.clamped]="track.clamped" />
+  }
+
+  @if (bugMarker(); as bug) {
+    <polygon points="-7,9 7,9 7,16 0,21 -7,16"
+             class="bug-marker" [attr.transform]="'translate(' + bug.x + ' 0)'" [class.clamped]="bug.clamped" />
+  }
+
+  <polygon points="300,11 293,0 307,0" class="centre-pointer" />
+  <line x1="300" y1="14" x2="300" y2="48" class="centre-line" />
+</svg>

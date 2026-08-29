@@ -33,6 +33,7 @@ public static class ApplicationCompositionExtensions
 
         services.AddSingleton<IUdpClientFactory, UdpClientFactory>();
         services.AddSingleton<ISCSTelemetryFactory, SCSSdkTelemetryFactory>();
+        services.AddSingleton<Displays.Msfs.ISimConnectClient, Displays.Msfs.SimConnectClient>();
         services.AddSingleton<IDisplayFactory, DisplayFactory>();
         services.AddSingleton<SseBroadcastService>();
         services.AddSingleton<ISseBroadcastService>(sp => sp.GetRequiredService<SseBroadcastService>());
@@ -44,11 +45,13 @@ public static class ApplicationCompositionExtensions
         services.RegisterGameDisplay<Displays.AC.ACGameDataProvider, Displays.AC.ACDataConverter, Displays.AC.ACTelemetry>(DisplayDefinitions.Game.Ac);
         services.RegisterGameDisplay<Displays.ACC.ACCGameDataProvider, Displays.ACC.ACCDataConverter, Displays.ACC.ACCTelemetry>(DisplayDefinitions.Game.Acc);
         services.RegisterGameDisplay<Displays.ACRally.ACRallyGameDataProvider, Displays.ACRally.ACRallyDataConverter, Displays.ACRally.ACRallyTelemetry>(DisplayDefinitions.Game.AcRally);
+        services.RegisterGameDisplay<Displays.Msfs.MsfsGameDataProvider, Displays.Msfs.MsfsDataConverter, Displays.Msfs.MsfsTelemetry>(DisplayDefinitions.Game.Msfs);
 
         services.AddSingleton<IDataConverter<DisplayUpdate, DisplayUpdate>, IdentityDataConverter<DisplayUpdate>>();
         services.RegisterTestDisplay<Displays.IRacing.TestDisplay>(DisplayDefinitions.TestIds.Race);
         services.RegisterTestDisplay<Displays.Dirt2.TestDisplay>(DisplayDefinitions.TestIds.Rally);
         services.RegisterTestDisplay<Displays.ETS.TestDisplay>(DisplayDefinitions.TestIds.Truck);
+        services.RegisterTestDisplay<Displays.Msfs.TestDisplay>(DisplayDefinitions.TestIds.Flight);
 
         services.AddSingleton<DisplaysRunner>();
         services.AddHostedService<DisplayRunnerHostedService>();

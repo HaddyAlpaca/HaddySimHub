@@ -1,0 +1,364 @@
+app-flight-display {
+  height: 100%;
+  padding-top: 1.5vh;
+  box-sizing: border-box;
+
+  .container {
+    max-width: unset;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2vh;
+    padding: 0 1.5vw 1.5vh;
+    height: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  .panel {
+    background: linear-gradient(135deg, rgb(0 150 255 / 10%) 0%, rgb(0 220 255 / 5%) 100%);
+    border: 1px solid rgb(0 220 255 / 35%);
+    border-radius: 1.2vh;
+    padding: 1.2vh 1.6vh;
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    box-sizing: border-box;
+
+    > label {
+      text-transform: uppercase;
+      font-size: clamp(0.75rem, 1.5vh, 1rem);
+      letter-spacing: 1px;
+      color: #6db3d8;
+      font-weight: 600;
+      margin-bottom: 0.6vh;
+    }
+  }
+
+  .primary {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    min-height: 0;
+    font-size: clamp(2rem, 6vh, 4.2rem);
+    font-weight: 700;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 20px rgb(255 255 255 / 20%);
+
+    .unit {
+      font-size: 0.34em;
+      font-weight: 500;
+      color: #6db3d8;
+      margin-left: 0.4vw;
+    }
+  }
+
+  .secondary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4vh 1.4vw;
+    margin-top: auto;
+    padding-top: 0.8vh;
+    font-size: clamp(0.8rem, 1.7vh, 1.15rem);
+    font-variant-numeric: tabular-nums;
+    color: #cfe8f5;
+
+    &.stacked { flex-direction: column; }
+
+    em {
+      font-style: normal;
+      color: rgb(109 179 216 / 75%);
+      text-transform: uppercase;
+      font-size: 0.82em;
+      letter-spacing: 0.5px;
+      margin-right: 0.3vw;
+    }
+
+    .strong {
+      color: #f5a623;
+      font-weight: 700;
+      font-size: 1.25em;
+    }
+
+    .climbing { color: #7dd3c0; }
+    .descending { color: #f5a623; }
+    .warning-text { color: #e94f37; }
+  }
+
+  /* Top instrument row */
+  .instrument-row {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1.2fr;
+    gap: 1.2vh;
+
+    // The artificial horizon is square, so this height -- not the column width --
+    // is what sets its size. It is the primary instrument, so it gets the room.
+    flex: 0 0 34vh;
+    min-height: 0;
+  }
+
+  .speed-panel.warning,
+  .speed-panel.overspeed {
+    border-color: rgb(233 79 55 / 80%);
+    background: linear-gradient(135deg, rgb(255 0 0 / 15%) 0%, rgb(255 100 0 / 8%) 100%);
+    animation: flight-alert 1s ease-in-out infinite;
+  }
+
+  .alert {
+    align-self: flex-start;
+    margin-top: 0.4vh;
+    padding: 0.2vh 0.8vh;
+    border-radius: 0.5vh;
+    background: #e94f37;
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-size: clamp(0.75rem, 1.6vh, 1rem);
+  }
+
+  .attitude-panel {
+    align-items: center;
+    overflow: hidden;
+
+    app-attitude-indicator {
+      flex: 1 1 auto;
+      min-height: 0;
+      width: 100%;
+    }
+
+    .secondary { justify-content: center; }
+  }
+
+  /* Heading + autopilot */
+  .heading-row {
+    display: grid;
+    grid-template-columns: 2.4fr 1fr;
+    gap: 1.2vh;
+    flex: 0 0 auto;
+  }
+
+  .heading-panel app-heading-indicator { margin-bottom: 0.4vh; }
+
+  .autopilot-panel {
+    &.engaged {
+      border-color: rgb(125 211 192 / 55%);
+      background: linear-gradient(135deg, rgb(125 211 192 / 12%) 0%, rgb(0 220 255 / 5%) 100%);
+    }
+
+    .mode-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6vh;
+    }
+
+    .mode {
+      padding: 0.3vh 0.9vh;
+      border-radius: 0.5vh;
+      background: rgb(125 211 192 / 20%);
+      border: 1px solid rgb(125 211 192 / 55%);
+      color: #7dd3c0;
+      font-weight: 700;
+      letter-spacing: 1px;
+      font-size: clamp(0.85rem, 1.9vh, 1.2rem);
+
+      &.off,
+      &.idle {
+        background: rgb(255 255 255 / 6%);
+        border-color: rgb(255 255 255 / 20%);
+        color: rgb(255 255 255 / 55%);
+      }
+    }
+  }
+
+  /* Navigation */
+  .nav-panel {
+    flex: 0 0 auto;
+
+    .nav-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6vh 3vw;
+      font-size: clamp(1rem, 2.4vh, 1.7rem);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .nav-leg {
+      display: flex;
+      align-items: baseline;
+      gap: 0.9vw;
+
+      .arrow { color: #7dd3c0; }
+
+      .ident {
+        color: #f5a623;
+        font-weight: 700;
+        letter-spacing: 1px;
+      }
+
+      .distance { color: #fff; }
+
+      .ete,
+      .eta { color: #cfe8f5; }
+
+      &.destination .ident { color: #7dd3c0; }
+    }
+
+    .xtk {
+      margin-top: 0.6vh;
+      font-size: clamp(0.8rem, 1.7vh, 1.15rem);
+      color: #cfe8f5;
+
+      em {
+        font-style: normal;
+        color: rgb(109 179 216 / 75%);
+        text-transform: uppercase;
+        margin-right: 0.3vw;
+      }
+    }
+
+    .nav-empty {
+      color: rgb(255 255 255 / 45%);
+      font-size: clamp(0.95rem, 2.2vh, 1.5rem);
+      font-style: italic;
+    }
+  }
+
+  /* Engine + configuration */
+  .bottom-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2vh;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 0.8vw;
+    margin-bottom: 0.8vh;
+    font-size: clamp(0.8rem, 1.7vh, 1.15rem);
+
+    em {
+      font-style: normal;
+      color: rgb(109 179 216 / 75%);
+      text-transform: uppercase;
+      font-size: 0.85em;
+      letter-spacing: 0.5px;
+      flex: 0 0 5.5vw;
+    }
+
+    .bar {
+      flex: 1 1 auto;
+      height: 1.8vh;
+      background: rgb(0 0 0 / 35%);
+      border: 1px solid rgb(0 220 255 / 20%);
+      border-radius: 0.9vh;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      transition: width 0.3s ease-out;
+
+      &.engine { background: linear-gradient(90deg, #4a90e2 0%, #7dd3c0 100%); }
+      &.fuel { background: linear-gradient(90deg, #f5a623 0%, #7dd3c0 100%); }
+    }
+
+    .bar-value {
+      flex: 0 0 auto;
+      min-width: 6vw;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    &.warning .bar-fill.fuel { background: linear-gradient(90deg, #e94f37 0%, #f5a623 100%); }
+  }
+
+  .config-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8vh 1vw;
+  }
+
+  .config-item {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5vh 0.8vh;
+    border-radius: 0.6vh;
+    background: rgb(0 0 0 / 25%);
+    border: 1px solid rgb(0 220 255 / 15%);
+    min-width: 0;
+
+    em {
+      font-style: normal;
+      color: rgb(109 179 216 / 75%);
+      text-transform: uppercase;
+      font-size: clamp(0.65rem, 1.3vh, 0.85rem);
+      letter-spacing: 0.5px;
+    }
+
+    > span {
+      font-size: clamp(0.9rem, 2vh, 1.35rem);
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      small { color: rgb(255 255 255 / 45%); }
+    }
+
+    .aircraft { font-size: clamp(0.75rem, 1.6vh, 1.05rem); }
+
+    &.down > span { color: #7dd3c0; }
+    &.transit > span { color: #f5a623; }
+
+    &.active {
+      border-color: rgb(245 166 35 / 55%);
+
+      > span { color: #f5a623; }
+    }
+  }
+
+  .light-row {
+    display: flex;
+    gap: 0.6vw;
+    margin-top: auto;
+    padding-top: 0.8vh;
+
+    .light {
+      flex: 1 1 0;
+      text-align: center;
+      padding: 0.3vh 0;
+      border-radius: 0.5vh;
+      border: 1px solid rgb(255 255 255 / 15%);
+      color: rgb(255 255 255 / 35%);
+      font-size: clamp(0.65rem, 1.4vh, 0.9rem);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+
+      &.on {
+        border-color: rgb(245 166 35 / 70%);
+        background: rgb(245 166 35 / 18%);
+        color: #f5a623;
+      }
+    }
+  }
+
+  @keyframes flight-alert {
+    0%, 100% { box-shadow: 0 0 18px rgb(233 79 55 / 30%); }
+    50% { box-shadow: 0 0 34px rgb(233 79 55 / 60%); }
+  }
+
+  @media (aspect-ratio < 16 / 9) {
+    .container { padding: 0 1vw 1vh; }
+
+    .instrument-row { flex-basis: 30vh; }
+
+    .config-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+}

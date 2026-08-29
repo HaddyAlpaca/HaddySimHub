@@ -15,6 +15,10 @@ export class AppComponentHarness extends ComponentHarness {
     return this.isVisible('app-rally-display');
   }
 
+  public async isFlightDisplayVisible(): Promise<boolean> {
+    return this.isVisible('app-flight-display');
+  }
+
   public async isConnectionStatusVisible(): Promise<boolean> {
     return this.isVisible('app-connection-status');
   }

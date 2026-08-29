@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ClockComponent, ConnectionStatusComponent } from './shared';
-import { RaceDisplayComponent, RallyDisplayComponent, TruckDisplayComponent } from './displays';
+import { FlightDisplayComponent, RaceDisplayComponent, RallyDisplayComponent, TruckDisplayComponent } from './displays';
 import { DisplayType } from './sse.service';
 import { APP_STORE } from './state/app.store';
 
@@ -12,6 +12,7 @@ import { APP_STORE } from './state/app.store';
     TruckDisplayComponent,
     RaceDisplayComponent,
     RallyDisplayComponent,
+    FlightDisplayComponent,
     ConnectionStatusComponent,
     ClockComponent,
   ],

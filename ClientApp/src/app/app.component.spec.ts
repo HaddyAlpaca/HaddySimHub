@@ -40,6 +40,7 @@ describe('AppComponent tests', () => {
     expect(await harness.isTruckDisplayVisible()).toBe(false);
     expect(await harness.isRaceDisplayVisible()).toBe(false);
     expect(await harness.isRallyDisplayVisible()).toBe(false);
+    expect(await harness.isFlightDisplayVisible()).toBe(false);
     expect(await harness.isConnectionStatusVisible()).toBe(true);
   });
 
@@ -51,6 +52,7 @@ describe('AppComponent tests', () => {
     expect(await harness.isTruckDisplayVisible()).toBe(true);
     expect(await harness.isRaceDisplayVisible()).toBe(false);
     expect(await harness.isRallyDisplayVisible()).toBe(false);
+    expect(await harness.isFlightDisplayVisible()).toBe(false);
     expect(await harness.isConnectionStatusVisible()).toBe(false);
   });
 
@@ -62,6 +64,7 @@ describe('AppComponent tests', () => {
     expect(await harness.isTruckDisplayVisible()).toBe(false);
     expect(await harness.isRaceDisplayVisible()).toBe(true);
     expect(await harness.isRallyDisplayVisible()).toBe(false);
+    expect(await harness.isFlightDisplayVisible()).toBe(false);
     expect(await harness.isConnectionStatusVisible()).toBe(false);
   });
 
@@ -85,6 +88,19 @@ describe('AppComponent tests', () => {
     expect(await harness.isTruckDisplayVisible()).toBe(false);
     expect(await harness.isRaceDisplayVisible()).toBe(false);
     expect(await harness.isRallyDisplayVisible()).toBe(true);
+    expect(await harness.isFlightDisplayVisible()).toBe(false);
+    expect(await harness.isConnectionStatusVisible()).toBe(false);
+  });
+
+  it('should show the flight display when flight data is available', async () => {
+    const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, AppComponentHarness);
+    mockStore.displayType.set(DisplayType.FlightDashboard);
+    fixture.detectChanges();
+
+    expect(await harness.isTruckDisplayVisible()).toBe(false);
+    expect(await harness.isRaceDisplayVisible()).toBe(false);
+    expect(await harness.isRallyDisplayVisible()).toBe(false);
+    expect(await harness.isFlightDisplayVisible()).toBe(true);
     expect(await harness.isConnectionStatusVisible()).toBe(false);
   });
 });

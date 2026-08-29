@@ -2,6 +2,23 @@
 
 All notable changes to this project are documented in this file.
 
+## Unreleased
+
+### Added
+- Microsoft Flight Simulator 2020 support, with a new flight dashboard showing the primary instruments (airspeed, artificial horizon, altitude, heading tape with heading bug and ground track), autopilot modes and targets, flight plan progress with distances and ETA, and engine, fuel and airframe configuration.
+- Telemetry is read over SimConnect through a hand-written interop layer, because the SDK's managed wrapper is a .NET Framework mixed-mode assembly that this application cannot load. `SimConnect.dll` is located next to the executable or in an MSFS SDK install; when it is missing the display stays inactive and logs where it looked.
+- `--test flight` and a `flight` step in the `Ctrl+T` cycle serve sample flight data, so the dashboard can be developed without the simulator running.
+
+### Tests
+- Added `SimVarDefinitionsTests`, pinning the simvar list against the layout of `MsfsTelemetry`. SimConnect reports nothing when the two drift apart, so this is what turns a silently misread telemetry block into a build failure.
+- Added `MsfsDataConverterTests` covering the unit and sign conventions the simulator uses, and `MsfsGameDataProviderTests` covering connect, reconnect and shutdown against a fake SimConnect client.
+
+### Build
+- `dotnet publish -p:IncludeSimConnectOnPublish=true` bundles `SimConnect.dll` from an MSFS SDK install into the published output, and fails with a clear message when the library is not found. It is opt-in, because the release workflow builds on a Linux runner without the SDK and redistributing the library is a licensing decision.
+
+### Documentation
+- Documented where `SimConnect.dll` comes from in the README, including how to bundle it into a build, and the SimConnect telemetry source in `Displays/README.md`.
+
 ## v0.1.503 - 2026-06-20
 
 ### Added

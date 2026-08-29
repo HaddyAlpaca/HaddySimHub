@@ -225,16 +225,18 @@ namespace HaddySimHub.Tests
 
             var displays = provider.GetRequiredService<IEnumerable<IDisplay>>().ToList();
 
-            Assert.AreEqual(9, displays.Count);
+            Assert.AreEqual(11, displays.Count);
             Assert.IsTrue(displays.Any(d => d.Description == "Dirt Rally 2"));
             Assert.IsTrue(displays.Any(d => d.Description == "IRacing"));
             Assert.IsTrue(displays.Any(d => d.Description == "Euro Truck Simulator 2"));
             Assert.IsTrue(displays.Any(d => d.Description == "Assetto Corsa"));
             Assert.IsTrue(displays.Any(d => d.Description == "Assetto Corsa Competizione"));
             Assert.IsTrue(displays.Any(d => d.Description == "Assetto Corsa Rally"));
+            Assert.IsTrue(displays.Any(d => d.Description == "Microsoft Flight Simulator 2020"));
             Assert.IsTrue(displays.Any(d => d.Description == $"Test display: {DisplayDefinitions.TestIds.Rally}"));
             Assert.IsTrue(displays.Any(d => d.Description == $"Test display: {DisplayDefinitions.TestIds.Race}"));
             Assert.IsTrue(displays.Any(d => d.Description == $"Test display: {DisplayDefinitions.TestIds.Truck}"));
+            Assert.IsTrue(displays.Any(d => d.Description == $"Test display: {DisplayDefinitions.TestIds.Flight}"));
         }
 
         [TestMethod]
