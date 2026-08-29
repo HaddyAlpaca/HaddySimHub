@@ -6,4 +6,4 @@ export { TruckDisplayComponent } from './truck-display/truck-display.component';
 export type { TruckData } from './truck-display/truck-data';
 export { FlightDisplayComponent } from './flight-display/flight-display.component';
 export type { FlightData } from './flight-display/flight-data';
-export { EngineType } from './flight-display/flight-data';
+export { CourseDeviationSource, EngineType, NavToFrom } from './flight-display/flight-data';

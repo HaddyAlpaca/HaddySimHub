@@ -83,6 +83,16 @@ internal static class SimVarDefinitions
         Value("GPS ETE", Seconds),
         Value("GPS ETA", Seconds),
         Value("GPS WP CROSS TRK", Meters),
+        Value("GPS IS APPROACH ACTIVE", Bool),
+
+        // Navigation radio, for the course deviation indicator
+        Value("NAV HAS NAV:1", Bool),
+        Value("NAV HAS LOCALIZER:1", Bool),
+        Value("NAV HAS GLIDE SLOPE:1", Bool),
+        Value("NAV CDI:1", Number),
+        Value("NAV GSI:1", Number),
+        Value("NAV TOFROM:1", "enum"),
+        Value("NAV OBS:1", Degrees),
 
         // Engine
         Value("NUMBER OF ENGINES", Number),
@@ -123,6 +133,7 @@ internal static class SimVarDefinitions
         // Strings
         Text("GPS WP NEXT ID", SimConnectDataType.String32),
         Text("GPS APPROACH AIRPORT ID", SimConnectDataType.String32),
+        Text("NAV IDENT:1", SimConnectDataType.String32),
         Text("TITLE", SimConnectDataType.String256),
     ];
 

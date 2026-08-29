@@ -108,6 +108,17 @@ public class TestDisplay : TestDisplayBase
                 NavHold = !onApproach,
                 ApproachHold = onApproach,
 
+                // Course deviation. The cruise flies the flight plan; the approach
+                // switches to a localiser with a glideslope, so both paths of the
+                // indicator are exercised as the loop runs.
+                DeviationSource = onApproach ? CourseDeviationSource.Localizer : CourseDeviationSource.Gps,
+                DeviationSourceId = onApproach ? "IAA" : Waypoints[_waypointIndex],
+                SelectedCourse = onApproach ? 87f : null,
+                LateralDeviation = (float)(Math.Sin(phase * 0.3) * (onApproach ? 0.55 : 0.2)),
+                LateralFullScaleNm = onApproach ? null : 2f,
+                GlideslopeDeviation = onApproach ? (float)(Math.Sin(phase * 0.45) * 0.4) : null,
+                ToFrom = NavToFrom.Off,
+
                 // Navigation
                 HasActiveFlightPlan = true,
                 NextWaypointId = Waypoints[_waypointIndex],

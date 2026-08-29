@@ -95,7 +95,7 @@ app-flight-display {
 
     // The artificial horizon is square, so this height -- not the column width --
     // is what sets its size. It is the primary instrument, so it gets the room.
-    flex: 0 0 34vh;
+    flex: 0 0 32vh;
     min-height: 0;
   }
 
@@ -134,12 +134,73 @@ app-flight-display {
   /* Heading + autopilot */
   .heading-row {
     display: grid;
-    grid-template-columns: 2.4fr 1fr;
+    grid-template-columns: 1.9fr 1.1fr 1fr;
     gap: 1.2vh;
     flex: 0 0 auto;
   }
 
-  .heading-panel app-heading-indicator { margin-bottom: 0.4vh; }
+  .heading-panel app-heading-indicator { margin: auto 0 0.4vh; }
+
+  .course-panel {
+    &.no-guidance { border-color: rgb(255 255 255 / 15%); }
+
+    .source-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.3vh 0.7vw;
+      margin-bottom: 0.4vh;
+      font-size: clamp(0.8rem, 1.8vh, 1.15rem);
+    }
+
+    .reading {
+      color: #cfe8f5;
+      font-variant-numeric: tabular-nums;
+
+      em {
+        font-style: normal;
+        color: rgb(109 179 216 / 75%);
+        text-transform: uppercase;
+        font-size: 0.82em;
+        letter-spacing: 0.5px;
+        margin-right: 0.25vw;
+      }
+    }
+
+    .source {
+      padding: 0.1vh 0.7vh;
+      border-radius: 0.4vh;
+      background: rgb(125 211 192 / 20%);
+      border: 1px solid rgb(125 211 192 / 55%);
+      color: #7dd3c0;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .source-id {
+      color: #f5a623;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .to-from {
+      color: rgb(207 232 245 / 75%);
+      letter-spacing: 1px;
+    }
+
+    app-course-deviation {
+      flex: 1 1 auto;
+      min-height: 0;
+      margin: 0.4vh 0;
+    }
+
+    .no-guidance-text {
+      margin: auto 0;
+      color: rgb(255 255 255 / 40%);
+      font-style: italic;
+      font-size: clamp(0.85rem, 1.9vh, 1.2rem);
+    }
+  }
 
   .autopilot-panel {
     &.engaged {

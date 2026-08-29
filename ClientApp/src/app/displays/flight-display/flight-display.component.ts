@@ -2,9 +2,10 @@ import { Component, computed, inject, ViewEncapsulation } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { AttitudeIndicatorComponent } from './attitude-indicator.component';
 import { HeadingIndicatorComponent } from './heading-indicator.component';
+import { CourseDeviationComponent } from './course-deviation.component';
 import { NumberNlPipe, TimespanPipe } from '../../shared';
 import { APP_STORE } from '../../state/app.store';
-import { EngineType } from './flight-data';
+import { CourseDeviationSource, EngineType, NavToFrom } from './flight-data';
 
 export type { FlightData } from './flight-data';
 
@@ -23,6 +24,7 @@ const optional = (value: number | undefined): number | null => value ?? null;
   imports: [
     AttitudeIndicatorComponent,
     HeadingIndicatorComponent,
+    CourseDeviationComponent,
     DecimalPipe,
     NumberNlPipe,
     TimespanPipe,
@@ -60,6 +62,46 @@ export class FlightDisplayComponent {
     const rpm = this.data().engineRpm;
     return rpm === undefined || rpm === null ? null : Math.round(rpm);
   });
+
+  protected readonly hasGuidance = computed(() => this.data().deviationSource !== CourseDeviationSource.None);
+
+  /** How the guidance source is labelled on the panel. */
+  protected readonly deviationSourceLabel = computed(() => {
+    switch (this.data().deviationSource) {
+      case CourseDeviationSource.Gps:
+        return 'GPS';
+      case CourseDeviationSource.Vor:
+        return 'VOR';
+      case CourseDeviationSource.Localizer:
+        return 'LOC';
+      default:
+        return null;
+    }
+  });
+
+  protected readonly toFromLabel = computed(() => {
+    switch (this.data().toFrom) {
+      case NavToFrom.To:
+        return 'TO';
+      case NavToFrom.From:
+        return 'FROM';
+      default:
+        return null;
+    }
+  });
+
+  /**
+   * Says what full scale means, so a needle hard over reads as a distance rather
+   * than just "a long way". Radio guidance is angular, so it has no such distance.
+   */
+  protected readonly fullScaleText = computed(() => {
+    const fullScale = this.data().lateralFullScaleNm;
+    return fullScale === undefined || fullScale === null ? null : `${fullScale} NM`;
+  });
+
+  protected readonly lateralDeviation = computed(() => optional(this.data().lateralDeviation));
+
+  protected readonly glideslopeDeviation = computed(() => optional(this.data().glideslopeDeviation));
 
   /**
    * A pressure setting is read as four bare digits ("1013"), never grouped as

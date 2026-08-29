@@ -54,6 +54,33 @@
       </div>
     </div>
 
+    <div class="panel course-panel" [class.no-guidance]="!hasGuidance()">
+      <label>Course</label>
+      @if (hasGuidance()) {
+        <div class="source-row">
+          <span class="source">{{deviationSourceLabel()}}</span>
+          @if (data().deviationSourceId; as sourceId) {
+            <span class="source-id">{{sourceId}}</span>
+          }
+          @if (toFromLabel(); as toFrom) {
+            <span class="to-from">{{toFrom}}</span>
+          }
+          @if (data().selectedCourse !== undefined && data().selectedCourse !== null) {
+            <span class="reading"><em>CRS</em> {{data().selectedCourse | number: '3.0-0'}}&deg;</span>
+          }
+          @if (fullScaleText(); as fullScale) {
+            <span class="reading"><em>SCALE</em> &plusmn;{{fullScale}}</span>
+          }
+          @if (glideslopeDeviation() !== null) {
+            <span class="reading"><em>G/S</em> live</span>
+          }
+        </div>
+        <app-course-deviation [lateral]="lateralDeviation()" [glideslope]="glideslopeDeviation()" />
+      } @else {
+        <div class="no-guidance-text">No lateral guidance</div>
+      }
+    </div>
+
     <div class="panel autopilot-panel" [class.engaged]="data().autopilotMaster">
       <label>Autopilot</label>
       @if (data().autopilotMaster) {

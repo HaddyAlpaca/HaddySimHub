@@ -83,6 +83,26 @@ public struct MsfsTelemetry
 
     public double CrossTrackMeters;
 
+    /// <summary>Set once an approach is being flown, which tightens the GPS course scale.</summary>
+    public double ApproachActive;
+
+    // --- Navigation radio ---
+    public double NavHasSignal;
+    public double NavHasLocalizer;
+    public double NavHasGlideSlope;
+
+    /// <summary>Lateral deviation, -127 to 127 at full scale.</summary>
+    public double NavCdi;
+
+    /// <summary>Glideslope deviation, -119 to 119 at full scale.</summary>
+    public double NavGsi;
+
+    /// <summary>0 = off, 1 = to the station, 2 = from it.</summary>
+    public double NavToFrom;
+
+    /// <summary>The course selected on the radio, in degrees.</summary>
+    public double NavObs;
+
     // --- Engine ---
     public double EngineCount;
 
@@ -138,6 +158,10 @@ public struct MsfsTelemetry
     /// </summary>
     [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
     public string DestinationId;
+
+    /// <summary>Identifier of the tuned navaid; empty when nothing is received.</summary>
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
+    public string NavIdent;
 
     [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
     public string AircraftTitle;

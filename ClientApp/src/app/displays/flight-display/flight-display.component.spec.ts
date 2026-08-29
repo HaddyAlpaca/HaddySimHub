@@ -4,7 +4,7 @@ import { provideZonelessChangeDetection } from '@angular/core';
 import { describe, beforeEach, it, expect } from 'vitest';
 import { FlightDisplayComponent } from './flight-display.component';
 import { FlightDisplayComponentHarness } from './flight-display.component.harness';
-import { EngineType, FlightData } from './flight-data';
+import { CourseDeviationSource, EngineType, FlightData, NavToFrom } from './flight-data';
 import { MockAppStore } from '../../../testing/mock-app.store';
 import { APP_STORE } from '../../state/app.store';
 
@@ -54,6 +54,12 @@ const createFlightData = (overrides: Partial<FlightData> = {}): FlightData => ({
   destinationEteSeconds: 2040,
   destinationEtaUtcSeconds: 14 * 3600 + 12 * 60,
   crossTrackErrorNm: 0.12,
+
+  deviationSource: CourseDeviationSource.Gps,
+  deviationSourceId: 'ARTIP',
+  lateralDeviation: 0.2,
+  lateralFullScaleNm: 2,
+  toFrom: NavToFrom.Off,
 
   engineCount: 2,
   engineType: EngineType.Jet,
@@ -182,6 +188,63 @@ describe('FlightDisplayComponent', () => {
 
     expect(await harness.isFlightPlanShown()).toBe(false);
     expect(await harness.getNavPanelText()).toContain('No active flight plan');
+  });
+
+  it('should show flight plan guidance with the scale it is drawn to', async () => {
+    render({
+      deviationSource: CourseDeviationSource.Gps,
+      deviationSourceId: 'ARTIP',
+      lateralDeviation: 0.4,
+      lateralFullScaleNm: 2,
+    });
+
+    const text = await harness.getCoursePanelText();
+    expect(text).toContain('GPS');
+    expect(text).toContain('ARTIP');
+    expect(text).toContain('2 NM');
+    expect(await harness.isCourseNeedleShown()).toBe(true);
+    expect(await harness.isGlideslopeShown()).toBe(false);
+  });
+
+  it('should show a localiser with its glideslope and selected course', async () => {
+    render({
+      deviationSource: CourseDeviationSource.Localizer,
+      deviationSourceId: 'IAA',
+      selectedCourse: 87,
+      lateralDeviation: -0.2,
+      lateralFullScaleNm: undefined,
+      glideslopeDeviation: 0.3,
+    });
+
+    const text = await harness.getCoursePanelText();
+    expect(text).toContain('LOC');
+    expect(text).toContain('IAA');
+    expect(text).toContain('087');
+    expect(await harness.isGlideslopeShown()).toBe(true);
+  });
+
+  it('should show the TO flag on a VOR radial', async () => {
+    render({
+      deviationSource: CourseDeviationSource.Vor,
+      deviationSourceId: 'SPL',
+      toFrom: NavToFrom.To,
+    });
+
+    const text = await harness.getCoursePanelText();
+    expect(text).toContain('VOR');
+    expect(text).toContain('TO');
+  });
+
+  it('should say so when there is no lateral guidance', async () => {
+    render({
+      deviationSource: CourseDeviationSource.None,
+      deviationSourceId: undefined,
+      lateralDeviation: undefined,
+      lateralFullScaleNm: undefined,
+    });
+
+    expect(await harness.getCoursePanelText()).toContain('No lateral guidance');
+    expect(await harness.isCourseNeedleShown()).toBe(false);
   });
 
   it('should label the primary engine readout N1 for a turbine', async () => {

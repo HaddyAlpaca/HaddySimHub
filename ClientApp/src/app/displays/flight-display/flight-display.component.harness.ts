@@ -23,6 +23,18 @@ export class FlightDisplayComponentHarness extends ComponentHarness {
     return (await this.locatorFor('.config-panel')()).text();
   }
 
+  public async getCoursePanelText(): Promise<string> {
+    return (await this.locatorFor('.course-panel')()).text();
+  }
+
+  public async isCourseNeedleShown(): Promise<boolean> {
+    return !!(await this.locatorForOptional('.course-panel .needle')());
+  }
+
+  public async isGlideslopeShown(): Promise<boolean> {
+    return !!(await this.locatorForOptional('.course-panel .glideslope-marker')());
+  }
+
   public async getAutopilotModes(): Promise<string[]> {
     const modes = await this.locatorForAll('.autopilot-panel .mode')();
     return Promise.all(modes.map((mode) => mode.text()));

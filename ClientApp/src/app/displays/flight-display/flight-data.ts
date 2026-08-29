@@ -11,6 +11,21 @@ export enum EngineType {
   Turboprop,
 }
 
+/** Mirrors HaddySimHub/Models/CourseDeviationSource.cs. Serialized as a number. */
+export enum CourseDeviationSource {
+  None,
+  Gps,
+  Vor,
+  Localizer,
+}
+
+/** Mirrors HaddySimHub/Models/NavToFrom.cs, and the MSFS simvar it came from. */
+export enum NavToFrom {
+  Off,
+  To,
+  From,
+}
+
 /**
  * Mirrors HaddySimHub/Models/FlightData.cs. Kept in sync by hand, like the other
  * display DTOs. Optional fields are the ones the sim only supplies for some
@@ -67,6 +82,15 @@ export interface FlightData {
   destinationEteSeconds?: number;
   destinationEtaUtcSeconds?: number; // seconds since midnight UTC
   crossTrackErrorNm?: number; // positive right of course
+
+  // Course deviation
+  deviationSource: CourseDeviationSource;
+  deviationSourceId?: string;
+  selectedCourse?: number; // degrees; radio guidance only
+  lateralDeviation?: number; // -1 (full scale left) to 1 (full scale right), positive = right of course
+  lateralFullScaleNm?: number; // what full scale means in NM; absent for angular radio guidance
+  glideslopeDeviation?: number; // -1 (full scale low) to 1 (full scale high), positive = above the path
+  toFrom: NavToFrom;
 
   // Engine
   engineCount: number;

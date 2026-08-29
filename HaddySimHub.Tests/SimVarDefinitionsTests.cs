@@ -55,8 +55,8 @@ public class SimVarDefinitionsTests
     [TestMethod]
     public void TelemetryStruct_IsTheExpectedSize()
     {
-        // 62 doubles, then a 32, a 32 and a 256 byte string.
-        Assert.AreEqual(816, Marshal.SizeOf<MsfsTelemetry>());
+        // 70 doubles, then three 32-byte strings and a 256-byte one.
+        Assert.AreEqual(912, Marshal.SizeOf<MsfsTelemetry>());
     }
 
     [TestMethod]

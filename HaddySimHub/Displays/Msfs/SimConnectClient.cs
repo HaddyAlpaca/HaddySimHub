@@ -173,6 +173,12 @@ public sealed class SimConnectClient : ISimConnectClient
     /// </summary>
     private bool TrySubscribe()
     {
+        // Collect every rejection before giving up rather than stopping at the first.
+        // A rejected simvar is fatal either way -- it is left out of the block, so
+        // everything after it would be read from the wrong offset -- but naming all of
+        // them at once turns diagnosing a bad simvar into one run instead of several.
+        var rejected = new List<string>();
+
         foreach (var definition in SimVarDefinitions.All)
         {
             var result = NativeMethods.SimConnect_AddToDataDefinition(
@@ -186,9 +192,16 @@ public sealed class SimConnectClient : ISimConnectClient
 
             if (NativeMethods.Failed(result))
             {
-                Logger.Warn($"[Msfs] The simulator rejected simvar '{definition.Name}' (0x{result:X8}); telemetry cannot be read");
-                return false;
+                rejected.Add($"{definition.Name} (0x{result:X8})");
             }
+        }
+
+        if (rejected.Count > 0)
+        {
+            Logger.Warn(
+                $"[Msfs] The simulator rejected {rejected.Count} of {SimVarDefinitions.All.Count} simulation variables, " +
+                $"so telemetry cannot be read: {string.Join(", ", rejected)}");
+            return false;
         }
 
         var request = NativeMethods.SimConnect_RequestDataOnSimObject(

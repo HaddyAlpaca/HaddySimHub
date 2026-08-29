@@ -246,6 +246,166 @@ public class MsfsDataConverterTests
 
     #endregion
 
+    #region Course deviation
+
+    [TestMethod]
+    public void Convert_FollowsTheFlightPlanWhenNoStationIsReceived()
+    {
+        var telemetry = CreateTelemetry();
+        telemetry.FlightPlanActive = 1;
+        telemetry.NextWaypointId = "ARTIP";
+        telemetry.NavHasSignal = 0;
+        telemetry.CrossTrackMeters = 1852;
+
+        var data = ConvertData(telemetry);
+
+        Assert.AreEqual(CourseDeviationSource.Gps, data.DeviationSource);
+        Assert.AreEqual("ARTIP", data.DeviationSourceId);
+        // One nautical mile right of course, against a two mile en-route scale.
+        Assert.AreEqual(0.5f, data.LateralDeviation!.Value, 0.001f);
+        Assert.AreEqual(2f, data.LateralFullScaleNm!.Value, 0.001f);
+        Assert.IsNull(data.GlideslopeDeviation);
+        Assert.AreEqual(NavToFrom.Off, data.ToFrom);
+    }
+
+    [TestMethod]
+    public void Convert_TightensTheFlightPlanScaleOnAnApproach()
+    {
+        var telemetry = CreateTelemetry();
+        telemetry.FlightPlanActive = 1;
+        telemetry.ApproachActive = 1;
+        telemetry.CrossTrackMeters = 1852 * 0.15;
+
+        var data = ConvertData(telemetry);
+
+        // The same needle now means a tenth of the distance it did en route.
+        Assert.AreEqual(0.3f, data.LateralFullScaleNm!.Value, 0.001f);
+        Assert.AreEqual(0.5f, data.LateralDeviation!.Value, 0.001f);
+    }
+
+    [TestMethod]
+    public void Convert_PinsTheNeedleRatherThanRunningOffTheScale()
+    {
+        var telemetry = CreateTelemetry();
+        telemetry.FlightPlanActive = 1;
+        telemetry.CrossTrackMeters = 1852 * 20;
+
+        Assert.AreEqual(1f, ConvertData(telemetry).LateralDeviation!.Value, 0.001f);
+    }
+
+    [TestMethod]
+    public void Convert_PrefersTheRadioOverTheFlightPlan()
+    {
+        // Once a station is being received it is what the needle should follow, which
+        // is what matters when the flight plan and the approach disagree.
+        var telemetry = CreateTelemetry();
+        telemetry.FlightPlanActive = 1;
+        telemetry.NextWaypointId = "ARTIP";
+        telemetry.CrossTrackMeters = 5000;
+        telemetry.NavHasSignal = 1;
+        telemetry.NavIdent = "SPL";
+        telemetry.NavCdi = 0;
+
+        var data = ConvertData(telemetry);
+
+        Assert.AreEqual(CourseDeviationSource.Vor, data.DeviationSource);
+        Assert.AreEqual("SPL", data.DeviationSourceId);
+        Assert.AreEqual(0f, data.LateralDeviation!.Value, 0.001f);
+    }
+
+    [TestMethod]
+    public void Convert_NormalisesTheRadioNeedleToFullScale()
+    {
+        var telemetry = CreateTelemetry();
+        telemetry.NavHasSignal = 1;
+        telemetry.NavCdi = 127;
+
+        Assert.AreEqual(1f, ConvertData(telemetry).LateralDeviation!.Value, 0.001f);
+
+        telemetry.NavCdi = -63.5;
+        Assert.AreEqual(-0.5f, ConvertData(telemetry).LateralDeviation!.Value, 0.001f);
+    }
+
+    [TestMethod]
+    public void Convert_ReportsALocaliserWithItsGlideslope()
+    {
+        var telemetry = CreateTelemetry();
+        telemetry.NavHasSignal = 1;
+        telemetry.NavHasLocalizer = 1;
+        telemetry.NavHasGlideSlope = 1;
+        telemetry.NavIdent = "IAA";
+        telemetry.NavObs = 87;
+        telemetry.NavGsi = 59.5;
+
+        var data = ConvertData(telemetry);
+
+        Assert.AreEqual(CourseDeviationSource.Localizer, data.DeviationSource);
+        Assert.AreEqual(87f, data.SelectedCourse!.Value, 0.001f);
+        Assert.AreEqual(0.5f, data.GlideslopeDeviation!.Value, 0.001f);
+        Assert.IsNull(data.LateralFullScaleNm);
+    }
+
+    [TestMethod]
+    public void Convert_ReportsNoGlideslopeOnALocaliserWithoutOne()
+    {
+        var telemetry = CreateTelemetry();
+        telemetry.NavHasSignal = 1;
+        telemetry.NavHasLocalizer = 1;
+        telemetry.NavHasGlideSlope = 0;
+        telemetry.NavGsi = 100;
+
+        Assert.IsNull(ConvertData(telemetry).GlideslopeDeviation);
+    }
+
+    [TestMethod]
+    public void Convert_SuppressesTheToFromFlagOnALocaliser()
+    {
+        // A localizer has no radial, so the flag has nothing to say.
+        var telemetry = CreateTelemetry();
+        telemetry.NavHasSignal = 1;
+        telemetry.NavHasLocalizer = 1;
+        telemetry.NavToFrom = (double)NavToFrom.To;
+
+        Assert.AreEqual(NavToFrom.Off, ConvertData(telemetry).ToFrom);
+    }
+
+    [TestMethod]
+    public void Convert_KeepsTheToFromFlagOnAVor()
+    {
+        var telemetry = CreateTelemetry();
+        telemetry.NavHasSignal = 1;
+        telemetry.NavToFrom = (double)NavToFrom.From;
+
+        Assert.AreEqual(NavToFrom.From, ConvertData(telemetry).ToFrom);
+    }
+
+    [TestMethod]
+    public void Convert_ReportsNoGuidanceWithoutAStationOrAFlightPlan()
+    {
+        var telemetry = CreateTelemetry();
+        telemetry.NavHasSignal = 0;
+        telemetry.FlightPlanActive = 0;
+
+        var data = ConvertData(telemetry);
+
+        Assert.AreEqual(CourseDeviationSource.None, data.DeviationSource);
+        Assert.IsNull(data.LateralDeviation);
+        Assert.IsNull(data.GlideslopeDeviation);
+        Assert.IsNull(data.DeviationSourceId);
+    }
+
+    [TestMethod]
+    public void Convert_KeepsAnUnreadableToFromValueOff()
+    {
+        var telemetry = CreateTelemetry();
+        telemetry.NavHasSignal = 1;
+        telemetry.NavToFrom = 7;
+
+        Assert.AreEqual(NavToFrom.Off, ConvertData(telemetry).ToFrom);
+    }
+
+    #endregion
+
     #region Engine
 
     [TestMethod]
@@ -508,6 +668,7 @@ public class MsfsDataConverterTests
         EngineCount = 2,
         NextWaypointId = string.Empty,
         DestinationId = string.Empty,
+        NavIdent = string.Empty,
         AircraftTitle = string.Empty,
     };
 }

@@ -191,6 +191,51 @@ public sealed record FlightData
     /// </summary>
     public float? CrossTrackErrorNm { get; init; }
 
+    /* Course deviation */
+
+    /// <summary>
+    /// What the deviation readings below come from. <see cref="CourseDeviationSource.None"/>
+    /// means there is no lateral guidance and the indicator has nothing to show.
+    /// </summary>
+    public CourseDeviationSource DeviationSource { get; init; }
+
+    /// <summary>
+    /// Identifier of whatever is providing guidance: the navaid ident, or the next
+    /// waypoint when the source is the flight plan.
+    /// </summary>
+    public string? DeviationSourceId { get; init; }
+
+    /// <summary>
+    /// Course selected on the navigation radio, in degrees. Null for flight plan guidance.
+    /// </summary>
+    public float? SelectedCourse { get; init; }
+
+    /// <summary>
+    /// Lateral deviation, -1 (full scale left of course) to 1 (full scale right).
+    /// Positive means the aircraft is right of the course, matching
+    /// <see cref="CrossTrackErrorNm"/>; the needle on the dashboard points the other
+    /// way, because it shows where the course is rather than where the aircraft is.
+    /// </summary>
+    public float? LateralDeviation { get; init; }
+
+    /// <summary>
+    /// What full-scale deflection means in nautical miles, for flight plan guidance.
+    /// Null for a radio source, whose scale is angular rather than a fixed distance.
+    /// </summary>
+    public float? LateralFullScaleNm { get; init; }
+
+    /// <summary>
+    /// Glideslope deviation, -1 (full scale below the glidepath) to 1 (full scale
+    /// above). Positive means the aircraft is high. Null when no glideslope is received.
+    /// </summary>
+    public float? GlideslopeDeviation { get; init; }
+
+    /// <summary>
+    /// Whether the selected radial leads to the station or away from it.
+    /// <see cref="NavToFrom.Off"/> whenever the flag does not apply.
+    /// </summary>
+    public NavToFrom ToFrom { get; init; }
+
     /* Engine */
 
     public int EngineCount { get; init; }
