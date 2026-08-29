@@ -66,12 +66,13 @@ Then `dotnet build` will use the correct SDK version.
 - Logging is excluded from HaddySimHub project (see Logging/** excludes in csproj)
 - **Game display pipeline**: every supported game follows a `provider → converter → display → hub` pattern, registered via `RegisterGameDisplay<>` in `Extensions/ApplicationCompositionExtensions.cs`. See [`HaddySimHub/Displays/README.md`](./HaddySimHub/Displays/README.md) for the full convention and how to add a new game.
 - **Console dashboard**: in an interactive terminal the backend renders a live Spectre.Console TUI (`HaddySimHub/Dashboard/`); console logs are routed into it via `DashboardLogTarget` instead of being written directly. Set `HADDYSIMHUB_NO_DASHBOARD=1` to fall back to plain coloured console logging (this also happens automatically when stdout/stdin is redirected, e.g. in CI). Set `HADDYSIMHUB_DEBUG=1` for debug-level logging plus per-frame data logs.
-- **Test mode**: the backend supports `--test <name>` to serve fake telemetry data without a real game running. Test displays are registered in `Extensions/ApplicationCompositionExtensions.cs` via `RegisterTestDisplay<>`. Available test IDs: `race`, `rally`, `truck`. Usage:
+- **Test mode**: the backend supports `--test <name>` to serve fake telemetry data without a real game running. Test displays are registered in `Extensions/ApplicationCompositionExtensions.cs` via `RegisterTestDisplay<>`. Available test IDs: `race`, `rally`, `truck`, `flight`. Usage:
   ```bash
   # From ClientApp/ directory — starts both frontend + backend:
   npm run dev:all:race                # circuit racing data (iRacing-style)
   npm run dev:all:rally               # rally stage data (Dirt Rally 2-style)
   npm run dev:all:truck               # trucking data (ETS2-style)
+  npm run dev:all:flight              # flight data (MSFS-style)
   ```
   Or manually in two terminals:
   ```bash
@@ -81,7 +82,7 @@ Then `dotnet build` will use the correct SDK version.
   # Terminal 2 — backend (race test data)
   HADDYSIMHUB_NO_DASHBOARD=1 dotnet run --project HaddySimHub -- --test race --no-update
   ```
-  Then open http://localhost:4200/ to see the display live. Press `Ctrl+T` while the backend is running to cycle test modes (`"" → race → rally → truck → ""`).
+  Then open http://localhost:4200/ to see the display live. Press `Ctrl+T` while the backend is running to cycle test modes (`"" → race → rally → truck → flight → ""`).
 - **Project skills**: shared skills live in `.claude/skills/` and are committed; everything else under `.claude/` (personal settings, IDE scratch files) stays ignored. `.gitignore` excludes `.claude/*` rather than `.claude/` itself, because git cannot re-include a path whose parent directory is excluded — keep that shape when adding rules there.
 - **Dependency updates**: CI installs npm packages through Safe Chain (`ClientApp/scripts/safe-chain-wrapper.sh`), which refuses any package below a minimum age of roughly two days. A blocked install fails the **Frontend tests** check with `403 Forbidden - blocked by safe-chain direct download minimum package age` — that is the policy working, not a test failure, so hold the version back instead of skipping the check. Every version held back goes in [`ClientApp/DEPENDENCY-PINS.md`](./ClientApp/DEPENDENCY-PINS.md) with the reason and a removal condition; `overrides` entries especially, because the scheduled `deps-update.yml` workflow preserves that block and `npm outdated` never reveals it. Read that file at the start of every dependency update and drop the entries whose condition has been met.
 - **Backend tests use MSTest**: assert exceptions with `Assert.Throws<T>()`, `Assert.ThrowsExactly<T>()`, or `Assert.ThrowsAsync<T>()`. The legacy `Assert.ThrowsException<T>()` does **not** exist in this MSTest version and will fail to compile.

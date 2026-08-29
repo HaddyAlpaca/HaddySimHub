@@ -1,0 +1,28 @@
+<svg viewBox="0 0 440 90" class="cdi" role="img" aria-label="Course deviation indicator">
+  <!-- Lateral scale -->
+  <line class="scale-line" [attr.x1]="centreX - 132" [attr.y1]="centreY" [attr.x2]="centreX + 132" [attr.y2]="centreY" />
+  @for (x of lateralDots(); track x) {
+    <circle class="dot" r="4.5" [attr.cx]="x" [attr.cy]="centreY" />
+  }
+
+  @if (hasLateral()) {
+    <line class="needle" y1="8" y2="82" [attr.x1]="needleX()" [attr.x2]="needleX()" />
+  }
+
+  <!-- Fixed aircraft symbol, which the needle is read against -->
+  <g class="aircraft">
+    <line [attr.x1]="centreX - 22" [attr.y1]="centreY" [attr.x2]="centreX + 22" [attr.y2]="centreY" />
+    <line [attr.x1]="centreX" [attr.y1]="centreY - 12" [attr.x2]="centreX" [attr.y2]="centreY + 12" />
+  </g>
+
+  <!-- Glideslope scale -->
+  @if (hasGlideslope()) {
+    <line class="scale-line" [attr.x1]="glideslopeX" [attr.y1]="centreY - 40" [attr.x2]="glideslopeX" [attr.y2]="centreY + 40" />
+    @for (y of glideslopeDots(); track y) {
+      <circle class="dot" r="4.5" [attr.cx]="glideslopeX" [attr.cy]="y" />
+    }
+    <polygon class="glideslope-marker"
+             points="0,-9 13,0 0,9 -13,0"
+             [attr.transform]="'translate(' + glideslopeX + ' ' + glideslopeY() + ')'" />
+  }
+</svg>

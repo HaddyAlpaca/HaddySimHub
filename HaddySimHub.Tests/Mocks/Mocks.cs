@@ -40,6 +40,56 @@ namespace HaddySimHub.Tests.Mocks
         public SCSSdkTelemetry Create() => null!; // Return null or a mock SCSSdkTelemetry
     }
 
+    /// <summary>
+    /// Stands in for the native SimConnect connection so the MSFS provider can be
+    /// tested without Windows or the simulator.
+    /// </summary>
+    public class MockSimConnectClient : HaddySimHub.Displays.Msfs.ISimConnectClient
+    {
+        private HaddySimHub.Displays.Msfs.MsfsTelemetry? _pending;
+
+        public bool IsConnected { get; private set; }
+
+        /// <summary>When set, Connect() leaves the client disconnected.</summary>
+        public bool ConnectFails { get; set; }
+
+        public int ConnectCallCount { get; private set; }
+
+        public int DisconnectCallCount { get; private set; }
+
+        public bool Disposed { get; private set; }
+
+        public void Connect()
+        {
+            ConnectCallCount++;
+            IsConnected = !ConnectFails;
+        }
+
+        public void Disconnect()
+        {
+            DisconnectCallCount++;
+            IsConnected = false;
+        }
+
+        /// <summary>Queues one telemetry block for the next read, as a dispatch would.</summary>
+        public void QueueTelemetry(HaddySimHub.Displays.Msfs.MsfsTelemetry telemetry) => _pending = telemetry;
+
+        public bool TryReadTelemetry(out HaddySimHub.Displays.Msfs.MsfsTelemetry telemetry)
+        {
+            if (_pending is null)
+            {
+                telemetry = default;
+                return false;
+            }
+
+            telemetry = _pending.Value;
+            _pending = null;
+            return true;
+        }
+
+        public void Dispose() => Disposed = true;
+    }
+
     // Mock for IDisplayUpdateSender
     public class MockDisplayUpdateSender : IDisplayUpdateSender
     {

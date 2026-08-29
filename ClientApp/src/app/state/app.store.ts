@@ -1,7 +1,7 @@
 import { computed } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { DisplayUpdate, DisplayType } from '../sse.service';
-import { RaceData, RallyData, TruckData } from '../displays';
+import { FlightData, RaceData, RallyData, TruckData } from '../displays';
 
 export const APP_STORE = signalStore(
   { providedIn: 'root' },
@@ -19,5 +19,6 @@ export const APP_STORE = signalStore(
     truckData: computed(() => (displayUpdate().data ?? { }) as TruckData),
     raceData: computed(() => (displayUpdate().data ?? { }) as RaceData),
     rallyData: computed(() => (displayUpdate().data ?? { }) as RallyData),
+    flightData: computed(() => (displayUpdate().data ?? { }) as FlightData),
   })),
 );

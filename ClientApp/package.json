@@ -10,6 +10,7 @@
     "dev:all:race": "cross-env TEST_MODE=race npm run dev:all",
     "dev:all:rally": "cross-env TEST_MODE=rally npm run dev:all",
     "dev:all:truck": "cross-env TEST_MODE=truck npm run dev:all",
+    "dev:all:flight": "cross-env TEST_MODE=flight npm run dev:all",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",

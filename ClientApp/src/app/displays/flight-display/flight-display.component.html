@@ -1,0 +1,223 @@
+<div class="container">
+  <!-- Top row: speed | attitude | altitude -->
+  <div class="instrument-row">
+    <div class="panel speed-panel"
+         [class.warning]="data().stallWarning"
+         [class.overspeed]="data().overspeedWarning">
+      <label>Speed</label>
+      <div class="primary">{{data().indicatedAirspeed | number: '1.0-0'}}<span class="unit">kts</span></div>
+      <div class="secondary">
+        <span><em>GS</em> {{data().groundSpeed | number: '1.0-0'}}</span>
+        <span><em>TAS</em> {{data().trueAirspeed | number: '1.0-0'}}</span>
+      </div>
+      @if (data().stallWarning) {
+        <div class="alert">STALL</div>
+      } @else if (data().overspeedWarning) {
+        <div class="alert">OVERSPEED</div>
+      }
+    </div>
+
+    <div class="panel attitude-panel">
+      <label>Attitude</label>
+      <app-attitude-indicator [pitch]="pitch()" [bank]="bank()" [slip]="slip()" />
+      <div class="secondary">
+        <span><em>PITCH</em> {{data().pitchDegrees | number: '1.0-1'}}&deg;</span>
+        <span><em>BANK</em> {{data().bankDegrees | number: '1.0-1'}}&deg;</span>
+      </div>
+    </div>
+
+    <div class="panel altitude-panel">
+      <label>Altitude</label>
+      <div class="primary">{{indicatedAltitude() | numbernl}}<span class="unit">ft</span></div>
+      <div class="secondary">
+        <span [class.climbing]="data().verticalSpeed > 50" [class.descending]="data().verticalSpeed < -50">
+          <em>VS</em> {{data().verticalSpeed | number: '1.0-0'}} fpm
+        </span>
+        <span><em>AGL</em> {{altitudeAboveGround() | numbernl}}</span>
+        <span><em>QNH</em> {{altimeterText()}}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Heading tape and autopilot -->
+  <div class="heading-row">
+    <div class="panel heading-panel">
+      <label>Heading</label>
+      <app-heading-indicator
+        [heading]="heading()"
+        [headingBug]="headingBugMarker()"
+        [groundTrack]="groundTrackMarker()" />
+      <div class="secondary">
+        <span class="strong">{{data().headingMagnetic | number: '3.0-0'}}&deg;</span>
+        <span><em>TRK</em> {{data().groundTrack | number: '3.0-0'}}&deg;</span>
+        <span><em>WIND</em> {{data().windDirection | number: '3.0-0'}}&deg; / {{data().windSpeed | number: '1.0-0'}} kts</span>
+      </div>
+    </div>
+
+    <div class="panel course-panel" [class.no-guidance]="!hasGuidance()">
+      <label>Course</label>
+      @if (hasGuidance()) {
+        <div class="source-row">
+          <span class="source">{{deviationSourceLabel()}}</span>
+          @if (data().deviationSourceId; as sourceId) {
+            <span class="source-id">{{sourceId}}</span>
+          }
+          @if (toFromLabel(); as toFrom) {
+            <span class="to-from">{{toFrom}}</span>
+          }
+          @if (data().selectedCourse !== undefined && data().selectedCourse !== null) {
+            <span class="reading"><em>CRS</em> {{data().selectedCourse | number: '3.0-0'}}&deg;</span>
+          }
+          @if (fullScaleText(); as fullScale) {
+            <span class="reading"><em>SCALE</em> &plusmn;{{fullScale}}</span>
+          }
+          @if (glideslopeDeviation() !== null) {
+            <span class="reading"><em>G/S</em> live</span>
+          }
+        </div>
+        <app-course-deviation [lateral]="lateralDeviation()" [glideslope]="glideslopeDeviation()" />
+      } @else {
+        <div class="no-guidance-text">No lateral guidance</div>
+      }
+    </div>
+
+    <div class="panel autopilot-panel" [class.engaged]="data().autopilotMaster">
+      <label>Autopilot</label>
+      @if (data().autopilotMaster) {
+        <div class="mode-row">
+          @for (mode of autopilotModes(); track mode) {
+            <span class="mode">{{mode}}</span>
+          } @empty {
+            <span class="mode idle">CWS</span>
+          }
+        </div>
+        <div class="secondary stacked">
+          <span><em>ALT</em> {{altitudeTarget() | numbernl}} ft</span>
+          <span><em>HDG</em> {{data().headingBug | number: '3.0-0'}}&deg;</span>
+          @if (data().speedHold) {
+            <span><em>SPD</em> {{data().speedTarget | number: '1.0-0'}} kts</span>
+          }
+          @if (data().verticalSpeedTarget) {
+            <span><em>VS</em> {{data().verticalSpeedTarget | number: '1.0-0'}} fpm</span>
+          }
+        </div>
+      } @else {
+        <div class="mode-row">
+          <span class="mode off">AP OFF</span>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="panel nav-panel">
+    <label>Navigation</label>
+    @if (data().hasActiveFlightPlan) {
+      <div class="nav-row">
+        <div class="nav-leg">
+          <span class="arrow">&rarr;</span>
+          <span class="ident">{{data().nextWaypointId}}</span>
+          <span class="distance">{{data().distanceToWaypointNm | number: '1.0-1'}} NM</span>
+          @if (waypointEteMinutes(); as minutes) {
+            <span class="ete">{{minutes | timespan}}</span>
+          }
+        </div>
+        <div class="nav-leg destination">
+          <span class="arrow">&#9992;</span>
+          @if (data().destinationId; as destination) {
+            <span class="ident">{{destination}}</span>
+          }
+          <span class="distance">{{data().distanceToDestinationNm | number: '1.0-0'}} NM</span>
+          @if (destinationEteMinutes(); as minutes) {
+            <span class="ete">{{minutes | timespan}}</span>
+          }
+          @if (destinationEtaText(); as eta) {
+            <span class="eta">ETA {{eta}}Z</span>
+          }
+        </div>
+      </div>
+      @if (crossTrackText(); as crossTrack) {
+        <div class="xtk">
+          <em>XTK</em> {{crossTrack}}
+        </div>
+      }
+    } @else {
+      <div class="nav-empty">No active flight plan</div>
+    }
+  </div>
+
+  <!-- Engine and configuration -->
+  <div class="bottom-row">
+    <div class="panel engine-panel">
+      <label>Engine &amp; fuel</label>
+      @if (hasEngine()) {
+        <div class="bar-row">
+          <em>{{enginePrimaryLabel()}}</em>
+          <div class="bar">
+            <div class="bar-fill engine" [style.width.%]="data().enginePrimaryPct ?? 0"></div>
+          </div>
+          <span class="bar-value">{{data().enginePrimaryPct | number: '1.0-0'}}%</span>
+        </div>
+      }
+      <div class="bar-row" [class.warning]="lowFuel()">
+        <em>Fuel</em>
+        <div class="bar">
+          <div class="bar-fill fuel" [style.width.%]="fuelPct()"></div>
+        </div>
+        <span class="bar-value">{{fuelQuantity() | numbernl}} lb</span>
+      </div>
+      <div class="secondary">
+        @if (enduranceText(); as endurance) {
+          <span [class.warning-text]="lowFuel()"><em>ENDUR</em> {{endurance}}</span>
+        }
+        @if (hasEngine()) {
+          <span><em>FF</em> {{data().fuelFlowPph | number: '1.0-0'}} pph</span>
+          <span><em>OIL</em> {{data().oilTemperature | number: '1.0-0'}}&deg;C / {{data().oilPressure | number: '1.0-0'}} psi</span>
+          @if (isPiston()) {
+            <span><em>MAP</em> {{data().manifoldPressure | number: '1.0-1'}} inHg</span>
+            @if (engineRpm(); as rpm) {
+              <span><em>RPM</em> {{rpm | numbernl}}</span>
+            }
+          }
+        }
+      </div>
+    </div>
+
+    <div class="panel config-panel">
+      <label>Configuration</label>
+      <div class="config-grid">
+        <div class="config-item">
+          <em>Flaps</em>
+          <span>{{flapsLabel()}}<small> / {{flapsMaxIndex()}}</small></span>
+        </div>
+        <div class="config-item" [class.transit]="gearState() === 'IN TRANSIT'" [class.down]="gearState() === 'DOWN'">
+          <em>Gear</em>
+          <span>{{gearState()}}</span>
+        </div>
+        <div class="config-item" [class.active]="data().spoilersPct > 0">
+          <em>Spoilers</em>
+          <span>{{spoilerText()}}</span>
+        </div>
+        <div class="config-item" [class.active]="data().parkingBrakeOn">
+          <em>Park brake</em>
+          <span>{{data().parkingBrakeOn ? 'SET' : 'OFF'}}</span>
+        </div>
+        <div class="config-item">
+          <em>Trim</em>
+          <span>{{data().elevatorTrimPct | number: '1.0-0'}}%</span>
+        </div>
+        <div class="config-item">
+          <em>Aircraft</em>
+          <span class="aircraft">{{data().aircraftTitle}}</span>
+        </div>
+      </div>
+      <div class="light-row">
+        <span class="light" [class.on]="data().landingLightsOn">LAND</span>
+        <span class="light" [class.on]="data().taxiLightsOn">TAXI</span>
+        <span class="light" [class.on]="data().strobeLightsOn">STROBE</span>
+        <span class="light" [class.on]="data().navLightsOn">NAV</span>
+        <span class="light" [class.on]="data().beaconOn">BCN</span>
+      </div>
+    </div>
+  </div>
+</div>

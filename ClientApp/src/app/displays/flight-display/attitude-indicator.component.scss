@@ -1,0 +1,69 @@
+:host {
+  display: block;
+  position: relative;
+  min-height: 0;
+}
+
+.attitude {
+  // Absolute so the square viewBox scales to whatever the panel leaves it,
+  // instead of claiming its intrinsic height and overflowing.
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  .sky { fill: #2a7fc4; }
+  .ground { fill: #6b4423; }
+
+  .horizon-line {
+    stroke: #fff;
+    stroke-width: 1.6;
+  }
+
+  .rung {
+    stroke: rgb(255 255 255 / 85%);
+    stroke-width: 1.2;
+  }
+
+  .rung-label {
+    fill: rgb(255 255 255 / 85%);
+    font-size: 9px;
+    font-weight: 600;
+  }
+
+  .bezel {
+    fill: none;
+    stroke: rgb(125 211 192 / 45%);
+    stroke-width: 2;
+  }
+
+  .bank-tick {
+    stroke: rgb(255 255 255 / 70%);
+    stroke-width: 1.4;
+  }
+
+  .bank-zero { fill: rgb(255 255 255 / 80%); }
+  .bank-pointer { fill: #f5a623; }
+
+  .aircraft {
+    line, circle {
+      stroke: #f5a623;
+      stroke-width: 3;
+      fill: none;
+    }
+  }
+
+  .slip-tube {
+    fill: rgb(0 0 0 / 45%);
+    stroke: rgb(125 211 192 / 40%);
+    stroke-width: 1;
+  }
+
+  .slip-mark {
+    stroke: rgb(255 255 255 / 60%);
+    stroke-width: 1.2;
+  }
+
+  .slip-ball { fill: #e8e8e8; }
+}

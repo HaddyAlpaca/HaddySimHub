@@ -62,4 +62,40 @@
     </ItemGroup>
   </Target>
 
+  <!--
+    Microsoft Flight Simulator telemetry needs the native x64 SimConnect.dll. That
+    library ships with the MSFS SDK, not with the simulator and not with this
+    repository, so it cannot be committed or fetched by the release workflow (which
+    builds on a Linux runner with no SDK installed).
+
+    At runtime SimConnectLibraryResolver finds it next to the executable or in an SDK
+    install, so a developer machine with the SDK needs no packaging at all. Set
+    `-p:IncludeSimConnectOnPublish=true` to bundle it into the published output
+    instead, for distributing to machines without the SDK. It is opt-in because
+    redistributing the library is a licensing decision for whoever cuts the release,
+    not a side effect of publishing.
+  -->
+  <PropertyGroup>
+    <IncludeSimConnectOnPublish Condition="'$(IncludeSimConnectOnPublish)' == ''">false</IncludeSimConnectOnPublish>
+    <SimConnectDllPath Condition="'$(SimConnectDllPath)' == '' and '$(MSFS_SDK)' != ''">$([MSBuild]::EnsureTrailingSlash('$(MSFS_SDK)'))SimConnect SDK\lib\SimConnect.dll</SimConnectDllPath>
+    <SimConnectDllPath Condition="'$(SimConnectDllPath)' == ''">C:\MSFS SDK\SimConnect SDK\lib\SimConnect.dll</SimConnectDllPath>
+  </PropertyGroup>
+
+  <Target Name="PublishSimConnect"
+          AfterTargets="ComputeFilesToPublish"
+          Condition="'$(IncludeSimConnectOnPublish)' == 'true'">
+    <!-- Fail loudly: a package that silently lacks the library would look fine and
+         then leave the flight dashboard permanently inactive. -->
+    <Error Condition="!Exists('$(SimConnectDllPath)')"
+           Text="IncludeSimConnectOnPublish is set but SimConnect.dll was not found at '$(SimConnectDllPath)'. Install the MSFS SDK, or pass -p:SimConnectDllPath=&lt;path&gt;." />
+    <Message Importance="high" Text="Bundling SimConnect.dll from $(SimConnectDllPath)" />
+    <ItemGroup>
+      <ResolvedFileToPublish Include="$(SimConnectDllPath)">
+        <RelativePath>SimConnect.dll</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
+
 </Project>

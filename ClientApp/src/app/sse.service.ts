@@ -1,6 +1,6 @@
 import { inject, OnDestroy, Service, signal } from '@angular/core';
 import { filter, interval, Subscription, take, tap } from 'rxjs';
-import { RaceData, RallyData, TruckData } from './displays';
+import { FlightData, RaceData, RallyData, TruckData } from './displays';
 import { APP_STORE } from './state/app.store';
 
 export interface ConnectionInfo {
@@ -16,16 +16,19 @@ export enum ConnectionStatus {
   Connected,
 }
 
+// Mirrors HaddySimHub/Models/DisplayType.cs positionally -- the backend sends the
+// enum as a number. Append new members; inserting one shifts every dashboard after it.
 export enum DisplayType {
   None,
   TruckDashboard,
   RaceDashboard,
   RallyDashboard,
+  FlightDashboard,
 }
 
 export interface DisplayUpdate {
   type: DisplayType;
-  data: TruckData | RaceData | RallyData | undefined;
+  data: TruckData | RaceData | RallyData | FlightData | undefined;
 }
 
 @Service()

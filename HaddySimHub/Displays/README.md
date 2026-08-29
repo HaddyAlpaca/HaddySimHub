@@ -21,6 +21,36 @@ IGameDataProvider<T>  →  IDataConverter<T, DisplayUpdate>  →  DisplayBase<T>
 `SimpleGameDisplay<T>` reports `IsActive` via `ProcessHelper.IsProcessRunning(processName)`,
 so a display becomes active when the game's process is detected.
 
+## Telemetry sources
+
+Providers acquire telemetry in one of three ways:
+
+| Source | Games | Base / helper |
+|---|---|---|
+| Shared memory | Assetto Corsa, ACC, AC Rally, ETS2/ATS | `SharedMemoryGameDataProviderBase` + `SharedMemoryPage<T>` |
+| UDP | Dirt Rally 2 | `IUdpClientFactory` |
+| Vendor SDK | iRacing, ETS2/ATS | the vendored `iRacingSDK.Net` / `SCSSdkClient` projects |
+| SimConnect | Microsoft Flight Simulator 2020 | `Displays/Msfs/Interop` |
+
+### SimConnect, and why the interop is hand-written
+
+The managed `Microsoft.FlightSimulator.SimConnect.dll` from the MSFS SDK is a
+mixed-mode C++/CLI assembly built against .NET Framework, so it cannot be loaded
+by this application. `Displays/Msfs/Interop/NativeMethods.cs` therefore binds the
+five entry points needed to read telemetry directly against the native x64
+`SimConnect.dll`, and `SimConnectClient` polls `SimConnect_GetNextDispatch`
+rather than passing a window handle to `SimConnect_Open` - which keeps MSFS
+inside the same timer-based provider shape as every other game, with no Win32
+message loop.
+
+**The one thing to be careful with:** SimConnect returns one opaque block of
+bytes, laid out in exactly the order the simvars were added to the data
+definition. The order of `SimVarDefinitions.All` *is* the field order of
+`MsfsTelemetry`. Change one without the other and every field past the change
+reads a plausible but wrong value, with no error from the simulator.
+`SimVarDefinitionsTests` compares the two - total size, field count and per-field
+type - so that mistake fails the build instead of reaching the dashboard.
+
 Every display writes to the same stream, so `DisplaysRunner` feeds only one of them
 at a time. The display already running keeps its turn for as long as its game is up,
 and the rest report `standing by` in the console dashboard. Without that, two open
@@ -118,4 +148,9 @@ Additional aids:
 Test displays push sample data so the frontend can be exercised without a game
 running. They are registered with `RegisterTestDisplay<T>(id)` and toggled at
 runtime by pressing `Ctrl+T` in the backend console, which cycles
-`Program.TestId` through `race` → `rally` → `truck` → off.
+`Program.TestId` through `race` → `rally` → `truck` → `flight` → off.
+
+A test display can exist before its game does. `Displays/Msfs/TestDisplay.cs`
+serves the flight dashboard on sample data while the Microsoft Flight Simulator
+provider is still being built, which is what lets the frontend be developed
+against a display type no game feeds yet.

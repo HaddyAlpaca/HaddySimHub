@@ -63,6 +63,10 @@ public class Program
                         {
                             TestId = "truck";
                         }
+                        else if (TestId == "truck")
+                        {
+                            TestId = "flight";
+                        }
                         else
                         {
                             TestId = string.Empty;
@@ -127,6 +131,7 @@ public class Program
             HaddySimHub.Displays.DisplayDefinitions.TestIds.Race,
             HaddySimHub.Displays.DisplayDefinitions.TestIds.Rally,
             HaddySimHub.Displays.DisplayDefinitions.TestIds.Truck,
+            HaddySimHub.Displays.DisplayDefinitions.TestIds.Flight,
         };
 
         if (Array.IndexOf(validIds, normalized) < 0)

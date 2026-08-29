@@ -1,0 +1,47 @@
+<svg viewBox="0 0 200 200" class="attitude" role="img" aria-label="Attitude indicator">
+  <defs>
+    <clipPath id="attitude-face">
+      <circle cx="100" cy="100" r="88" />
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#attitude-face)">
+    <g [attr.transform]="horizonTransform()">
+      <rect x="-200" y="-500" width="600" height="600" class="sky" />
+      <rect x="-200" y="100" width="600" height="600" class="ground" />
+      <line x1="-200" y1="100" x2="400" y2="100" class="horizon-line" />
+
+      @for (rung of ladder(); track rung.y) {
+        <line class="rung" [attr.x1]="100 - rung.halfWidth"
+              [attr.y1]="rung.y" [attr.x2]="100 + rung.halfWidth" [attr.y2]="rung.y" />
+        <text class="rung-label" text-anchor="end" [attr.x]="100 - rung.halfWidth - 4" [attr.y]="rung.y + 3">{{rung.label}}</text>
+        <text class="rung-label" text-anchor="start" [attr.x]="100 + rung.halfWidth + 4" [attr.y]="rung.y + 3">{{rung.label}}</text>
+      }
+    </g>
+
+    <!-- Sky pointer: rolls with the horizon against the fixed bank scale below. -->
+    <g [attr.transform]="bankPointerTransform()">
+      <polygon points="100,16 94,28 106,28" class="bank-pointer" />
+    </g>
+  </g>
+
+  <!-- Fixed overlay: bank scale and aircraft symbol. -->
+  <circle cx="100" cy="100" r="88" class="bezel" />
+  @for (tick of [-60, -45, -30, -20, -10, 10, 20, 30, 45, 60]; track tick) {
+    <line x1="100" y1="12" x2="100" y2="22" class="bank-tick"
+          [attr.transform]="'rotate(' + tick + ' 100 100)'" />
+  }
+  <polygon points="100,10 93,24 107,24" class="bank-zero" />
+
+  <g class="aircraft">
+    <line x1="52" y1="100" x2="84" y2="100" />
+    <line x1="116" y1="100" x2="148" y2="100" />
+    <circle cx="100" cy="100" r="3.5" />
+  </g>
+
+  <!-- Slip/skid ball -->
+  <rect x="70" y="160" width="60" height="16" rx="8" class="slip-tube" />
+  <line x1="94" y1="162" x2="94" y2="174" class="slip-mark" />
+  <line x1="106" y1="162" x2="106" y2="174" class="slip-mark" />
+  <circle cy="180" r="5.5" class="slip-ball" [attr.cx]="slipBallX()" />
+</svg>
