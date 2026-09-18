@@ -34,6 +34,9 @@ jobs:
       - name: Create branch
         run: |
           BRANCH="deps/update-$(date +%Y-%m-%d)"
+          # A previous run may have left this branch on the remote (e.g. it
+          # failed after pushing). Drop it so the re-run can push cleanly.
+          git push origin --delete "$BRANCH" 2>/dev/null || true
           git checkout -b "$BRANCH"
           echo "BRANCH=$BRANCH" >> "$GITHUB_ENV"
 
