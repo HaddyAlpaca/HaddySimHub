@@ -45,7 +45,12 @@ done
 flags=(--state "$ISSUE_STATE" --limit "$LIMIT")
 [[ -n "$LABEL_FILTER" ]] && flags+=(--label "$LABEL_FILTER")
 
-mapfile -t issues < <(gh issue list --repo "$REPO" "${flags[@]}" --json number,title,labels --jq '.[] | [.number, (.title|gsub("\t";" ")), ([.labels[].name]|join(","))] | @tsv')
+flag_output="$(gh issue list --repo "$REPO" "${flags[@]}" --json number,title,labels --jq '.[] | [.number, (.title|gsub("\t";" ")), ([.labels[].name]|join(","))] | @tsv' 2>&1)" || {
+  echo "error: could not fetch issues from $REPO" >&2
+  echo "$flag_output" >&2
+  exit 1
+}
+mapfile -t issues < <(printf '%s\n' "$flag_output" | grep -v '^$')
 
 if [[ ${#issues[@]} -eq 0 ]]; then
   echo "No issues to sync."
