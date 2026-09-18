@@ -1,102 +1,102 @@
-# Issue-queue als cronjob (met ntfy.sh-notificaties)
+# Running the issue queue as a cronjob (with ntfy.sh notifications)
 
-Deze scripts runnen de issue-gedreven queue onbeheerd via cron:
+These scripts run the issue-driven queue unattended via cron:
 
-| Script | Wat het doet |
+| Script | What it does |
 | --- | --- |
-| `sync-issues.sh` | Haalt GitHub-issues op en schrijft één markdown-taak per issue naar `.queue/pending/` |
-| `process-pending.sh` | Draait `opencode` op elke taak, maakt een branch + PR en verplaatst taken naar `in-progress`/`done`/`failed` |
-| `cron-run.sh` | Wrapper voor cron: draait `sync-issues.sh` (en optioneel `process-pending.sh`) en stuurt een **ntfy.sh-notificatie** bij fouten of een samenvatting bij succes |
+| `sync-issues.sh` | Fetches GitHub issues and writes one markdown task per issue to `.queue/pending/` |
+| `process-pending.sh` | Runs `opencode` on each task, creates a branch + PR, and moves tasks through `in-progress`/`done`/`failed` |
+| `cron-run.sh` | Cron wrapper: runs `sync-issues.sh` (and optionally `process-pending.sh`) and sends an **ntfy.sh notification** on failures or a summary on success |
 
-Logs staan in `.queue/logs/<stap>-<timestamp>.log` (`.queue/` staat in `.gitignore`).
+Logs live in `.queue/logs/<step>-<timestamp>.log` (`.queue/` is in `.gitignore`).
 
-## Vereisten
+## Requirements
 
-- `gh` geauthenticeerd (bv. `gh auth login`)
-- `curl` (voor ntfy.sh-notificaties)
-- `opencode` op `$PATH` (alleen voor `process-pending.sh`)
-- Uitvoerbare scripts (`chmod +x scripts/queue/*.sh`)
+- `gh` authenticated (e.g. `gh auth login`)
+- `curl` (for ntfy.sh notifications)
+- `opencode` on `$PATH` (only for `process-pending.sh`)
+- Executable scripts (`chmod +x scripts/queue/*.sh`)
 
-## ntfy.sh instellen
+## Setting up ntfy.sh
 
-1. Installeer de ntfy-app op je telefoon ([ntfy.sh/docs/subscribe/phone/](https://docs.ntfy.sh/subscribe/phone/)) en abonneer je op een topic, bijv. `haddy-queue`:
+1. Install the ntfy app on your phone ([ntfy.sh/docs/subscribe/phone/](https://docs.ntfy.sh/subscribe/phone/)) and subscribe to a topic, e.g. `haddy-queue`:
 
    ```
    termux-notifications install
    ```
 
-   Of vul in de app: `haddy-queue` (of `https://ntfy.sh/haddy-queue`).
+   Or in the app, enter: `haddy-queue` (or `https://ntfy.sh/haddy-queue`).
 
-2. Kies een eigen topicnaam zodat anderen hem niet kunnen raden — je kunt een toegangstoken koppelen ([securing](https://docs.ntfy.sh/publish/#authentication)).
+2. Pick a unique topic name so others can't guess it — you can attach an access token ([securing](https://docs.ntfy.sh/publish/#authentication)).
 
-## Cronjob configureren
+## Configuring the cronjob
 
-`cron-run.sh` wordt volledig via omgevingsvariabelen geconfigureerd:
+`cron-run.sh` is configured entirely via environment variables:
 
-| Variabele | Standaard | Betekenis |
+| Variable | Default | Meaning |
 | --- | --- | --- |
-| `NTFY_TOPIC` | — (uit) | ntfy.de topic; zonder dit wordt er niets verzonden |
-| `NTFY_SERVER` | `https://ntfy.sh` | ntfy-server |
-| `NTFY_FAILURE_PRIORITY` | `high` | Prioriteit bij fouten |
-| `NTFY_SUCCESS_PRIORITY` | `default` | Prioriteit bij succes |
-| `NTFY_NOTIFY_FAILURE` | `1` | `0` = geen notificatie bij fouten |
-| `NTFY_NOTIFY_SUCCESS` | `1` | `0` = geen notificatie bij succes |
-| `SYNC_ISSUES` | `1` | `0` = sync-stap overslaan |
-| `PROCESS_PENDING` | `0` | `1` = ook `process-pending.sh` draaien |
-| `QUEUE_DIR` | `.queue` | Alternatieve queuedirectory |
+| `NTFY_TOPIC` | — (off) | The ntfy.sh topic; without it no notifications are sent |
+| `NTFY_SERVER` | `https://ntfy.sh` | The ntfy server |
+| `NTFY_FAILURE_PRIORITY` | `high` | Priority for failures |
+| `NTFY_SUCCESS_PRIORITY` | `default` | Priority for success summaries |
+| `NTFY_NOTIFY_FAILURE` | `1` | `0` = disable failure notifications |
+| `NTFY_NOTIFY_SUCCESS` | `1` | `0` = disable success notifications |
+| `SYNC_ISSUES` | `1` | `0` = skip the sync step |
+| `PROCESS_PENDING` | `0` | `1` = also run `process-pending.sh` |
+| `QUEUE_DIR` | `.queue` | Alternative queue directory |
 
-> Let op: `gh issue list` kan stil falen (verlopen token, rate limit). `sync-issues.sh` eindigt dan met een fout in plaats van `No issues to sync.`, zodat `cron-run.sh` via ntfy meldt dat er iets mis is.
+> Note: `gh issue list` can fail silently (expired token, rate limit). `sync-issues.sh` then exits with an error instead of printing `No issues to sync.`, so `cron-run.sh` reports the problem via ntfy.
 
-### Voorbeeld: elk uur syncen
+### Example: sync every hour
 
 ```bash
 crontab -e
 ```
 
 ```cron
-# elke minuut 0 van elk uur, dagelijks
+# at minute 0 of every hour, every day
 0 * * * * cd /home/joost/code/HaddySimHub && NTFY_TOPIC=haddy-queue ./scripts/queue/cron-run.sh >> .queue/cron.log 2>&1
 ```
 
-### Voorbeeld: elk uur syncen + 's avonds taken verwerken
+### Example: sync hourly + process tasks in the evening
 
 ```cron
 0 * * * * cd /home/joost/code/HaddySimHub && NTFY_TOPIC=haddy-queue ./scripts/queue/cron-run.sh >> .queue/cron.log 2>&1
 0 22 * * * cd /home/joost/code/HaddySimHub && NTFY_TOPIC=haddy-queue PROCESS_PENDING=1 ./scripts/queue/cron-run.sh >> .queue/cron.log 2>&1
 ```
 
-### Crontab-tips
+### Crontab tips
 
-- Zet bovenin je crontab een `PATH` zodat `git`, `gh`, `opencode` en `curl` gevonden worden:
+- Set a `PATH` at the top of your crontab so `git`, `gh`, `opencode` and `curl` are found:
   ```cron
   PATH=/home/joost/.local/bin:/usr/local/bin:/usr/bin:/bin
   ```
-- `cron` e-mailt output alleen naar het systeempercentage-account; door het loggen naar `.queue/cron.log` zie je alle output op één plek.
-- Laat cron de output `>> file 2>&1` wegschrijven; **niet** direct doorsturen naar `ntfy` — `cron-run.sh` stuurt al geaggregeerde notificaties.
+- `cron` only emails output to the system account; logging to `.queue/cron.log` keeps all output in one place.
+- Have cron write output to `>> file 2>&1`; **do not** pipe it straight to `ntfy` — `cron-run.sh` already sends aggregated notifications.
 
-## Testen
+## Testing
 
-Draai eerst handmatig om te controleren dat alles werkt (zonder notificatie):
+First run manually to check everything works (no notification):
 
 ```bash
 NTFY_TOPIC= ./scripts/queue/cron-run.sh
 ```
 
-Voor een echte notificatietest naar je eigen topic:
+For a real notification to your own topic:
 
 ```bash
 NTFY_TOPIC=haddy-queue ./scripts/queue/cron-run.sh
 ```
 
-Flow-test: simuleer een mislukkende sync (slechte token), zodat je de fout-notificatie ziet:
+Flow test: simulate a failing sync (bad token) so you can see the failure notification:
 
 ```bash
 GH_TOKEN=bogus NTFY_TOPIC=haddy-queue ./scripts/queue/cron-run.sh
 ```
 
-## Alternatief: systemd-timer
+## Alternative: systemd timer
 
-Gebruik je liever een systemd-timer dan cron:
+Prefer a systemd timer over cron:
 
 `~/.config/systemd/user/issue-queue.service`:
 
@@ -126,7 +126,7 @@ Persistent=true
 WantedBy=timers.target
 ```
 
-Activeer:
+Enable it:
 
 ```bash
 systemctl --user daemon-reload
@@ -134,6 +134,6 @@ systemctl --user enable --now issue-queue.timer
 systemctl --user list-timers issue-queue.timer
 ```
 
-## Notificaties bij "belangrijke mededelingen"
+## Notifications for "important announcements"
 
-`cron-run.sh` stuurt standaard een notificatie bij elke mislukte stap (fout + laatste logregels) en een korte samenvatting bij succes. Wil je ook gewaarschuwd worden bij taken die in de queue blijven liggen of herhaaldelijk falen, zet dan `PROCESS_PENDING=1` aan: falende taken komen in `.queue/failed/` en `process-pending.sh` telt die in zijn samenvatting.
+`cron-run.sh` sends a notification on every failed step (error + last log lines) and a short summary on success, by default. If you also want to be alerted when tasks sit in the queue or keep failing, enable `PROCESS_PENDING=1`: failed tasks end up in `.queue/failed/` and `process-pending.sh` counts them in its summary.
