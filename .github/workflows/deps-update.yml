@@ -8,6 +8,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  workflows: write
 
 env:
   dotnet_version: '10.0.201'
