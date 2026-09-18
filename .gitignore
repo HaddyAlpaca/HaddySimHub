@@ -283,3 +283,6 @@ tmpclaude-*
 .claude/*
 !.claude/skills/
 HaddySimHub.Tests/coverage/coverage.info
+
+# Local queue contents (git-ignored)
+.queue/
