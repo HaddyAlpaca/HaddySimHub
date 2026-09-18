@@ -45,33 +45,56 @@ jobs:
       - name: Detect latest .NET SDK version
         id: dotnet-sdk
         run: |
-          RELEASES=$(curl -sL https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json)
-          # Find the latest LTS or current-major channel, preferring the highest major
-          CHANNEL=$(echo "$RELEASES" | jq -r '[.channels[] | select(.release-type == "LTS" or .channel-version == "10.0")] | sort_by(.channel-version | split(".") | map(tonumber)) | last')
-          LATEST_SDK=$(echo "$CHANNEL" | jq -r '.["latest-sdk"] // empty')
-          CHANNEL_VER=$(echo "$CHANNEL" | jq -r '.["channel-version"] // empty')
-
-          if [ -z "$LATEST_SDK" ]; then
-            echo "Could not determine latest SDK, keeping current: ${{ env.dotnet_version }}"
-            echo "full_version=${{ env.dotnet_version }}" >> "$GITHUB_OUTPUT"
-          else
-            echo "full_version=$LATEST_SDK" >> "$GITHUB_OUTPUT"
-            echo "channel=$CHANNEL_VER" >> "$GITHUB_OUTPUT"
-            echo "Latest .NET SDK: $LATEST_SDK (channel $CHANNEL_VER)"
-          fi
+          node -e "
+            (async () => {
+              const res = await fetch('https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json');
+              const data = await res.json();
+              const channels = data['releases-index'] ?? data.channels ?? [];
+              const toArr = (v) => String(v).split('.').map(Number);
+              const currentMajor = String(process.env.dotnet_version).split('.')[0];
+              // Find the latest LTS or current-major channel, preferring the highest major
+              const candidates = channels
+                .filter((c) => c['release-type'] === 'LTS' || String(c['channel-version']).split('.')[0] === currentMajor)
+                .sort((a, b) => {
+                  const va = toArr(a['channel-version']);
+                  const vb = toArr(b['channel-version']);
+                  const n = Math.max(va.length, vb.length);
+                  for (let i = 0; i < n; i++) {
+                    const d = (va[i] || 0) - (vb[i] || 0);
+                    if (d !== 0) return d;
+                  }
+                  return 0;
+                });
+              const best = candidates[candidates.length - 1];
+              if (!best || !best['latest-sdk']) {
+                console.error('Could not determine latest SDK, keeping current: ' + process.env.dotnet_version);
+                console.log('full_version=' + process.env.dotnet_version);
+              } else {
+                console.error('Latest .NET SDK: ' + best['latest-sdk'] + ' (channel ' + best['channel-version'] + ')');
+                console.log('full_version=' + best['latest-sdk']);
+                console.log('channel=' + best['channel-version']);
+              }
+            })().catch((e) => { console.error(e); process.exit(1); });
+          " >> "$GITHUB_OUTPUT"
 
       - name: Detect latest LTS Node.js version
         id: node-lts
         run: |
-          LTS_INFO=$(curl -sL https://nodejs.org/dist/index.json | jq '[.[] | select(.lts != false)] | first')
-          if [ -z "$LTS_INFO" ] || [ "$LTS_INFO" = "null" ]; then
-            echo "No LTS release found, keeping current: ${{ env.node_version }}"
-            echo "full_version=${{ env.node_version }}" >> "$GITHUB_OUTPUT"
-          else
-            LTS_FULL=$(echo "$LTS_INFO" | jq -r '.version' | sed 's/^v//')
-            echo "full_version=$LTS_FULL" >> "$GITHUB_OUTPUT"
-            echo "Latest Node LTS: $LTS_FULL"
-          fi
+          node -e "
+            (async () => {
+              const res = await fetch('https://nodejs.org/dist/index.json');
+              const data = await res.json();
+              const lts = Array.isArray(data) ? data.find((r) => r.lts !== false) : null;
+              if (!lts) {
+                console.error('No LTS release found, keeping current: ' + process.env.node_version);
+                console.log('full_version=' + process.env.node_version);
+              } else {
+                const v = String(lts.version).replace(/^v/, '');
+                console.error('Latest Node LTS: ' + v);
+                console.log('full_version=' + v);
+              }
+            })().catch((e) => { console.error(e); process.exit(1); });
+          " >> "$GITHUB_OUTPUT"
 
       - name: Update npm dependencies
         working-directory: ./ClientApp
