@@ -22,32 +22,31 @@ comment on the dependency itself.
 
 ## Active pins
 
-### `jose` → `6.2.9` (override)
+### `jsdom` → `^30.0.1`
 
-- **Reached through:** `@angular/cli` → `@modelcontextprotocol/sdk`
-- **Held since:** 2026-08-22
-- **Why:** `6.2.10` was published the same day. Safe Chain blocks packages below its
-  minimum age (see `scripts/safe-chain-wrapper.sh`), so `npm ci` fails in CI on a
-  release that new. The version itself is not suspect — it is simply too young to
-  have been observed.
-- **Remove when:** the version `@modelcontextprotocol/sdk` resolves to is more than
-  two days old, which is any time after roughly 2026-08-25. Drop the `overrides`
-  entry, run `npm install`, and check that CI's install step passes.
+- **Held since:** 2026-09-18
+- **Why:** `30.1.0` was published 2026-09-17 (one day old), so Safe Chain blocked
+  `npm ci` in CI. It also drags in `@asamuzakjp/dom-selector@9.2.0`, which is
+  younger than the gate too.
+- **Remove when:** `30.1.0` is past the age gate (roughly after 2026-09-19). Raise
+  the range and run `npm install`.
 
-### `eslint` → `^10.8.1`
+### `baseline-browser-mapping` → `^2.11.24`
 
-- **Held since:** 2026-08-22
-- **Why:** same minimum-age block; `10.9.0` was one day old.
-- **Remove when:** `10.9.0` or later is past the age gate. Raise the range and run
-  `npm install`.
-
-### `baseline-browser-mapping` → `^2.11.15`
-
-- **Held since:** 2026-08-22
-- **Why:** same minimum-age block; `2.11.18` was published the same day. This
-  package releases most days, so expect a newer version to be available rather than
-  the exact one that was blocked.
+- **Held since:** 2026-08-22 (re-held 2026-09-18)
+- **Why:** same minimum-age block; `2.11.25` was published 2026-09-17. This package
+  releases most days, so expect a newer version to be available rather than the
+  exact one that was blocked.
 - **Remove when:** the latest release is past the age gate.
+
+### `eslint-plugin-jsdoc` → `64.2.1`
+
+- **Held since:** 2026-09-18
+- **Why:** `64.5.3` was published 2026-09-18 (the same day the dependency PR ran).
+  It drags in `jsdoc-type-pratt-parser@9.2.2` and `@es-joy/jsdoccomment@0.98.0`,
+  both younger than the gate too.
+- **Remove when:** `64.5.3` and those two transitives are past the age gate
+  (roughly after 2026-09-20). Raise the version and run `npm install`.
 
 ## Pins that predate this file
 
@@ -63,6 +62,18 @@ them directly. To check before pushing:
 ```bash
 npm view <package>@<version> time --json
 ```
+
+Or run the whole check against the updated lockfile — it fails loudly on anything
+younger than the Safe Chain gate:
+
+```bash
+node ClientApp/scripts/check-package-ages.mjs
+```
+
+It compares `ClientApp/package-lock.json` in the working tree with the lockfile at
+`HEAD` (default) or any `CHECK_PACKAGE_AGES_BASE_REF` you pass, and exits 1 with
+the offending versions if a newly introduced one is younger than `MIN_AGE_HOURS`
+(default 48).
 
 The scheduled `deps-update.yml` workflow runs `ncu -u` with no target filter, so it
 will keep proposing the versions pinned here. That is expected: the pins live in
