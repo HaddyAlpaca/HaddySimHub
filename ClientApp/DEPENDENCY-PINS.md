@@ -48,6 +48,15 @@ comment on the dependency itself.
 - **Remove when:** `64.5.3` and those two transitives are past the age gate
   (roughly after 2026-09-20). Raise the version and run `npm install`.
 
+### `typescript` → `6.0.3`
+
+- **Held since:** 2026-09-18
+- **Why:** `7.0.2` is supported by neither `typescript-eslint` (ESLint fails with
+  "typescript-eslint does not support TS 7.0") nor the Angular toolchain yet. This
+  is a compatibility hold, not a Safe Chain one.
+- **Remove when:** `typescript-eslint` (and `@angular/compiler-cli`) support a
+  7.x release.
+
 ## Pins that predate this file
 
 `esbuild`, `@babel/core` and `piscina` are pinned in `overrides` without a recorded
