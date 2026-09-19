@@ -64,13 +64,22 @@ The failure surfaces as a red "Frontend tests" check whose log ends in
 `403 Forbidden - blocked by safe-chain direct download minimum package age`,
 followed by the list of packages. It reads like a test failure and is not one.
 
-Catch it before pushing by ageing the versions the update actually introduces:
+The scheduled workflow runs `ClientApp/scripts/check-package-ages.mjs` after the npm
+update and **before it commits or opens the PR**, so a young version fails the run
+instead of producing a PR with red checks.
+
+Catch it by hand the same way, ageing the versions the update actually introduces
+against the last committed lockfile:
 
 ```bash
-git show main:ClientApp/package-lock.json > /tmp/lock-main.json
-# diff the two lockfiles for changed versions, then for each:
-npm view <package>@<version> time --json
+# from ClientApp/ — compares the working-tree lockfile against HEAD
+node scripts/check-package-ages.mjs
 ```
+
+Pass `CHECK_PACKAGE_AGES_BASE_REF` to compare against a different ref (e.g.
+`origin/main`), and `MIN_AGE_HOURS` to change the gate (default 48). For a single
+package, `npm view <package>@<version> time --json` gives the same answer. Skip the
+check with `CHECK_PACKAGE_AGES_SKIP=1` only if you know the failure is wrong.
 
 Anything under two days old will be blocked. Hold it back:
 

@@ -67,6 +67,15 @@ jobs:
             require('fs').writeFileSync('./package.json', JSON.stringify(p, null, 2) + '\n');
           "
 
+      - name: Check package age gate
+        working-directory: ./ClientApp
+        run: |
+          node scripts/check-package-ages.mjs || {
+            echo "::error::One or more freshly published packages are younger than the Safe Chain" \
+                 "minimum age. Hold them back (see DEPENDENCY-PINS.md) instead of skipping the gate."
+            exit 1
+          }
+
       - name: Commit and push
         run: |
           git config user.name "haddy-simhub-bot"
