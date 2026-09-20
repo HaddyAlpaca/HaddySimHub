@@ -32,6 +32,16 @@ npm run lint:styles       # check only
 npm run lint:styles:fix   # apply safe automatic fixes
 ```
 
+To inspect selectors that do not appear to be used by the built application,
+run:
+
+```bash
+npm run analyze:styles
+```
+
+This is a report-only heuristic. Lit templates can contain dynamic class names,
+so review the output before removing any selector.
+
 ## Selecting a test mode
 
 - Via CLI when starting the backend: `--test race`, `--test rally` or `--test truck` (also `--test=race` works). An unknown value is ignored with a warning.
