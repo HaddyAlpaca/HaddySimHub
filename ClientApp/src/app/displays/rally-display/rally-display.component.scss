@@ -1,4 +1,4 @@
-app-rally-display {
+app-rally-display, haddy-rally-display {
   height: 100%;
   padding-top: 2vh;
   box-sizing: border-box;
@@ -117,7 +117,7 @@ app-rally-display {
       border-color: rgb(255 0 0 / 80%);
       box-shadow: 0 0 30px rgb(255 0 0 / 40%), inset 0 0 30px rgb(255 0 0 / 10%);
 
-      app-speedometer {
+      app-speedometer, haddy-speedometer {
         > label {
           color: #e94f37;
           text-shadow: 0 0 20px rgb(233 79 55 / 40%);
@@ -125,7 +125,7 @@ app-rally-display {
       }
     }
 
-    app-speedometer {
+    app-speedometer, haddy-speedometer {
       text-align: center;
       width: 100%;
 
