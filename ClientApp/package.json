@@ -32,7 +32,8 @@
   "overrides": {
     "esbuild": "0.28.1",
     "@babel/core": "7.29.7",
-    "piscina": "5.2.0"
+    "piscina": "5.2.0",
+    "rollup": "4.63.3"
   },
   "dependencies": {
     "@stylistic/eslint-plugin": "^5.10.0",

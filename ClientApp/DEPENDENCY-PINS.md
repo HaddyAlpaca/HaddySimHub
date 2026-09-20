@@ -22,6 +22,14 @@ comment on the dependency itself.
 
 ## Active pins
 
+### `rollup` → `4.63.3`
+
+- **Held since:** 2026-09-20
+- **Why:** Vite resolved `4.63.4`, which was blocked by Safe Chain's direct-download
+  minimum-age policy in CI.
+- **Remove when:** `4.63.4` and its platform packages are past the age gate; remove
+  the override and regenerate the lockfile.
+
 ### `jsdom` → `^30.0.1`
 
 - **Held since:** 2026-09-18
