@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using HaddySimHub.Dashboard;
+using System.Text.Json;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
@@ -43,31 +42,12 @@ public static class Logger
         _logger.Trace($"{JsonSerializer.Serialize(data)}\n");
     }
 
-    private static bool _dashboardConsole;
-
     public static void Setup()
     {
-        _dashboardConsole = ConsoleDashboard.IsSupported;
-        Configure(_dashboardConsole);
+        Configure();
     }
 
-    /// <summary>
-    /// Switches console logging from the live dashboard back to the classic
-    /// coloured console output. Used when the dashboard fails so that log
-    /// messages remain visible to the operator.
-    /// </summary>
-    public static void ActivateConsoleFallback()
-    {
-        if (!_dashboardConsole)
-        {
-            return;
-        }
-
-        _dashboardConsole = false;
-        Configure(useDashboardConsole: false);
-    }
-
-    private static void Configure(bool useDashboardConsole)
+    private static void Configure()
     {
         // Per-frame telemetry logging is opt-in through the environment.
         var enableDebugLogging = Environment.GetEnvironmentVariable("HADDYSIMHUB_DEBUG") == "1";
@@ -75,12 +55,7 @@ public static class Logger
 
         var logConfig = new LoggingConfiguration();
 
-        // When attached to an interactive terminal, route console output into the
-        // live dashboard instead of writing raw log lines. Otherwise keep the
-        // classic coloured console output (e.g. CI or redirected output).
-        Target consoleTarget = useDashboardConsole
-            ? new DashboardLogTarget(DashboardLogStore.Instance) { Layout = @"${message}" }
-            : new ColoredConsoleTarget { Layout = @"${message}" };
+        Target consoleTarget = new ColoredConsoleTarget { Layout = @"${message}" };
 
         logConfig.LoggingRules.Add(new LoggingRule(
             "*",

@@ -53,7 +53,6 @@ public static class ApplicationCompositionExtensions
 
         services.AddSingleton<DisplaysRunner>();
         services.AddHostedService<DisplayRunnerHostedService>();
-        services.AddHostedService<Dashboard.ConsoleDashboardHostedService>();
 
         return services;
     }

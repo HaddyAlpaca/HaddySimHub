@@ -16,6 +16,7 @@ All notable changes to this project are documented in this file.
 
 ### Changed
 - A rejected simulation variable now reports every rejection at once rather than stopping at the first, so diagnosing a bad simvar name against a real simulator takes one run instead of several.
+- The live console dashboard was removed in favour of direct colour-coded console logging, reducing startup and runtime complexity while keeping debug and per-frame file logging available.
 
 ### Build
 - `dotnet publish -p:IncludeSimConnectOnPublish=true` bundles `SimConnect.dll` from an MSFS SDK install into the published output, and fails with a clear message when the library is not found. It is opt-in, because the release workflow builds on a Linux runner without the SDK and redistributing the library is a licensing decision.
