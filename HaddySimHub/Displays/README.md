@@ -53,8 +53,7 @@ type - so that mistake fails the build instead of reaching the dashboard.
 
 Every display writes to the same stream, so `DisplaysRunner` feeds only one of them
 at a time. The display already running keeps its turn for as long as its game is up,
-and the rest report `standing by` in the console dashboard. Without that, two open
-games would interleave frames of different types on one screen.
+so two open games cannot interleave frames of different types on one screen.
 
 ### Why detection uses the process and not the shared memory
 
@@ -68,8 +67,8 @@ Assetto Corsa display at once.
 
 The process name is what distinguishes them, so detection stays process-based and
 shared memory answers the separate question of whether telemetry is flowing. That
-split is what the `◐ running · waiting for data` state in the console dashboard
-reports.
+split is reflected in the logs: a running process can be detected before its
+telemetry connection is ready.
 
 | Title | Process |
 |---|---|
@@ -133,10 +132,7 @@ The pipeline distinguishes two failure modes and surfaces both:
   configured name. With `HADDYSIMHUB_DEBUG=1`, `DisplaysRunner` logs the list of
   running process names when no display is active, so you can confirm the exact
   executable name to put in `DisplayDefinitions`.
-- **Detected but no data** — the process runs (panel shows it) but no telemetry
-  arrives. The console dashboard's Games panel marks each game:
-  `○` not running · `◌ running · standing by` · `◐ running · waiting for data` ·
-  `● live · <age> ago`.
+- **Detected but no data** — the process runs but no telemetry arrives.
   `DisplayBase` logs *"First telemetry received from …"* on the first frame and
   shared-memory providers warn *"process detected but shared memory is not
   connected"* via `SharedMemoryGameDataProviderBase`.
