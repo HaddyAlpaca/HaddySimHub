@@ -1,13 +1,7 @@
-import { inject, OnDestroy, Service, signal } from '@angular/core';
-import { filter, interval, Subscription, take, tap } from 'rxjs';
-import { FlightData, RaceData, RallyData, TruckData } from './displays';
-import { APP_STORE } from './state/app.store';
-
-export interface ConnectionInfo {
-  status: ConnectionStatus;
-  message?: string;
-  reloadSeconds?: number;
-}
+import type { FlightData } from './displays/flight-display/flight-data';
+import type { RaceData } from './displays/race-display/race-data';
+import type { RallyData } from './displays/rally-display/rally-data';
+import type { TruckData } from './displays/truck-display/truck-data';
 
 export enum ConnectionStatus {
   Disconnected,
@@ -16,8 +10,6 @@ export enum ConnectionStatus {
   Connected,
 }
 
-// Mirrors HaddySimHub/Models/DisplayType.cs positionally -- the backend sends the
-// enum as a number. Append new members; inserting one shifts every dashboard after it.
 export enum DisplayType {
   None,
   TruckDashboard,
@@ -31,61 +23,69 @@ export interface DisplayUpdate {
   data: TruckData | RaceData | RallyData | FlightData | undefined;
 }
 
-@Service()
-export class SseService implements OnDestroy {
-  private readonly _store = inject(APP_STORE);
+export interface ConnectionInfo {
+  status: ConnectionStatus;
+  message?: string;
+  reloadSeconds?: number;
+}
+
+export class SseService {
   private _eventSource?: EventSource;
-  private _reloadSubscription?: Subscription;
+  private _reloadTimer?: number;
+  private _connectionInfo: ConnectionInfo = { status: ConnectionStatus.Disconnected };
+  private readonly _listeners = new Set<(info: ConnectionInfo) => void>();
 
-  private readonly _connectionStatus = signal<ConnectionInfo>({ status: ConnectionStatus.Disconnected });
-  public readonly connectionStatus = this._connectionStatus.asReadonly();
-
-  public constructor() {
+  public constructor(private readonly _onDisplayUpdate: (update: DisplayUpdate) => void) {
     this.connect();
   }
 
+  public subscribe(listener: (info: ConnectionInfo) => void): () => void {
+    this._listeners.add(listener);
+    listener(this._connectionInfo);
+    return () => this._listeners.delete(listener);
+  }
+
+  public dispose(): void {
+    if (this._reloadTimer !== undefined) {
+      window.clearInterval(this._reloadTimer);
+    }
+    this._eventSource?.close();
+  }
+
   private connect(): void {
-    this._connectionStatus.set({ status: ConnectionStatus.Connecting });
-
+    this.setConnectionInfo({ status: ConnectionStatus.Connecting });
     this._eventSource = new EventSource('/display-data/stream');
-
-    this._eventSource.onopen = (): void => {
-      this._connectionStatus.set({ status: ConnectionStatus.Connected });
+    this._eventSource.onopen = (): void => this.setConnectionInfo({ status: ConnectionStatus.Connected });
+    this._eventSource.onmessage = (event: MessageEvent<string>): void => {
+      this._onDisplayUpdate(JSON.parse(event.data) as DisplayUpdate);
     };
-
-    this._eventSource.onmessage = (event: MessageEvent): void => {
-      const data = event.data as string;
-      const update = JSON.parse(data) as DisplayUpdate;
-      this._store.updateDisplay(update);
-    };
-
     this._eventSource.onerror = (): void => {
       if (this._eventSource?.readyState === EventSource.CONNECTING) {
-        this._connectionStatus.set({ status: ConnectionStatus.Connecting, message: 'Reconnecting...' });
-        return;
+        this.setConnectionInfo({ status: ConnectionStatus.Connecting, message: 'Reconnecting...' });
+      } else {
+        this.setConnectionInfo({ status: ConnectionStatus.ConnectionError, message: 'Connection lost' });
+        this.startReloadSequence();
       }
-      this._connectionStatus.set({ status: ConnectionStatus.ConnectionError, message: 'Connection lost' });
-      this.startReloadSequence();
     };
   }
 
   private startReloadSequence(): void {
-    this._reloadSubscription?.unsubscribe();
-    let countDownSeconds = 10;
-    this._connectionStatus.update((value) => ({ ...value, reloadSeconds: countDownSeconds }));
-    this._reloadSubscription = interval(1000).pipe(
-      take(countDownSeconds + 1),
-      tap(() => {
-        this._connectionStatus.update((value) => ({ ...value, reloadSeconds: countDownSeconds }));
-        countDownSeconds--;
-      }),
-      filter(() => countDownSeconds <= 0),
-      tap(() => window.location.reload()),
-    ).subscribe();
+    if (this._reloadTimer !== undefined) {
+      window.clearInterval(this._reloadTimer);
+    }
+    let seconds = 10;
+    this.setConnectionInfo({ ...this._connectionInfo, reloadSeconds: seconds });
+    this._reloadTimer = window.setInterval(() => {
+      seconds--;
+      this.setConnectionInfo({ ...this._connectionInfo, reloadSeconds: seconds });
+      if (seconds <= 0) {
+        window.location.reload();
+      }
+    }, 1000);
   }
 
-  public ngOnDestroy(): void {
-    this._reloadSubscription?.unsubscribe();
-    this._eventSource?.close();
+  private setConnectionInfo(info: ConnectionInfo): void {
+    this._connectionInfo = info;
+    this._listeners.forEach((listener) => listener(info));
   }
 }

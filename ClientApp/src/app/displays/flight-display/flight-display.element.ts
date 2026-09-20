@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import { LitElement, html, type TemplateResult } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { CourseDeviationSource, EngineType, NavToFrom, type FlightData } from './flight-data';
