@@ -16,7 +16,7 @@ export class AppComponentHarness extends ComponentHarness {
   }
 
   public async isFlightDisplayVisible(): Promise<boolean> {
-    return this.isVisible('app-flight-display');
+    return this.isVisible('haddy-flight-display');
   }
 
   public async isConnectionStatusVisible(): Promise<boolean> {
