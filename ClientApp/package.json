@@ -18,6 +18,7 @@
     "lint": "npm run lint:ts && npm run lint:styles",
     "lint:ts": "eslint \"src/**/*.ts\"",
     "lint:styles": "stylelint \"**/*.scss\"",
+    "lint:styles:fix": "stylelint \"**/*.scss\" --fix",
     "build:prod": "vite build",
     "ci": "bash scripts/safe-chain-wrapper.sh npm ci",
     "safe-chain:install": "bash scripts/install-safe-chain.sh",

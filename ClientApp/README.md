@@ -22,6 +22,16 @@ Run the backend once and the frontend using the Vite dev server with HMR.
 
 The dev server proxies `/display-data` (SSE endpoint) to the backend on port 3333; see [`proxy.conf.json`](./proxy.conf.json).
 
+## Keeping SCSS clean
+
+Stylelint checks every SCSS file in CI and can automatically fix the formatting
+rules it supports:
+
+```bash
+npm run lint:styles       # check only
+npm run lint:styles:fix   # apply safe automatic fixes
+```
+
 ## Selecting a test mode
 
 - Via CLI when starting the backend: `--test race`, `--test rally` or `--test truck` (also `--test=race` works). An unknown value is ignored with a warning.

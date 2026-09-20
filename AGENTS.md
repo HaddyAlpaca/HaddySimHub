@@ -16,6 +16,7 @@
 - Lint (all): `npm run lint` (from ClientApp directory)
 - Lint (TypeScript): `npm run lint:ts` (from ClientApp directory)
 - Lint (SCSS): `npm run lint:styles` (from ClientApp directory)
+- Fix SCSS automatically where supported: `npm run lint:styles:fix` (from ClientApp directory)
 - Start dev server: `npm start` (from ClientApp directory)
 
 ## Environment & Setup
