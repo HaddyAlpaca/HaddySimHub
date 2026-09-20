@@ -63,6 +63,7 @@ Then `dotnet build` will use the correct SDK version.
   - **Frontend entry point**: `ClientApp/src/index.html` and `ClientApp/src/main.ts`
 - Backend settings: `TreatWarningsAsErrors` is enabled — fix all compiler warnings
 - Frontend uses ESLint with `eslint.config.mjs` and Stylelint for SCSS validation
+- Frontend migration: new Lit custom elements can be embedded in the existing Angular shell; the current incremental migration starts with `haddy-clock` in `ClientApp/src/app/shared/clock/clock.element.ts`. Keep Angular and Lit boundaries explicit until the remaining displays are migrated.
 - Logging is excluded from HaddySimHub project (see Logging/** excludes in csproj)
 - **Game display pipeline**: every supported game follows a `provider → converter → display → hub` pattern, registered via `RegisterGameDisplay<>` in `Extensions/ApplicationCompositionExtensions.cs`. See [`HaddySimHub/Displays/README.md`](./HaddySimHub/Displays/README.md) for the full convention and how to add a new game.
 - **Console logging**: the backend writes coloured logs directly to the console and keeps daily log files. Set `HADDYSIMHUB_DEBUG=1` for debug-level logging plus per-frame data logs.
