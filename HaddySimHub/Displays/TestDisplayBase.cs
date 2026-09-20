@@ -16,7 +16,7 @@ namespace HaddySimHub.Displays
         private readonly string _id; // Store id as a field
 
         public override string Description => $"Test display: {_id}";
-        public override bool IsActive => Program.TestId == _id;
+        public override bool IsActive => Infrastructure.TestModeController.Current == _id;
 
         // Traditional constructor
         public TestDisplayBase(
