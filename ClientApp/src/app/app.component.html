@@ -14,7 +14,7 @@
         <haddy-rally-display [data]="rallyData()" />
       }
       @case (DisplayType.FlightDashboard) {
-        <app-flight-display />
+        <haddy-flight-display [data]="flightData()" />
       }
       @default {
         <app-connection-status />
