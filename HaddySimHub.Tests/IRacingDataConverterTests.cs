@@ -71,7 +71,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(gear: 0, playerCarIdx: 0, carIdxLap: new int[64]);
+            var data = CreateMockDataSample(gear: 0);
 
             // Act
             var update = converter.Convert(data);
@@ -87,7 +87,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(gear: -1, playerCarIdx: 0, carIdxLap: new int[64]);
+            var data = CreateMockDataSample(gear: -1);
 
             // Act
             var update = converter.Convert(data);
@@ -103,7 +103,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(gear: 0, playerCarIdx: 0, carIdxLap: new int[64]);
+            var data = CreateMockDataSample(gear: 0);
 
             // Act
             var update = converter.Convert(data);
@@ -119,7 +119,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(gear: 1, playerCarIdx: 0, carIdxLap: new int[64]);
+            var data = CreateMockDataSample(gear: 1);
 
             // Act
             var update = converter.Convert(data);
@@ -135,7 +135,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(gear: 6, playerCarIdx: 0, carIdxLap: new int[64]);
+            var data = CreateMockDataSample(gear: 6);
 
             // Act
             var update = converter.Convert(data);
@@ -155,7 +155,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(speed: 10.0f, playerCarIdx: 0, carIdxLap: new int[64]); // 10 m/s = 36 km/h
+            var data = CreateMockDataSample(speed: 10.0f); // 10 m/s = 36 km/h
 
             // Act
             var update = converter.Convert(data);
@@ -171,7 +171,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(speed: 0.0f, playerCarIdx: 0, carIdxLap: new int[64]);
+            var data = CreateMockDataSample(speed: 0.0f);
 
             // Act
             var update = converter.Convert(data);
@@ -187,7 +187,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(speed: 27.777f, playerCarIdx: 0, carIdxLap: new int[64]); // 27.777 * 3.6 = 99.9972 -> rounds to 100
+            var data = CreateMockDataSample(speed: 27.777f); // 27.777 * 3.6 = 99.9972 -> rounds to 100
 
             // Act
             var update = converter.Convert(data);
@@ -207,7 +207,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(rpm: 6543.5f, playerCarIdx: 0, carIdxLap: new int[64]);
+            var data = CreateMockDataSample(rpm: 6543.5f);
 
             // Act
             var update = converter.Convert(data);
@@ -223,7 +223,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(rpm: 0.0f, playerCarIdx: 0, carIdxLap: new int[64]);
+            var data = CreateMockDataSample(rpm: 0.0f);
 
             // Act
             var update = converter.Convert(data);
@@ -243,7 +243,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(throttle: 0.75f, playerCarIdx: 0, carIdxLap: new int[64]); // 0.75 = 75%
+            var data = CreateMockDataSample(throttle: 0.75f); // 0.75 = 75%
 
             // Act
             var update = converter.Convert(data);
@@ -259,7 +259,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(brake: 0.50f, playerCarIdx: 0, carIdxLap: new int[64]); // 0.50 = 50%
+            var data = CreateMockDataSample(brake: 0.50f); // 0.50 = 50%
 
             // Act
             var update = converter.Convert(data);
@@ -275,7 +275,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(throttle: 1.0f, playerCarIdx: 0, carIdxLap: new int[64]);
+            var data = CreateMockDataSample(throttle: 1.0f);
 
             // Act
             var update = converter.Convert(data);
@@ -291,7 +291,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(throttle: 0.0f, playerCarIdx: 0, carIdxLap: new int[64]);
+            var data = CreateMockDataSample(throttle: 0.0f);
 
             // Act
             var update = converter.Convert(data);
@@ -311,7 +311,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(steeringAngle: 0.0f, steeringWheelAngleMax: 12.0f, playerCarIdx: 0, carIdxLap: new int[64]);
+            var data = CreateMockDataSample(steeringAngle: 0.0f, steeringWheelAngleMax: 12.0f);
 
             // Act
             var update = converter.Convert(data);
@@ -327,7 +327,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(steeringAngle: -6.0f, steeringWheelAngleMax: 12.0f, playerCarIdx: 0, carIdxLap: new int[64]);
+            var data = CreateMockDataSample(steeringAngle: -6.0f, steeringWheelAngleMax: 12.0f);
 
             // Act
             var update = converter.Convert(data);
@@ -343,7 +343,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(steeringAngle: 6.0f, steeringWheelAngleMax: 12.0f, playerCarIdx: 0, carIdxLap: new int[64]);
+            var data = CreateMockDataSample(steeringAngle: 6.0f, steeringWheelAngleMax: 12.0f);
 
             // Act
             var update = converter.Convert(data);
@@ -359,7 +359,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(steeringAngle: -3.0f, steeringWheelAngleMax: 12.0f, playerCarIdx: 0, carIdxLap: new int[64]);
+            var data = CreateMockDataSample(steeringAngle: -3.0f, steeringWheelAngleMax: 12.0f);
 
             // Act
             var update = converter.Convert(data);
@@ -375,7 +375,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(steeringAngle: 5.0f, steeringWheelAngleMax: 0.0f, playerCarIdx: 0, carIdxLap: new int[64]);
+            var data = CreateMockDataSample(steeringAngle: 5.0f, steeringWheelAngleMax: 0.0f);
 
             // Act
             var update = converter.Convert(data);
@@ -391,7 +391,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(steeringAngle: -7.0f, steeringWheelAngleMax: 12.0f, playerCarIdx: 0, carIdxLap: new int[64]);
+            var data = CreateMockDataSample(steeringAngle: -7.0f, steeringWheelAngleMax: 12.0f);
 
             // Act
             var update = converter.Convert(data);
@@ -407,7 +407,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(steeringAngle: 7.0f, steeringWheelAngleMax: 12.0f, playerCarIdx: 0, carIdxLap: new int[64]);
+            var data = CreateMockDataSample(steeringAngle: 7.0f, steeringWheelAngleMax: 12.0f);
 
             // Act
             var update = converter.Convert(data);
@@ -420,14 +420,6 @@ namespace HaddySimHub.Tests
 
         #endregion
 
-        #region Display Properties Tests
-
-
-
-
-
-        #endregion
-
         #region Fuel Tests
 
         [TestMethod]
@@ -435,7 +427,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(fuelLevel: 45.5f, playerCarIdx: 0, carIdxLap: new int[64]);
+            var data = CreateMockDataSample(fuelLevel: 45.5f);
 
             // Act
             var update = converter.Convert(data);
@@ -451,7 +443,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(fuelLevel: 50.0f, playerCarIdx: 0, carIdxLap: new int[64]);
+            var data = CreateMockDataSample(fuelLevel: 50.0f);
 
             // Act
             var update = converter.Convert(data);
@@ -471,7 +463,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(brakeBias: 52.5f, playerCarIdx: 0, carIdxLap: new int[64]);
+            var data = CreateMockDataSample(brakeBias: 52.5f);
 
             // Act
             var update = converter.Convert(data);
@@ -491,7 +483,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(airTemp: 28.5f, playerCarIdx: 0, carIdxLap: new int[64]);
+            var data = CreateMockDataSample(airTemp: 28.5f);
 
             // Act
             var update = converter.Convert(data);
@@ -507,7 +499,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(trackTemp: 45.2f, playerCarIdx: 0, carIdxLap: new int[64]);
+            var data = CreateMockDataSample(trackTemp: 45.2f);
 
             // Act
             var update = converter.Convert(data);
@@ -527,7 +519,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(engineWarnings: EngineWarnings.PitSpeedLimiter, playerCarIdx: 0, carIdxLap: new int[64]);
+            var data = CreateMockDataSample(engineWarnings: EngineWarnings.PitSpeedLimiter);
 
             // Act
             var update = converter.Convert(data);
@@ -543,7 +535,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(engineWarnings: EngineWarnings.None, playerCarIdx: 0, carIdxLap: new int[64]);
+            var data = CreateMockDataSample(engineWarnings: EngineWarnings.None);
 
             // Act
             var update = converter.Convert(data);
@@ -563,7 +555,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(position: 5, playerCarIdx: 0, carIdxLap: new int[64]);
+            var data = CreateMockDataSample(position: 5);
 
             // Act
             var update = converter.Convert(data);
@@ -579,7 +571,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(incidents: -5, playerCarIdx: 0, carIdxLap: new int[64]); // Negative should be clamped to 0
+            var data = CreateMockDataSample(incidents: -5); // Negative should be clamped to 0
 
             // Act
             var update = converter.Convert(data);
@@ -595,7 +587,7 @@ namespace HaddySimHub.Tests
         {
             // Arrange
             var converter = new IRacingDataConverter();
-            var data = CreateMockDataSample(incidents: 3, playerCarIdx: 0, carIdxLap: new int[64]);
+            var data = CreateMockDataSample(incidents: 3);
 
             // Act
             var update = converter.Convert(data);

@@ -1,7 +1,6 @@
 using HaddySimHub.Displays;
 using HaddySimHub.Displays.Dirt2;
 using HaddySimHub.Models;
-using System.Net.Sockets;
 
 namespace HaddySimHub.Tests
 {
@@ -31,11 +30,6 @@ namespace HaddySimHub.Tests
                 clutch = clutch,
                 distance = distance
             };
-        }
-
-        private class MockUdpClientFactory : IUdpClientFactory
-        {
-            public UdpClient Create(int port) => null!;
         }
 
         #region Speed Conversion Tests
