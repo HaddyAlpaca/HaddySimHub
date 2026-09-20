@@ -1,4 +1,4 @@
-app-truck-display {
+haddy-truck-display {
   display: grid;
   grid-template-rows: auto 1fr auto auto;
   height: 100%;
@@ -219,7 +219,7 @@ app-truck-display {
     }
   }
 
-  app-gauge {
+  app-gauge, haddy-gauge {
     height: 100%;
     width: 100%;
     display: flex;
