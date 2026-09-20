@@ -19,7 +19,6 @@ namespace HaddySimHub.Tests
             services.AddHaddySimHubApplication();
             var provider = services.BuildServiceProvider();
 
-            Assert.IsNotNull(provider.GetRequiredService<IDisplayFactory>());
             Assert.IsNotNull(provider.GetRequiredService<DisplaysRunner>());
             Assert.IsNotNull(provider.GetRequiredService<ISseBroadcastService>());
         }
@@ -49,16 +48,15 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
-        public void DisplayFactory_ThrowsOnInvalidGameDisplayDefinition()
+        public void CreateGameDisplay_ThrowsOnInvalidGameDisplayDefinition()
         {
             var services = new ServiceCollection();
             services.AddLogging();
             services.AddHaddySimHubApplication();
             var provider = services.BuildServiceProvider();
-            var factory = provider.GetRequiredService<IDisplayFactory>();
 
             var ex = Assert.Throws<ArgumentException>(() =>
-                factory.CreateGameDisplay(new GameDisplayDefinition<Packet>(string.Empty, "Invalid")));
+                DisplayRegistrationExtensions.CreateGameDisplay(provider, new GameDisplayDefinition<Packet>(string.Empty, "Invalid")));
             StringAssert.Contains(ex.Message, "Process name cannot be empty");
         }
     }

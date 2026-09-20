@@ -4,8 +4,7 @@ namespace HaddySimHub.Displays.Msfs;
 /// The seam between the MSFS provider and the native SimConnect API.
 /// </summary>
 /// <remarks>
-/// Everything that touches <c>SimConnect.dll</c> lives behind this interface, in the
-/// same spirit as <c>ISCSTelemetryFactory</c> and <c>IUdpClientFactory</c>, so the
+/// Everything that touches <c>SimConnect.dll</c> lives behind this interface, so the
 /// provider can be tested without Windows or the simulator.
 /// </remarks>
 public interface ISimConnectClient : IDisposable

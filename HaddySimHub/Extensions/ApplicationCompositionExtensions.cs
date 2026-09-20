@@ -31,10 +31,7 @@ public static class ApplicationCompositionExtensions
         });
         services.AddControllers();
 
-        services.AddSingleton<IUdpClientFactory, UdpClientFactory>();
-        services.AddSingleton<ISCSTelemetryFactory, SCSSdkTelemetryFactory>();
         services.AddSingleton<Displays.Msfs.ISimConnectClient, Displays.Msfs.SimConnectClient>();
-        services.AddSingleton<IDisplayFactory, DisplayFactory>();
         services.AddSingleton<SseBroadcastService>();
         services.AddSingleton<ISseBroadcastService>(sp => sp.GetRequiredService<SseBroadcastService>());
         services.AddSingleton<IDisplayUpdateSender>(sp => sp.GetRequiredService<SseBroadcastService>());

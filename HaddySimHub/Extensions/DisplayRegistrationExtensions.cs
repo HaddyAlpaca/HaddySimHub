@@ -33,11 +33,31 @@ public static class DisplayRegistrationExtensions
         // Register the converter
         services.AddSingleton<IDataConverter<TInput, DisplayUpdate>, TConverter>();
 
-        // Register the display via typed factory creation
-        services.AddSingleton<IDisplay>(sp =>
-            sp.GetRequiredService<IDisplayFactory>().CreateGameDisplay(definition));
+        services.AddSingleton<IDisplay>(sp => CreateGameDisplay(sp, definition));
 
         return services;
+    }
+
+    public static IDisplay CreateGameDisplay<TInput>(
+        IServiceProvider serviceProvider,
+        GameDisplayDefinition<TInput> definition)
+    {
+        ArgumentNullException.ThrowIfNull(serviceProvider);
+        ArgumentNullException.ThrowIfNull(definition);
+        if (string.IsNullOrWhiteSpace(definition.ProcessName))
+        {
+            throw new ArgumentException("Process name cannot be empty.", nameof(definition));
+        }
+        if (string.IsNullOrWhiteSpace(definition.Description))
+        {
+            throw new ArgumentException("Description cannot be empty.", nameof(definition));
+        }
+
+        var provider = serviceProvider.GetRequiredService<IGameDataProvider<TInput>>();
+        var converter = serviceProvider.GetRequiredService<IDataConverter<TInput, DisplayUpdate>>();
+        var sender = serviceProvider.GetRequiredService<IDisplayUpdateSender>();
+
+        return new SimpleGameDisplay<TInput>(definition.ProcessName, definition.Description, provider, converter, sender);
     }
 
     public static IServiceCollection RegisterTestDisplay<TDisplay>(
@@ -52,7 +72,7 @@ public static class DisplayRegistrationExtensions
         }
 
         services.AddSingleton<IDisplay>(sp =>
-            sp.GetRequiredService<IDisplayFactory>().CreateTestDisplay<TDisplay>(id));
+            ActivatorUtilities.CreateInstance<TDisplay>(sp, id));
 
         return services;
     }
