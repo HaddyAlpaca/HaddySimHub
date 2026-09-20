@@ -2,6 +2,7 @@
 @use './app/displays/race-display/race-display.component';
 @use './app/displays/truck-display/truck-display.component';
 @use './app/displays/flight-display/flight-display.component';
+@use './app/shared/connection-status/connection-status.component';
 
 /* You can add global styles to this file, and also import other style files */
 html, body {
@@ -12,9 +13,26 @@ html, body {
   overflow: hidden;
 }
 
-app-root {
+haddy-app {
   display: block;
   height: 100%;
+}
+
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.display {
+  flex: 1;
+  overflow: hidden;
+}
+
+haddy-clock {
+  color: white;
+  text-align: center;
+  font-size: 32px;
 }
 
 html, body { height: 100%; }

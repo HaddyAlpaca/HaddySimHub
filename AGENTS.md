@@ -8,7 +8,7 @@
 - Test with coverage: `dotnet test HaddySimHub.sln --no-restore --collect:"XPlat Code Coverage"`
 - Restore dependencies: `dotnet restore HaddySimHub.sln`
 
-### Frontend (Angular)
+### Frontend (Lit + Vite)
 - Install: `npm install` (from ClientApp directory)
 - Build: `npm run build` (from ClientApp directory)
 - Test: `npm run test_ci` (from ClientApp directory, non-interactive CI mode)
@@ -56,14 +56,14 @@ Then `dotnet build` will use the correct SDK version.
 
 ## Conventions
 
-- The project is a monorepo: backend is ASP.NET Core (root), frontend is Angular (ClientApp/)
+- The project is a monorepo: backend is ASP.NET Core (root), frontend is Lit + Vite (ClientApp/)
   - **Backend structure**: `HaddySimHub/` (main app), `HaddySimHub.Tests/` (tests), `HaddySimHub.Shared/` (shared models)
   - **Frontend structure**: `ClientApp/src/app/` (components, services, displays), `ClientApp/src/assets/` (static files)
   - **Backend entry point**: `HaddySimHub/Program.cs`
   - **Frontend entry point**: `ClientApp/src/index.html` and `ClientApp/src/main.ts`
 - Backend settings: `TreatWarningsAsErrors` is enabled — fix all compiler warnings
 - Frontend uses ESLint with `eslint.config.mjs` and Stylelint for SCSS validation
-- Frontend migration: new Lit custom elements can be embedded in the existing Angular shell; the current incremental migration starts with `haddy-clock` in `ClientApp/src/app/shared/clock/clock.element.ts`. Keep Angular and Lit boundaries explicit until the remaining displays are migrated.
+- Frontend uses Lit custom elements and a Vite shell. The app entrypoint is `ClientApp/src/main.ts`, and the SSE endpoint is proxied by `ClientApp/vite.config.ts`.
 - Logging is excluded from HaddySimHub project (see Logging/** excludes in csproj)
 - **Game display pipeline**: every supported game follows a `provider → converter → display → hub` pattern, registered via `RegisterGameDisplay<>` in `Extensions/ApplicationCompositionExtensions.cs`. See [`HaddySimHub/Displays/README.md`](./HaddySimHub/Displays/README.md) for the full convention and how to add a new game.
 - **Console logging**: the backend writes coloured logs directly to the console and keeps daily log files. Set `HADDYSIMHUB_DEBUG=1` for debug-level logging plus per-frame data logs.

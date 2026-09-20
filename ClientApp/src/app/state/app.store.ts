@@ -1,23 +1,26 @@
-import { computed } from '@angular/core';
-import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
-import { DisplayUpdate, DisplayType } from '../sse.service';
-import { FlightData, RaceData, RallyData, TruckData } from '../displays';
+import { DisplayType, type DisplayUpdate } from '../sse.service';
 
-export const APP_STORE = signalStore(
-  { providedIn: 'root' },
-  withState({
-    displayUpdate: {} as DisplayUpdate,
-  }),
-  withMethods((store) => ({
-    updateDisplay: (displayUpdate: DisplayUpdate): void => {
-      patchState(store, { displayUpdate });
-    },
-  })),
-  withComputed(({ displayUpdate }) => ({
-    displayType: computed(() => displayUpdate().type ?? DisplayType.None),
-    truckData: computed(() => (displayUpdate().data ?? { }) as TruckData),
-    raceData: computed(() => (displayUpdate().data ?? { }) as RaceData),
-    rallyData: computed(() => (displayUpdate().data ?? { }) as RallyData),
-    flightData: computed(() => (displayUpdate().data ?? { }) as FlightData),
-  })),
-);
+type Listener = () => void;
+
+export class AppStore {
+  private _displayUpdate: DisplayUpdate = { type: DisplayType.None, data: undefined };
+  private readonly _listeners = new Set<Listener>();
+
+  public subscribe(listener: Listener): () => void {
+    this._listeners.add(listener);
+    return () => this._listeners.delete(listener);
+  }
+
+  public updateDisplay(displayUpdate: DisplayUpdate): void {
+    this._displayUpdate = displayUpdate;
+    this._listeners.forEach((listener) => listener());
+  }
+
+  public get displayType(): DisplayType {
+    return this._displayUpdate.type ?? DisplayType.None;
+  }
+
+  public get data(): DisplayUpdate['data'] {
+    return this._displayUpdate.data;
+  }
+}

@@ -1,9 +1,8 @@
-# HaddySimHub Client (Angular)
+# HaddySimHub Client (Lit + Vite)
 
 ## Fast dev loop with hot-reload (recommended)
 
-Instead of `ng build` → copying files to `wwwroot` → restarting the backend,
-run the backend once and the frontend using the Angular dev-server with HMR.
+Run the backend once and the frontend using the Vite dev server with HMR.
 
 1. **Start the backend** (from the repository root) and optionally set a test mode directly:
 
@@ -19,7 +18,7 @@ run the backend once and the frontend using the Angular dev-server with HMR.
    npm start
    ```
 
-   Open `http://localhost:4200`. Changes in `src/` are hot-reloaded — no rebuild, copy or backend restart required.
+   Open `http://localhost:5173`. Changes in `src/` are hot-reloaded — no rebuild, copy or backend restart required.
 
 The dev server proxies `/display-data` (SSE endpoint) to the backend on port 3333; see [`proxy.conf.json`](./proxy.conf.json).
 
