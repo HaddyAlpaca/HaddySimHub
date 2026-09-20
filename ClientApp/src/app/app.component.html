@@ -11,7 +11,7 @@
         <app-race-display />
       }
       @case (DisplayType.RallyDashboard) {
-        <app-rally-display />
+        <haddy-rally-display [data]="rallyData()" />
       }
       @case (DisplayType.FlightDashboard) {
         <app-flight-display />
