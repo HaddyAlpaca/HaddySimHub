@@ -1,4 +1,4 @@
-app-race-display {
+haddy-race-display {
   --panel-bg: rgb(255 255 255 / 4%);
   --panel-border: rgb(255 255 255 / 8%);
   --label-color: rgb(180 190 210 / 70%);
@@ -164,7 +164,7 @@ app-race-display {
       box-shadow: 0 0 3vh rgb(255 50 0 / 15%);
     }
 
-    app-speedometer {
+    app-speedometer, haddy-speedometer {
       text-align: center;
       width: 100%;
 
@@ -234,7 +234,7 @@ app-race-display {
 
 
   /* ─── Telemetry trace ─── */
-  app-telemetry-trace {
+  haddy-telemetry-trace {
     min-height: 60px;
   }
 

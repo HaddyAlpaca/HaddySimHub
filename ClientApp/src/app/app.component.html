@@ -8,7 +8,7 @@
         <app-truck-display />
       }
       @case (DisplayType.RaceDashboard) {
-        <app-race-display />
+        <haddy-race-display [data]="raceData()" />
       }
       @case (DisplayType.RallyDashboard) {
         <haddy-rally-display [data]="rallyData()" />
