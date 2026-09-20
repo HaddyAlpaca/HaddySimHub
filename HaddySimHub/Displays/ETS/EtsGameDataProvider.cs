@@ -7,18 +7,12 @@ namespace HaddySimHub.Displays.ETS;
 public class EtsGameDataProvider : IGameDataProvider<SCSTelemetry>
 {
     private SCSSdkTelemetry? _telemetry;
-    private readonly ISCSTelemetryFactory _telemetryFactory;
 
     public event EventHandler<SCSTelemetry>? DataReceived;
 
-    public EtsGameDataProvider(ISCSTelemetryFactory telemetryFactory)
-    {
-        _telemetryFactory = telemetryFactory ?? throw new ArgumentNullException(nameof(telemetryFactory));
-    }
-
     public void Start()
     {
-        _telemetry = _telemetryFactory.Create();
+        _telemetry = new SCSSdkTelemetry();
         _telemetry.Data += HandleTelemetryData;
     }
 

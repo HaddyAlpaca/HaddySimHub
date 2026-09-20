@@ -10,7 +10,6 @@ namespace HaddySimHub.Displays.Dirt2;
 public class Dirt2GameDataProvider : IGameDataProvider<Packet>, IDisposable
 {
     private const int PORT = 20777;
-    private readonly IUdpClientFactory _udpClientFactory;
     private readonly ConcurrentQueue<Packet> _packetQueue = new();
     private readonly object _sync = new();
     private CancellationTokenSource? _cts;
@@ -20,11 +19,6 @@ public class Dirt2GameDataProvider : IGameDataProvider<Packet>, IDisposable
     private bool _disposed;
 
     public event EventHandler<Packet>? DataReceived;
-
-    public Dirt2GameDataProvider(IUdpClientFactory udpClientFactory)
-    {
-        _udpClientFactory = udpClientFactory ?? throw new ArgumentNullException(nameof(udpClientFactory));
-    }
 
     public void Start()
     {
@@ -39,7 +33,7 @@ public class Dirt2GameDataProvider : IGameDataProvider<Packet>, IDisposable
 
             _cts = new CancellationTokenSource();
             _processingTask = Task.Run(() => ProcessPacketsAsync(_cts.Token));
-            _client = _udpClientFactory.Create(PORT);
+            _client = new UdpClient(PORT);
             _senderEndPoint = new IPEndPoint(IPAddress.Any, PORT);
             _client.BeginReceive(ReceiveCallback, null);
         }

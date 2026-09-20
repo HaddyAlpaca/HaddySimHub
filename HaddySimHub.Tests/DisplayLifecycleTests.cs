@@ -3,6 +3,7 @@ using HaddySimHub.Extensions;
 using HaddySimHub.Interfaces;
 using HaddySimHub.Models;
 using Microsoft.Extensions.DependencyInjection;
+using HaddySimHub.Tests.Mocks;
 
 namespace HaddySimHub.Tests;
 
@@ -38,7 +39,9 @@ public class DisplayLifecycleTests
     public void RegisterGameDisplay_RegistersOneDisplayInstance_WhenUsedAsSingleRegistrationPath()
     {
         var services = new ServiceCollection();
-        services.AddSingleton<IDisplayFactory, FakeDisplayFactory>();
+        services.AddSingleton<IGameDataProvider<int>, FakeGameDataProvider>();
+        services.AddSingleton<IDataConverter<int, DisplayUpdate>, FakeDataConverter>();
+        services.AddSingleton<IDisplayUpdateSender, MockDisplayUpdateSender>();
 
         services.RegisterGameDisplay<FakeGameDataProvider, FakeDataConverter, int>(
             new GameDisplayDefinition<int>("fake", "Fake"));
@@ -162,32 +165,5 @@ public class DisplayLifecycleTests
         {
             return new DisplayUpdate { Type = DisplayType.RaceDashboard };
         }
-    }
-
-    private sealed class FakeDisplayFactory : IDisplayFactory
-    {
-        public IDisplay CreateGameDisplay<TTelemetry>(GameDisplayDefinition<TTelemetry> definition)
-        {
-            if (definition.ProcessName != "fake")
-            {
-                throw new InvalidOperationException($"Unknown display process: {definition.ProcessName}");
-            }
-
-            return new FakeDisplay();
-        }
-
-        public TDisplay CreateTestDisplay<TDisplay>(string id) where TDisplay : TestDisplayBase
-        {
-            throw new NotSupportedException("Not needed for this test.");
-        }
-    }
-
-    private sealed class FakeDisplay : IDisplay
-    {
-        public string Description => "Fake";
-        public bool IsActive => false;
-        public DateTime? LastUpdateUtc => null;
-        public void Start() { }
-        public void Stop() { }
     }
 }
