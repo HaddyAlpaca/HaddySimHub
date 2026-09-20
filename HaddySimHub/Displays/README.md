@@ -28,7 +28,7 @@ Providers acquire telemetry in one of three ways:
 | Source | Games | Base / helper |
 |---|---|---|
 | Shared memory | Assetto Corsa, ACC, AC Rally, ETS2/ATS | `SharedMemoryGameDataProviderBase` + `SharedMemoryPage<T>` |
-| UDP | Dirt Rally 2 | `IUdpClientFactory` |
+| UDP | Dirt Rally 2, Forza Horizon 5 | `UdpClient` |
 | Vendor SDK | iRacing, ETS2/ATS | the vendored `iRacingSDK.Net` / `SCSSdkClient` projects |
 | SimConnect | Microsoft Flight Simulator 2020 | `Displays/Msfs/Interop` |
 
@@ -118,6 +118,12 @@ Each game lives in its own folder under `Displays/` (e.g. `Displays/IRacing/`):
    `DisplayDefinitions.Game`.
 5. Register it with `services.RegisterGameDisplay<TProvider, TConverter, T>(...)`
    in `ApplicationCompositionExtensions`.
+
+Forza Horizon 5 must have **Data Out** enabled in its telemetry settings and
+configured to send to UDP port `5300`. FH5 publishes a little-endian Car Dash
+packet with a 323-byte payload (some versions append one trailing byte);
+HaddySimHub maps it to the race dashboard. The packet contains a numeric
+`CarOrdinal`, not a human-readable car name.
 
 ## Debugging a game that "doesn't work"
 

@@ -65,6 +65,24 @@ public sealed record RaceData
     public int SteeringPct { get; init; }
 
     // Optional sim-specific fields
+    /// <summary>Forza only: numeric car identifier from the telemetry packet.</summary>
+    public int? CarOrdinal { get; init; }
+
+    /// <summary>Forza only: performance class from D (0) through X (7).</summary>
+    public int? CarClass { get; init; }
+
+    /// <summary>Forza only: performance index from 100 through 999.</summary>
+    public int? CarPerformanceIndex { get; init; }
+
+    /// <summary>Forza only: drivetrain (0=FWD, 1=RWD, 2=AWD).</summary>
+    public int? DrivetrainType { get; init; }
+
+    public int? NumCylinders { get; init; }
+
+    public float? Power { get; init; }
+
+    public float? Torque { get; init; }
+
     /// <summary>iRacing only: Expected finish position (derived from the assigned car number)</summary>
     public string? ExpectedPosition { get; init; }
 

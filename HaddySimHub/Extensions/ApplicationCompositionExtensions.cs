@@ -43,6 +43,7 @@ public static class ApplicationCompositionExtensions
         services.RegisterGameDisplay<Displays.ACC.ACCGameDataProvider, Displays.ACC.ACCDataConverter, Displays.ACC.ACCTelemetry>(DisplayDefinitions.Game.Acc);
         services.RegisterGameDisplay<Displays.ACRally.ACRallyGameDataProvider, Displays.ACRally.ACRallyDataConverter, Displays.ACRally.ACRallyTelemetry>(DisplayDefinitions.Game.AcRally);
         services.RegisterGameDisplay<Displays.Msfs.MsfsGameDataProvider, Displays.Msfs.MsfsDataConverter, Displays.Msfs.MsfsTelemetry>(DisplayDefinitions.Game.Msfs);
+        services.RegisterGameDisplay<Displays.Forza.ForzaGameDataProvider, Displays.Forza.ForzaDataConverter, Displays.Forza.ForzaTelemetry>(DisplayDefinitions.Game.Forza);
 
         services.AddSingleton<IDataConverter<DisplayUpdate, DisplayUpdate>, IdentityDataConverter<DisplayUpdate>>();
         services.RegisterTestDisplay<Displays.IRacing.TestDisplay>(DisplayDefinitions.TestIds.Race);

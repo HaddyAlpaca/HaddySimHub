@@ -28,6 +28,13 @@ export interface RaceData {
   steeringPct: number;
 
   // Optional sim-specific fields
+  carOrdinal?: number; // Forza only; the UDP packet has no car name
+  carClass?: number; // Forza only; 0=D through 7=X
+  carPerformanceIndex?: number; // Forza only
+  drivetrainType?: number; // Forza only; 0=FWD, 1=RWD, 2=AWD
+  numCylinders?: number; // Forza only
+  power?: number; // Forza only, watts
+  torque?: number; // Forza only, newton metres
   expectedPosition?: string; // iRacing only
   brakeBias?: number; // iRacing, ACC, etc.
   strengthOfField?: number; // iRacing only
