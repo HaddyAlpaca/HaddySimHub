@@ -8,7 +8,7 @@ export class AppComponentHarness extends ComponentHarness {
   }
 
   public async isRaceDisplayVisible(): Promise<boolean> {
-    return this.isVisible('app-race-display');
+    return this.isVisible('haddy-race-display');
   }
 
   public async isRallyDisplayVisible(): Promise<boolean> {
