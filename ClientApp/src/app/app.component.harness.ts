@@ -4,7 +4,7 @@ export class AppComponentHarness extends ComponentHarness {
   public static hostSelector = 'app-root';
 
   public async isTruckDisplayVisible(): Promise<boolean> {
-    return this.isVisible('app-truck-display');
+    return this.isVisible('haddy-truck-display');
   }
 
   public async isRaceDisplayVisible(): Promise<boolean> {

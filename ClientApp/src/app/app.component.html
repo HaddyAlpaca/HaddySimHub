@@ -5,7 +5,7 @@
   <div class="display">
     @switch (type()) {
       @case (DisplayType.TruckDashboard) {
-        <app-truck-display />
+        <haddy-truck-display [data]="truckData()" />
       }
       @case (DisplayType.RaceDashboard) {
         <haddy-race-display [data]="raceData()" />
