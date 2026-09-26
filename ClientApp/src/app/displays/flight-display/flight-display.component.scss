@@ -122,10 +122,90 @@ haddy-flight-display {
     align-items: center;
     overflow: hidden;
 
-    app-attitude-indicator {
-      flex: 1 1 auto;
-      min-height: 0;
-      width: 100%;
+    .attitude {
+      display: block;
+      width: clamp(112px, 24vh, 176px);
+      height: auto;
+      aspect-ratio: 1;
+      flex: 0 0 auto;
+    }
+
+    .sky { fill: #159bd3; }
+    .ground { fill: #c79d73; }
+
+    .horizon-band {
+      fill: none;
+      stroke: #f4f5f6;
+      stroke-width: 8;
+      stroke-linejoin: round;
+    }
+
+    .horizon-trim {
+      fill: none;
+      stroke: #f5de38;
+      stroke-width: 1.5;
+      stroke-linejoin: round;
+    }
+
+    .rung {
+      stroke: #f4f5f6;
+      stroke-width: 1.8;
+
+      &.major { stroke-width: 2.2; }
+    }
+
+    .pitch-label {
+      fill: #f4f5f6;
+      font-size: 13px;
+      font-weight: 700;
+      text-anchor: middle;
+      dominant-baseline: central;
+    }
+
+    .roll-tick {
+      stroke: #f4f5f6;
+      stroke-width: 1.8;
+    }
+
+    .roll-index {
+      fill: #f4f5f6;
+    }
+
+    .flight-reference {
+      stroke: #f5de38;
+      stroke-width: 1.5;
+    }
+
+    .bezel-background {
+      fill: #050607;
+    }
+
+    .bezel {
+      fill: none;
+      stroke: #111315;
+      stroke-width: 3;
+    }
+
+    .aircraft {
+      .aircraft-disc {
+        fill: #f4f5f6;
+        stroke: #191b1d;
+        stroke-width: 2;
+      }
+
+      .aircraft-symbol {
+        fill: #fff;
+        stroke: #191b1d;
+        stroke-width: 1;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+    }
+
+    .slip-ball {
+      fill: #f5a623;
+      stroke: #343a40;
+      stroke-width: 1.5;
     }
 
     .secondary { justify-content: center; }
@@ -139,7 +219,62 @@ haddy-flight-display {
     flex: 0 0 auto;
   }
 
-  .heading-panel app-heading-indicator { margin: auto 0 0.4vh; }
+  .heading-panel {
+    align-items: center;
+
+    .heading-compass {
+      display: block;
+      width: clamp(96px, 16vh, 168px);
+      height: auto;
+      aspect-ratio: 1;
+      flex: 0 0 auto;
+    }
+
+    .compass-bezel {
+      fill: #282b31;
+      stroke: #bdc2ca;
+      stroke-width: 2;
+    }
+
+    .compass-face {
+      fill: #17191d;
+      stroke: #5b6068;
+      stroke-width: 1;
+    }
+
+    .compass-tick {
+      stroke: #f2f3f5;
+      stroke-width: 1;
+
+      &.major { stroke-width: 1.8; }
+    }
+
+    .compass-label {
+      fill: #f2f3f5;
+      font-size: 9px;
+      font-weight: 600;
+
+      &.cardinal {
+        font-size: 12px;
+        font-weight: 700;
+      }
+    }
+
+    .compass-pointer,
+    .compass-aircraft { fill: #f2f3f5; }
+
+    .heading-bug-marker {
+      fill: #7dd3c0;
+      stroke: #17191d;
+      stroke-width: 1;
+    }
+
+    .ground-track-marker {
+      fill: #e94f37;
+      stroke: #17191d;
+      stroke-width: 1;
+    }
+  }
 
   .course-panel {
     &.no-guidance { border-color: rgb(255 255 255 / 15%); }

@@ -16,6 +16,20 @@ test('loads global dashboard styles', async ({ page }) => {
   await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(30, 30, 47)');
 });
 
+test('centers the clock across the viewport', async ({ page }) => {
+  const clockText = page.locator('haddy-clock span');
+  await expect(clockText).toBeVisible();
+
+  const box = await clockText.boundingBox();
+  const viewportWidth = page.viewportSize()?.width;
+
+  if (box === null || viewportWidth === undefined) {
+    throw new Error('Clock text or viewport dimensions are unavailable');
+  }
+
+  expect(Math.abs((box.x + box.width / 2) - viewportWidth / 2)).toBeLessThanOrEqual(1);
+});
+
 test('rejects invalid display updates', async ({ page }) => {
   const invalidType = await page.request.post('http://127.0.0.1:3333/__e2e/display-update', {
     data: { type: 99, data: {} },
@@ -173,4 +187,32 @@ test('renders backend-provided flight data', async ({ page }) => {
 
   await expect(page.locator('haddy-flight-display .speed-panel .primary')).toContainText('268');
   await expect(page.locator('haddy-flight-display .config-panel .aircraft')).toHaveText('E2E Citation');
+  await expect(page.locator('haddy-flight-display .attitude .sky')).toHaveCSS('fill', 'rgb(21, 155, 211)');
+  await expect(page.locator('haddy-flight-display .attitude .ground')).toHaveCSS('fill', 'rgb(199, 157, 115)');
+  await expect(page.locator('haddy-flight-display .attitude .horizon-band')).toHaveCSS('stroke', 'rgb(244, 245, 246)');
+  await expect(page.locator('haddy-flight-display .attitude .horizon-trim')).toHaveCSS('stroke', 'rgb(245, 222, 56)');
+  await expect(page.locator('haddy-flight-display .attitude .bezel-background')).toHaveCSS('fill', 'rgb(5, 6, 7)');
+  await expect(page.locator('haddy-flight-display .attitude')).toHaveCSS('aspect-ratio', '1 / 1');
+  const attitudeBounds = await page.locator('haddy-flight-display .attitude').boundingBox();
+  expect(attitudeBounds?.width).toBeGreaterThan(160);
+  expect(attitudeBounds?.width).toBe(attitudeBounds?.height);
+  const horizonEscapesFace = await page.locator('haddy-flight-display .attitude').evaluate(element => {
+    const bounds = element.getBoundingClientRect();
+    const scale = bounds.width / 200;
+    const hit = document.elementFromPoint(
+      bounds.left + (100 + 40) * scale,
+      bounds.top + (100 + 82) * scale,
+    );
+    return hit?.closest('.attitude-card') != null;
+  });
+  expect(horizonEscapesFace).toBe(false);
+  await expect(page.locator('haddy-flight-display .heading-compass')).toHaveAttribute('aria-label', 'Heading 094 degrees');
+  await expect(page.locator('haddy-flight-display .compass-face')).toHaveCSS('fill', 'rgb(23, 25, 29)');
+  await expect(page.locator('haddy-flight-display .heading-bug-marker')).toHaveCSS('fill', 'rgb(125, 211, 192)');
+  await expect(page.locator('haddy-flight-display .ground-track-marker')).toHaveCSS('fill', 'rgb(233, 79, 55)');
+  await expect(page.locator('haddy-flight-display .compass-tick')).toHaveCount(72);
+  const tickHeight = await page.locator('haddy-flight-display .compass-tick').first().evaluate(element =>
+    element instanceof SVGGraphicsElement ? element.getBBox().height : 0,
+  );
+  expect(tickHeight).toBeGreaterThan(0);
 });

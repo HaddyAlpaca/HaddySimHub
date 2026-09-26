@@ -30,6 +30,44 @@ describe('haddy-flight-display', () => {
     expect(element.querySelector('.nav-panel')?.textContent).toContain('ARTIP');
     expect(element.querySelector('.engine-panel')?.textContent).toContain('N1');
     expect(element.querySelector('.config-panel')?.textContent).toContain('Citation');
+    expect(element.querySelector('.attitude .sky')?.namespaceURI).toBe('http://www.w3.org/2000/svg');
+    expect(element.querySelector('.attitude .ground')?.namespaceURI).toBe('http://www.w3.org/2000/svg');
+    expect(element.querySelector('.attitude .horizon-band')?.namespaceURI).toBe('http://www.w3.org/2000/svg');
+    expect(element.querySelector('.attitude .rung')?.namespaceURI).toBe('http://www.w3.org/2000/svg');
+    expect(element.querySelector('.attitude .roll-tick')?.namespaceURI).toBe('http://www.w3.org/2000/svg');
+    expect(element.querySelectorAll('.attitude .rung')).toHaveLength(4);
+    expect(element.querySelectorAll('.attitude .pitch-label')).toHaveLength(8);
+    expect(element.querySelector('.attitude .flight-reference')?.namespaceURI).toBe('http://www.w3.org/2000/svg');
+    expect(element.querySelector('.attitude .aircraft-symbol')?.namespaceURI).toBe('http://www.w3.org/2000/svg');
+  });
+
+  it('renders a rotating compass rose with heading and track markers', async () => {
+    const element = document.createElement('haddy-flight-display') as FlightDisplayElement;
+    element.data = data();
+    document.body.append(element);
+    await element.updateComplete;
+
+    const compass = element.querySelector('.heading-compass');
+    expect(compass?.getAttribute('aria-label')).toBe('Heading 094 degrees');
+    expect(element.querySelector('.compass-card')?.getAttribute('transform')).toBe('rotate(-94 100 100)');
+    expect(element.querySelectorAll('.compass-tick')).toHaveLength(72);
+    expect(element.querySelector('.compass-tick')?.namespaceURI).toBe('http://www.w3.org/2000/svg');
+    expect([...element.querySelectorAll('.compass-label')].map(label => label.textContent)).toContain('N');
+    expect([...element.querySelectorAll('.compass-label')].map(label => label.textContent)).toContain('E');
+    expect(element.querySelector('.compass-label')?.namespaceURI).toBe('http://www.w3.org/2000/svg');
+    expect(element.querySelector('.heading-bug-marker')).toBeTruthy();
+    expect(element.querySelector('.heading-bug-marker')?.namespaceURI).toBe('http://www.w3.org/2000/svg');
+    expect(element.querySelector('.ground-track-marker')).toBeTruthy();
+    expect(element.querySelector('.ground-track-marker')?.namespaceURI).toBe('http://www.w3.org/2000/svg');
+  });
+
+  it('shows the selected heading bug when the autopilot is disengaged', async () => {
+    const element = document.createElement('haddy-flight-display') as FlightDisplayElement;
+    element.data = data({ autopilotMaster: false });
+    document.body.append(element);
+    await element.updateComplete;
+
+    expect(element.querySelector('.heading-bug-marker')).toBeTruthy();
   });
 
   it('renders warnings and optional guidance state', async () => {
@@ -40,6 +78,7 @@ describe('haddy-flight-display', () => {
     expect(element.querySelector('.speed-panel')?.classList.contains('warning')).toBe(true);
     expect(element.querySelector('.course-panel .needle')).toBeTruthy();
     expect(element.querySelector('.glideslope-marker')).toBeTruthy();
+    expect(element.querySelector('.glideslope-marker')?.namespaceURI).toBe('http://www.w3.org/2000/svg');
   });
 
   it('renders piston and no-engine configuration correctly', async () => {
