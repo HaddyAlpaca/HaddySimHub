@@ -1,4 +1,4 @@
-import { LitElement, html, type TemplateResult } from 'lit';
+import { LitElement, html, svg, type TemplateResult } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { CourseDeviationSource, EngineType, NavToFrom, type FlightData } from './flight-data';
 
@@ -39,7 +39,7 @@ export class FlightDisplayElement extends LitElement {
           <div class="panel altitude-panel"><label>Altitude</label><div class="primary">${numberNl(Math.round(d.indicatedAltitude ?? 0))}<span class="unit">ft</span></div><div class="secondary"><span class="${d.verticalSpeed > 50 ? 'climbing' : d.verticalSpeed < -50 ? 'descending' : ''}"><em>VS</em> ${number(d.verticalSpeed)} fpm</span><span><em>AGL</em> ${numberNl(Math.round(d.altitudeAboveGround ?? 0))}</span><span><em>QNH</em> ${Math.round(d.altimeterSettingHpa ?? 0)}</span></div></div>
         </div>
         <div class="heading-row">
-          <div class="panel heading-panel"><label>Heading</label>${this.heading(d.headingMagnetic ?? 0, d.headingBug, d.groundTrack)}<div class="secondary"><span class="strong">${number(d.headingMagnetic, 0)}&deg;</span><span><em>TRK</em> ${number(d.groundTrack, 0)}&deg;</span><span><em>WIND</em> ${number(d.windDirection, 0)}&deg; / ${number(d.windSpeed)} kts</span></div></div>
+          <div class="panel heading-panel"><label>Heading</label>${this.heading(d.headingMagnetic ?? 0, d.headingBug, d.groundTrack)}<div class="secondary"><span class="strong">${number(d.headingMagnetic, 0)}&deg;</span><span><em>TRK</em> ${number(d.groundTrack)}&deg;</span><span><em>WIND</em> ${number(d.windDirection)}&deg; / ${number(d.windSpeed)} kts</span></div></div>
           <div class="panel course-panel ${guidance ? '' : 'no-guidance'}"><label>Course</label>${guidance ? html`<div class="source-row"><span class="source">${courseName}</span>${d.deviationSourceId ? html`<span class="source-id">${d.deviationSourceId}</span>` : ''}${d.toFrom === NavToFrom.To ? html`<span class="to-from">TO</span>` : d.toFrom === NavToFrom.From ? html`<span class="to-from">FROM</span>` : ''}${d.selectedCourse != null ? html`<span class="reading"><em>CRS</em> ${number(d.selectedCourse)}&deg;</span>` : ''}${d.lateralFullScaleNm != null ? html`<span class="reading"><em>SCALE</em> &plusmn;${d.lateralFullScaleNm} NM</span>` : ''}</div>${this.course(d.lateralDeviation, d.glideslopeDeviation)}` : html`<div class="no-guidance-text">No lateral guidance</div>`}</div>
           <div class="panel autopilot-panel ${d.autopilotMaster ? 'engaged' : ''}"><label>Autopilot</label>${d.autopilotMaster ? html`<div class="mode-row">${(modes.length ? modes : ['CWS']).map(mode => html`<span class="mode ${modes.length ? '' : 'idle'}">${mode}</span>`)}</div><div class="secondary stacked"><span><em>ALT</em> ${numberNl(Math.round(d.altitudeTarget))} ft</span><span><em>HDG</em> ${number(d.headingBug)}&deg;</span>${d.speedHold ? html`<span><em>SPD</em> ${number(d.speedTarget)} kts</span>` : ''}</div>` : html`<div class="mode-row"><span class="mode off">AP OFF</span></div>`}</div>
         </div>
@@ -52,17 +52,137 @@ export class FlightDisplayElement extends LitElement {
   }
 
   private attitude(pitch: number, bank: number, slip: number): TemplateResult {
-    const rungs = [-30, -20, -10, 10, 20, 30];
-    return html`<svg viewBox="0 0 200 200" class="attitude"><defs><clipPath id="attitude-face"><circle cx="100" cy="100" r="88"/></clipPath></defs><g clip-path="url(#attitude-face)" transform="rotate(${-bank} 100 100) translate(0 ${(pitch * 2.4).toFixed(1)})"><rect x="-200" y="-500" width="600" height="600" class="sky"/><rect x="-200" y="100" width="600" height="600" class="ground"/><line x1="-200" y1="100" x2="400" y2="100" class="horizon-line"/>${rungs.map(degrees => html`<line class="rung" x1=${100 - (Math.abs(degrees) === 10 ? 14 : Math.abs(degrees) === 20 ? 22 : 30)} y1=${100 - degrees * 2.4} x2=${100 + (Math.abs(degrees) === 10 ? 14 : Math.abs(degrees) === 20 ? 22 : 30)} y2=${100 - degrees * 2.4}/>` )}</g><circle cx="100" cy="100" r="88" class="bezel"/><g class="aircraft"><line x1="52" y1="100" x2="84" y2="100"/><line x1="116" y1="100" x2="148" y2="100"/><circle cx="100" cy="100" r="3.5"/></g><circle cy="180" r="5.5" class="slip-ball" cx=${100 + Math.max(-1, Math.min(1, slip)) * 22}/></svg>`;
+    const rungs = [-10, -5, 5, 10];
+    const rollTicks = Array.from({ length: 13 }, (_, index) => {
+      const angle = -60 + index * 10;
+      const radians = angle * Math.PI / 180;
+      const major = angle % 30 === 0;
+      const point = (radius: number): { x: number; y: number } => ({
+        x: +(100 + Math.sin(radians) * radius).toFixed(2),
+        y: +(100 - Math.cos(radians) * radius).toFixed(2),
+      });
+      return { start: point(86), end: point(major ? 74 : 79) };
+    });
+    const pitchLadder = rungs.map(degrees => {
+      const major = Math.abs(degrees) === 10;
+      const halfWidth = major ? 34 : 18;
+      const y = 100 - degrees * 4.2;
+      const labelOffset = major ? 45 : 28;
+      return {
+        degrees: Math.abs(degrees),
+        major,
+        y,
+        halfWidth,
+        leftLabelX: 100 - labelOffset,
+        rightLabelX: 100 + labelOffset,
+      };
+    });
+    const slipPosition = 100 + Math.max(-1, Math.min(1, slip)) * 22;
+
+    return html`
+      <svg viewBox="0 0 200 200" class="attitude" role="img"
+        aria-label="Pitch ${number(pitch, 1)} degrees, bank ${number(bank, 1)} degrees">
+        <defs>
+          <clipPath id="attitude-face"><circle cx="100" cy="100" r="87"></circle></clipPath>
+        </defs>
+        <circle cx="100" cy="100" r="98" class="bezel-background"></circle>
+        <g class="attitude-window" clip-path="url(#attitude-face)">
+          <g class="attitude-card"
+          transform="rotate(${-bank} 100 100) translate(0 ${(pitch * 4.2).toFixed(1)})">
+          <rect x="-200" y="-500" width="600" height="600" class="sky"></rect>
+          <rect x="-200" y="100" width="600" height="600" class="ground"></rect>
+          <path class="horizon-band"
+            d="M0 100H32Q41 100 48 104Q53 107 60 107H140Q147 107 152 104Q159 100 168 100H200"></path>
+          <path class="horizon-trim"
+            d="M0 100H32Q41 100 48 104Q53 107 60 107H140Q147 107 152 104Q159 100 168 100H200"></path>
+          ${pitchLadder.map(rung => svg`
+            <line class="rung ${rung.major ? 'major' : ''}"
+              x1=${100 - rung.halfWidth} y1=${rung.y}
+              x2=${100 + rung.halfWidth} y2=${rung.y}></line>
+            <text class="pitch-label" x=${rung.leftLabelX} y=${rung.y}>${rung.degrees}</text>
+            <text class="pitch-label" x=${rung.rightLabelX} y=${rung.y}>${rung.degrees}</text>
+          `)}
+          </g>
+        </g>
+        <line class="flight-reference" x1="100" y1="18" x2="100" y2="182"></line>
+        <g class="roll-scale">
+          ${rollTicks.map(tick => svg`
+            <line class="roll-tick" x1=${tick.start.x} y1=${tick.start.y}
+              x2=${tick.end.x} y2=${tick.end.y}></line>
+          `)}
+        </g>
+        <path class="roll-index" d="M100 9 89 22h22Z"></path>
+        <circle cx="100" cy="100" r="88" class="bezel"></circle>
+        <g class="aircraft">
+          <circle class="aircraft-disc" cx="100" cy="100" r="9"></circle>
+          <path class="aircraft-symbol"
+            d="M100 90 103 98 119 100 119 103 103 102 103 106 109 110 109 112 100 109 91 112 91 110 97 106 97 102 81 103 81 100 97 98Z"></path>
+        </g>
+        <circle class="slip-ball" cx=${slipPosition} cy="180" r="5.5"></circle>
+      </svg>
+    `;
   }
 
-  private heading(heading: number, bug: number, track: number): TemplateResult {
-    const marker = (value: number): number => 300 + Math.max(-48, Math.min(48, ((value - heading + 540) % 360) - 180)) * 6;
-    return html`<svg viewBox="0 0 600 64" class="heading-tape"><rect x="0" y="14" width="600" height="34" rx="4" class="tape-bg"/><polygon points="300,11 293,0 307,0" class="centre-pointer"/><line x1="300" y1="14" x2="300" y2="48" class="centre-line"/><polygon points="-7,9 7,9 7,16 0,21 -7,16" class="bug-marker" transform="translate(${marker(bug)} 0)"/><polygon points="0,43 6,49 0,55 -6,49" class="track-marker" transform="translate(${marker(track)} 0)"/></svg>`;
+  private heading(heading: number, bug: number | undefined, track: number): TemplateResult {
+    const normalizedHeading = ((heading % 360) + 360) % 360;
+    const polarPoint = (bearing: number, radius: number): { x: number; y: number } => {
+      const radians = (bearing - 90) * Math.PI / 180;
+      return {
+        x: +(100 + Math.cos(radians) * radius).toFixed(2),
+        y: +(100 + Math.sin(radians) * radius).toFixed(2),
+      };
+    };
+    const ticks = Array.from({ length: 72 }, (_, index) => {
+      const bearing = index * 5;
+      const major = bearing % 10 === 0;
+      const start = polarPoint(bearing, 84);
+      const end = polarPoint(bearing, major ? 72 : 79);
+      const label = polarPoint(bearing, 60);
+      const text = bearing % 90 === 0
+        ? ['N', 'E', 'S', 'W'][bearing / 90]
+        : bearing % 30 === 0 ? `${bearing / 10}`.padStart(2, '0') : undefined;
+      return { bearing, start, end, label, text };
+    });
+    const marker = (value: number): { x: number; y: number; rotation: number } => {
+      const relativeBearing = ((value - normalizedHeading + 540) % 360) - 180;
+      const point = polarPoint(relativeBearing, 84);
+      return { ...point, rotation: relativeBearing };
+    };
+    const trackMarker = marker(track);
+    const headingBug = bug === undefined ? undefined : marker(bug);
+
+    return html`
+      <svg viewBox="0 0 200 200" class="heading-compass"
+        role="img" aria-label="Heading ${Math.round(normalizedHeading).toString().padStart(3, '0')} degrees">
+        <circle class="compass-bezel" cx="100" cy="100" r="98"></circle>
+        <circle class="compass-face" cx="100" cy="100" r="86"></circle>
+        <g class="compass-card" transform="rotate(${-normalizedHeading} 100 100)">
+          ${ticks.map(tick => svg`
+            <line class="compass-tick ${tick.bearing % 10 === 0 ? 'major' : ''}"
+              x1=${tick.start.x} y1=${tick.start.y} x2=${tick.end.x} y2=${tick.end.y}></line>
+            ${tick.text ? svg`
+              <text class="compass-label ${tick.text.length === 1 ? 'cardinal' : ''}"
+                x=${tick.label.x} y=${tick.label.y}
+                transform="rotate(${normalizedHeading} ${tick.label.x} ${tick.label.y})"
+                text-anchor="middle" dominant-baseline="central">${tick.text}</text>
+            ` : ''}
+          `)}
+        </g>
+        ${headingBug ? svg`
+          <polygon class="heading-bug-marker" points="0,-8 6,6 -6,6"
+            transform="translate(${headingBug.x} ${headingBug.y}) rotate(${headingBug.rotation})"></polygon>
+        ` : ''}
+        <polygon class="ground-track-marker" points="0,-7 5,5 -5,5"
+          transform="translate(${trackMarker.x} ${trackMarker.y}) rotate(${trackMarker.rotation})"></polygon>
+        <polygon class="compass-pointer" points="100,16 94,32 106,32"></polygon>
+        <path class="compass-aircraft"
+          d="M100 66 106 94 135 97 135 103 106 101 104 117 116 122 116 126 100 123 84 126 84 122 96 117 94 101 65 103 65 97 94 94Z"></path>
+      </svg>
+    `;
   }
 
   private course(lateral: number | undefined, glideslope: number | undefined): TemplateResult {
     const x = 170 - Math.max(-1, Math.min(1, lateral ?? 0)) * 120;
-    return html`<svg viewBox="0 0 440 90" class="cdi"><line class="scale-line" x1="38" y1="45" x2="302" y2="45"/><circle class="dot" r="4.5" cx="110" cy="45"/><circle class="dot" r="4.5" cx="230" cy="45"/><line class="needle" y1="8" y2="82" x1=${x} x2=${x}/><g class="aircraft"><line x1="148" y1="45" x2="192" y2="45"/><line x1="170" y1="33" x2="170" y2="57"/></g>${glideslope != null ? html`<polygon class="glideslope-marker" points="0,-9 13,0 0,9 -13,0" transform="translate(390 ${45 + Math.max(-1, Math.min(1, glideslope)) * 32})"/>` : ''}</svg>`;
+    return html`<svg viewBox="0 0 440 90" class="cdi"><line class="scale-line" x1="38" y1="45" x2="302" y2="45"/><circle class="dot" r="4.5" cx="110" cy="45"/><circle class="dot" r="4.5" cx="230" cy="45"/><line class="needle" y1="8" y2="82" x1=${x} x2=${x}/><g class="aircraft"><line x1="148" y1="45" x2="192" y2="45"/><line x1="170" y1="33" x2="170" y2="57"/></g>${glideslope != null ? svg`<polygon class="glideslope-marker" points="0,-9 13,0 0,9 -13,0" transform="translate(390 ${45 + Math.max(-1, Math.min(1, glideslope)) * 32})"/>` : ''}</svg>`;
   }
 }
