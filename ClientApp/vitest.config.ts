@@ -1,8 +1,9 @@
-import { defineConfig } from 'vitest/config';
+import { configDefaults, defineConfig } from 'vitest/config';
 import { playwright } from '@vitest/browser-playwright';
 
 export default defineConfig({
   test: {
+    exclude: [...configDefaults.exclude, 'e2e/**'],
     browser: {
       provider: playwright(),
       enabled: true,

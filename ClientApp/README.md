@@ -4,10 +4,10 @@
 
 Run the backend once and the frontend using the Vite dev server with HMR.
 
-1. **Start the backend** (from the repository root) and optionally set a test mode directly:
+1. **Start the backend** (from the repository root):
 
    ```bash
-   dotnet run --project HaddySimHub --test race    # or: rally / truck
+   dotnet run --project HaddySimHub -- --no-update
    ```
 
    The backend listens on `http://localhost:3333` (including the SSE endpoint `/display-data/stream`).
@@ -42,10 +42,19 @@ npm run analyze:styles
 This is a report-only heuristic. Lit templates can contain dynamic class names,
 so review the output before removing any selector.
 
-## Selecting a test mode
+## End-to-end tests
 
-- Via CLI when starting the backend: `--test race`, `--test rally` or `--test truck` (also `--test=race` works). An unknown value is ignored with a warning.
-- At runtime in the backend console: press `Ctrl+T` to cycle through none → race → rally → truck.
+Run the real frontend and backend together in Chromium without a simulator:
+
+```bash
+npm run test:e2e
+```
+
+Playwright starts the backend with `--e2e` and the Vite development server.
+That backend mode disables game display polling and exposes
+`POST /__e2e/display-update` on loopback only; the tests post a `DisplayUpdate`
+and assert that the corresponding dashboard renders the supplied values. The
+injection route is not registered during normal application runs.
 
 ## Production build to wwwroot
 

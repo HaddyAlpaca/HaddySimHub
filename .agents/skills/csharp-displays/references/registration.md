@@ -13,11 +13,6 @@ public IDisplay Create(string displayTypeName)
             "gameexe",
             "Game Name"),
 
-        "GameName.TestDisplay" => new Game.TestDisplay(
-            "rally",
-            _serviceProvider.GetRequiredService<IDataConverter<DisplayUpdate, DisplayUpdate>>(),
-            _serviceProvider.GetRequiredService<IDisplayUpdateSender>()),
-
         // ... other displays
     };
 }

@@ -15,12 +15,4 @@ public static class DisplayDefinitions
         public static readonly GameDisplayDefinition<Displays.Msfs.MsfsTelemetry> Msfs = new("FlightSimulator", "Microsoft Flight Simulator 2020");
         public static readonly GameDisplayDefinition<Displays.Forza.ForzaTelemetry> Forza = new("ForzaHorizon5", "Forza Horizon 5");
     }
-
-    public static class TestIds
-    {
-        public const string Rally = "rally";
-        public const string Race = "race";
-        public const string Truck = "truck";
-        public const string Flight = "flight";
-    }
 }

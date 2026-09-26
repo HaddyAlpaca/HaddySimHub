@@ -17,16 +17,23 @@ public static class ApplicationCompositionExtensions
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     };
 
-    public static IServiceCollection AddHaddySimHubApplication(this IServiceCollection services)
+    public static IServiceCollection AddHaddySimHubApplication(this IServiceCollection services, bool e2eMode = false)
     {
         services.AddCors(corsOptions =>
         {
             corsOptions.AddDefaultPolicy(policyBuilder =>
             {
                 policyBuilder
-                    .AllowAnyOrigin()
                     .AllowAnyHeader()
                     .AllowAnyMethod();
+                if (e2eMode)
+                {
+                    policyBuilder.WithOrigins("http://127.0.0.1:5173", "http://localhost:5173");
+                }
+                else
+                {
+                    policyBuilder.AllowAnyOrigin();
+                }
             });
         });
         services.AddControllers();
@@ -45,19 +52,16 @@ public static class ApplicationCompositionExtensions
         services.RegisterGameDisplay<Displays.Msfs.MsfsGameDataProvider, Displays.Msfs.MsfsDataConverter, Displays.Msfs.MsfsTelemetry>(DisplayDefinitions.Game.Msfs);
         services.RegisterGameDisplay<Displays.Forza.ForzaGameDataProvider, Displays.Forza.ForzaDataConverter, Displays.Forza.ForzaTelemetry>(DisplayDefinitions.Game.Forza);
 
-        services.AddSingleton<IDataConverter<DisplayUpdate, DisplayUpdate>, IdentityDataConverter<DisplayUpdate>>();
-        services.RegisterTestDisplay<Displays.IRacing.TestDisplay>(DisplayDefinitions.TestIds.Race);
-        services.RegisterTestDisplay<Displays.Dirt2.TestDisplay>(DisplayDefinitions.TestIds.Rally);
-        services.RegisterTestDisplay<Displays.ETS.TestDisplay>(DisplayDefinitions.TestIds.Truck);
-        services.RegisterTestDisplay<Displays.Msfs.TestDisplay>(DisplayDefinitions.TestIds.Flight);
-
         services.AddSingleton<DisplaysRunner>();
-        services.AddHostedService<DisplayRunnerHostedService>();
+        if (!e2eMode)
+        {
+            services.AddHostedService<DisplayRunnerHostedService>();
+        }
 
         return services;
     }
 
-    public static WebApplication ConfigureHaddySimHubPipeline(this WebApplication app)
+    public static WebApplication ConfigureHaddySimHubPipeline(this WebApplication app, bool e2eMode = false)
     {
         app.UseRouting();
         app.UseDefaultFiles();
@@ -98,6 +102,24 @@ public static class ApplicationCompositionExtensions
                 channel.Writer.TryComplete();
             }
         });
+
+        if (e2eMode)
+        {
+            app.MapGet("/__e2e/health", () => Results.Ok());
+            app.MapPost("/__e2e/display-update", async (DisplayUpdate? update, IDisplayUpdateSender sender) =>
+            {
+                if (update is null
+                    || update.Data is not JsonElement { ValueKind: JsonValueKind.Object }
+                    || update.Type == DisplayType.None
+                    || !Enum.IsDefined(update.Type))
+                {
+                    return Results.BadRequest("A valid display type and data object are required.");
+                }
+
+                await sender.SendDisplayUpdate(update);
+                return Results.NoContent();
+            });
+        }
 
         return app;
     }

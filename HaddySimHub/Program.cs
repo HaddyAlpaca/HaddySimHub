@@ -1,20 +1,16 @@
-using HaddySimHub.Infrastructure;
 using HaddySimHub;
+using HaddySimHub.Infrastructure;
 
 public class Program
 {
-    public static string TestId
-    {
-        get => TestModeController.Current;
-        private set => TestModeController.Set(value);
-    }
-
     public static async Task Main(string[] args)
     {
         Logger.Setup();
-        SingleInstanceGuard.StopOtherInstances();
-
-        TestModeController.ApplyArgument(args);
+        var e2eMode = args.Contains("--e2e", StringComparer.Ordinal);
+        if (!e2eMode)
+        {
+            SingleInstanceGuard.StopOtherInstances();
+        }
 
         if (!args.Contains("--no-update"))
         {
@@ -31,19 +27,8 @@ public class Program
             cancellationTokenSource.Cancel();
         };
 
-        var keyInputTask = ConsoleInput.RunAsync(token);
-        var webServer = WebServerHost.Create();
+        var webServer = WebServerHost.Create(e2eMode);
 
         await WebServerHost.RunAsync(webServer, token);
-
-        await cancellationTokenSource.CancelAsync();
-
-        try
-        {
-            await keyInputTask;
-        }
-        catch (OperationCanceledException)
-        {
-        }
     }
 }

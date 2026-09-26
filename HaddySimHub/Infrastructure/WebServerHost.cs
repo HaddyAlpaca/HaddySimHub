@@ -7,17 +7,27 @@ namespace HaddySimHub.Infrastructure;
 
 public static class WebServerHost
 {
-    public static WebApplication Create()
+    public static WebApplication Create(bool e2eMode = false)
     {
         WebApplicationOptions options = new() { ContentRootPath = AppContext.BaseDirectory };
         var builder = WebApplication.CreateBuilder(options);
 
-        builder.WebHost.UseKestrel(options => options.ListenAnyIP(3333));
+        builder.WebHost.UseKestrel(options =>
+        {
+            if (e2eMode)
+            {
+                options.ListenLocalhost(3333);
+            }
+            else
+            {
+                options.ListenAnyIP(3333);
+            }
+        });
 
-        builder.Services.AddHaddySimHubApplication();
+        builder.Services.AddHaddySimHubApplication(e2eMode);
 
         var app = builder.Build();
-        return app.ConfigureHaddySimHubPipeline();
+        return app.ConfigureHaddySimHubPipeline(e2eMode);
     }
 
     public static async Task RunAsync(WebApplication webServer, CancellationToken cancellationToken)

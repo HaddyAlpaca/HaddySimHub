@@ -3,7 +3,10 @@ using HaddySimHub.Displays.Dirt2;
 using HaddySimHub.Extensions;
 using HaddySimHub.Interfaces;
 using HaddySimHub.Models;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace HaddySimHub.Tests
@@ -33,7 +36,7 @@ namespace HaddySimHub.Tests
 
             var displays = provider.GetRequiredService<IEnumerable<IDisplay>>().ToList();
 
-            Assert.AreEqual(12, displays.Count);
+            Assert.AreEqual(8, displays.Count);
             Assert.IsTrue(displays.Any(d => d.Description == "Dirt Rally 2"));
             Assert.IsTrue(displays.Any(d => d.Description == "IRacing"));
             Assert.IsTrue(displays.Any(d => d.Description == "Euro Truck Simulator 2"));
@@ -42,10 +45,36 @@ namespace HaddySimHub.Tests
             Assert.IsTrue(displays.Any(d => d.Description == "Assetto Corsa Rally"));
             Assert.IsTrue(displays.Any(d => d.Description == "Microsoft Flight Simulator 2020"));
             Assert.IsTrue(displays.Any(d => d.Description == "Forza Horizon 5"));
-            Assert.IsTrue(displays.Any(d => d.Description == $"Test display: {DisplayDefinitions.TestIds.Rally}"));
-            Assert.IsTrue(displays.Any(d => d.Description == $"Test display: {DisplayDefinitions.TestIds.Race}"));
-            Assert.IsTrue(displays.Any(d => d.Description == $"Test display: {DisplayDefinitions.TestIds.Truck}"));
-            Assert.IsTrue(displays.Any(d => d.Description == $"Test display: {DisplayDefinitions.TestIds.Flight}"));
+        }
+
+        [TestMethod]
+        public void AddHaddySimHubApplication_InE2eMode_DoesNotStartDisplayRunner()
+        {
+            var services = new ServiceCollection();
+            services.AddLogging();
+            services.AddHaddySimHubApplication(e2eMode: true);
+
+            Assert.IsFalse(services.Any(service => service.ServiceType == typeof(IHostedService)));
+        }
+
+        [TestMethod]
+        public async Task ConfigureHaddySimHubPipeline_MapsInjectionRoutesOnlyInE2eMode()
+        {
+            var normalApp = CreateWebApplication(e2eMode: false);
+            var e2eApp = CreateWebApplication(e2eMode: true);
+
+            try
+            {
+                Assert.IsFalse(HasEndpoint(normalApp, "/__e2e/display-update"));
+                Assert.IsFalse(HasEndpoint(normalApp, "/__e2e/health"));
+                Assert.IsTrue(HasEndpoint(e2eApp, "/__e2e/display-update"));
+                Assert.IsTrue(HasEndpoint(e2eApp, "/__e2e/health"));
+            }
+            finally
+            {
+                await normalApp.DisposeAsync();
+                await e2eApp.DisposeAsync();
+            }
         }
 
         [TestMethod]
@@ -59,6 +88,21 @@ namespace HaddySimHub.Tests
             var ex = Assert.Throws<ArgumentException>(() =>
                 DisplayRegistrationExtensions.CreateGameDisplay(provider, new GameDisplayDefinition<Packet>(string.Empty, "Invalid")));
             StringAssert.Contains(ex.Message, "Process name cannot be empty");
+        }
+
+        private static WebApplication CreateWebApplication(bool e2eMode)
+        {
+            var builder = WebApplication.CreateBuilder();
+            builder.Services.AddHaddySimHubApplication(e2eMode);
+            return builder.Build().ConfigureHaddySimHubPipeline(e2eMode);
+        }
+
+        private static bool HasEndpoint(IEndpointRouteBuilder app, string route)
+        {
+            return app.DataSources
+                .SelectMany(dataSource => dataSource.Endpoints)
+                .OfType<RouteEndpoint>()
+                .Any(endpoint => endpoint.RoutePattern.RawText == route);
         }
     }
 }

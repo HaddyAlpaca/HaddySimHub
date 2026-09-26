@@ -113,6 +113,39 @@ jobs:
           npm --version
           echo "::endgroup::"
 
+  e2e-tests:
+    name: End-to-end tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: ./ClientApp
+    env:
+      node_version: 24.15.0
+      dotnet_version: '10.0.201'
+
+    steps:
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
+
+      - name: Install Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: ${{ env.node_version }}
+
+      - name: Install .NET Core
+        uses: actions/setup-dotnet@87b7050bc53ea08284295505d98d2aa94301e852 # v4.2.0
+        with:
+          dotnet-version: ${{ env.dotnet_version }}
+
+      - name: Install dependencies (with Safe Chain supply chain protection)
+        run: npm run ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run end-to-end tests
+        run: npm run test:e2e
+
   coverage-comment:
     name: Coverage summary
     runs-on: ubuntu-latest

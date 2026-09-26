@@ -59,21 +59,4 @@ public static class DisplayRegistrationExtensions
 
         return new SimpleGameDisplay<TInput>(definition.ProcessName, definition.Description, provider, converter, sender);
     }
-
-    public static IServiceCollection RegisterTestDisplay<TDisplay>(
-        this IServiceCollection services,
-        string id)
-        where TDisplay : TestDisplayBase
-    {
-        ArgumentNullException.ThrowIfNull(services);
-        if (string.IsNullOrWhiteSpace(id))
-        {
-            throw new ArgumentException("Test display id cannot be empty.", nameof(id));
-        }
-
-        services.AddSingleton<IDisplay>(sp =>
-            ActivatorUtilities.CreateInstance<TDisplay>(sp, id));
-
-        return services;
-    }
 }

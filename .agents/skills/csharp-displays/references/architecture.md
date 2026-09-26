@@ -29,6 +29,5 @@ Displays/{Game}/
 ├── {Game}DataConverter.cs       # Converts Packet → DisplayUpdate
 ├── {Game}GameDataProvider.cs   # Reads from game
 ├── {Game}SharedMemoryReader.cs  # (if shared memory)
-├── Display.cs                   # Production display
-└── TestDisplay.cs              # Test display with mock data
+└── Display.cs                   # Production display
 ```
