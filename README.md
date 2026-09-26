@@ -63,7 +63,6 @@ enabled.
 
 Keyboard shortcuts:
 
-* `Ctrl+T` — cycle the test display (`race` → `rally` → `truck` → `flight` → off);
 * `Ctrl+C` — quit.
 
 Environment variables:

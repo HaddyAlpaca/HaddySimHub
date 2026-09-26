@@ -105,8 +105,6 @@ Each game lives in its own folder under `Displays/` (e.g. `Displays/IRacing/`):
 - `*DataConverter.cs` — implements `IDataConverter<T, DisplayUpdate>`.
 - `Display.cs` — the concrete display (often a thin `SimpleGameDisplay<T>` or a
   `DisplayBase<T>` subclass overriding `IsActive`).
-- `TestDisplay.cs` — a `TestDisplayBase` that emits sample data without the game
-  running (see below).
 
 ## Adding a new game
 
@@ -145,14 +143,10 @@ Additional aids:
   `log/<date>-HaddySimHub-data.log` via `Logger.LogData`, wired centrally in
   `DisplayBase`, so converter mapping issues can be diagnosed offline.
 
-## Test displays
+## End-to-end testing
 
-Test displays push sample data so the frontend can be exercised without a game
-running. They are registered with `RegisterTestDisplay<T>(id)` and toggled at
-runtime by pressing `Ctrl+T` in the backend console, which cycles
-`Program.TestId` through `race` → `rally` → `truck` → `flight` → off.
-
-A test display can exist before its game does. `Displays/Msfs/TestDisplay.cs`
-serves the flight dashboard on sample data while the Microsoft Flight Simulator
-provider is still being built, which is what lets the frontend be developed
-against a display type no game feeds yet.
+The frontend dashboards are exercised without a simulator by the Playwright
+suite in `ClientApp/e2e/`. Run `npm run test:e2e` from `ClientApp/`; Playwright
+starts the backend in explicit `--e2e` mode and posts controlled display updates
+to its loopback-only test route, then verifies the rendered dashboard in
+Chromium. The normal game display pipeline is not changed by this test mode.

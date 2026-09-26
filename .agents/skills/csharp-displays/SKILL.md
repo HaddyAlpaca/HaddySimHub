@@ -38,5 +38,4 @@ SignalR Hub → Clients
 | UDP Provider Pattern | [references/pattern-udp-provider.md](references/pattern-udp-provider.md) |
 | Shared Memory Provider Pattern | [references/pattern-sharedmemory-provider.md](references/pattern-sharedmemory-provider.md) |
 | Display Implementation | [references/pattern-display.md](references/pattern-display.md) |
-| Test Display Pattern | [references/pattern-test-display.md](references/pattern-test-display.md) |
 | Registration | [references/registration.md](references/registration.md)
