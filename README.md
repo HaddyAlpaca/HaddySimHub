@@ -8,6 +8,17 @@
 
 HaddySimHub is a tool that reads data from various racing simulators and provides a web-based interface to view real-time information and telemetry. It acts as a central hub for all your sim racing data.
 
+## Architecture and development
+
+- [Architecture overview](docs/architecture.md) — repository structure,
+  runtime flow, boundaries, and extension points.
+- [Documentation index](docs/README.md) — architecture decisions and related
+  guides.
+- [Game display pipeline](HaddySimHub/Displays/README.md) — how to add or
+  debug a simulator integration.
+- [AGENTS.md](AGENTS.md) — SDK versions, build/test commands, conventions, and
+  CI details.
+
 ## Supported Games
 
 Currently, HaddySimHub supports the following games:
