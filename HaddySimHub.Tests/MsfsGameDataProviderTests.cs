@@ -6,8 +6,26 @@ namespace HaddySimHub.Tests;
 [TestClass]
 public class MsfsGameDataProviderTests
 {
-    /// <summary>The provider polls every 10 ms; this is comfortably several ticks.</summary>
+    /// <summary>
+    /// How long a negative test watches for telemetry that must never arrive. Kept
+    /// short because these tests always pay the full window.
+    /// </summary>
     private static readonly TimeSpan PollWindow = TimeSpan.FromMilliseconds(500);
+
+    /// <summary>
+    /// How long a positive test waits for telemetry that must arrive.
+    /// <para>
+    /// The provider delivers on a 10 ms <see cref="Timer"/> callback, so waiting for
+    /// one means waiting on the threadpool to schedule that callback. This assembly
+    /// runs every test method concurrently (<c>Parallelize</c> at method level), so
+    /// a deadline that assumed the callback always lands on schedule turned this
+    /// into a flaky test: a spin-wait here occupies a pool thread for the whole
+    /// window and starves the very timer it is waiting on, and the failure only
+    /// shows up under a full-suite run. Prefer <c>ManualResetEventSlim</c>, which
+    /// parks instead of spinning -- its timeout costs nothing on the happy path.
+    /// </para>
+    /// </summary>
+    private static readonly TimeSpan WaitTimeout = TimeSpan.FromSeconds(5);
 
     [TestMethod]
     public void Constructor_RejectsAMissingClient()
@@ -62,13 +80,18 @@ public class MsfsGameDataProviderTests
         using var provider = new MsfsGameDataProvider(client);
 
         MsfsTelemetry? received = null;
-        provider.DataReceived += (_, telemetry) => received = telemetry;
+        using var signal = new ManualResetEventSlim();
+        provider.DataReceived += (_, telemetry) =>
+        {
+            received = telemetry;
+            signal.Set();
+        };
 
         provider.Start();
         var sent = new MsfsTelemetry { IndicatedAirspeed = 142 };
         client.QueueTelemetry(sent);
 
-        WaitFor(() => received is not null);
+        Assert.IsTrue(signal.Wait(WaitTimeout), "The provider delivered no telemetry block.");
 
         Assert.IsNotNull(received);
         Assert.AreEqual(142, received.Value.IndicatedAirspeed);
@@ -117,15 +140,20 @@ public class MsfsGameDataProviderTests
         using var provider = new MsfsGameDataProvider(client);
 
         var raised = 0;
-        provider.DataReceived += (_, _) => Interlocked.Increment(ref raised);
+        using var signal = new ManualResetEventSlim();
+        provider.DataReceived += (_, _) =>
+        {
+            Interlocked.Increment(ref raised);
+            signal.Set();
+        };
 
         provider.Start();
         provider.Stop();
         provider.Start();
 
         client.QueueTelemetry(new MsfsTelemetry());
-        WaitFor(() => raised > 0);
 
+        Assert.IsTrue(signal.Wait(WaitTimeout), "The provider did not resume polling after Start following Stop.");
         Assert.IsTrue(raised > 0);
     }
 
@@ -164,9 +192,15 @@ public class MsfsGameDataProviderTests
         Assert.ThrowsExactly<ObjectDisposedException>(provider.Start);
     }
 
+    /// <summary>
+    /// Spins until a mock's state changes. Only for conditions nothing signals, so
+    /// it cannot be turned into a parked wait; keep it off the critical path and
+    /// give it <see cref="WaitTimeout"/> rather than the short <see cref="PollWindow"/>,
+    /// because it too is waiting on the provider's 10 ms timer.
+    /// </summary>
     private static void WaitFor(Func<bool> condition)
     {
-        var deadline = DateTime.UtcNow + PollWindow;
+        var deadline = DateTime.UtcNow + WaitTimeout;
         while (DateTime.UtcNow < deadline && !condition())
         {
             Thread.Sleep(10);
