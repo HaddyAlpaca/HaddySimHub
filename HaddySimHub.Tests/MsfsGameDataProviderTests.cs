@@ -151,9 +151,17 @@ public class MsfsGameDataProviderTests
         provider.Stop();
         provider.Start();
 
+        // Two blocks, not one. A single tick after Start satisfies a one-block wait,
+        // so one block would pass even if polling wedged permanently after the first
+        // frame -- which is what happens if Poll's guard is never released.
         client.QueueTelemetry(new MsfsTelemetry());
-
         Assert.IsTrue(signal.Wait(WaitTimeout), "The provider did not resume polling after Start following Stop.");
+        Assert.IsTrue(raised > 0);
+
+        Interlocked.Exchange(ref raised, 0);
+        signal.Reset();
+        client.QueueTelemetry(new MsfsTelemetry());
+        Assert.IsTrue(signal.Wait(WaitTimeout), "The provider delivered one block then stopped polling.");
         Assert.IsTrue(raised > 0);
     }
 
