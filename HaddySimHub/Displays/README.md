@@ -103,8 +103,11 @@ Each game lives in its own folder under `Displays/` (e.g. `Displays/IRacing/`):
 
 - `*GameDataProvider.cs` — implements `IGameDataProvider<T>`.
 - `*DataConverter.cs` — implements `IDataConverter<T, DisplayUpdate>`.
-- `Display.cs` — the concrete display (often a thin `SimpleGameDisplay<T>` or a
-  `DisplayBase<T>` subclass overriding `IsActive`).
+
+Most games need no display class at all: `RegisterGameDisplay` builds a
+`SimpleGameDisplay<T>` from the `GameDisplayDefinition<T>` and the
+provider/converter pair. A game only adds its own display type when it must
+override `IsActive` or the send loop, by subclassing `DisplayBase<T>`.
 
 ## Adding a new game
 
