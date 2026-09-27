@@ -27,14 +27,14 @@
   </ItemGroup>
 
   <!--
-    Frontend integration: on `dotnet publish`, build the Angular client and
+    Frontend integration: on `dotnet publish`, build the Lit/Vite client and
     place its output in wwwroot so the published app is self-contained. This is
     the single source of truth for the "build client + copy to wwwroot" step
     (used by the CD workflow and by anyone running `dotnet publish` locally).
 
     It deliberately hooks into the publish pipeline only, so a plain
     `dotnet build`/`dotnet test` (e.g. the CI server-tests, which have no Node)
-    is unaffected and stays fast. The fast dev loop uses `ng serve` instead.
+    is unaffected and stays fast. The fast dev loop uses `npm start` instead.
 
     Set `-p:BuildClientAppOnPublish=false` to skip it (e.g. publishing on a
     machine without Node).
@@ -42,13 +42,18 @@
   <PropertyGroup>
     <BuildClientAppOnPublish Condition="'$(BuildClientAppOnPublish)' == ''">true</BuildClientAppOnPublish>
     <ClientAppDir>$(MSBuildThisFileDirectory)../ClientApp</ClientAppDir>
-    <ClientAppDist>$(ClientAppDir)/dist/haddy-sim-hub-client/browser</ClientAppDist>
+    <!-- Must match `build.outDir` in ClientApp/vite.config.ts. A stale path here
+         matches nothing and silently publishes a backend with no frontend. -->
+    <ClientAppDist>$(ClientAppDir)/dist/haddy-sim-hub-client</ClientAppDist>
   </PropertyGroup>
 
   <Target Name="PublishClientApp" AfterTargets="ComputeFilesToPublish" Condition="'$(BuildClientAppOnPublish)' == 'true'">
-    <Message Importance="high" Text="Building Angular client app for publish..." />
+    <Message Importance="high" Text="Building Lit/Vite client app for publish..." />
     <Exec Command="npm ci" WorkingDirectory="$(ClientAppDir)" Condition="!Exists('$(ClientAppDir)/node_modules')" />
     <Exec Command="npm run build" WorkingDirectory="$(ClientAppDir)" />
+    <!-- Fail loudly: a glob over a non-existent path yields an empty item group,
+         which would ship a server that serves a 404 for every asset. -->
+    <Error Condition="!Exists('$(ClientAppDist)/index.html')" Text="Client build produced no index.html at '$(ClientAppDist)'. Check 'build.outDir' in ClientApp/vite.config.ts against ClientAppDist in HaddySimHub.csproj." />
     <ItemGroup>
       <_ClientAppDist Include="$(ClientAppDist)/**" />
       <ResolvedFileToPublish Include="@(_ClientAppDist)" Exclude="@(ResolvedFileToPublish)">

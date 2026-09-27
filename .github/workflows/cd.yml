@@ -110,7 +110,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore ${{ env.solution_file }} --runtime win-x64
 
-    # `dotnet publish` builds the Angular client (production) and places it in
+    # `dotnet publish` builds the Lit/Vite client (production) and places it in
     # the app's wwwroot via the PublishClientApp target in HaddySimHub.csproj,
     # so no separate "build client" / "copy to wwwroot" steps are needed here.
     - name: Publish server app
