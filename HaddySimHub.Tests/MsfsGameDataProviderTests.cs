@@ -1,5 +1,8 @@
 using HaddySimHub.Displays.Msfs;
+using HaddySimHub.Capture;
 using HaddySimHub.Tests.Mocks;
+using Microsoft.Extensions.Logging.Abstractions;
+using System.Text.Json.Nodes;
 
 namespace HaddySimHub.Tests;
 
@@ -95,6 +98,41 @@ public class MsfsGameDataProviderTests
 
         Assert.IsNotNull(received);
         Assert.AreEqual(142, received.Value.IndicatedAirspeed);
+    }
+
+    [TestMethod]
+    public void Poll_CapturesRawSimConnectPayloadBeforeTelemetryDelivery()
+    {
+        var directory = Path.Combine(Path.GetTempPath(), "haddysimhub-msfs-capture", Guid.NewGuid().ToString("N"));
+        var rawPayload = new byte[] { 7, 1, 255, 0, 34 };
+        using var capture = new TelemetryCapture(directory, NullLogger<TelemetryCapture>.Instance);
+        var client = new MockSimConnectClient();
+        using var provider = new MsfsGameDataProvider(client, capture);
+        using var signal = new ManualResetEventSlim();
+        provider.DataReceived += (_, _) => signal.Set();
+
+        try
+        {
+            provider.Start();
+            client.QueueTelemetry(new MsfsTelemetry { IndicatedAirspeed = 142 }, rawPayload);
+
+            Assert.IsTrue(signal.Wait(WaitTimeout), "The provider delivered no telemetry block.");
+            provider.Stop();
+            capture.Dispose();
+
+            var frame = JsonNode.Parse(File.ReadAllText(Path.Combine(directory, "msfs.jsonl")))!;
+            Assert.AreEqual("simconnect-api", frame["raw"]!["transport"]!.GetValue<string>());
+            CollectionAssert.AreEqual(
+                rawPayload,
+                Convert.FromBase64String(frame["raw"]!["pages"]!["dispatch"]!.GetValue<string>()));
+        }
+        finally
+        {
+            if (Directory.Exists(directory))
+            {
+                Directory.Delete(directory, recursive: true);
+            }
+        }
     }
 
     [TestMethod]

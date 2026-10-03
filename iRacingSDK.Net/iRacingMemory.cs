@@ -7,6 +7,8 @@ namespace iRacingSDK;
 
 class iRacingMemory
 {
+    private const int SnapshotAttempts = 3;
+
     public MemoryMappedViewAccessor Accessor { get; private set; }
     IntPtr dataValidEvent;
     MemoryMappedFile irsdkMappedMemory;
@@ -58,4 +60,32 @@ class iRacingMemory
     }
 
     public bool WaitForData() => Event.WaitForSingleObject(dataValidEvent, 17) == 0;
+
+    public byte[] ReadRawSnapshot()
+    {
+        var accessor = Accessor ?? throw new InvalidOperationException("iRacing shared memory is not connected.");
+        var headerLength = Marshal.SizeOf<iRSDKHeader>();
+        var headerBefore = new byte[headerLength];
+        var headerAfter = new byte[headerLength];
+
+        for (var attempt = 0; attempt < SnapshotAttempts; attempt++)
+        {
+            accessor.ReadArray(0, headerBefore, 0, headerLength);
+            var snapshot = new byte[checked((int)accessor.Capacity)];
+            accessor.ReadArray(0, snapshot, 0, snapshot.Length);
+            accessor.ReadArray(0, headerAfter, 0, headerLength);
+            if (IsStableSnapshotHeader(headerBefore, snapshot, headerAfter))
+            {
+                return snapshot;
+            }
+        }
+
+        throw new InvalidDataException("iRacing shared-memory header changed while capturing a raw snapshot.");
+    }
+
+    internal static bool IsStableSnapshotHeader(byte[] before, byte[] snapshot, byte[] after) =>
+        before.Length == after.Length &&
+        before.Length <= snapshot.Length &&
+        before.AsSpan().SequenceEqual(after) &&
+        before.AsSpan().SequenceEqual(snapshot.AsSpan(0, before.Length));
 }

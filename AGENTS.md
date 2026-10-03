@@ -2,6 +2,16 @@
 
 ## Build & Test
 
+### Rust prototype
+- Rust 1.92.0 is pinned in `rust/rust-toolchain.toml`.
+- Run Rust commands from `rust/` so the pinned toolchain is selected.
+- Test workspace: `cargo test --workspace --locked`
+- Format check: `cargo fmt --all -- --check`
+- Run a synthetic Slint dashboard: `cargo run -p simhub-app -- race` (also `rally`, `truck`, or `flight`)
+- Linux builds need the Fontconfig development package (`libfontconfig1-dev` on Ubuntu).
+- The Rust/Slint app is a parallel prototype; its synthetic data is not game telemetry.
+- Capture fixtures and layout manifests before porting any game converter or provider.
+
 ### Backend (.NET)
 - Build: `dotnet build HaddySimHub.sln`
 - Test: `dotnet test HaddySimHub.sln --no-restore`
@@ -70,6 +80,7 @@ Then `dotnet build` will use the correct SDK version.
 - **Game display pipeline**: every supported game follows a `provider → converter → display → hub` pattern, registered via `RegisterGameDisplay<>` in `Extensions/ApplicationCompositionExtensions.cs`. See [`HaddySimHub/Displays/README.md`](./HaddySimHub/Displays/README.md) for the full convention and how to add a new game.
 - **Console logging**: the backend writes coloured logs directly to the console and keeps daily log files. Set `HADDYSIMHUB_DEBUG=1` for debug-level logging plus per-frame data logs.
 - **End-to-end tests**: from `ClientApp/`, run `npm run test:e2e`. Playwright starts the backend with `--e2e` (which enables the loopback-only `POST /__e2e/display-update` data injection route and disables game display polling) plus the Vite frontend; no simulator is needed.
+- **Command-line options**: the backend accepts `--e2e`, `--no-update`, `--capture <dir>` and `--help`/`-h`, and rejects anything else rather than starting anyway. They are parsed in `HaddySimHub/Infrastructure/CommandLineOptions.cs`, with the usage text on its `Usage` constant. Keep that text and `CommandLineOptionsTests` in step when adding an option.
 - **Project skills**: shared skills live in `.agents/skills/` and are committed. Claude-specific personal settings and IDE scratch files under `.claude/` stay ignored.
 - **Dependency updates**: CI installs npm packages through Safe Chain (`ClientApp/scripts/safe-chain-wrapper.sh`), which refuses any package below a minimum age of roughly two days. A blocked install fails the **Frontend tests** check with `403 Forbidden - blocked by safe-chain direct download minimum package age` — that is the policy working, not a test failure, so hold the version back instead of skipping the check. Every version held back goes in [`ClientApp/DEPENDENCY-PINS.md`](./ClientApp/DEPENDENCY-PINS.md) with the reason and a removal condition; `overrides` entries especially, because the scheduled `deps-update.yml` workflow preserves that block and `npm outdated` never reveals it. Read that file at the start of every dependency update and drop the entries whose condition has been met.
 - **Backend tests use MSTest**: assert exceptions with `Assert.Throws<T>()`, `Assert.ThrowsExactly<T>()`, or `Assert.ThrowsAsync<T>()`. The legacy `Assert.ThrowsException<T>()` does **not** exist in this MSTest version and will fail to compile.

@@ -1,3 +1,5 @@
+using HaddySimHub.Capture;
+
 namespace HaddySimHub.Displays.ACC;
 
 /// <summary>
@@ -5,11 +7,17 @@ namespace HaddySimHub.Displays.ACC;
 /// </summary>
 public class ACCGameDataProvider : SharedMemoryGameDataProviderBase<ACCSharedMemoryReader, ACCTelemetry>
 {
+    private readonly TelemetryCapture _capture;
     private DateTime _lastDataLog = DateTime.MinValue;
+
+    public ACCGameDataProvider(TelemetryCapture capture)
+    {
+        _capture = capture;
+    }
 
     protected override string ProviderName => "ACC";
 
-    protected override ACCSharedMemoryReader CreateReader() => new();
+    protected override ACCSharedMemoryReader CreateReader() => new(_capture);
 
     protected override bool HasDataChanged(ACCTelemetry current, ACCTelemetry last)
     {

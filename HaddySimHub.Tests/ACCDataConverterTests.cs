@@ -22,6 +22,14 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
+        public void HasPacketGapDetectsMissedRawSharedMemoryFrames()
+        {
+            Assert.IsTrue(ACCSharedMemoryReader.HasPacketGap(10, 12));
+            Assert.IsFalse(ACCSharedMemoryReader.HasPacketGap(10, 11));
+            Assert.IsFalse(ACCSharedMemoryReader.HasPacketGap(12, 10));
+        }
+
+        [TestMethod]
         public void Convert_ReturnsRaceDashboard()
         {
             var converter = new ACCDataConverter();

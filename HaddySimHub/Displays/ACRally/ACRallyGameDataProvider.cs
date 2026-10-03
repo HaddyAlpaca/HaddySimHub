@@ -1,3 +1,5 @@
+using HaddySimHub.Capture;
+
 namespace HaddySimHub.Displays.ACRally;
 
 /// <summary>
@@ -5,7 +7,14 @@ namespace HaddySimHub.Displays.ACRally;
 /// </summary>
 public class ACRallyGameDataProvider : SharedMemoryGameDataProviderBase<ACRallySharedMemoryReader, ACRallyTelemetry>
 {
-    protected override ACRallySharedMemoryReader CreateReader() => new();
+    private readonly TelemetryCapture? _capture;
+
+    public ACRallyGameDataProvider(TelemetryCapture? capture = null)
+    {
+        _capture = capture;
+    }
+
+    protected override ACRallySharedMemoryReader CreateReader() => new(_capture);
 
     protected override bool HasDataChanged(ACRallyTelemetry current, ACRallyTelemetry last)
     {

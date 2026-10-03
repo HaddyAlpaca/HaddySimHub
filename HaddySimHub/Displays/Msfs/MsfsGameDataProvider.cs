@@ -1,4 +1,5 @@
 using HaddySimHub.Interfaces;
+using HaddySimHub.Capture;
 
 namespace HaddySimHub.Displays.Msfs;
 
@@ -21,6 +22,7 @@ public sealed class MsfsGameDataProvider : IGameDataProvider<MsfsTelemetry>, IDi
     private const string ProviderName = "Msfs";
 
     private readonly ISimConnectClient _client;
+    private readonly TelemetryCapture? _capture;
     private readonly Timer _timer;
 
     private int _consecutiveMissedConnections;
@@ -29,9 +31,10 @@ public sealed class MsfsGameDataProvider : IGameDataProvider<MsfsTelemetry>, IDi
 
     public event EventHandler<MsfsTelemetry>? DataReceived;
 
-    public MsfsGameDataProvider(ISimConnectClient client)
+    public MsfsGameDataProvider(ISimConnectClient client, TelemetryCapture? capture = null)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
+        _capture = capture;
         _timer = new Timer(Poll, null, Timeout.Infinite, Timeout.Infinite);
     }
 
@@ -102,7 +105,8 @@ public sealed class MsfsGameDataProvider : IGameDataProvider<MsfsTelemetry>, IDi
 
             _consecutiveMissedConnections = 0;
 
-            if (_client.TryReadTelemetry(out var telemetry))
+            var rawPayloadReceived = _capture?.Enabled == true ? CaptureRawPayload : null;
+            if (_client.TryReadTelemetry(out var telemetry, rawPayloadReceived))
             {
                 DataReceived?.Invoke(this, telemetry);
             }
@@ -116,6 +120,13 @@ public sealed class MsfsGameDataProvider : IGameDataProvider<MsfsTelemetry>, IDi
             Interlocked.Exchange(ref _polling, 0);
         }
     }
+
+    private void CaptureRawPayload(byte[] bytes) =>
+        _capture?.RecordRawFrame(
+            "msfs",
+            "simconnect-api",
+            "SimConnect_RECV_SIMOBJECT_DATA",
+            new Dictionary<string, byte[]> { ["dispatch"] = bytes });
 
     /// <summary>
     /// Mirrors the shared memory providers: the first miss is a warning, so a running

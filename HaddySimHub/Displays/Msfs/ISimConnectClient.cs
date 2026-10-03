@@ -23,5 +23,5 @@ public interface ISimConnectClient : IDisposable
     /// Drains the dispatch queue and returns the most recent telemetry block, if the
     /// sim sent one since the last call.
     /// </summary>
-    bool TryReadTelemetry(out MsfsTelemetry telemetry);
+    bool TryReadTelemetry(out MsfsTelemetry telemetry, Action<byte[]>? rawPayloadReceived = null);
 }

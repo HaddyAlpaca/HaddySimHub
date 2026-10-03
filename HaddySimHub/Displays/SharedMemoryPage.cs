@@ -24,6 +24,7 @@ public sealed class SharedMemoryPage<T> : IDisposable
     where T : struct
 {
     private static readonly TimeSpan RetryInterval = TimeSpan.FromSeconds(1);
+    private const int StableReadAttempts = 3;
 
     private readonly string _mapName;
     private readonly string _description;
@@ -61,7 +62,7 @@ public sealed class SharedMemoryPage<T> : IDisposable
 #pragma warning disable CA1416 // Validate platform compatibility
             _file = MemoryMappedFile.OpenExisting(_mapName, MemoryMappedFileRights.Read);
 #pragma warning restore CA1416 // Validate platform compatibility
-            _accessor = _file.CreateViewAccessor(0, _size, MemoryMappedFileAccess.Read);
+            _accessor = _file.CreateViewAccessor(0, 0, MemoryMappedFileAccess.Read);
         }
         catch (FileNotFoundException)
         {
@@ -81,14 +82,21 @@ public sealed class SharedMemoryPage<T> : IDisposable
     }
 
     /// <exception cref="InvalidOperationException">The page is not mapped.</exception>
-    public T Read()
+    public T Read() => Read(out _);
+
+    /// <summary>
+    /// Reads and decodes one snapshot, returning the exact bytes used for decoding.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">The page is not mapped.</exception>
+    public T Read(out byte[] bytes, bool captureFullPage = false)
     {
         var accessor = _accessor ?? throw new InvalidOperationException($"{_description} is not mapped.");
 
-        var buffer = new byte[_size];
-        accessor.ReadArray(0, buffer, 0, buffer.Length);
+        var byteCount = captureFullPage ? checked((int)accessor.Capacity) : _size;
+        bytes = new byte[byteCount];
+        accessor.ReadArray(0, bytes, 0, bytes.Length);
 
-        var handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+        var handle = GCHandle.Alloc(bytes, GCHandleType.Pinned);
         try
         {
             return Marshal.PtrToStructure<T>(handle.AddrOfPinnedObject());
@@ -97,6 +105,29 @@ public sealed class SharedMemoryPage<T> : IDisposable
         {
             handle.Free();
         }
+    }
+
+    /// <summary>
+    /// Reads until two adjacent copies of the mapped page are byte-identical.
+    /// </summary>
+    public bool TryReadStable(out T telemetry, out byte[] bytes, bool captureFullPage = false)
+    {
+        telemetry = default;
+        bytes = [];
+
+        for (var attempt = 0; attempt < StableReadAttempts; attempt++)
+        {
+            _ = Read(out var first, captureFullPage);
+            var current = Read(out var currentBytes, captureFullPage);
+            if (first.AsSpan().SequenceEqual(currentBytes))
+            {
+                telemetry = current;
+                bytes = currentBytes;
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void Close()

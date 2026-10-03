@@ -67,6 +67,8 @@ namespace SCSSdkClient
 
         public event TelemetryData? Data;
 
+        public event Action<byte[]>? RawDataReceived;
+
         public event EventHandler? JobStarted;
 
         public event EventHandler? JobCancelled;
@@ -94,7 +96,7 @@ namespace SCSSdkClient
         }
 
         private void _updateTimer_Elapsed(object? sender) {
-            var scsTelemetry = SharedMemory.Update<SCSTelemetry>();
+            var scsTelemetry = SharedMemory.Update<SCSTelemetry>(bytes => RawDataReceived?.Invoke(bytes));
 
             if (scsTelemetry == null) {
                 return;

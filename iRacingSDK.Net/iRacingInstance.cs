@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Buffers.Binary;
 using iRacingSDK.Support;
 
 namespace iRacingSDK;
@@ -23,6 +24,9 @@ public class iRacingConnection
     public readonly PitCommand PitCommand;
 
     public bool IsConnected { get; private set; }
+
+    public event Action<byte[]> RawDataReceived;
+    public event Action<string> RawCaptureIncomplete;
 
     public event Action Connected
     {
@@ -99,6 +103,7 @@ public class iRacingConnection
             dataFeed = new DataFeed(iRacingMemory.Accessor);
 
         var nextTickCount = 0;
+        int? lastCapturedTickCount = null;
         var lastTickTime = DateTime.Now;
 
         var watchProcessingTime = new Stopwatch();
@@ -107,11 +112,50 @@ public class iRacingConnection
         while (true)
         {
             watchWaitingTime.Restart();
-            iRacingMemory.WaitForData();
+            var dataSignaled = iRacingMemory.WaitForData();
             waitingTime = watchWaitingTime.ElapsedTicks;
 
             watchProcessingTime.Restart();
 
+            if (dataSignaled && (RawDataReceived is not null || RawCaptureIncomplete is not null))
+            {
+                byte[] rawSnapshot;
+                try
+                {
+                    rawSnapshot = iRacingMemory.ReadRawSnapshot();
+                }
+                catch (InvalidDataException)
+                {
+                    RawCaptureIncomplete?.Invoke("source-snapshot-unstable:iracing");
+                    rawSnapshot = null;
+                }
+                catch (Exception ex)
+                {
+                    RawCaptureIncomplete?.Invoke($"source-read-failed:iracing:{ex.GetType().Name}");
+                    throw;
+                }
+
+                if (rawSnapshot is not null)
+                {
+                    var hasTickCount = TryGetLatestTickCount(rawSnapshot, out var tickCount);
+                    RawDataReceived?.Invoke(rawSnapshot);
+
+                    if (!hasTickCount)
+                    {
+                        RawCaptureIncomplete?.Invoke("source-header-invalid:iracing");
+                    }
+                    else
+                    {
+                        if (lastCapturedTickCount is int previousTickCount &&
+                            HasTickGap(previousTickCount, tickCount))
+                        {
+                            RawCaptureIncomplete?.Invoke($"source-gap:iracing:{previousTickCount}-{tickCount}");
+                        }
+
+                        lastCapturedTickCount = tickCount;
+                    }
+                }
+            }
             var data = dataFeed.GetNextDataSample(nextTickCount, logging);
             if (data != null)
             {
@@ -135,4 +179,36 @@ public class iRacingConnection
             }
         }
     }
+
+    internal static bool TryGetLatestTickCount(byte[] snapshot, out int tickCount)
+    {
+        const int numBuffersOffset = 32;
+        const int buffersOffset = 48;
+        const int bufferStride = 16;
+        tickCount = 0;
+
+        if (snapshot.Length < buffersOffset + bufferStride)
+        {
+            return false;
+        }
+
+        var numBuffers = BinaryPrimitives.ReadInt32LittleEndian(snapshot.AsSpan(numBuffersOffset, sizeof(int)));
+        if (numBuffers is < 1 or > 4 || snapshot.Length < buffersOffset + numBuffers * bufferStride)
+        {
+            return false;
+        }
+
+        tickCount = BinaryPrimitives.ReadInt32LittleEndian(snapshot.AsSpan(buffersOffset, sizeof(int)));
+        for (var index = 1; index < numBuffers; index++)
+        {
+            var offset = buffersOffset + index * bufferStride;
+            tickCount = Math.Max(tickCount, BinaryPrimitives.ReadInt32LittleEndian(snapshot.AsSpan(offset, sizeof(int))));
+        }
+
+        return true;
+    }
+
+    internal static bool HasTickGap(int previousTickCount, int currentTickCount) =>
+        currentTickCount > previousTickCount &&
+        currentTickCount - previousTickCount > 1;
 }

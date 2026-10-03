@@ -1,3 +1,5 @@
+using HaddySimHub.Capture;
+
 namespace HaddySimHub.Displays.ACRally;
 
 /// <summary>
@@ -20,8 +22,15 @@ public sealed class ACRallySharedMemoryReader : ISharedMemoryTelemetryReader<ACR
     private readonly SharedMemoryPage<ACRallyPhysics> _physics = new(PhysicsMemoryName, "[ACRally] physics");
     private readonly SharedMemoryPage<ACRallyGraphics> _graphics = new(GraphicsMemoryName, "[ACRally] graphics");
     private readonly SharedMemoryPage<ACRallyStatic> _static = new(StaticMemoryName, "[ACRally] static");
+    private readonly TelemetryCapture? _capture;
 
     private bool _staticLogged;
+    private int? _lastPacketId;
+
+    public ACRallySharedMemoryReader(TelemetryCapture? capture = null)
+    {
+        _capture = capture;
+    }
 
     /// <summary>
     /// True once the pages carrying live telemetry are mapped. The static page is
@@ -54,8 +63,27 @@ public sealed class ACRallySharedMemoryReader : ISharedMemoryTelemetryReader<ACR
 
         try
         {
-            var physics = _physics.Read();
-            var graphics = _graphics.Read();
+            var capturing = _capture?.Enabled == true;
+            ACRallyPhysics physics;
+            ACRallyGraphics graphics;
+            byte[] physicsBytes;
+            byte[] graphicsBytes;
+            if (capturing)
+            {
+                if (!_physics.TryReadStable(out physics, out physicsBytes, captureFullPage: true) ||
+                    !_graphics.TryReadStable(out graphics, out graphicsBytes, captureFullPage: true))
+                {
+                    _capture!.MarkIncomplete("source-page-unstable:acrally");
+                    return false;
+                }
+            }
+            else
+            {
+                physics = _physics.Read();
+                graphics = _graphics.Read();
+                physicsBytes = [];
+                graphicsBytes = [];
+            }
 
             // The static page is written once per session. Missing it costs only the
             // rev limit and stage length, both of which have physics/graphics fallbacks,
@@ -65,7 +93,41 @@ public sealed class ACRallySharedMemoryReader : ISharedMemoryTelemetryReader<ACR
                 _static.TryOpen();
             }
 
-            var staticInfo = _static.IsConnected ? _static.Read() : default;
+            byte[] staticBytes = [];
+            var staticInfo = _static.IsConnected
+                ? _static.Read(out staticBytes, captureFullPage: capturing)
+                : default;
+            if (capturing)
+            {
+                if (!_static.IsConnected)
+                {
+                    _capture!.MarkIncomplete("source-page-unavailable:acrally:static");
+                    return false;
+                }
+
+                _capture!.RecordRawFrame(
+                    "acrally",
+                    "shared-memory",
+                    $"{PhysicsMemoryName} + {GraphicsMemoryName} + {StaticMemoryName}",
+                    new Dictionary<string, byte[]>
+                    {
+                        ["physics"] = physicsBytes,
+                        ["graphics"] = graphicsBytes,
+                        ["static"] = staticBytes,
+                    });
+
+                if (physics.PacketId != graphics.PacketId)
+                {
+                    _capture.MarkIncomplete($"source-pages-mismatched:acrally:{physics.PacketId}-{graphics.PacketId}");
+                }
+                else if (_lastPacketId is int previousPacketId &&
+                         HaddySimHub.Displays.ACC.ACCSharedMemoryReader.HasPacketGap(previousPacketId, physics.PacketId))
+                {
+                    _capture.MarkIncomplete($"source-gap:acrally:{previousPacketId}-{physics.PacketId}");
+                }
+
+                _lastPacketId = physics.PacketId;
+            }
 
             if (_static.IsConnected && !_staticLogged)
             {

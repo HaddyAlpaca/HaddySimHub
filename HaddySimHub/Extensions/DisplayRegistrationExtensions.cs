@@ -30,7 +30,6 @@ public static class DisplayRegistrationExtensions
         // Register the provider
         services.AddSingleton<IGameDataProvider<TInput>, TProvider>();
 
-        // Register the converter
         services.AddSingleton<IDataConverter<TInput, DisplayUpdate>, TConverter>();
 
         services.AddSingleton<IDisplay>(sp => CreateGameDisplay(sp, definition));

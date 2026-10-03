@@ -44,7 +44,7 @@ public class DisplayLifecycleTests
         services.AddSingleton<IDisplayUpdateSender, MockDisplayUpdateSender>();
 
         services.RegisterGameDisplay<FakeGameDataProvider, FakeDataConverter, int>(
-            new GameDisplayDefinition<int>("fake", "Fake"));
+            new GameDisplayDefinition<int>("fake", "Fake", "fake"));
 
         var serviceProvider = services.BuildServiceProvider();
         var displays = serviceProvider.GetServices<IDisplay>().ToList();

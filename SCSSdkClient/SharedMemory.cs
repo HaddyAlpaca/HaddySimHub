@@ -96,10 +96,11 @@ namespace SCSSdkClient {
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public SCSTelemetry Update<T>() {
+        public SCSTelemetry Update<T>(Action<byte[]>? rawDataRead = null) {
             Update();
 
             // Convert the data to our object.
+            rawDataRead?.Invoke((byte[])RawData.Clone());
             return ToObject<T>(RawData);
         }
 

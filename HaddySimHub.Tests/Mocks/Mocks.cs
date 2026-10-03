@@ -10,6 +10,7 @@ namespace HaddySimHub.Tests.Mocks
     public class MockSimConnectClient : HaddySimHub.Displays.Msfs.ISimConnectClient
     {
         private HaddySimHub.Displays.Msfs.MsfsTelemetry? _pending;
+        private byte[]? _pendingRawPayload;
 
         public bool IsConnected { get; private set; }
 
@@ -35,14 +36,26 @@ namespace HaddySimHub.Tests.Mocks
         }
 
         /// <summary>Queues one telemetry block for the next read, as a dispatch would.</summary>
-        public void QueueTelemetry(HaddySimHub.Displays.Msfs.MsfsTelemetry telemetry) => _pending = telemetry;
+        public void QueueTelemetry(HaddySimHub.Displays.Msfs.MsfsTelemetry telemetry, byte[]? rawPayload = null)
+        {
+            _pending = telemetry;
+            _pendingRawPayload = rawPayload;
+        }
 
-        public bool TryReadTelemetry(out HaddySimHub.Displays.Msfs.MsfsTelemetry telemetry)
+        public bool TryReadTelemetry(
+            out HaddySimHub.Displays.Msfs.MsfsTelemetry telemetry,
+            Action<byte[]>? rawPayloadReceived = null)
         {
             if (_pending is null)
             {
                 telemetry = default;
                 return false;
+            }
+
+            if (_pendingRawPayload is not null)
+            {
+                rawPayloadReceived?.Invoke(_pendingRawPayload);
+                _pendingRawPayload = null;
             }
 
             telemetry = _pending.Value;

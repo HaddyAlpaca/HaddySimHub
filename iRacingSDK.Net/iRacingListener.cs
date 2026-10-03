@@ -50,6 +50,18 @@ public class iRacingEvents : IDisposable
         remove { newData.Event -= value; }
     }
 
+    public event Action<byte[]> RawDataReceived
+    {
+        add { instance.RawDataReceived += value; }
+        remove { instance.RawDataReceived -= value; }
+    }
+
+    public event Action<string> RawCaptureIncomplete
+    {
+        add { instance.RawCaptureIncomplete += value; }
+        remove { instance.RawCaptureIncomplete -= value; }
+    }
+
     public event Action<DataSample> NewSessionData
     {
         add { newSessionData.Event += value; }

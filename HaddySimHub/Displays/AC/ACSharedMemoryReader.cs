@@ -1,3 +1,5 @@
+using HaddySimHub.Capture;
+
 namespace HaddySimHub.Displays.AC;
 
 /// <summary>
@@ -17,8 +19,15 @@ public sealed class ACSharedMemoryReader : ISharedMemoryTelemetryReader<ACTeleme
     private readonly SharedMemoryPage<ACPhysics> _physics = new(PhysicsMemoryName, "[AC] physics");
     private readonly SharedMemoryPage<ACGraphics> _graphics = new(GraphicsMemoryName, "[AC] graphics");
     private readonly SharedMemoryPage<ACStatic> _static = new(StaticMemoryName, "[AC] static");
+    private readonly TelemetryCapture? _capture;
 
     private bool _staticLogged;
+    private int? _lastPacketId;
+
+    public ACSharedMemoryReader(TelemetryCapture? capture = null)
+    {
+        _capture = capture;
+    }
 
     /// <summary>
     /// True once the pages carrying live telemetry are mapped. The static page is
@@ -51,8 +60,27 @@ public sealed class ACSharedMemoryReader : ISharedMemoryTelemetryReader<ACTeleme
 
         try
         {
-            var physics = _physics.Read();
-            var graphics = _graphics.Read();
+            var capturing = _capture?.Enabled == true;
+            ACPhysics physics;
+            ACGraphics graphics;
+            byte[] physicsBytes;
+            byte[] graphicsBytes;
+            if (capturing)
+            {
+                if (!_physics.TryReadStable(out physics, out physicsBytes, captureFullPage: true) ||
+                    !_graphics.TryReadStable(out graphics, out graphicsBytes, captureFullPage: true))
+                {
+                    _capture!.MarkIncomplete("source-page-unstable:ac");
+                    return false;
+                }
+            }
+            else
+            {
+                physics = _physics.Read();
+                graphics = _graphics.Read();
+                physicsBytes = [];
+                graphicsBytes = [];
+            }
 
             // The static page is written once per session, so keep trying for it
             // while the live pages already stream.
@@ -61,7 +89,41 @@ public sealed class ACSharedMemoryReader : ISharedMemoryTelemetryReader<ACTeleme
                 _static.TryOpen();
             }
 
-            var staticInfo = _static.IsConnected ? _static.Read() : default;
+            byte[] staticBytes = [];
+            var staticInfo = _static.IsConnected
+                ? _static.Read(out staticBytes, captureFullPage: capturing)
+                : default;
+            if (capturing)
+            {
+                if (!_static.IsConnected)
+                {
+                    _capture!.MarkIncomplete("source-page-unavailable:ac:static");
+                    return false;
+                }
+
+                _capture!.RecordRawFrame(
+                    "ac",
+                    "shared-memory",
+                    $"{PhysicsMemoryName} + {GraphicsMemoryName} + {StaticMemoryName}",
+                    new Dictionary<string, byte[]>
+                    {
+                        ["physics"] = physicsBytes,
+                        ["graphics"] = graphicsBytes,
+                        ["static"] = staticBytes,
+                    });
+
+                if (physics.PacketId != graphics.PacketId)
+                {
+                    _capture.MarkIncomplete($"source-pages-mismatched:ac:{physics.PacketId}-{graphics.PacketId}");
+                }
+                else if (_lastPacketId is int previousPacketId &&
+                         HaddySimHub.Displays.ACC.ACCSharedMemoryReader.HasPacketGap(previousPacketId, physics.PacketId))
+                {
+                    _capture.MarkIncomplete($"source-gap:ac:{previousPacketId}-{physics.PacketId}");
+                }
+
+                _lastPacketId = physics.PacketId;
+            }
 
             if (_static.IsConnected && !_staticLogged)
             {

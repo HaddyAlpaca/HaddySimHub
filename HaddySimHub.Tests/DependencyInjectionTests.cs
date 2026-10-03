@@ -3,11 +3,14 @@ using HaddySimHub.Displays.Dirt2;
 using HaddySimHub.Extensions;
 using HaddySimHub.Interfaces;
 using HaddySimHub.Models;
+using HaddySimHub.Capture;
+using HaddySimHub.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.Text.Json.Nodes;
 
 namespace HaddySimHub.Tests
 {
@@ -78,6 +81,32 @@ namespace HaddySimHub.Tests
         }
 
         [TestMethod]
+        public async Task WebServerHostRunAsync_DisposesCaptureAfterShutdown()
+        {
+            var captureDirectory = Path.Combine(Path.GetTempPath(), "haddysimhub-capture", Guid.NewGuid().ToString("N"));
+            var webServer = WebServerHost.Create(captureDirectory: captureDirectory);
+            _ = webServer.Services.GetRequiredService<TelemetryCapture>();
+            using var cancellation = new CancellationTokenSource();
+            cancellation.Cancel();
+
+            try
+            {
+                await WebServerHost.RunAsync(webServer, cancellation.Token);
+
+                var statusPath = Directory.GetFiles(captureDirectory, "capture-status-*.json").Single();
+                var status = JsonNode.Parse(File.ReadAllText(statusPath))!;
+                Assert.AreEqual("complete", status["status"]!.GetValue<string>());
+            }
+            finally
+            {
+                if (Directory.Exists(captureDirectory))
+                {
+                    Directory.Delete(captureDirectory, recursive: true);
+                }
+            }
+        }
+
+        [TestMethod]
         public void CreateGameDisplay_ThrowsOnInvalidGameDisplayDefinition()
         {
             var services = new ServiceCollection();
@@ -86,7 +115,7 @@ namespace HaddySimHub.Tests
             var provider = services.BuildServiceProvider();
 
             var ex = Assert.Throws<ArgumentException>(() =>
-                DisplayRegistrationExtensions.CreateGameDisplay(provider, new GameDisplayDefinition<Packet>(string.Empty, "Invalid")));
+                DisplayRegistrationExtensions.CreateGameDisplay(provider, new GameDisplayDefinition<Packet>(string.Empty, "Invalid", "invalid")));
             StringAssert.Contains(ex.Message, "Process name cannot be empty");
         }
 

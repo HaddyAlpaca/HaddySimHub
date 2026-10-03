@@ -1,3 +1,5 @@
+using HaddySimHub.Capture;
+
 namespace HaddySimHub.Displays.AC;
 
 /// <summary>
@@ -5,7 +7,14 @@ namespace HaddySimHub.Displays.AC;
 /// </summary>
 public class ACGameDataProvider : SharedMemoryGameDataProviderBase<ACSharedMemoryReader, ACTelemetry>
 {
-    protected override ACSharedMemoryReader CreateReader() => new();
+    private readonly TelemetryCapture? _capture;
+
+    public ACGameDataProvider(TelemetryCapture? capture = null)
+    {
+        _capture = capture;
+    }
+
+    protected override ACSharedMemoryReader CreateReader() => new(_capture);
 
     protected override bool HasDataChanged(ACTelemetry current, ACTelemetry last)
     {

@@ -1,3 +1,6 @@
+using HaddySimHub.Capture;
+using HaddySimHub.Displays;
+
 namespace HaddySimHub.Displays.ACC;
 
 /// <summary>
@@ -16,6 +19,13 @@ public sealed class ACCSharedMemoryReader : ISharedMemoryTelemetryReader<ACCTele
 
     private readonly SharedMemoryPage<ACCPhysics> _physics = new(PhysicsMemoryName, "[ACC] physics");
     private readonly SharedMemoryPage<ACCGraphics> _graphics = new(GraphicsMemoryName, "[ACC] graphics");
+    private readonly TelemetryCapture? _capture;
+    private int? _lastCapturedPacketId;
+
+    public ACCSharedMemoryReader(TelemetryCapture? capture = null)
+    {
+        _capture = capture;
+    }
 
     public bool IsConnected => _physics.IsConnected && _graphics.IsConnected;
 
@@ -32,6 +42,10 @@ public sealed class ACCSharedMemoryReader : ISharedMemoryTelemetryReader<ACCTele
         }
     }
 
+    internal static bool HasPacketGap(int previousPacketId, int currentPacketId) =>
+        currentPacketId > previousPacketId &&
+        currentPacketId - previousPacketId > 1;
+
     public bool TryReadTelemetry(out ACCTelemetry telemetry)
     {
         telemetry = default;
@@ -43,8 +57,46 @@ public sealed class ACCSharedMemoryReader : ISharedMemoryTelemetryReader<ACCTele
 
         try
         {
-            var physics = _physics.Read();
-            var graphics = _graphics.Read();
+            ACCPhysics physics;
+            ACCGraphics graphics;
+            byte[] physicsBytes;
+            byte[] graphicsBytes;
+            if (_capture?.Enabled == true)
+            {
+                if (!_physics.TryReadStable(out physics, out physicsBytes, captureFullPage: true) ||
+                    !_graphics.TryReadStable(out graphics, out graphicsBytes, captureFullPage: true))
+                {
+                    _capture.MarkIncomplete("source-page-unstable:acc");
+                    return false;
+                }
+            }
+            else
+            {
+                physics = _physics.Read(out physicsBytes);
+                graphics = _graphics.Read(out graphicsBytes);
+            }
+
+            _capture?.RecordRawFrame(
+                DisplayDefinitions.Game.Acc.Slug,
+                "shared-memory",
+                "Local\\acpmf_physics + Local\\acpmf_graphics",
+                new Dictionary<string, byte[]>
+                {
+                    ["physics"] = physicsBytes,
+                    ["graphics"] = graphicsBytes,
+                });
+            if (physics.PacketId != graphics.PacketId)
+            {
+                _capture?.MarkIncomplete(
+                    $"source-pages-mismatched:acc:{physics.PacketId}-{graphics.PacketId}");
+            }
+            else if (_lastCapturedPacketId is int previousPacketId &&
+                     HasPacketGap(previousPacketId, physics.PacketId))
+            {
+                _capture?.MarkIncomplete($"source-gap:acc:{previousPacketId}-{physics.PacketId}");
+            }
+
+            _lastCapturedPacketId = physics.PacketId;
 
             telemetry = new ACCTelemetry
             {

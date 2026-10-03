@@ -31,4 +31,28 @@ public static class iRacing
             eventInstance.NewData -= value;
         }
     }
+
+    public static event Action<byte[]> RawDataReceived
+    {
+        add
+        {
+            eventInstance.RawDataReceived += value;
+        }
+        remove
+        {
+            eventInstance.RawDataReceived -= value;
+        }
+    }
+
+    public static event Action<string> RawCaptureIncomplete
+    {
+        add
+        {
+            eventInstance.RawCaptureIncomplete += value;
+        }
+        remove
+        {
+            eventInstance.RawCaptureIncomplete -= value;
+        }
+    }
 }

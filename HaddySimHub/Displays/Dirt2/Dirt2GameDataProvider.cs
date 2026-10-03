@@ -1,5 +1,6 @@
 using HaddySimHub.Interfaces;
 using HaddySimHub.Shared;
+using HaddySimHub.Capture;
 using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
@@ -10,6 +11,7 @@ namespace HaddySimHub.Displays.Dirt2;
 public class Dirt2GameDataProvider : IGameDataProvider<Packet>, IDisposable
 {
     private const int PORT = 20777;
+    private readonly TelemetryCapture? _capture;
     private readonly ConcurrentQueue<Packet> _packetQueue = new();
     private readonly object _sync = new();
     private CancellationTokenSource? _cts;
@@ -17,6 +19,11 @@ public class Dirt2GameDataProvider : IGameDataProvider<Packet>, IDisposable
     private UdpClient? _client;
     private IPEndPoint? _senderEndPoint;
     private bool _disposed;
+
+    public Dirt2GameDataProvider(TelemetryCapture? capture = null)
+    {
+        _capture = capture;
+    }
 
     public event EventHandler<Packet>? DataReceived;
 
@@ -108,6 +115,8 @@ public class Dirt2GameDataProvider : IGameDataProvider<Packet>, IDisposable
             return;
         }
 
+        CaptureDatagram(data, _senderEndPoint);
+
         if (!(_cts?.Token.IsCancellationRequested ?? true))
         {
             _client.BeginReceive(ReceiveCallback, null);
@@ -129,6 +138,13 @@ public class Dirt2GameDataProvider : IGameDataProvider<Packet>, IDisposable
             handle.Free();
         }
     }
+
+    internal void CaptureDatagram(byte[] data, IPEndPoint? remoteEndPoint) =>
+        _capture?.RecordRawFrame(
+            "dirtrally2",
+            "udp",
+            $"udp://0.0.0.0:{PORT};remote={remoteEndPoint}",
+            new Dictionary<string, byte[]> { ["datagram"] = data });
 
     private async Task ProcessPacketsAsync(CancellationToken token)
     {

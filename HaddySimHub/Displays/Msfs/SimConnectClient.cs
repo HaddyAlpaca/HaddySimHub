@@ -96,7 +96,7 @@ public sealed class SimConnectClient : ISimConnectClient
         }
     }
 
-    public bool TryReadTelemetry(out MsfsTelemetry telemetry)
+    public bool TryReadTelemetry(out MsfsTelemetry telemetry, Action<byte[]>? rawPayloadReceived = null)
     {
         telemetry = default;
 
@@ -112,7 +112,7 @@ public sealed class SimConnectClient : ISimConnectClient
             // Drain the whole queue and keep the newest block: the sim dispatches on
             // every simulation frame, which is faster than this is polled, and a
             // dashboard only ever wants the latest state.
-            while (!NativeMethods.Failed(NativeMethods.SimConnect_GetNextDispatch(_handle, out var data, out _)) && data != nint.Zero)
+            while (!NativeMethods.Failed(NativeMethods.SimConnect_GetNextDispatch(_handle, out var data, out var size)) && data != nint.Zero)
             {
                 var header = Marshal.PtrToStructure<SimConnectRecv>(data);
 
@@ -122,6 +122,16 @@ public sealed class SimConnectClient : ISimConnectClient
                         var message = Marshal.PtrToStructure<SimConnectRecvSimObjectData>(data);
                         if (message.RequestId == RequestId)
                         {
+                            var payloadLength = checked((int)size);
+                            if (payloadLength < PayloadOffset + Marshal.SizeOf<MsfsTelemetry>())
+                            {
+                                Logger.Warn($"[Msfs] SimConnect telemetry payload was truncated ({payloadLength} bytes)");
+                                break;
+                            }
+
+                            var rawPayload = new byte[payloadLength];
+                            Marshal.Copy(data, rawPayload, 0, payloadLength);
+                            rawPayloadReceived?.Invoke(rawPayload);
                             telemetry = Marshal.PtrToStructure<MsfsTelemetry>(data + PayloadOffset);
                             received = true;
                         }

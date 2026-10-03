@@ -1,0 +1,410 @@
+{
+  "Game": "dirt2",
+  "Types": [
+    {
+      "Type": "Packet",
+      "LayoutKind": "Sequential",
+      "Pack": 0,
+      "CharSet": "Ansi",
+      "Size": 264,
+      "Fields": [
+        {
+          "Name": "run_time",
+          "Type": "Single",
+          "Offset": 0,
+          "Size": 4
+        },
+        {
+          "Name": "lap_time",
+          "Type": "Single",
+          "Offset": 4,
+          "Size": 4
+        },
+        {
+          "Name": "distance",
+          "Type": "Single",
+          "Offset": 8,
+          "Size": 4
+        },
+        {
+          "Name": "progress",
+          "Type": "Single",
+          "Offset": 12,
+          "Size": 4
+        },
+        {
+          "Name": "pos_x",
+          "Type": "Single",
+          "Offset": 16,
+          "Size": 4
+        },
+        {
+          "Name": "pos_y",
+          "Type": "Single",
+          "Offset": 20,
+          "Size": 4
+        },
+        {
+          "Name": "pos_z",
+          "Type": "Single",
+          "Offset": 24,
+          "Size": 4
+        },
+        {
+          "Name": "speed_ms",
+          "Type": "Single",
+          "Offset": 28,
+          "Size": 4
+        },
+        {
+          "Name": "vel_x",
+          "Type": "Single",
+          "Offset": 32,
+          "Size": 4
+        },
+        {
+          "Name": "vel_y",
+          "Type": "Single",
+          "Offset": 36,
+          "Size": 4
+        },
+        {
+          "Name": "vel_z",
+          "Type": "Single",
+          "Offset": 40,
+          "Size": 4
+        },
+        {
+          "Name": "roll_x",
+          "Type": "Single",
+          "Offset": 44,
+          "Size": 4
+        },
+        {
+          "Name": "roll_y",
+          "Type": "Single",
+          "Offset": 48,
+          "Size": 4
+        },
+        {
+          "Name": "roll_z",
+          "Type": "Single",
+          "Offset": 52,
+          "Size": 4
+        },
+        {
+          "Name": "pitch_x",
+          "Type": "Single",
+          "Offset": 56,
+          "Size": 4
+        },
+        {
+          "Name": "pitch_y",
+          "Type": "Single",
+          "Offset": 60,
+          "Size": 4
+        },
+        {
+          "Name": "pitch_z",
+          "Type": "Single",
+          "Offset": 64,
+          "Size": 4
+        },
+        {
+          "Name": "susp_rl",
+          "Type": "Single",
+          "Offset": 68,
+          "Size": 4
+        },
+        {
+          "Name": "susp_rr",
+          "Type": "Single",
+          "Offset": 72,
+          "Size": 4
+        },
+        {
+          "Name": "susp_fl",
+          "Type": "Single",
+          "Offset": 76,
+          "Size": 4
+        },
+        {
+          "Name": "susp_fr",
+          "Type": "Single",
+          "Offset": 80,
+          "Size": 4
+        },
+        {
+          "Name": "susp_vel_rl",
+          "Type": "Single",
+          "Offset": 84,
+          "Size": 4
+        },
+        {
+          "Name": "susp_vel_rr",
+          "Type": "Single",
+          "Offset": 88,
+          "Size": 4
+        },
+        {
+          "Name": "susp_vel_fl",
+          "Type": "Single",
+          "Offset": 92,
+          "Size": 4
+        },
+        {
+          "Name": "susp_vel_fr",
+          "Type": "Single",
+          "Offset": 96,
+          "Size": 4
+        },
+        {
+          "Name": "wsp_rl",
+          "Type": "Single",
+          "Offset": 100,
+          "Size": 4
+        },
+        {
+          "Name": "wsp_rr",
+          "Type": "Single",
+          "Offset": 104,
+          "Size": 4
+        },
+        {
+          "Name": "wsp_fl",
+          "Type": "Single",
+          "Offset": 108,
+          "Size": 4
+        },
+        {
+          "Name": "wsp_fr",
+          "Type": "Single",
+          "Offset": 112,
+          "Size": 4
+        },
+        {
+          "Name": "throttle",
+          "Type": "Single",
+          "Offset": 116,
+          "Size": 4
+        },
+        {
+          "Name": "steering",
+          "Type": "Single",
+          "Offset": 120,
+          "Size": 4
+        },
+        {
+          "Name": "brakes",
+          "Type": "Single",
+          "Offset": 124,
+          "Size": 4
+        },
+        {
+          "Name": "clutch",
+          "Type": "Single",
+          "Offset": 128,
+          "Size": 4
+        },
+        {
+          "Name": "gear",
+          "Type": "Single",
+          "Offset": 132,
+          "Size": 4
+        },
+        {
+          "Name": "g_force_lat",
+          "Type": "Single",
+          "Offset": 136,
+          "Size": 4
+        },
+        {
+          "Name": "g_force_lon",
+          "Type": "Single",
+          "Offset": 140,
+          "Size": 4
+        },
+        {
+          "Name": "current_lap",
+          "Type": "Single",
+          "Offset": 144,
+          "Size": 4
+        },
+        {
+          "Name": "rpm",
+          "Type": "Single",
+          "Offset": 148,
+          "Size": 4
+        },
+        {
+          "Name": "sli_pro_support",
+          "Type": "Single",
+          "Offset": 152,
+          "Size": 4
+        },
+        {
+          "Name": "car_pos",
+          "Type": "Single",
+          "Offset": 156,
+          "Size": 4
+        },
+        {
+          "Name": "kers_level",
+          "Type": "Single",
+          "Offset": 160,
+          "Size": 4
+        },
+        {
+          "Name": "kers_max_level",
+          "Type": "Single",
+          "Offset": 164,
+          "Size": 4
+        },
+        {
+          "Name": "drs",
+          "Type": "Single",
+          "Offset": 168,
+          "Size": 4
+        },
+        {
+          "Name": "traction_control",
+          "Type": "Single",
+          "Offset": 172,
+          "Size": 4
+        },
+        {
+          "Name": "anti_lock_brakes",
+          "Type": "Single",
+          "Offset": 176,
+          "Size": 4
+        },
+        {
+          "Name": "fuel_in_tank",
+          "Type": "Single",
+          "Offset": 180,
+          "Size": 4
+        },
+        {
+          "Name": "fuel_capacity",
+          "Type": "Single",
+          "Offset": 184,
+          "Size": 4
+        },
+        {
+          "Name": "in_pit",
+          "Type": "Single",
+          "Offset": 188,
+          "Size": 4
+        },
+        {
+          "Name": "sector",
+          "Type": "Single",
+          "Offset": 192,
+          "Size": 4
+        },
+        {
+          "Name": "sector_1_time",
+          "Type": "Single",
+          "Offset": 196,
+          "Size": 4
+        },
+        {
+          "Name": "sector_2_time",
+          "Type": "Single",
+          "Offset": 200,
+          "Size": 4
+        },
+        {
+          "Name": "brakes_temp_rl",
+          "Type": "Single",
+          "Offset": 204,
+          "Size": 4
+        },
+        {
+          "Name": "brakes_temp_rr",
+          "Type": "Single",
+          "Offset": 208,
+          "Size": 4
+        },
+        {
+          "Name": "brakes_temp_fl",
+          "Type": "Single",
+          "Offset": 212,
+          "Size": 4
+        },
+        {
+          "Name": "brakes_temp_fr",
+          "Type": "Single",
+          "Offset": 216,
+          "Size": 4
+        },
+        {
+          "Name": "tyre_pressure_rl",
+          "Type": "Single",
+          "Offset": 220,
+          "Size": 4
+        },
+        {
+          "Name": "tyre_pressure_rr",
+          "Type": "Single",
+          "Offset": 224,
+          "Size": 4
+        },
+        {
+          "Name": "tyre_pressure_fl",
+          "Type": "Single",
+          "Offset": 228,
+          "Size": 4
+        },
+        {
+          "Name": "tyre_pressure_fr",
+          "Type": "Single",
+          "Offset": 232,
+          "Size": 4
+        },
+        {
+          "Name": "laps_completed",
+          "Type": "Single",
+          "Offset": 236,
+          "Size": 4
+        },
+        {
+          "Name": "total_laps",
+          "Type": "Single",
+          "Offset": 240,
+          "Size": 4
+        },
+        {
+          "Name": "track_length",
+          "Type": "Single",
+          "Offset": 244,
+          "Size": 4
+        },
+        {
+          "Name": "last_lap_time",
+          "Type": "Single",
+          "Offset": 248,
+          "Size": 4
+        },
+        {
+          "Name": "max_rpm",
+          "Type": "Single",
+          "Offset": 252,
+          "Size": 4
+        },
+        {
+          "Name": "idle_rpm",
+          "Type": "Single",
+          "Offset": 256,
+          "Size": 4
+        },
+        {
+          "Name": "max_gears",
+          "Type": "Single",
+          "Offset": 260,
+          "Size": 4
+        }
+      ]
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+using HaddySimHub.Capture;
 using HaddySimHub.Displays;
 using HaddySimHub.Interfaces;
 using HaddySimHub.Models;
@@ -5,6 +6,7 @@ using HaddySimHub.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using System.Threading.Channels;
 
@@ -12,13 +14,22 @@ namespace HaddySimHub.Extensions;
 
 public static class ApplicationCompositionExtensions
 {
+    /// <summary>
+    /// The wire format of a <see cref="DisplayUpdate"/> on the SSE stream.
+    /// </summary>
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     };
 
-    public static IServiceCollection AddHaddySimHubApplication(this IServiceCollection services, bool e2eMode = false)
+    public static IServiceCollection AddHaddySimHubApplication(
+        this IServiceCollection services,
+        bool e2eMode = false,
+        string? captureDirectory = null)
     {
+        services.AddSingleton(sp => new TelemetryCapture(
+            captureDirectory,
+            sp.GetRequiredService<ILogger<TelemetryCapture>>()));
         services.AddCors(corsOptions =>
         {
             corsOptions.AddDefaultPolicy(policyBuilder =>

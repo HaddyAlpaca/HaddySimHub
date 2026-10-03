@@ -1,5 +1,6 @@
 using HaddySimHub.Interfaces;
 using HaddySimHub.Shared;
+using HaddySimHub.Capture;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
@@ -10,11 +11,17 @@ public sealed class ForzaGameDataProvider : IGameDataProvider<ForzaTelemetry>, I
 {
     public const int DefaultPort = 5300;
     private static readonly int PacketSize = Marshal.SizeOf<ForzaTelemetry>();
+    private readonly TelemetryCapture? _capture;
     private readonly object _sync = new();
     private CancellationTokenSource? _cts;
     private Task? _receiveTask;
     private UdpClient? _client;
     private bool _disposed;
+
+    public ForzaGameDataProvider(TelemetryCapture? capture = null)
+    {
+        _capture = capture;
+    }
 
     public event EventHandler<ForzaTelemetry>? DataReceived;
 
@@ -96,6 +103,7 @@ public sealed class ForzaGameDataProvider : IGameDataProvider<ForzaTelemetry>, I
             while (!cancellationToken.IsCancellationRequested)
             {
                 UdpReceiveResult result = await _client!.ReceiveAsync(cancellationToken);
+                CaptureDatagram(result.Buffer, result.RemoteEndPoint);
                 if (result.Buffer.Length < PacketSize)
                 {
                     Logger.Debug($"[Forza Horizon 5] Ignoring UDP packet with {result.Buffer.Length} bytes; expected at least {PacketSize}");
@@ -113,6 +121,7 @@ public sealed class ForzaGameDataProvider : IGameDataProvider<ForzaTelemetry>, I
                     handle.Free();
                 }
             }
+
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
@@ -128,4 +137,11 @@ public sealed class ForzaGameDataProvider : IGameDataProvider<ForzaTelemetry>, I
             Logger.Error($"[Forza Horizon 5] UDP receive loop stopped: {ex.Message}");
         }
     }
+
+    internal void CaptureDatagram(byte[] data, IPEndPoint remoteEndPoint) =>
+        _capture?.RecordRawFrame(
+            "forza",
+            "udp",
+            $"udp://0.0.0.0:{DefaultPort};remote={remoteEndPoint}",
+            new Dictionary<string, byte[]> { ["datagram"] = data });
 }

@@ -1,0 +1,458 @@
+{
+  "Game": "msfs",
+  "Types": [
+    {
+      "Type": "MsfsTelemetry",
+      "LayoutKind": "Sequential",
+      "Pack": 1,
+      "CharSet": "Ansi",
+      "Size": 912,
+      "Fields": [
+        {
+          "Name": "IndicatedAirspeed",
+          "Type": "Double",
+          "Offset": 0,
+          "Size": 8
+        },
+        {
+          "Name": "TrueAirspeed",
+          "Type": "Double",
+          "Offset": 8,
+          "Size": 8
+        },
+        {
+          "Name": "GroundSpeed",
+          "Type": "Double",
+          "Offset": 16,
+          "Size": 8
+        },
+        {
+          "Name": "Mach",
+          "Type": "Double",
+          "Offset": 24,
+          "Size": 8
+        },
+        {
+          "Name": "StallWarning",
+          "Type": "Double",
+          "Offset": 32,
+          "Size": 8
+        },
+        {
+          "Name": "OverspeedWarning",
+          "Type": "Double",
+          "Offset": 40,
+          "Size": 8
+        },
+        {
+          "Name": "PitchRadians",
+          "Type": "Double",
+          "Offset": 48,
+          "Size": 8
+        },
+        {
+          "Name": "BankRadians",
+          "Type": "Double",
+          "Offset": 56,
+          "Size": 8
+        },
+        {
+          "Name": "TurnCoordinatorBall",
+          "Type": "Double",
+          "Offset": 64,
+          "Size": 8
+        },
+        {
+          "Name": "TurnRateRadiansPerSecond",
+          "Type": "Double",
+          "Offset": 72,
+          "Size": 8
+        },
+        {
+          "Name": "IndicatedAltitude",
+          "Type": "Double",
+          "Offset": 80,
+          "Size": 8
+        },
+        {
+          "Name": "AltitudeAboveGround",
+          "Type": "Double",
+          "Offset": 88,
+          "Size": 8
+        },
+        {
+          "Name": "VerticalSpeed",
+          "Type": "Double",
+          "Offset": 96,
+          "Size": 8
+        },
+        {
+          "Name": "AltimeterSettingMb",
+          "Type": "Double",
+          "Offset": 104,
+          "Size": 8
+        },
+        {
+          "Name": "OnGround",
+          "Type": "Double",
+          "Offset": 112,
+          "Size": 8
+        },
+        {
+          "Name": "HeadingMagnetic",
+          "Type": "Double",
+          "Offset": 120,
+          "Size": 8
+        },
+        {
+          "Name": "HeadingTrue",
+          "Type": "Double",
+          "Offset": 128,
+          "Size": 8
+        },
+        {
+          "Name": "GroundTrack",
+          "Type": "Double",
+          "Offset": 136,
+          "Size": 8
+        },
+        {
+          "Name": "WindDirection",
+          "Type": "Double",
+          "Offset": 144,
+          "Size": 8
+        },
+        {
+          "Name": "WindVelocity",
+          "Type": "Double",
+          "Offset": 152,
+          "Size": 8
+        },
+        {
+          "Name": "AutopilotMaster",
+          "Type": "Double",
+          "Offset": 160,
+          "Size": 8
+        },
+        {
+          "Name": "AutopilotHeadingLock",
+          "Type": "Double",
+          "Offset": 168,
+          "Size": 8
+        },
+        {
+          "Name": "AutopilotHeadingBug",
+          "Type": "Double",
+          "Offset": 176,
+          "Size": 8
+        },
+        {
+          "Name": "AutopilotAltitudeLock",
+          "Type": "Double",
+          "Offset": 184,
+          "Size": 8
+        },
+        {
+          "Name": "AutopilotAltitudeTarget",
+          "Type": "Double",
+          "Offset": 192,
+          "Size": 8
+        },
+        {
+          "Name": "AutopilotAirspeedHold",
+          "Type": "Double",
+          "Offset": 200,
+          "Size": 8
+        },
+        {
+          "Name": "AutopilotAirspeedTarget",
+          "Type": "Double",
+          "Offset": 208,
+          "Size": 8
+        },
+        {
+          "Name": "AutopilotVerticalSpeedTarget",
+          "Type": "Double",
+          "Offset": 216,
+          "Size": 8
+        },
+        {
+          "Name": "AutopilotNavLock",
+          "Type": "Double",
+          "Offset": 224,
+          "Size": 8
+        },
+        {
+          "Name": "AutopilotApproachHold",
+          "Type": "Double",
+          "Offset": 232,
+          "Size": 8
+        },
+        {
+          "Name": "FlightPlanActive",
+          "Type": "Double",
+          "Offset": 240,
+          "Size": 8
+        },
+        {
+          "Name": "WaypointDistanceMeters",
+          "Type": "Double",
+          "Offset": 248,
+          "Size": 8
+        },
+        {
+          "Name": "WaypointEteSeconds",
+          "Type": "Double",
+          "Offset": 256,
+          "Size": 8
+        },
+        {
+          "Name": "DestinationEteSeconds",
+          "Type": "Double",
+          "Offset": 264,
+          "Size": 8
+        },
+        {
+          "Name": "DestinationEtaSeconds",
+          "Type": "Double",
+          "Offset": 272,
+          "Size": 8
+        },
+        {
+          "Name": "CrossTrackMeters",
+          "Type": "Double",
+          "Offset": 280,
+          "Size": 8
+        },
+        {
+          "Name": "ApproachActive",
+          "Type": "Double",
+          "Offset": 288,
+          "Size": 8
+        },
+        {
+          "Name": "NavHasSignal",
+          "Type": "Double",
+          "Offset": 296,
+          "Size": 8
+        },
+        {
+          "Name": "NavHasLocalizer",
+          "Type": "Double",
+          "Offset": 304,
+          "Size": 8
+        },
+        {
+          "Name": "NavHasGlideSlope",
+          "Type": "Double",
+          "Offset": 312,
+          "Size": 8
+        },
+        {
+          "Name": "NavCdi",
+          "Type": "Double",
+          "Offset": 320,
+          "Size": 8
+        },
+        {
+          "Name": "NavGsi",
+          "Type": "Double",
+          "Offset": 328,
+          "Size": 8
+        },
+        {
+          "Name": "NavToFrom",
+          "Type": "Double",
+          "Offset": 336,
+          "Size": 8
+        },
+        {
+          "Name": "NavObs",
+          "Type": "Double",
+          "Offset": 344,
+          "Size": 8
+        },
+        {
+          "Name": "EngineCount",
+          "Type": "Double",
+          "Offset": 352,
+          "Size": 8
+        },
+        {
+          "Name": "EngineType",
+          "Type": "Double",
+          "Offset": 360,
+          "Size": 8
+        },
+        {
+          "Name": "TurbineN1Pct",
+          "Type": "Double",
+          "Offset": 368,
+          "Size": 8
+        },
+        {
+          "Name": "PistonPctMaxRpm",
+          "Type": "Double",
+          "Offset": 376,
+          "Size": 8
+        },
+        {
+          "Name": "EngineRpm",
+          "Type": "Double",
+          "Offset": 384,
+          "Size": 8
+        },
+        {
+          "Name": "FuelFlowPph",
+          "Type": "Double",
+          "Offset": 392,
+          "Size": 8
+        },
+        {
+          "Name": "OilTemperature",
+          "Type": "Double",
+          "Offset": 400,
+          "Size": 8
+        },
+        {
+          "Name": "OilPressure",
+          "Type": "Double",
+          "Offset": 408,
+          "Size": 8
+        },
+        {
+          "Name": "ManifoldPressure",
+          "Type": "Double",
+          "Offset": 416,
+          "Size": 8
+        },
+        {
+          "Name": "FuelQuantityLbs",
+          "Type": "Double",
+          "Offset": 424,
+          "Size": 8
+        },
+        {
+          "Name": "FuelCapacityGallons",
+          "Type": "Double",
+          "Offset": 432,
+          "Size": 8
+        },
+        {
+          "Name": "FuelWeightPerGallon",
+          "Type": "Double",
+          "Offset": 440,
+          "Size": 8
+        },
+        {
+          "Name": "FlapsHandleIndex",
+          "Type": "Double",
+          "Offset": 448,
+          "Size": 8
+        },
+        {
+          "Name": "FlapsHandlePositions",
+          "Type": "Double",
+          "Offset": 456,
+          "Size": 8
+        },
+        {
+          "Name": "GearPercentExtended",
+          "Type": "Double",
+          "Offset": 464,
+          "Size": 8
+        },
+        {
+          "Name": "GearHandleDown",
+          "Type": "Double",
+          "Offset": 472,
+          "Size": 8
+        },
+        {
+          "Name": "SpoilersHandlePct",
+          "Type": "Double",
+          "Offset": 480,
+          "Size": 8
+        },
+        {
+          "Name": "SpoilersArmed",
+          "Type": "Double",
+          "Offset": 488,
+          "Size": 8
+        },
+        {
+          "Name": "ParkingBrakeOn",
+          "Type": "Double",
+          "Offset": 496,
+          "Size": 8
+        },
+        {
+          "Name": "ElevatorTrimPct",
+          "Type": "Double",
+          "Offset": 504,
+          "Size": 8
+        },
+        {
+          "Name": "LightLanding",
+          "Type": "Double",
+          "Offset": 512,
+          "Size": 8
+        },
+        {
+          "Name": "LightTaxi",
+          "Type": "Double",
+          "Offset": 520,
+          "Size": 8
+        },
+        {
+          "Name": "LightStrobe",
+          "Type": "Double",
+          "Offset": 528,
+          "Size": 8
+        },
+        {
+          "Name": "LightNav",
+          "Type": "Double",
+          "Offset": 536,
+          "Size": 8
+        },
+        {
+          "Name": "LightBeacon",
+          "Type": "Double",
+          "Offset": 544,
+          "Size": 8
+        },
+        {
+          "Name": "ZuluTimeSeconds",
+          "Type": "Double",
+          "Offset": 552,
+          "Size": 8
+        },
+        {
+          "Name": "NextWaypointId",
+          "Type": "String",
+          "Offset": 560,
+          "Size": 32
+        },
+        {
+          "Name": "DestinationId",
+          "Type": "String",
+          "Offset": 592,
+          "Size": 32
+        },
+        {
+          "Name": "NavIdent",
+          "Type": "String",
+          "Offset": 624,
+          "Size": 32
+        },
+        {
+          "Name": "AircraftTitle",
+          "Type": "String",
+          "Offset": 656,
+          "Size": 256
+        }
+      ]
+    }
+  ]
+}
