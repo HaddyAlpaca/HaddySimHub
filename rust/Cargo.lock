@@ -4140,6 +4140,7 @@ version = "0.1.0"
 name = "simhub-telemetry"
 version = "0.1.0"
 dependencies = [
+ "libloading",
  "simetry",
  "simhub-model",
  "yaml-rust",

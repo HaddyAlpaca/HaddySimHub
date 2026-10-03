@@ -324,10 +324,6 @@ mod tests {
             self.0[offset..offset + 4].copy_from_slice(&value.to_le_bytes());
             self
         }
-        fn i32(mut self, offset: usize, value: i32) -> Self {
-            self.0[offset..offset + 4].copy_from_slice(&value.to_le_bytes());
-            self
-        }
         fn u32(mut self, offset: usize, value: u32) -> Self {
             self.0[offset..offset + 4].copy_from_slice(&value.to_le_bytes());
             self

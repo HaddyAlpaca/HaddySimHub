@@ -14,6 +14,10 @@ simhub-model.workspace = true
 # that `SimState::session_info` returns is the same type this crate parses.
 yaml-rust = "0.4.5"
 
+# Binds SimConnect.dll at runtime. The DLL comes with the MSFS SDK rather than
+# with us, so linking it at build time would stop the app starting without it.
+libloading = "0.8.9"
+
 # simetry reads the Assetto, DiRT Rally 2 and SCS plugin maps, and generates its
 # SCS layout with bindgen from the plugin's own header rather than by hand. That
 # build step needs libclang. `with_r3e` is left off because it runs bindgen over

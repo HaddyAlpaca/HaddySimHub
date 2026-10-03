@@ -15,6 +15,7 @@ pub mod dirt2;
 pub mod ets;
 pub mod forza;
 pub mod iracing;
+pub mod msfs;
 pub mod udp;
 
 /// Reads a little-endian value out of a packet at a fixed offset.
@@ -31,6 +32,22 @@ mod read {
 
     pub fn i32_at(bytes: &[u8], offset: usize) -> i32 {
         i32::from_le_bytes(
+            bytes[offset..offset + 4]
+                .try_into()
+                .expect("checked length"),
+        )
+    }
+
+    pub fn f64_at(bytes: &[u8], offset: usize) -> f64 {
+        f64::from_le_bytes(
+            bytes[offset..offset + 8]
+                .try_into()
+                .expect("checked length"),
+        )
+    }
+
+    pub fn u32_at(bytes: &[u8], offset: usize) -> u32 {
+        u32::from_le_bytes(
             bytes[offset..offset + 4]
                 .try_into()
                 .expect("checked length"),
