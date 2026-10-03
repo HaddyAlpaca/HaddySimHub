@@ -105,7 +105,7 @@ public sealed class MsfsGameDataProvider : IGameDataProvider<MsfsTelemetry>, IDi
 
             _consecutiveMissedConnections = 0;
 
-            var rawPayloadReceived = _capture?.Enabled == true ? CaptureRawPayload : null;
+            Action<byte[]>? rawPayloadReceived = _capture?.Enabled == true ? CaptureRawPayload : null;
             if (_client.TryReadTelemetry(out var telemetry, rawPayloadReceived))
             {
                 DataReceived?.Invoke(this, telemetry);

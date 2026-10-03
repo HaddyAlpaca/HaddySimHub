@@ -198,7 +198,6 @@ pub mod session {
     }
 }
 
-#[cfg(windows)]
 mod simetry_source {
     use super::VarSource;
     use simetry::iracing::SimState;

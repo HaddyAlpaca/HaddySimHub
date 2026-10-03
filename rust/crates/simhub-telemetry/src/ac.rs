@@ -242,7 +242,6 @@ mod tests {
 /// Type-checked against `simetry` but not unit-tested: its page types exist
 /// only on Windows, so there is no fixture to build off it. The byte decoder
 /// above stays the tested path.
-#[cfg(windows)]
 pub mod simetry_source {
     use simetry::assetto_corsa::{SessionType, SimState};
     use simhub_model::telemetry::AcTelemetry;

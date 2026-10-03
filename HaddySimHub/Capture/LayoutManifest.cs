@@ -66,9 +66,12 @@ public sealed record GameLayout
 /// </remarks>
 public static class LayoutManifest
 {
+    // The manifests are committed and compared byte for byte, so the line ending
+    // is fixed rather than taken from the platform.
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         WriteIndented = true,
+        NewLine = "\n",
     };
 
     /// <summary>Describes every type in <paramref name="types"/> as one game.</summary>

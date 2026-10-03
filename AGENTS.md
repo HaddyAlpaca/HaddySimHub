@@ -8,7 +8,7 @@
 - Test workspace: `cargo test --workspace --locked`
 - Format check: `cargo fmt --all -- --check`
 - Run a synthetic Slint dashboard: `cargo run -p simhub-app -- race` (also `rally`, `truck`, or `flight`)
-- Linux builds need the Fontconfig development package (`libfontconfig1-dev` on Ubuntu).
+- Builds target Windows only and need the MSVC C++ build tools and libclang (LLVM): `simetry` runs `bindgen` at build time, so a missing `libclang.dll` stops the build.
 - The Rust/Slint app is a parallel prototype; its synthetic data is not game telemetry.
 - Capture fixtures and layout manifests before porting any game converter or provider.
 

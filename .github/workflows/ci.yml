@@ -11,26 +11,16 @@ on:
 
 jobs:
   rust-tests:
-    name: Rust tests (${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
+    name: Rust tests
+    runs-on: windows-latest
     timeout-minutes: 30
     defaults:
       run:
         working-directory: ./rust
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest]
 
     steps:
       - name: Checkout
         uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
-
-      - name: Install Slint Linux build dependencies
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install --yes libfontconfig1-dev
 
       - name: Check Rust formatting
         run: cargo fmt --all -- --check
@@ -40,7 +30,7 @@ jobs:
 
   server-tests:
     name: Server tests
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     timeout-minutes: 30
 
     env:
@@ -90,10 +80,12 @@ jobs:
 
   clientapp-tests:
     name: Frontend tests
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     timeout-minutes: 20
     defaults:
       run:
+        # Git Bash, so the `bash` that `npm run ci` starts is not the WSL one.
+        shell: bash
         working-directory: ./ClientApp
     env:
       node_version: 24.15.0
@@ -104,7 +96,7 @@ jobs:
       - name: Cache node modules
         uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4.2.0
         with:
-          path: ~/.npm
+          path: ~/AppData/Local/npm-cache
           key: npm-${{ runner.os }}-${{ hashFiles('ClientApp/package-lock.json') }}
           restore-keys: |
             npm-${{ runner.os }}-
@@ -143,10 +135,11 @@ jobs:
 
   e2e-tests:
     name: End-to-end tests
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     timeout-minutes: 30
     defaults:
       run:
+        shell: bash
         working-directory: ./ClientApp
     env:
       node_version: 24.15.0
@@ -176,12 +169,15 @@ jobs:
 
   coverage-comment:
     name: Coverage summary
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     timeout-minutes: 10
     needs: [server-tests, clientapp-tests]
     permissions:
       contents: read
       pull-requests: write
+    defaults:
+      run:
+        shell: bash
     env:
       node_version: 24.15.0
 

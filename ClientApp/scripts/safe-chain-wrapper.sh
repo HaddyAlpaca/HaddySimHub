@@ -48,9 +48,10 @@ if [ ! -x "${SAFE_CHAIN_BIN}" ]; then
   rm -f "$TMP_INSTALLER"
 fi
 
-# Ensure Safe Chain shims are in PATH for this process
-if [[ ":$PATH:" != *":${SHIMS_DIR}:"* ]]; then
-  export PATH="${SHIMS_DIR}:${SAFE_CHAIN_BASE}/bin:${PATH}"
-fi
-
-exec "$@"
+# Run the command through Safe Chain explicitly rather than relying on its shims
+# to shadow it. On Windows the shims are `.cmd` files, which bash never resolves,
+# so a bare `npm` here would bypass the scan without any error. The shims also
+# stay off PATH: Safe Chain looks up the real command itself, and finding its own
+# shim instead would make it call itself.
+PATH="${PATH//${SHIMS_DIR}:/}"
+exec "${SAFE_CHAIN_BIN}" "$@"

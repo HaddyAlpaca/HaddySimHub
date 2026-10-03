@@ -180,7 +180,6 @@ mod tests {
 /// Type-checked against `simetry` but not unit-tested. The byte decoder above
 /// stays the tested path, and remains the fuller one: `simetry` does not expose
 /// the sector split times, so those are lost here.
-#[cfg(windows)]
 pub mod simetry_source {
     use simetry::dirt_rally_2::SimState;
     use simhub_model::telemetry::Dirt2Telemetry;

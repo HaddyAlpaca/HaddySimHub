@@ -134,7 +134,7 @@ and telemetry; rally progress, driving instruments, and sectors; truck route,
 damage, speed, and vehicle status; and flight instruments, navigation,
 autopilot, and engine data. Custom instruments such as the flight attitude
 indicator and race telemetry trace are still simplified rather than exact
-pixel/feature-parity ports. The prototype runs on Linux without a simulator or
+pixel/feature-parity ports. The prototype runs without a simulator or
 browser, but it does not contain game providers or prove telemetry parity.
 Porting a game converter remains blocked on that game's captured frames and
 layout manifest.

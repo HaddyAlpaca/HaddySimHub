@@ -11,14 +11,11 @@ path = "src/lib.rs"
 simhub-model.workspace = true
 
 # Pinned to the version simetry uses, so cargo unifies the two and the `Yaml`
-# that `SimState::session_info` returns is the same type this crate parses. As a
-# plain dependency it also builds on Linux, which keeps the session mapping
-# testable against real fixtures off Windows.
+# that `SimState::session_info` returns is the same type this crate parses.
 yaml-rust = "0.4.5"
 
 # simetry reads the Assetto, DiRT Rally 2 and SCS plugin maps, and generates its
-# SCS layout with bindgen from the plugin's own header rather than by hand. Its
-# own manifest depends on `windows` unconditionally, so it is gated here: on
-# Linux cargo never builds it and the portable decoders below keep CI green.
-[target.'cfg(windows)'.dependencies]
+# SCS layout with bindgen from the plugin's own header rather than by hand. That
+# build step needs libclang. `with_r3e` is left off because it runs bindgen over
+# a RaceRoom header we do not use.
 simetry = { version = "0.2.3", default-features = false, features = ["with_truck_simulator"] }

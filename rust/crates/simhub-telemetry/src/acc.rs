@@ -230,7 +230,6 @@ mod tests {
 /// Two things differ from that decoder. The rev limit is read from the static
 /// page, which is where ACC actually publishes it. And `number_of_laps` has no
 /// counterpart in `simetry`'s model, so a lap-limited session loses its total.
-#[cfg(windows)]
 pub mod simetry_source {
     use simetry::assetto_corsa_competizione::{
         RainIntensity, SessionType, SimState, TrackGripStatus,

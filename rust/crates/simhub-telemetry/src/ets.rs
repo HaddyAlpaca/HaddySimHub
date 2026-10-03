@@ -567,7 +567,6 @@ mod tests {
 /// bindgen from the header this module's offsets were derived from, so the two
 /// read the same layout by construction. Type-checked against `simetry` but not
 /// unit-tested; the byte decoder above stays the tested path.
-#[cfg(windows)]
 pub mod simetry_source {
     use simetry::truck_simulator::SimState;
     use simhub_model::telemetry::ets::*;

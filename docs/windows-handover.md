@@ -18,26 +18,21 @@ that is the cause and not the code.
 
 ## Build changes
 
-`rust/crates/simhub-telemetry/Cargo.toml` declares `simetry` under
-`[target.'cfg(windows)'.dependencies]`. That gating exists only so the crate
-still builds on Linux, where `simetry` pulls `windows` unconditionally and would
-fail. On Windows it can become a plain `[dependencies]` entry.
+Done. CI and CD now run on Windows runners only, so `simetry` is a plain
+dependency and the `simetry_source` modules are no longer gated on
+`cfg(windows)`. The feature limitation stays: `with_r3e` runs `bindgen` over a
+RaceRoom header we do not use.
 
-Keep the feature limitation:
+Moving the other jobs to Windows turned up three things that Linux CI had hidden:
 
-```toml
-simetry = { version = "0.2.3", default-features = false, features = ["with_truck_simulator"] }
-```
-
-Only the section header changes — the `default-features` line stays as it is.
-
-`with_r3e` is on by default and runs `bindgen` over a RaceRoom header we do not
-use. It needs libclang and the target's C headers, and it was what blocked
-cross-compiling; there is no reason to carry it.
-
-Cross-checking with `cargo check --target x86_64-pc-windows-msvc` becomes the
-native build. `simhub-ui` should compile there — its failure on Linux is a
-missing fontconfig, not a code problem.
+- `MsfsGameDataProvider` did not compile: a `var` initialised from a method
+  group or `null` has no type. The branch never ran through CI.
+- The layout manifests failed byte-for-byte on a CRLF checkout. The serializer
+  now writes `\n` regardless of platform, and `.gitattributes` keeps the
+  committed files LF.
+- Under Git Bash the Safe Chain wrapper ran npm without Safe Chain, because its
+  Windows shims are `.cmd` files that bash never resolves. The wrapper now calls
+  `safe-chain` directly, and its own test package is blocked again.
 
 ## What only a running game can settle
 

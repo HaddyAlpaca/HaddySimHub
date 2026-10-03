@@ -127,8 +127,8 @@ only after all replacement gates pass.
 - The Rust migration must preserve the current supported game set and
   user-visible dashboards, lifecycle, and update/install behavior unless a
   separately accepted change says otherwise.
-- The application targets Windows for simulator integration; the Rust
-  prototype may continue to build/test on Linux where dependencies allow.
+- The application targets Windows only, and CI and CD run on Windows runners;
+  no build or test path needs to work on another platform.
 - Capture must use bounded memory and non-blocking source callbacks; overload
   must invalidate the capture instead of silently dropping accepted records.
 - “Complete” is scoped to records observed and durably saved at a documented
@@ -403,7 +403,7 @@ deployment, and updater gates pass.
 | iRacing map changes while buffers/session data are copied | Likely | Produces mixed, misleading replay input | Validate header, selected buffer tick, session-info generation/ranges; retry and fail capture if consistency cannot be established |
 | UDP packets are dropped by OS/socket/queue before or during capture | Possible | Gaps in Rust rebuild evidence | Capture immediately on receive, bound queues, count socket/queue drops, use game sequence fields when available, report unobservable network loss |
 | SimConnect only exposes API-shaped data, not raw transport | Likely | Could prevent strict raw-transport requirement | Capture exact native API response block; document boundary; prove Rust can decode it before C# retirement |
-| Real game corpora are unavailable on Linux CI | Likely | CI cannot exercise source protocols | Commit sanitized/raw representative fixtures with provenance; keep live Windows capture/soak as release gate |
+| Real game corpora are unavailable in CI | Likely | CI cannot exercise source protocols | Commit sanitized/raw representative fixtures with provenance; keep live Windows capture/soak as release gate |
 | An unvalidated C# reader is treated as an oracle and its layout error is inherited by the Rust port | Likely | Silent wrong dashboards that no gate catches | Capture the four unvalidated sources early; verify decoded values against the published format and a live session, not against our own implementation |
 | Full UI/runtime/updater migration is much larger than telemetry conversion | Likely | Delays full C# removal | Keep stages independently shippable; leave legacy app default until end-to-end gates pass |
 
