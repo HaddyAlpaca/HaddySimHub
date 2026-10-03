@@ -1,3 +1,6 @@
+pub mod lifecycle;
+pub mod live;
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum DashboardKind {
     Race,
@@ -61,6 +64,20 @@ pub struct TelemetryPoint {
     pub throttle: f32,
 }
 
+/// The values the flight instruments are drawn from. Carried as numbers so the
+/// UI never has to parse them back out of the formatted metrics.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct FlightInstruments {
+    pub pitch: f32,
+    pub bank: f32,
+    /// -1 to 1, left to right.
+    pub slip: f32,
+    pub heading: f32,
+    pub track: f32,
+    /// `None` when the autopilot is off and the bug means nothing.
+    pub heading_bug: Option<f32>,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct DashboardSnapshot {
     pub kind: DashboardKind,
@@ -75,7 +92,10 @@ pub struct DashboardSnapshot {
     pub rpm_detail: String,
     pub gear_value: String,
     pub recommended_gear: Option<String>,
+    /// Truck only: the posted limit, `None` where there is none.
+    pub speed_limit: Option<i32>,
     pub engine_gauge: Option<EngineGaugeSnapshot>,
+    pub flight: Option<FlightInstruments>,
     pub groups_top: Vec<MetricGroup>,
     pub groups_middle: Vec<MetricGroup>,
     pub groups_bottom: Vec<MetricGroup>,
@@ -171,6 +191,8 @@ fn race_dashboard() -> DashboardSnapshot {
         rpm_detail: "of 7,800 RPM".into(),
         gear_value: "4".into(),
         recommended_gear: None,
+        speed_limit: None,
+        flight: None,
         engine_gauge: None,
         groups_top: vec![
             group(
@@ -232,6 +254,8 @@ fn rally_dashboard() -> DashboardSnapshot {
         rpm_detail: "RPM".into(),
         gear_value: "4".into(),
         recommended_gear: None,
+        speed_limit: None,
+        flight: None,
         engine_gauge: None,
         groups_top: vec![],
         groups_middle: vec![],
@@ -273,6 +297,8 @@ fn truck_dashboard() -> DashboardSnapshot {
         rpm_detail: "of 2,500 RPM".into(),
         gear_value: "7".into(),
         recommended_gear: Some("9".into()),
+        speed_limit: Some(90),
+        flight: None,
         engine_gauge: Some(EngineGaugeSnapshot {
             value: 1_500.0,
             max: 2_500.0,
@@ -410,6 +436,15 @@ fn flight_dashboard() -> DashboardSnapshot {
         rpm_detail: "N1".into(),
         gear_value: "FLAPS  1".into(),
         recommended_gear: None,
+        speed_limit: None,
+        flight: Some(FlightInstruments {
+            pitch: 3.0,
+            bank: 12.0,
+            slip: 0.0,
+            heading: 94.0,
+            track: 97.0,
+            heading_bug: Some(106.0),
+        }),
         engine_gauge: None,
         groups_top: vec![
             group(

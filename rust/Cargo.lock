@@ -4131,6 +4131,10 @@ dependencies = [
 [[package]]
 name = "simhub-core"
 version = "0.1.0"
+dependencies = [
+ "log",
+ "simhub-model",
+]
 
 [[package]]
 name = "simhub-model"
@@ -4142,6 +4146,7 @@ version = "0.1.0"
 dependencies = [
  "simetry",
  "simhub-model",
+ "windows 0.62.2",
  "yaml-rust",
 ]
 

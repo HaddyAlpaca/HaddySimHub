@@ -14,8 +14,15 @@ simhub-model.workspace = true
 # that `SimState::session_info` returns is the same type this crate parses.
 yaml-rust = "0.4.5"
 
-# simetry reads the Assetto, DiRT Rally 2 and SCS plugin maps, and generates its
-# SCS layout with bindgen from the plugin's own header rather than by hand. That
-# build step needs libclang. `with_r3e` is left off because it runs bindgen over
-# a RaceRoom header we do not use.
-simetry = { version = "0.2.3", default-features = false, features = ["with_truck_simulator"] }
+# simetry reads the Assetto Corsa, Competizione and iRacing pages. Its default
+# features are off: `with_r3e` and `with_truck_simulator` both run bindgen at
+# build time (so need libclang), and neither is used — ETS2 is read through the
+# byte decoder here, because simetry's SCS client spins while the game is paused.
+simetry = { version = "0.2.3", default-features = false }
+
+# Named file mappings for the pages simetry does not cover.
+windows = { version = "0.62", features = [
+    "Win32_Foundation",
+    "Win32_Security",
+    "Win32_System_Memory",
+] }

@@ -990,6 +990,8 @@ export component DashboardWindow inherits Window {
     in property <string> rpm_detail: "";
     in property <string> gear_value: "";
     in property <string> clock_text: "";
+    in property <string> status_text: "";
+    in property <string> speed_limit: "--";
     in property <float> progress_pct: 0;
     in property <int> dashboard_kind: 0;
     in property <[Metric]> header_metrics;
@@ -1044,7 +1046,7 @@ export component DashboardWindow inherits Window {
                 vertical-alignment: center;
             }
             Text {
-                text: "DEMO DATA";
+                text: root.status_text;
                 color: #ffc14b;
                 font-size: 11px;
                 font-weight: 700;
@@ -1262,7 +1264,7 @@ export component DashboardWindow inherits Window {
                                 border-width: 5px;
                                 border-color: #ef4444;
                                 Text {
-                                    text: "90";
+                                    text: root.speed_limit;
                                     color: #111111;
                                     font-size: 18px;
                                     font-weight: 800;
@@ -1396,6 +1398,30 @@ export component DashboardWindow inherits Window {
                     flight_style: true;
                     width: (parent.width - 8px) / 2;
                 }
+            }
+        }
+
+        VerticalLayout {
+            x: 0px;
+            y: 0px;
+            width: parent.width;
+            height: parent.height;
+            alignment: center;
+            spacing: 12px;
+            visible: root.dashboard_kind == 4;
+
+            Text {
+                text: "Waiting for a game";
+                color: #ffffff;
+                font-size: 32px;
+                font-weight: 600;
+                horizontal-alignment: center;
+            }
+            Text {
+                text: "Start a supported simulator and its dashboard appears here.";
+                color: #aeb5c6;
+                font-size: 16px;
+                horizontal-alignment: center;
             }
         }
         }

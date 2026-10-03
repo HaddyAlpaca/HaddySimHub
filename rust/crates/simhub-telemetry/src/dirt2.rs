@@ -174,34 +174,3 @@ mod tests {
         assert_eq!(decoded, Dirt2Telemetry::default());
     }
 }
-
-/// Maps `simetry`'s decoded datagram onto [`Dirt2Telemetry`].
-///
-/// Type-checked against `simetry` but not unit-tested. The byte decoder above
-/// stays the tested path, and remains the fuller one: `simetry` does not expose
-/// the sector split times, so those are lost here.
-pub mod simetry_source {
-    use simetry::dirt_rally_2::SimState;
-    use simhub_model::telemetry::Dirt2Telemetry;
-
-    pub fn telemetry_from(state: &SimState) -> Dirt2Telemetry {
-        Dirt2Telemetry {
-            lap_time: state.time_of_current_lap,
-            distance: state.distance_driven_on_current_lap,
-            // The C# struct names the field at this offset `progress` and reads
-            // it as a 0-1 fraction; `simetry` reads the same offset as the
-            // overall distance driven, matching the published Codemasters
-            // layout. Mapped the way the converter expects, so behaviour is
-            // unchanged — but one of the two readings is wrong.
-            progress: state.distance_driven_overall,
-            speed_ms: state.velocity_ms,
-            gear: state.gear,
-            rpm: state.speed_of_engine_rpm_div_10,
-            max_rpm: state.maximum_rpm_div_10,
-            car_pos: state.current_lap,
-            // Not exposed by `simetry`; the byte decoder reads both.
-            sector_1_time: 0.0,
-            sector_2_time: 0.0,
-        }
-    }
-}

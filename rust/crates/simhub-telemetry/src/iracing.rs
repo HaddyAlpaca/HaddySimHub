@@ -6,8 +6,7 @@
 //! hands back a state that can be queried by variable name.
 //!
 //! The mapping from those names onto [`IRacingTelemetry`] is kept behind
-//! [`VarSource`] so it stays pure and testable off Windows; only the
-//! implementation for `simetry`'s own state is platform-gated.
+//! [`VarSource`] so it stays pure and testable without a running session.
 
 use simhub_model::telemetry::IRacingTelemetry;
 
@@ -198,9 +197,24 @@ pub mod session {
     }
 }
 
-mod simetry_source {
-    use super::VarSource;
+/// The `simetry` side of iRacing: its state answers [`VarSource`], and its
+/// session YAML fills in what the telemetry block does not carry.
+pub mod simetry_source {
+    use super::{VarSource, session, telemetry_from};
     use simetry::iracing::SimState;
+    use simhub_model::telemetry::IRacingSample;
+
+    pub use simetry::iracing::Client;
+
+    /// Builds one converter sample from a `simetry` state.
+    pub fn sample_from(state: &SimState) -> IRacingSample {
+        let yaml = state.session_info();
+        let mut telemetry = telemetry_from(state);
+        telemetry.car_screen_name = session::car_screen_name(yaml, telemetry.player_car_idx);
+        telemetry.race_car_iratings = session::race_car_iratings(yaml);
+        let session = session::session_from(yaml, telemetry.session_num, telemetry.player_car_idx);
+        IRacingSample { telemetry, session }
+    }
 
     impl VarSource for SimState {
         fn f32(&self, name: &str) -> Option<f32> {

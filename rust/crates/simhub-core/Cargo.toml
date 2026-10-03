@@ -6,3 +6,7 @@ rust-version.workspace = true
 
 [lib]
 path = "src/lib.rs"
+
+[dependencies]
+log.workspace = true
+simhub-model.workspace = true

@@ -2,40 +2,140 @@ slint::include_modules!();
 
 use chrono::Local;
 use simhub_core::{
-    DashboardSnapshot, EngineGaugeSnapshot, Metric as CoreMetric, MetricGroup as CoreMetricGroup,
-    TelemetryPoint,
+    DashboardKind, DashboardSnapshot, EngineGaugeSnapshot, Metric as CoreMetric,
+    MetricGroup as CoreMetricGroup, TelemetryPoint,
 };
 use slint::{Color, ModelRc, Timer, TimerMode, VecModel};
 use std::error::Error;
+use std::sync::{Arc, Mutex};
 use std::{fmt::Write as _, time::Duration};
 
+/// `dashboard_kind` value of the waiting screen shown while no game runs.
+const IDLE_KIND: i32 = 4;
+
+/// The dashboard window. Lives on the UI thread; other threads reach it
+/// through a [`DashboardHandle`].
+pub struct DashboardUi {
+    window: DashboardWindow,
+    _clock: Timer,
+}
+
+impl DashboardUi {
+    pub fn new() -> Result<Self, Box<dyn Error>> {
+        let window = DashboardWindow::new()?;
+        window.set_dashboard_kind(IDLE_KIND);
+
+        let weak_window = window.as_weak();
+        let clock = Timer::default();
+        clock.start(TimerMode::Repeated, Duration::from_secs(1), move || {
+            if let Some(window) = weak_window.upgrade() {
+                window.set_clock_text(Local::now().format("%H:%M:%S").to_string().into());
+            }
+        });
+        window.set_clock_text(Local::now().format("%H:%M:%S").to_string().into());
+
+        Ok(Self {
+            window,
+            _clock: clock,
+        })
+    }
+
+    pub fn handle(&self) -> DashboardHandle {
+        DashboardHandle {
+            window: self.window.as_weak(),
+            pending: Arc::new(Mutex::new(Pending::default())),
+        }
+    }
+
+    /// Shows a snapshot, or the waiting screen for `None`. UI thread only.
+    pub fn show(&self, snapshot: Option<DashboardSnapshot>, status: &str) {
+        apply(&self.window, snapshot, status);
+    }
+
+    /// Runs the event loop until the window is closed.
+    pub fn run(self) -> Result<(), Box<dyn Error>> {
+        self.window.run()?;
+        Ok(())
+    }
+}
+
+/// Sends snapshots to the dashboard from any thread.
+///
+/// Telemetry arrives far faster than a screen refreshes, so only the newest
+/// snapshot is kept and at most one repaint is queued at a time. A slow frame
+/// therefore skips stale data instead of building a backlog, which is what the
+/// bounded drop-oldest channel did in the C# app.
+#[derive(Clone)]
+pub struct DashboardHandle {
+    window: slint::Weak<DashboardWindow>,
+    pending: Arc<Mutex<Pending>>,
+}
+
+type Frame = (Option<DashboardSnapshot>, String);
+
+#[derive(Default)]
+struct Pending {
+    latest: Option<Frame>,
+    scheduled: bool,
+}
+
+impl DashboardHandle {
+    pub fn show(&self, snapshot: Option<DashboardSnapshot>, status: &str) {
+        let mut pending = self.pending.lock().unwrap_or_else(|e| e.into_inner());
+        pending.latest = Some((snapshot, status.to_owned()));
+        if pending.scheduled {
+            return;
+        }
+        pending.scheduled = true;
+        drop(pending);
+
+        let shared = Arc::clone(&self.pending);
+        let _ = self.window.upgrade_in_event_loop(move |window| {
+            let latest = {
+                let mut pending = shared.lock().unwrap_or_else(|e| e.into_inner());
+                pending.scheduled = false;
+                pending.latest.take()
+            };
+            if let Some((snapshot, status)) = latest {
+                apply(&window, snapshot, &status);
+            }
+        });
+    }
+
+    /// Closes the window, ending [`DashboardUi::run`].
+    pub fn close(&self) {
+        let _ = slint::invoke_from_event_loop(|| {
+            let _ = slint::quit_event_loop();
+        });
+    }
+}
+
+/// Shows one fixed snapshot, for the demo mode.
 pub fn run(snapshot: DashboardSnapshot) -> Result<(), Box<dyn Error>> {
-    let window = DashboardWindow::new()?;
-    let (gauge_ticks, gauge_arc, needle_path) = gauge_visuals(snapshot.engine_gauge.as_ref());
-    let (compass_ticks, heading_marker_path, track_marker_path, bug_marker_path) =
-        if snapshot.kind == simhub_core::DashboardKind::Flight {
-            let heading = metric_degrees(&snapshot.groups_middle[0], "Heading")?;
-            let track = metric_degrees(&snapshot.groups_middle[0], "Track")?;
-            let bug = metric_degrees(&snapshot.groups_middle[2], "Heading")?;
-            heading_compass_visuals(heading, track, Some(bug))
-        } else {
-            (Vec::new(), String::new(), String::new(), String::new())
-        };
-    let attitude = if snapshot.kind == simhub_core::DashboardKind::Flight {
-        let group = snapshot.groups_top.first().ok_or_else(|| {
-            std::io::Error::new(
-                std::io::ErrorKind::InvalidData,
-                "Flight display is missing its attitude metric group",
-            )
-        })?;
-        flight_attitude_visuals(
-            metric_number(group, "Pitch")?,
-            metric_number(group, "Bank")?,
-            metric_number(group, "Slip")?,
-        )
-    } else {
-        AttitudeVisuals::default()
+    let ui = DashboardUi::new()?;
+    ui.show(Some(snapshot), "DEMO DATA");
+    ui.run()
+}
+
+fn apply(window: &DashboardWindow, snapshot: Option<DashboardSnapshot>, status: &str) {
+    window.set_status_text(status.into());
+    let Some(snapshot) = snapshot else {
+        window.set_dashboard_kind(IDLE_KIND);
+        window.set_title_text("HaddySimHub".into());
+        return;
     };
+
+    let (gauge_ticks, gauge_arc, needle_path) = gauge_visuals(snapshot.engine_gauge.as_ref());
+    let (compass_ticks, heading_marker_path, track_marker_path, bug_marker_path) = match snapshot
+        .flight
+    {
+        Some(flight) => heading_compass_visuals(flight.heading, flight.track, flight.heading_bug),
+        None => (Vec::new(), String::new(), String::new(), String::new()),
+    };
+    let attitude = snapshot
+        .flight
+        .map(|flight| flight_attitude_visuals(flight.pitch, flight.bank, flight.slip))
+        .unwrap_or_default();
     let (brake_trace, clutch_trace, throttle_trace) = telemetry_paths(&snapshot.telemetry_trace);
 
     window.set_title_text(snapshot.title.into());
@@ -47,6 +147,12 @@ pub fn run(snapshot: DashboardSnapshot) -> Result<(), Box<dyn Error>> {
     window.set_rpm_detail(snapshot.rpm_detail.into());
     window.set_gear_value(snapshot.gear_value.into());
     window.set_recommended_gear(snapshot.recommended_gear.unwrap_or_default().into());
+    window.set_speed_limit(
+        snapshot
+            .speed_limit
+            .map_or_else(|| "--".to_string(), |limit| limit.to_string())
+            .into(),
+    );
     window.set_compass_ticks(ModelRc::new(VecModel::from(compass_ticks)));
     window.set_heading_marker_path(heading_marker_path.into());
     window.set_track_marker_path(track_marker_path.into());
@@ -94,87 +200,11 @@ pub fn run(snapshot: DashboardSnapshot) -> Result<(), Box<dyn Error>> {
         1,
     ))));
     window.set_dashboard_kind(match snapshot.kind {
-        simhub_core::DashboardKind::Race => 0,
-        simhub_core::DashboardKind::Rally => 1,
-        simhub_core::DashboardKind::Truck => 2,
-        simhub_core::DashboardKind::Flight => 3,
+        DashboardKind::Race => 0,
+        DashboardKind::Rally => 1,
+        DashboardKind::Truck => 2,
+        DashboardKind::Flight => 3,
     });
-
-    let weak_window = window.as_weak();
-    let clock = Timer::default();
-    clock.start(TimerMode::Repeated, Duration::from_secs(1), move || {
-        if let Some(window) = weak_window.upgrade() {
-            window.set_clock_text(Local::now().format("%H:%M:%S").to_string().into());
-        }
-    });
-    window.set_clock_text(Local::now().format("%H:%M:%S").to_string().into());
-
-    window.run()?;
-    Ok(())
-}
-
-fn metric_degrees(group: &CoreMetricGroup, label: &str) -> Result<f32, std::io::Error> {
-    let value = group
-        .metrics
-        .iter()
-        .find(|metric| metric.label == label)
-        .ok_or_else(|| {
-            std::io::Error::new(
-                std::io::ErrorKind::InvalidData,
-                format!("Flight display is missing the {label} metric"),
-            )
-        })?
-        .value
-        .trim_end_matches('°')
-        .parse::<f32>()
-        .map_err(|error| {
-            std::io::Error::new(
-                std::io::ErrorKind::InvalidData,
-                format!("Flight {label} must be a numeric bearing: {error}"),
-            )
-        })?;
-    if !value.is_finite() {
-        return Err(std::io::Error::new(
-            std::io::ErrorKind::InvalidData,
-            format!("Flight {label} bearing must be finite"),
-        ));
-    }
-    Ok(value)
-}
-
-fn metric_number(group: &CoreMetricGroup, label: &str) -> Result<f32, std::io::Error> {
-    let metric = group
-        .metrics
-        .iter()
-        .find(|metric| metric.label == label)
-        .ok_or_else(|| {
-            std::io::Error::new(
-                std::io::ErrorKind::InvalidData,
-                format!("Flight display is missing the {label} metric"),
-            )
-        })?;
-    if label == "Slip" && metric.value == "Centered" {
-        return Ok(0.0);
-    }
-
-    let value = metric
-        .value
-        .trim()
-        .trim_end_matches('°')
-        .parse::<f32>()
-        .map_err(|error| {
-            std::io::Error::new(
-                std::io::ErrorKind::InvalidData,
-                format!("Flight {label} must be numeric: {error}"),
-            )
-        })?;
-    if !value.is_finite() {
-        return Err(std::io::Error::new(
-            std::io::ErrorKind::InvalidData,
-            format!("Flight {label} must be finite"),
-        ));
-    }
-    Ok(value)
 }
 
 #[derive(Default)]
@@ -606,16 +636,6 @@ mod tests {
 
     #[test]
     fn flight_compass_marks_are_normalized_and_distinguish_heading_from_track() {
-        let flight = demo_dashboard(DashboardKind::Flight);
-        assert_eq!(
-            metric_degrees(&flight.groups_middle[0], "Heading").unwrap(),
-            94.0
-        );
-        assert_eq!(
-            metric_degrees(&flight.groups_middle[0], "Track").unwrap(),
-            97.0
-        );
-
         let (ticks, heading_path, track_path, bug_path) = heading_compass_visuals(0.0, 90.0, None);
         let (_, wrapped_heading_path, _, _) = heading_compass_visuals(360.0, 90.0, None);
 
@@ -670,37 +690,6 @@ mod tests {
         assert_eq!(left.slip_x, 78.0);
         assert_eq!(centered.slip_x, 100.0);
         assert_eq!(right.slip_x, 122.0);
-    }
-
-    #[test]
-    fn flight_compass_rejects_missing_and_non_numeric_bearings() {
-        let group = CoreMetricGroup {
-            title: "HEADING".into(),
-            accent: [0, 0, 0],
-            metrics: vec![CoreMetric {
-                label: "Heading".into(),
-                value: "unknown".into(),
-                delta: None,
-                ratio: 0.0,
-                active: false,
-                warning: false,
-                critical: false,
-            }],
-        };
-
-        assert!(metric_degrees(&group, "Track").is_err());
-        assert!(metric_degrees(&group, "Heading").is_err());
-    }
-
-    #[test]
-    fn flight_attitude_reads_numeric_pitch_bank_and_centered_slip() {
-        let flight = demo_dashboard(DashboardKind::Flight);
-        let attitude = &flight.groups_top[0];
-
-        assert_eq!(metric_number(attitude, "Pitch").unwrap(), 3.0);
-        assert_eq!(metric_number(attitude, "Bank").unwrap(), 12.0);
-        assert_eq!(metric_number(attitude, "Slip").unwrap(), 0.0);
-        assert!(metric_number(attitude, "Missing").is_err());
     }
 
     #[test]

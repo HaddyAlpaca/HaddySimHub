@@ -15,6 +15,7 @@ pub mod dirt2;
 pub mod ets;
 pub mod forza;
 pub mod iracing;
+pub mod shm;
 pub mod udp;
 
 /// Reads a little-endian value out of a packet at a fixed offset.
