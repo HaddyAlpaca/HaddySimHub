@@ -1,0 +1,31 @@
+[package]
+name = "simhub-update"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+
+[lib]
+path = "src/lib.rs"
+# Windows will not start an unelevated exe with "update" in its name (installer
+# detection, error 740), and the unit test exe would be `simhub_update-*.exe`.
+# The tests live in `tests/` instead, and the doc example is `no_run`.
+test = false
+
+[dependencies]
+log = "0.4"
+
+# self_update does the whole GitHub check -> download -> unzip -> replace the
+# running exe flow, so no separate updater exe is needed. Its defaults pull in
+# reqwest, tar and a terminal progress bar; we want the blocking ureq client over
+# rustls (no tokio) and zip, because CD publishes `Compress-Archive` output,
+# which is deflate-compressed.
+self_update = { version = "1.3", default-features = false, features = [
+    "ureq",
+    "rustls",
+    "github",
+    "archive-zip",
+    "compression-zip-deflate",
+] }
+
+# Only the process table is needed to find and stop other running copies.
+sysinfo = { version = "0.38", default-features = false, features = ["system"] }
