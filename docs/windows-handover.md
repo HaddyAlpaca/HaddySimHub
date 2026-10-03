@@ -3,6 +3,19 @@
 Development moved to Windows after the telemetry layer was built. This records
 what changes on that machine, and what can only be answered there.
 
+## Picking it up
+
+```
+git fetch origin
+git checkout rust-migration
+```
+
+Two things the toolchain needs beyond a normal Rust install. An MSVC target,
+which `rustup target list --installed` will confirm. And libclang, because
+`simetry` runs `bindgen` in its build script to generate the SCS layout from
+the plugin's own header — if `cargo build` stops on a missing `libclang.dll`,
+that is the cause and not the code.
+
 ## Build changes
 
 `rust/crates/simhub-telemetry/Cargo.toml` declares `simetry` under
@@ -15,6 +28,8 @@ Keep the feature limitation:
 ```toml
 simetry = { version = "0.2.3", default-features = false, features = ["with_truck_simulator"] }
 ```
+
+Only the section header changes — the `default-features` line stays as it is.
 
 `with_r3e` is on by default and runs `bindgen` over a RaceRoom header we do not
 use. It needs libclang and the target's C headers, and it was what blocked
@@ -39,6 +54,17 @@ has already been played. Each is one session away from being resolved.
 | ETS2 | What does a 14-speed gearbox show in second gear? | The crawler labels were off by one; now fixed to `C1`, `C2`, then 1-12 |
 | AC Rally | Do the values look sane at all? | Its page layout was copied from ACC, never validated, and has no published specification |
 | MSFS 2020 | Do the deviation needles point the right way? | Positive is assumed to mean right of course and above the glidepath; mirrored needles are one negation |
+
+## Where to start
+
+Before touching code, run the four games that have been played before — ACC,
+iRacing, ETS2 and Dirt Rally 2 — for a few minutes each with `--capture`. That
+produces the fixtures this repository still lacks, and the recordings answer
+the ACC and Dirt Rally 2 questions above on the way past.
+
+Then start Forza Horizon 5 and Assetto Corsa Rally once each. Those are the two
+whose layouts rest on an assumption rather than on a specification, and they
+are where the difference between correct and merely plausible actually shows.
 
 ## State of the port
 
