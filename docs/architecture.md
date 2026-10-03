@@ -26,7 +26,8 @@ HaddySimHub.sln
 ├── SCSSdkClient/              vendored SCS telemetry SDK integration
 ├── iRacingSDK.Net/            vendored iRacing SDK integration
 ├── HaddySimHubUpdater/        updater project
-├── tools/                     developer and telemetry-support tools
+├── rust/                     parallel Rust + Slint prototype (synthetic data only)
+├── tools/                    developer and telemetry-support tools
 ├── docs/                      architecture documentation and ADRs
 └── .github/workflows/         build, test, and deployment automation
 ```
@@ -111,6 +112,38 @@ the display type or data shape must update both sides and their tests.
 The `--e2e` mode adds loopback-only health and display-update endpoints and does
 not start the normal display runner. It exists to drive the frontend without a
 running simulator.
+
+The opt-in `--capture <dir>` mode records raw source-boundary data for all
+eight registered games before C# telemetry struct/DTO conversion; for MSFS
+that boundary is the SimConnect API dispatch payload, not the underlying
+transport. It does not capture converted telemetry or display updates. Source
+coverage and its completeness limits are documented in
+[the raw telemetry capture guide](telemetry-corpus.md), and community Rust
+reader candidates are surveyed in
+[the Rust implementation research](rust-telemetry-implementations.md).
+
+## Rust prototype
+
+`rust/` is developed alongside the current application and is not the default
+runtime. The workspace pins Rust 1.92.0 in `rust/rust-toolchain.toml`.
+`simhub-core` prepares typed dashboard snapshots for race, rally,
+truck, and flight; `simhub-ui` renders a screen-specific Slint layout for each;
+and `simhub-app` starts the prototype using explicitly labeled synthetic data.
+The layouts follow the existing dashboard hierarchy: race session, speed, fuel,
+and telemetry; rally progress, driving instruments, and sectors; truck route,
+damage, speed, and vehicle status; and flight instruments, navigation,
+autopilot, and engine data. Custom instruments such as the flight attitude
+indicator and race telemetry trace are still simplified rather than exact
+pixel/feature-parity ports. The prototype runs on Linux without a simulator or
+browser, but it does not contain game providers or prove telemetry parity.
+Porting a game converter remains blocked on that game's captured frames and
+layout manifest.
+
+From `rust/`, run `cargo test --workspace --locked` to test the workspace.
+Run `cargo run -p simhub-app -- race` to open the race prototype; replace
+`race` with `rally`, `truck`, or `flight` to open another demo screen. On
+Ubuntu, install `libfontconfig1-dev` first to provide Slint's Fontconfig build
+dependency.
 
 ## Frontend boundaries
 

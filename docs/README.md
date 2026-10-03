@@ -9,6 +9,15 @@ discover from the folder names alone.
   project boundaries, and extension points.
 - [Game display pipeline](../HaddySimHub/Displays/README.md) — the detailed
   provider-to-frontend flow and instructions for adding a simulator.
+- [Telemetry corpus and layout manifest](telemetry-corpus.md) — the recorded
+  ground truth required before Rust game converters are ported, and how it is
+  captured.
+- [Raw-capture specification and Rust migration plan](rust-migration-spec-plan.md)
+  — defines the raw-input completeness contract, scope of the full Rust
+  migration, and staged acceptance gates.
+- [Existing Rust telemetry implementations](rust-telemetry-implementations.md)
+  — surveys community readers and protocol libraries for the supported games,
+  including coverage and license caveats.
 
 ## Architecture decisions
 
@@ -19,6 +28,8 @@ not a replacement for the architecture overview.
 - [ADR-0001: Use a shared game-display pipeline](adr/0001-game-display-pipeline.md)
 - [ADR-0002: Select one active display and separate detection from telemetry](adr/0002-single-active-display-and-telemetry-detection.md)
 - [ADR-0003: Prefer explicit and boring application structure](adr/0003-prefer-explicit-and-boring-application-structure.md)
+- [ADR-0004: Migrate the backend to Rust and the UI to Slint](adr/0004-migrate-backend-to-rust-and-ui-to-slint.md)
+- [ADR-0005: Pin telemetry layout with a generated manifest](adr/0005-pin-telemetry-layout-with-a-generated-manifest.md)
 
 ## Documentation rules
 
