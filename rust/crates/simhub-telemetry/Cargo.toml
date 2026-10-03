@@ -26,3 +26,7 @@ windows = { version = "0.62", features = [
     "Win32_Security",
     "Win32_System_Memory",
 ] }
+
+# Binds SimConnect.dll at runtime. The DLL comes with the MSFS SDK rather than
+# with us, so linking it at build time would stop the app starting without it.
+libloading = "0.8.9"
