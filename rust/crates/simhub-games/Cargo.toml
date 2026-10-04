@@ -1,0 +1,18 @@
+[package]
+name = "simhub-games"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+log.workspace = true
+simetry = { version = "0.2.3", default-features = false }
+simhub-convert.workspace = true
+simhub-core.workspace = true
+simhub-model.workspace = true
+simhub-telemetry.workspace = true
+# simetry's clients are async; each feed runs them on a runtime of its own thread.
+tokio = { version = "1", features = ["rt", "time", "macros"] }

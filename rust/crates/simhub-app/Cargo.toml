@@ -4,6 +4,18 @@ version = "0.1.0"
 edition.workspace = true
 rust-version.workspace = true
 
+# The release layout and the updater both expect this exe name.
+[[bin]]
+name = "HaddySimHub"
+path = "src/main.rs"
+
 [dependencies]
+clap = { version = "4", features = ["derive"] }
+flexi_logger = "0.31"
+log.workspace = true
 simhub-core.workspace = true
+simhub-games.workspace = true
+simhub-model.workspace = true
 simhub-ui.workspace = true
+simhub-update.workspace = true
+sysinfo = { version = "0.38", default-features = false, features = ["system"] }

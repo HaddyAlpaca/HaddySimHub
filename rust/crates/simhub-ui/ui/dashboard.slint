@@ -267,6 +267,7 @@ component ProgressTrack inherits Rectangle {
     height: 14px;
 
     Rectangle {
+        x: 0px;
         width: parent.width * root.progress_pct;
         height: parent.height;
         background: #f0b429;
@@ -1023,7 +1024,7 @@ export component DashboardWindow inherits Window {
     in property <string> clutch_trace;
     in property <string> throttle_trace;
 
-    title: root.title_text + " - Rust";
+    title: root.title_text;
     width: 1440px;
     height: 900px;
     background: #1e1e2f;
