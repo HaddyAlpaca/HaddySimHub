@@ -1,0 +1,1432 @@
+export struct Metric {
+    label: string,
+    value: string,
+    delta_value: string,
+    delta_status: int,
+    ratio: float,
+    active: bool,
+    warning: bool,
+    critical: bool,
+}
+
+export struct MetricGroup {
+    title: string,
+    accent: color,
+    metrics: [Metric],
+}
+
+export struct GaugeTick {
+    commands: string,
+    label: string,
+    label_x: length,
+    label_y: length,
+}
+
+export struct GaugeArcSegment {
+    commands: string,
+    accent: color,
+}
+
+component MetricLine inherits Rectangle {
+    in property <Metric> metric;
+
+    background: transparent;
+    min-height: 34px;
+
+    VerticalLayout {
+        spacing: 2px;
+
+        HorizontalLayout {
+            spacing: 12px;
+
+            Text {
+                text: root.metric.label;
+                color: #aeb5c6;
+                font-size: 14px;
+                vertical-alignment: center;
+                horizontal-stretch: 1;
+            }
+
+            Text {
+                text: root.metric.value;
+                color: root.metric.critical ? #ff5252 : root.metric.warning ? #ffc14b : root.metric.active ? #45d483 : #ffffff;
+                font-size: 15px;
+                font-weight: 600;
+                horizontal-alignment: right;
+                vertical-alignment: center;
+                horizontal-stretch: 1;
+                wrap: word-wrap;
+            }
+
+            Text {
+                text: root.metric.delta_value;
+                color: root.metric.delta_status < 0 ? #45d483 : root.metric.delta_status > 0 ? #ff5252 : #ffffff;
+                font-size: 14px;
+                font-weight: 600;
+                vertical-alignment: center;
+                visible: root.metric.delta_value != "";
+            }
+        }
+
+        Rectangle {
+            height: 5px;
+            background: #3a3d51;
+            visible: root.metric.ratio > 0;
+            Rectangle {
+                width: parent.width * root.metric.ratio;
+                x: 0px;
+                height: parent.height;
+                background: root.metric.warning ? #ffc14b : #45d483;
+            }
+        }
+    }
+
+    Rectangle {
+        y: parent.height - 1px;
+        width: parent.width;
+        height: 1px;
+        background: #34374a;
+    }
+}
+
+component MetricGroupCard inherits Rectangle {
+    in property <MetricGroup> group;
+    in property <bool> flight_style: false;
+
+    background: root.flight_style ? #1d2b42 : #252840;
+    border-width: 1px;
+    border-color: root.flight_style ? #167c9b : root.group.accent;
+    border-radius: 10px;
+    horizontal-stretch: 1;
+    vertical-stretch: 1;
+
+    VerticalLayout {
+        padding: 14px;
+        spacing: 8px;
+
+        Text {
+            text: root.group.title;
+            color: root.group.accent;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+        }
+
+        VerticalLayout {
+            spacing: 0px;
+            vertical-stretch: 1;
+
+            for metric in root.group.metrics: MetricLine {
+                metric: metric;
+            }
+        }
+    }
+}
+
+component HeaderMetric inherits Rectangle {
+    in property <Metric> metric;
+    horizontal-stretch: 1;
+    background: transparent;
+
+    VerticalLayout {
+        alignment: center;
+        spacing: 4px;
+
+        Text {
+            text: root.metric.label;
+            color: #8e96ab;
+            font-size: 11px;
+            font-weight: 700;
+            horizontal-alignment: center;
+        }
+
+        Text {
+            text: root.metric.delta_value != "" ? root.metric.delta_value : root.metric.value;
+            color: root.metric.delta_status < 0 ? #45d483 : root.metric.delta_status > 0 ? #ff5252 : #ffffff;
+            font-size: 15px;
+            font-weight: 700;
+            horizontal-alignment: center;
+        }
+    }
+}
+
+component TelemetryLegend inherits Rectangle {
+    in property <Metric> metric;
+    horizontal-stretch: 1;
+    background: transparent;
+
+    HorizontalLayout {
+        alignment: center;
+        spacing: 6px;
+        Rectangle {
+            width: 9px;
+            height: 9px;
+            border-radius: 5px;
+            background: root.metric.label == "BRAKE" ? #ff3333 : root.metric.label == "CLUTCH" ? #ffcc00 : #00cc66;
+        }
+        Text {
+            text: root.metric.label + "  " + root.metric.value;
+            color: #d1d8e6;
+            font-size: 12px;
+            font-weight: 700;
+            vertical-alignment: center;
+        }
+    }
+}
+
+component TelemetryTracePanel inherits Rectangle {
+    in property <[Metric]> metrics;
+    in property <string> brake_trace;
+    in property <string> clutch_trace;
+    in property <string> throttle_trace;
+
+    background: #252840;
+    border-width: 1px;
+    border-color: #3c4059;
+    border-radius: 10px;
+
+    VerticalLayout {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        padding-left: 16px;
+        padding-right: 16px;
+        spacing: 6px;
+
+        HorizontalLayout {
+            height: 22px;
+            spacing: 12px;
+            Text {
+                text: "TELEMETRY";
+                color: #aeb5c6;
+                font-size: 13px;
+                font-weight: 700;
+                horizontal-stretch: 1;
+                vertical-alignment: center;
+            }
+            for metric in root.metrics: TelemetryLegend { metric: metric; }
+        }
+
+        Rectangle {
+            vertical-stretch: 1;
+            background: transparent;
+
+            Rectangle {
+                y: parent.height * 0.25;
+                width: parent.width;
+                height: 1px;
+                background: #55596a;
+            }
+            Rectangle {
+                y: parent.height * 0.5;
+                width: parent.width;
+                height: 1px;
+                background: #55596a;
+            }
+            Rectangle {
+                y: parent.height * 0.75;
+                width: parent.width;
+                height: 1px;
+                background: #55596a;
+            }
+
+            Path {
+                width: parent.width;
+                height: parent.height;
+                viewbox-width: 1000;
+                viewbox-height: 100;
+                commands: root.brake_trace;
+                stroke: #ff3333;
+                stroke-width: 2px;
+            }
+            Path {
+                width: parent.width;
+                height: parent.height;
+                viewbox-width: 1000;
+                viewbox-height: 100;
+                commands: root.clutch_trace;
+                stroke: #ffcc00;
+                stroke-width: 2px;
+            }
+            Path {
+                width: parent.width;
+                height: parent.height;
+                viewbox-width: 1000;
+                viewbox-height: 100;
+                commands: root.throttle_trace;
+                stroke: #00cc66;
+                stroke-width: 2px;
+            }
+        }
+    }
+}
+
+component ProgressTrack inherits Rectangle {
+    in property <float> progress_pct;
+    background: #34374a;
+    border-radius: 8px;
+    height: 14px;
+
+    Rectangle {
+        x: 0px;
+        width: parent.width * root.progress_pct;
+        height: parent.height;
+        background: #f0b429;
+        border-radius: 8px;
+    }
+}
+
+component SpeedometerReadout inherits Rectangle {
+    in property <string> rpm;
+    in property <string> gear;
+    in property <string> speed;
+    in property <bool> rally_style: false;
+    background: transparent;
+
+    VerticalLayout {
+        width: parent.width;
+        height: parent.height;
+        alignment: center;
+        spacing: root.rally_style ? 8px : 0px;
+
+        Text {
+            text: root.rpm;
+            color: #ffffff;
+            font-size: root.rally_style ? 54px : 32px;
+            font-weight: 700;
+            horizontal-alignment: center;
+        }
+        Text {
+            text: "RPM";
+            color: root.rally_style ? #f5a623 : #aeb5c6;
+            font-size: root.rally_style ? 27px : 14px;
+            font-weight: root.rally_style ? 600 : 400;
+            letter-spacing: root.rally_style ? 2px : 0px;
+            horizontal-alignment: center;
+        }
+        Text {
+            text: root.gear;
+            color: #ffffff;
+            font-size: root.rally_style ? 108px : 64px;
+            font-weight: 900;
+            horizontal-alignment: center;
+        }
+        Text {
+            text: "GEAR";
+            color: root.rally_style ? #f5a623 : #aeb5c6;
+            font-size: root.rally_style ? 27px : 14px;
+            font-weight: root.rally_style ? 600 : 400;
+            letter-spacing: root.rally_style ? 2px : 0px;
+            horizontal-alignment: center;
+        }
+        Text {
+            text: root.speed;
+            color: #ffffff;
+            font-size: root.rally_style ? 54px : 32px;
+            font-weight: 700;
+            horizontal-alignment: center;
+        }
+        Text {
+            text: "KM/H";
+            color: root.rally_style ? #f5a623 : #aeb5c6;
+            font-size: root.rally_style ? 27px : 14px;
+            font-weight: root.rally_style ? 600 : 400;
+            letter-spacing: root.rally_style ? 2px : 0px;
+            horizontal-alignment: center;
+        }
+    }
+}
+
+component RallyInstrumentPanel inherits Rectangle {
+    in property <string> rpm_value;
+    in property <string> gear_value;
+    in property <string> speed_value;
+    background: #292723;
+    border-width: 1px;
+    border-color: #8f7933;
+    border-radius: 10px;
+    vertical-stretch: 1;
+
+    SpeedometerReadout {
+        width: parent.width;
+        height: parent.height;
+        rpm: root.rpm_value;
+        gear: root.gear_value;
+        speed: root.speed_value;
+        rally_style: true;
+    }
+}
+
+component SpeedPanel inherits Rectangle {
+    in property <string> rpm;
+    in property <string> gear;
+    in property <string> speed;
+
+    background: #252840;
+    border-width: 1px;
+    border-color: #3c4059;
+    border-radius: 10px;
+    horizontal-stretch: 2;
+    vertical-stretch: 1;
+
+    SpeedometerReadout {
+        width: parent.width;
+        height: parent.height;
+        rpm: root.rpm;
+        gear: root.gear;
+        speed: root.speed;
+    }
+}
+
+component RallySectorCard inherits Rectangle {
+    in property <MetricGroup> group;
+    background: #252840;
+    border-width: 1px;
+    border-color: root.group.accent;
+    border-radius: 10px;
+    horizontal-stretch: 1;
+    vertical-stretch: 1;
+
+    VerticalLayout {
+        padding: 16px;
+        alignment: center;
+        spacing: 12px;
+        Text {
+            text: root.group.title;
+            color: root.group.accent;
+            font-size: 14px;
+            font-weight: 700;
+            horizontal-alignment: center;
+        }
+        Text {
+            text: root.group.metrics[0].value;
+            color: root.group.accent;
+            font-size: 34px;
+            font-weight: 800;
+            horizontal-alignment: center;
+            vertical-stretch: 1;
+            vertical-alignment: center;
+        }
+    }
+}
+
+component NavigationItem inherits Rectangle {
+    in property <Metric> metric;
+    horizontal-stretch: 1;
+    background: transparent;
+
+    VerticalLayout {
+        alignment: center;
+        spacing: 4px;
+        Text {
+            text: root.metric.label;
+            color: #8fb6ca;
+            font-size: 12px;
+            font-weight: 700;
+            horizontal-alignment: center;
+        }
+        Text {
+            text: root.metric.value;
+            color: #d8eaf2;
+            font-size: 17px;
+            font-weight: 700;
+            horizontal-alignment: center;
+        }
+    }
+}
+
+component FlightSpeedCard inherits Rectangle {
+    in property <string> label;
+    in property <string> value;
+    in property <string> unit;
+    in property <string> detail;
+    background: #1d2b42;
+    border-width: 1px;
+    border-color: #167c9b;
+    border-radius: 10px;
+    horizontal-stretch: 1;
+    vertical-stretch: 1;
+
+    VerticalLayout {
+        padding: 14px;
+        spacing: 6px;
+        Text {
+            text: root.label;
+            color: #75c9ed;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        HorizontalLayout {
+            alignment: center;
+            spacing: 8px;
+            vertical-stretch: 1;
+            Text {
+                text: root.value;
+                color: #ffffff;
+                font-size: 54px;
+                font-weight: 800;
+            }
+            Text {
+                text: root.unit;
+                color: #75c9ed;
+                font-size: 17px;
+                vertical-alignment: center;
+            }
+        }
+        Text {
+            text: root.detail;
+            color: #99b8cc;
+            font-size: 13px;
+        }
+    }
+}
+
+component FlightCompassDial inherits Rectangle {
+    in property <[GaugeTick]> compass_ticks;
+    in property <string> heading_marker_path;
+    in property <string> track_marker_path;
+    in property <string> bug_marker_path;
+    width: 132px;
+    height: 132px;
+    border-radius: 66px;
+    border-width: 3px;
+    border-color: #bdc2ca;
+    background: #17191d;
+
+    for tick in root.compass_ticks: Rectangle {
+        width: parent.width;
+        height: parent.height;
+        background: transparent;
+        Path {
+            width: parent.width;
+            height: parent.height;
+            viewbox-width: 200;
+            viewbox-height: 200;
+            commands: root.bug_marker_path;
+            fill: #7dd3c0;
+            stroke: #17191d;
+            stroke-width: 1px;
+        }
+        Path {
+            width: parent.width;
+            height: parent.height;
+            viewbox-width: 200;
+            viewbox-height: 200;
+            commands: tick.commands;
+            stroke: #f2f3f5;
+            stroke-width: 1.5px;
+        }
+        Text {
+            text: tick.label;
+            x: tick.label_x * (parent.width / 200px);
+            y: tick.label_y * (parent.height / 200px);
+            width: 24px;
+            height: 14px;
+            color: tick.label == "N" ? #7dd3c0 : #f2f3f5;
+            font-size: 10px;
+            font-weight: 600;
+            horizontal-alignment: center;
+            visible: tick.label != "";
+        }
+    }
+
+    Path {
+        width: parent.width;
+        height: parent.height;
+        viewbox-width: 200;
+        viewbox-height: 200;
+        commands: root.track_marker_path;
+        fill: #e94f37;
+        stroke-width: 3px;
+    }
+    Path {
+        width: parent.width;
+        height: parent.height;
+        viewbox-width: 200;
+        viewbox-height: 200;
+        commands: root.heading_marker_path;
+        fill: #f2f3f5;
+    }
+    Path {
+        width: parent.width;
+        height: parent.height;
+        viewbox-width: 200;
+        viewbox-height: 200;
+        commands: "M100 66 106 94 135 97 135 103 106 101 104 117 116 122 116 126 100 123 84 126 84 122 96 117 94 101 65 103 65 97 94 94Z";
+        fill: #f2f3f5;
+    }
+}
+
+component FlightHeadingPanel inherits Rectangle {
+    in property <MetricGroup> group;
+    in property <[GaugeTick]> compass_ticks;
+    in property <string> heading_marker_path;
+    in property <string> track_marker_path;
+    in property <string> bug_marker_path;
+    background: #1d2b42;
+    border-width: 1px;
+    border-color: #167c9b;
+    border-radius: 10px;
+    horizontal-stretch: 1;
+    vertical-stretch: 1;
+
+    VerticalLayout {
+        padding: 10px;
+        alignment: center;
+        spacing: 4px;
+
+        Text {
+            text: root.group.title;
+            color: #75c9ed;
+            font-size: 14px;
+            font-weight: 700;
+            horizontal-alignment: center;
+        }
+
+        HorizontalLayout {
+            height: 132px;
+            Text { text: ""; horizontal-stretch: 1; }
+            FlightCompassDial {
+                compass_ticks: root.compass_ticks;
+                heading_marker_path: root.heading_marker_path;
+                track_marker_path: root.track_marker_path;
+                bug_marker_path: root.bug_marker_path;
+            }
+            Text { text: ""; horizontal-stretch: 1; }
+        }
+
+        HorizontalLayout {
+            spacing: 10px;
+            for metric in root.group.metrics: Text {
+                text: metric.label == "Heading" ? metric.value : (metric.label == "Track" ? "TRK  " + metric.value : "WIND  " + metric.value);
+                color: metric.label == "Heading" ? #ffae00 : #b8d3e0;
+                font-size: metric.label == "Heading" ? 18px : 10px;
+                font-weight: metric.label == "Heading" ? 800 : 500;
+                horizontal-alignment: center;
+                horizontal-stretch: 1;
+            }
+        }
+    }
+}
+
+component FlightAltitudePanel inherits Rectangle {
+    in property <MetricGroup> group;
+    background: #1d2b42;
+    border-width: 1px;
+    border-color: #167c9b;
+    border-radius: 10px;
+    horizontal-stretch: 1;
+    vertical-stretch: 1;
+
+    VerticalLayout {
+        padding: 14px;
+        spacing: 6px;
+
+        Text {
+            text: root.group.title;
+            color: #75c9ed;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        Text {
+            text: root.group.metrics[0].value;
+            color: #ffffff;
+            font-size: 42px;
+            font-weight: 800;
+            vertical-stretch: 1;
+            vertical-alignment: center;
+        }
+
+        for metric in root.group.metrics: HorizontalLayout {
+            visible: metric.label != "Indicated";
+            Text {
+                text: metric.label;
+                color: #8fb6ca;
+                font-size: 12px;
+                horizontal-stretch: 1;
+                vertical-alignment: center;
+            }
+            Text {
+                text: metric.value;
+                color: #d8eaf2;
+                font-size: 14px;
+                font-weight: 600;
+                horizontal-alignment: right;
+                vertical-alignment: center;
+            }
+        }
+    }
+}
+
+component AttitudeCard inherits Rectangle {
+    in property <MetricGroup> group;
+    in property <string> sky_path;
+    in property <string> ground_path;
+    in property <string> horizon_path;
+    in property <[GaugeTick]> attitude_rungs;
+    in property <[GaugeTick]> attitude_labels;
+    in property <[GaugeTick]> attitude_roll_ticks;
+    in property <string> roll_index_path;
+    in property <string> reference_path;
+    in property <string> aircraft_path;
+    in property <float> slip_x;
+    background: #1d2b42;
+    border-width: 1px;
+    border-color: #167c9b;
+    border-radius: 10px;
+    horizontal-stretch: 1;
+    vertical-stretch: 1;
+
+    VerticalLayout {
+        padding: 14px;
+        spacing: 6px;
+        Text {
+            text: root.group.title;
+            color: #75c9ed;
+            font-size: 14px;
+            font-weight: 700;
+            horizontal-alignment: center;
+        }
+
+        Rectangle {
+            width: 164px;
+            height: 164px;
+            x: (parent.width - self.width) / 2;
+            border-radius: 82px;
+            border-width: 4px;
+            border-color: #090d14;
+            clip: true;
+            background: #050607;
+            vertical-stretch: 1;
+
+            Path {
+                width: parent.width;
+                height: parent.height;
+                viewbox-width: 200;
+                viewbox-height: 200;
+                commands: root.sky_path;
+                fill: #159bd3;
+            }
+
+            Path {
+                width: parent.width;
+                height: parent.height;
+                viewbox-width: 200;
+                viewbox-height: 200;
+                commands: root.ground_path;
+                fill: #c79d73;
+            }
+
+            Path {
+                width: parent.width;
+                height: parent.height;
+                viewbox-width: 200;
+                viewbox-height: 200;
+                commands: root.horizon_path;
+                stroke: #f4f5f6;
+                stroke-width: 8px;
+            }
+
+            Path {
+                width: parent.width;
+                height: parent.height;
+                viewbox-width: 200;
+                viewbox-height: 200;
+                commands: root.horizon_path;
+                stroke: #f5de38;
+                stroke-width: 1.5px;
+            }
+
+            for rung in root.attitude_rungs: Path {
+                width: parent.width;
+                height: parent.height;
+                viewbox-width: 200;
+                viewbox-height: 200;
+                commands: rung.commands;
+                stroke: #f4f5f6;
+                stroke-width: 2px;
+            }
+
+            for label in root.attitude_labels: Text {
+                text: label.label;
+                x: label.label_x * (parent.width / 200px);
+                y: label.label_y * (parent.height / 200px);
+                width: 12px;
+                height: 14px;
+                color: #f4f5f6;
+                font-size: 10px;
+                font-weight: 700;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+
+            for tick in root.attitude_roll_ticks: Path {
+                width: parent.width;
+                height: parent.height;
+                viewbox-width: 200;
+                viewbox-height: 200;
+                commands: tick.commands;
+                stroke: #f4f5f6;
+                stroke-width: 2px;
+            }
+
+            Path {
+                width: parent.width;
+                height: parent.height;
+                viewbox-width: 200;
+                viewbox-height: 200;
+                commands: root.roll_index_path;
+                fill: #f4f5f6;
+            }
+
+            Path {
+                width: parent.width;
+                height: parent.height;
+                viewbox-width: 200;
+                viewbox-height: 200;
+                commands: root.reference_path;
+                stroke: #f5de38;
+                stroke-width: 2px;
+            }
+
+            Path {
+                width: parent.width;
+                height: parent.height;
+                viewbox-width: 200;
+                viewbox-height: 200;
+                commands: root.aircraft_path;
+                fill: #ffffff;
+                stroke: #191b1d;
+                stroke-width: 1px;
+            }
+
+            Rectangle {
+                x: (root.slip_x - 5.5) * 1px * (parent.width / 200px);
+                y: parent.height * 0.87;
+                width: 11px;
+                height: 11px;
+                border-radius: 6px;
+                background: #f5a623;
+                border-width: 1px;
+                border-color: #343a40;
+            }
+
+            Rectangle {
+                width: parent.width;
+                height: parent.height;
+                border-radius: 82px;
+                border-width: 3px;
+                border-color: #111315;
+                background: transparent;
+            }
+        }
+
+        HorizontalLayout {
+            for metric in root.group.metrics: Text {
+                text: metric.label + "  " + metric.value;
+                color: #b8d3e0;
+                font-size: 12px;
+                horizontal-alignment: center;
+                horizontal-stretch: 1;
+            }
+        }
+    }
+}
+
+component TruckEnginePanel inherits Rectangle {
+    in property <string> gear_value;
+    in property <string> recommended_gear;
+    in property <[GaugeTick]> gauge_ticks;
+    in property <[GaugeArcSegment]> gauge_arc;
+    in property <string> needle_path;
+    background: #252840;
+    border-width: 1px;
+    border-color: #5dade2;
+    border-radius: 10px;
+    horizontal-stretch: 1;
+    vertical-stretch: 1;
+
+    VerticalLayout {
+        padding-top: 4px;
+        padding-bottom: 4px;
+        spacing: 0px;
+
+        Rectangle {
+            width: 250px;
+            height: 206px;
+            x: (parent.width - self.width) / 2;
+            background: transparent;
+
+            Text {
+                text: "x 100 RPM";
+                x: 0px;
+                y: 178px;
+                width: parent.width;
+                color: #8e96ab;
+                font-size: 13px;
+                horizontal-alignment: center;
+            }
+
+            for segment in root.gauge_arc: Path {
+                width: parent.width;
+                height: parent.height;
+                viewbox-width: 250;
+                viewbox-height: 206;
+                commands: segment.commands;
+                stroke: segment.accent;
+                stroke-width: 12px;
+                stroke-line-cap: round;
+            }
+
+            for tick in root.gauge_ticks: Rectangle {
+                width: parent.width;
+                height: parent.height;
+                background: transparent;
+                Path {
+                    width: parent.width;
+                    height: parent.height;
+                    viewbox-width: 250;
+                    viewbox-height: 206;
+                    commands: tick.commands;
+                    stroke: #ffffff;
+                    stroke-width: 2px;
+                }
+                Text {
+                    text: tick.label;
+                    x: tick.label_x;
+                    y: tick.label_y;
+                    width: 28px;
+                    height: 16px;
+                    color: #ffffff;
+                    font-size: 11px;
+                    horizontal-alignment: center;
+                    vertical-alignment: center;
+                    visible: tick.label != "";
+                }
+            }
+
+            Path {
+                width: parent.width;
+                height: parent.height;
+                viewbox-width: 250;
+                viewbox-height: 206;
+                commands: root.needle_path;
+                stroke: #ff5252;
+                stroke-width: 5px;
+            }
+
+            Rectangle {
+                x: (parent.width - 20px) / 2;
+                y: 95px;
+                width: 20px;
+                height: 20px;
+                border-radius: 10px;
+                background: #27293d;
+                border-width: 2px;
+                border-color: #ffffff;
+            }
+        }
+
+        HorizontalLayout {
+            height: 42px;
+            alignment: center;
+            spacing: 8px;
+
+            Rectangle {
+                width: 58px;
+                height: 48px;
+                border-radius: 8px;
+                background: #34374a;
+                Text {
+                    text: root.gear_value;
+                    color: #ffffff;
+                    font-size: 42px;
+                    horizontal-alignment: center;
+                    vertical-alignment: center;
+                }
+            }
+
+            Text {
+                text: root.recommended_gear == "" ? "" : "▲  " + root.recommended_gear;
+                color: #ffae00;
+                font-size: 20px;
+                font-weight: 700;
+                vertical-alignment: center;
+            }
+        }
+    }
+}
+
+component StatusIndicator inherits Rectangle {
+    in property <Metric> metric;
+    horizontal-stretch: 1;
+    background: transparent;
+
+    VerticalLayout {
+        alignment: center;
+        spacing: 4px;
+        Text {
+            text: root.metric.value;
+            color: root.metric.active ? #45d483 : #7f8497;
+            font-size: 12px;
+            font-weight: 800;
+            horizontal-alignment: center;
+        }
+        Text {
+            text: root.metric.label;
+            color: #aeb5c6;
+            font-size: 10px;
+            horizontal-alignment: center;
+        }
+    }
+}
+
+export component DashboardWindow inherits Window {
+    in property <string> title_text: "HaddySimHub";
+    in property <string> hero_label: "";
+    in property <string> hero_value: "";
+    in property <string> hero_unit: "";
+    in property <string> hero_detail: "";
+    in property <string> rpm_value: "";
+    in property <string> rpm_detail: "";
+    in property <string> gear_value: "";
+    in property <string> clock_text: "";
+    in property <string> status_text: "";
+    in property <string> speed_limit: "--";
+    in property <float> progress_pct: 0;
+    in property <int> dashboard_kind: 0;
+    in property <[Metric]> header_metrics;
+    in property <[MetricGroup]> groups_top;
+    in property <[MetricGroup]> groups_middle;
+    in property <[MetricGroup]> groups_bottom;
+    in property <MetricGroup> navigation_group;
+    in property <[Metric]> footer_metrics;
+    in property <[Metric]> pedals;
+    in property <[GaugeTick]> gauge_ticks;
+    in property <[GaugeArcSegment]> gauge_arc;
+    in property <[GaugeTick]> compass_ticks;
+    in property <string> recommended_gear;
+    in property <string> needle_path;
+    in property <string> heading_marker_path;
+    in property <string> track_marker_path;
+    in property <string> bug_marker_path;
+    in property <string> attitude_sky_path;
+    in property <string> attitude_ground_path;
+    in property <string> attitude_horizon_path;
+    in property <[GaugeTick]> attitude_rungs;
+    in property <[GaugeTick]> attitude_labels;
+    in property <[GaugeTick]> attitude_roll_ticks;
+    in property <string> attitude_roll_index_path;
+    in property <string> attitude_reference_path;
+    in property <string> attitude_aircraft_path;
+    in property <float> attitude_slip_x;
+    in property <string> brake_trace;
+    in property <string> clutch_trace;
+    in property <string> throttle_trace;
+
+    title: root.title_text;
+    min-width: 1440px;
+    preferred-width: 1440px;
+    min-height: 900px;
+    preferred-height: 900px;
+    background: #1e1e2f;
+
+    VerticalLayout {
+        padding: 8px;
+        spacing: 8px;
+
+        HorizontalLayout {
+            height: 34px;
+            spacing: 8px;
+            Text { text: ""; horizontal-stretch: 1; }
+            Text {
+                text: root.clock_text;
+                color: #ffffff;
+                font-size: 30px;
+                font-weight: 500;
+                horizontal-alignment: center;
+                horizontal-stretch: 1;
+                vertical-alignment: center;
+            }
+            Text {
+                text: root.status_text;
+                color: #ffc14b;
+                font-size: 11px;
+                font-weight: 700;
+                horizontal-alignment: right;
+                horizontal-stretch: 1;
+                vertical-alignment: center;
+            }
+        }
+
+        Rectangle {
+            vertical-stretch: 1;
+            background: transparent;
+
+        VerticalLayout {
+            x: 0px;
+            y: 0px;
+            width: parent.width;
+            height: 690px;
+            spacing: 8px;
+            visible: root.dashboard_kind == 0;
+
+            Rectangle {
+                height: 64px;
+                background: #252840;
+                border-width: 1px;
+                border-color: #3c4059;
+                border-radius: 10px;
+                HorizontalLayout {
+                    padding: 8px;
+                    spacing: 4px;
+                    for metric in root.header_metrics: HeaderMetric { metric: metric; }
+                }
+            }
+
+            HorizontalLayout {
+                spacing: 8px;
+                height: 456px;
+                MetricGroupCard {
+                    group: root.groups_top[0];
+                    width: parent.width * 0.25;
+                }
+                SpeedPanel {
+                    width: parent.width * 0.50;
+                    rpm: root.rpm_value;
+                    gear: root.gear_value;
+                    speed: root.hero_value;
+                }
+                MetricGroupCard {
+                    group: root.groups_top[1];
+                    width: parent.width * 0.25;
+                }
+            }
+
+            TelemetryTracePanel {
+                height: 148px;
+                metrics: root.pedals;
+                brake_trace: root.brake_trace;
+                clutch_trace: root.clutch_trace;
+                throttle_trace: root.throttle_trace;
+            }
+        }
+
+        VerticalLayout {
+            x: 0px;
+            y: 0px;
+            width: parent.width;
+            height: parent.height;
+            spacing: 10px;
+            visible: root.dashboard_kind == 1;
+
+            Rectangle {
+                height: 130px;
+                background: #252840;
+                border-width: 1px;
+                border-color: #f0b429;
+                border-radius: 10px;
+                VerticalLayout {
+                    padding-top: 18px;
+                    padding-bottom: 18px;
+                    padding-left: 24px;
+                    padding-right: 24px;
+                    spacing: 12px;
+                    HorizontalLayout {
+                        Text {
+                            text: "STAGE PROGRESS";
+                            color: #ffc14b;
+                            font-size: 16px;
+                            font-weight: 700;
+                            horizontal-stretch: 1;
+                        }
+                        Text {
+                            text: root.header_metrics[1].value;
+                            color: #ffffff;
+                            font-size: 16px;
+                            font-weight: 700;
+                            horizontal-alignment: right;
+                        }
+                    }
+                    ProgressTrack { progress_pct: root.progress_pct; }
+                    HorizontalLayout {
+                        Text {
+                            text: root.header_metrics[0].value;
+                            color: #d1d8e6;
+                            font-size: 14px;
+                            horizontal-stretch: 1;
+                        }
+                        HorizontalLayout {
+                            spacing: 6px;
+                            Text {
+                                text: root.header_metrics[2].value + "   ·";
+                                color: #d1d8e6;
+                                font-size: 14px;
+                                horizontal-alignment: right;
+                                horizontal-stretch: 1;
+                            }
+                            Text {
+                                text: root.header_metrics[3].delta_value != "" ? root.header_metrics[3].delta_value : root.header_metrics[3].value;
+                                color: root.header_metrics[3].delta_status < 0 ? #45d483 : root.header_metrics[3].delta_status > 0 ? #ff5252 : #d1d8e6;
+                                font-size: 14px;
+                                horizontal-alignment: right;
+                            }
+                        }
+                    }
+                }
+            }
+
+            RallyInstrumentPanel {
+                vertical-stretch: 3;
+                rpm_value: root.rpm_value;
+                gear_value: root.gear_value;
+                speed_value: root.hero_value;
+            }
+
+            HorizontalLayout {
+                height: 120px;
+                spacing: 10px;
+                for group in root.groups_bottom: RallySectorCard { group: group; }
+            }
+        }
+
+        VerticalLayout {
+            x: 0px;
+            y: 0px;
+            width: parent.width;
+            height: parent.height;
+            spacing: 10px;
+            visible: root.dashboard_kind == 2;
+
+            HorizontalLayout {
+                height: 300px;
+                spacing: 10px;
+                for group in root.groups_top: MetricGroupCard { group: group; }
+            }
+
+            HorizontalLayout {
+                height: 270px;
+                spacing: 10px;
+                TruckEnginePanel {
+                    gear_value: root.gear_value;
+                    recommended_gear: root.recommended_gear;
+                    gauge_ticks: root.gauge_ticks;
+                    gauge_arc: root.gauge_arc;
+                    needle_path: root.needle_path;
+                    width: (parent.width - 10px) / 2;
+                }
+                Rectangle {
+                    width: (parent.width - 10px) / 2;
+                    background: #252840;
+                    border-width: 1px;
+                    border-color: #5dade2;
+                    border-radius: 10px;
+                    VerticalLayout {
+                        padding: 18px;
+                        alignment: center;
+                        spacing: 8px;
+                        Text {
+                            text: "SPEED";
+                            color: #aeb5c6;
+                            font-size: 14px;
+                            font-weight: 700;
+                            horizontal-alignment: center;
+                        }
+                        HorizontalLayout {
+                            alignment: center;
+                            spacing: 8px;
+                            vertical-stretch: 1;
+                            Text {
+                                text: root.hero_value;
+                                color: #ffffff;
+                                font-size: 74px;
+                                font-weight: 800;
+                                vertical-alignment: center;
+                            }
+                            Text {
+                                text: root.hero_unit;
+                                color: #aeb5c6;
+                                font-size: 18px;
+                                vertical-alignment: center;
+                            }
+                        }
+                        Text {
+                            text: root.hero_detail;
+                            color: #aeb5c6;
+                            font-size: 14px;
+                            horizontal-alignment: center;
+                        }
+                        HorizontalLayout {
+                            height: 58px;
+                            Text { text: ""; horizontal-stretch: 1; }
+                            Rectangle {
+                                width: 58px;
+                                height: 58px;
+                                border-radius: 29px;
+                                background: #ffffff;
+                                border-width: 5px;
+                                border-color: #ef4444;
+                                Text {
+                                    text: root.speed_limit;
+                                    color: #111111;
+                                    font-size: 18px;
+                                    font-weight: 800;
+                                    horizontal-alignment: center;
+                                    vertical-alignment: center;
+                                }
+                            }
+                            Text { text: ""; horizontal-stretch: 1; }
+                        }
+                    }
+                }
+            }
+
+            Rectangle {
+                height: 52px;
+                background: #252840;
+                border-width: 1px;
+                border-color: #3c4059;
+                border-radius: 24px;
+                HorizontalLayout {
+                    padding-top: 4px;
+                    padding-bottom: 4px;
+                    padding-left: 12px;
+                    padding-right: 12px;
+                    spacing: 4px;
+                    for metric in root.footer_metrics: StatusIndicator { metric: metric; }
+                }
+            }
+
+            HorizontalLayout {
+                height: 175px;
+                spacing: 10px;
+                for group in root.groups_bottom: MetricGroupCard { group: group; }
+            }
+        }
+
+        VerticalLayout {
+            x: 0px;
+            y: 0px;
+            width: parent.width;
+            height: parent.height;
+            spacing: 8px;
+            visible: root.dashboard_kind == 3;
+
+            HorizontalLayout {
+                height: 252px;
+                spacing: 8px;
+                FlightSpeedCard {
+                    label: root.hero_label;
+                    value: root.hero_value;
+                    unit: root.hero_unit;
+                    detail: root.hero_detail;
+                    width: (parent.width - 16px) * 0.353;
+                }
+                AttitudeCard {
+                    group: root.groups_top[0];
+                    sky_path: root.attitude_sky_path;
+                    ground_path: root.attitude_ground_path;
+                    horizon_path: root.attitude_horizon_path;
+                    attitude_rungs: root.attitude_rungs;
+                    attitude_labels: root.attitude_labels;
+                    attitude_roll_ticks: root.attitude_roll_ticks;
+                    roll_index_path: root.attitude_roll_index_path;
+                    reference_path: root.attitude_reference_path;
+                    aircraft_path: root.attitude_aircraft_path;
+                    slip_x: root.attitude_slip_x;
+                    width: (parent.width - 16px) * 0.294;
+                }
+                FlightAltitudePanel {
+                    group: root.groups_top[1];
+                    width: (parent.width - 16px) * 0.353;
+                }
+            }
+
+            HorizontalLayout {
+                height: 190px;
+                spacing: 8px;
+                FlightHeadingPanel {
+                    group: root.groups_middle[0];
+                    compass_ticks: root.compass_ticks;
+                    heading_marker_path: root.heading_marker_path;
+                    track_marker_path: root.track_marker_path;
+                    bug_marker_path: root.bug_marker_path;
+                    width: (parent.width - 16px) * 0.475;
+                }
+                MetricGroupCard {
+                    group: root.groups_middle[1];
+                    flight_style: true;
+                    width: (parent.width - 16px) * 0.275;
+                }
+                MetricGroupCard {
+                    group: root.groups_middle[2];
+                    flight_style: true;
+                    width: (parent.width - 16px) * 0.25;
+                }
+            }
+
+            Rectangle {
+                height: 90px;
+                background: #1d2b42;
+                border-width: 1px;
+                border-color: #167c9b;
+                border-radius: 10px;
+                VerticalLayout {
+                    padding: 12px;
+                    spacing: 6px;
+                    Text {
+                        text: root.navigation_group.title;
+                        color: #75c9ed;
+                        font-size: 14px;
+                        font-weight: 700;
+                    }
+                    HorizontalLayout {
+                        spacing: 8px;
+                        vertical-stretch: 1;
+                        for metric in root.navigation_group.metrics: NavigationItem { metric: metric; }
+                    }
+                }
+            }
+
+            HorizontalLayout {
+                height: 258px;
+                spacing: 8px;
+                MetricGroupCard {
+                    group: root.groups_bottom[0];
+                    flight_style: true;
+                    width: (parent.width - 8px) / 2;
+                }
+                MetricGroupCard {
+                    group: root.groups_bottom[1];
+                    flight_style: true;
+                    width: (parent.width - 8px) / 2;
+                }
+            }
+        }
+
+        VerticalLayout {
+            x: 0px;
+            y: 0px;
+            width: parent.width;
+            height: parent.height;
+            alignment: center;
+            spacing: 12px;
+            visible: root.dashboard_kind == 4;
+
+            Text {
+                text: "Waiting for a game";
+                color: #ffffff;
+                font-size: 32px;
+                font-weight: 600;
+                horizontal-alignment: center;
+            }
+            Text {
+                text: "Start a supported simulator and its dashboard appears here.";
+                color: #aeb5c6;
+                font-size: 16px;
+                horizontal-alignment: center;
+            }
+        }
+        }
+    }
+}

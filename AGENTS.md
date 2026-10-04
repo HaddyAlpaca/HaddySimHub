@@ -2,144 +2,81 @@
 
 ## Build & Test
 
-### Backend (.NET)
-- Build: `dotnet build HaddySimHub.sln`
-- Test: `dotnet test HaddySimHub.sln --no-restore`
-- Test with coverage: `dotnet test HaddySimHub.sln --no-restore --collect:"XPlat Code Coverage"`
-- Restore dependencies: `dotnet restore HaddySimHub.sln`
+All commands run from `rust/`, so the toolchain pinned in `rust/rust-toolchain.toml`
+(Rust 1.92.0) is selected.
 
-### Frontend (Lit + Vite)
-- Install: `npm install` (from ClientApp directory)
-- Build: `npm run build` (from ClientApp directory)
-- Test: `npm run test_ci` (from ClientApp directory, non-interactive CI mode)
-- Test with coverage: `npm run coverage` (from ClientApp directory)
-- Lint (all): `npm run lint` (from ClientApp directory)
-- Lint (TypeScript): `npm run lint:ts` (from ClientApp directory)
-- Lint (SCSS): `npm run lint:styles` (from ClientApp directory)
-- Fix SCSS automatically where supported: `npm run lint:styles:fix` (from ClientApp directory)
-- Analyze potentially unused CSS: `npm run analyze:styles` (from ClientApp directory; report-only)
-- Start dev server: `npm start` (from ClientApp directory)
+- Test: `cargo test --workspace --locked`
+- Format check: `cargo fmt --all -- --check` (fix with `cargo fmt --all`)
+- Build the app: `cargo build -p simhub-app` (release: add `--release`); the exe is
+  `target/<profile>/HaddySimHub.exe`
+- Run against games: `cargo run -p simhub-app -- --no-update`
+- Run with sample data: `cargo run -p simhub-app -- --demo race` (also `rally`,
+  `truck`, `flight`)
 
 ## Environment & Setup
 
-- .NET SDK version: 10.0.201 (specified in global.json with `"rollForward": "latestFeature"`)
-  - This means minimum SDK 10.0.201; rollForward will only accept 10.0.2xx patch versions
-  - Verify your installed SDK: `dotnet --list-sdks`
-- Backend target: .NET 10.0 with ImplicitUsings and Nullable enabled
-- Frontend: Node.js 24.15.0+, npm 11.6.2+
-- Backend Windows runtime identifiers: win-x64 (see HaddySimHub.csproj)
-
-### .NET SDK Setup (Snap vs Native Install)
-
-If your `dotnet` is snap-installed, it may not include SDK 10.0.201 by default:
-
-```bash
-# Check where dotnet comes from
-which dotnet  # If /snap/bin/dotnet, you're using snap
-
-# Check available SDKs
-dotnet --list-sdks  # Look for 10.0.201
-```
-
-If you only see 10.0.107 or earlier:
-
-```bash
-# Install SDK 10.0.201 to ~/.dotnet (independent of snap)
-curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- --channel 10.0 --version 10.0.201
-
-# Add ~/.dotnet to PATH (do this in your shell or ~/.bashrc for permanence)
-export PATH="$HOME/.dotnet:$PATH"
-
-# Verify it worked
-dotnet --list-sdks  # Should now show 10.0.201
-```
-
-Then `dotnet build` will use the correct SDK version.
+- Windows only. CI and CD run on `windows-latest`. There is no CodeQL scanning.
+- Needs the MSVC C++ build tools (Visual Studio Build Tools, "Desktop development
+  with C++") and `rustup`. libclang is **not** needed: `simetry` is built without the
+  features that run bindgen.
+- `SimConnect.dll` is loaded at runtime, so building needs no MSFS SDK.
 
 ## Conventions
 
-- The project is a monorepo: backend is ASP.NET Core (root), frontend is Lit + Vite (ClientApp/)
-  - **Backend structure**: `HaddySimHub/` (main app), `HaddySimHub.Tests/` (tests), `HaddySimHub.Shared/` (shared models)
-  - **Frontend structure**: `ClientApp/src/app/` (components, services, displays), `ClientApp/src/assets/` (static files)
-  - **Backend entry point**: `HaddySimHub/Program.cs`
-  - **Frontend entry point**: `ClientApp/src/index.html` and `ClientApp/src/main.ts`
-- Backend settings: `TreatWarningsAsErrors` is enabled — fix all compiler warnings
-- Frontend uses ESLint with `eslint.config.mjs` and Stylelint for SCSS validation
-- Frontend uses Lit custom elements and a Vite shell. The app entrypoint is `ClientApp/src/main.ts`, and the SSE endpoint is proxied by `ClientApp/vite.config.ts`.
-- Logging is excluded from HaddySimHub project (see Logging/** excludes in csproj)
-- **Game display pipeline**: every supported game follows a `provider → converter → display → hub` pattern, registered via `RegisterGameDisplay<>` in `Extensions/ApplicationCompositionExtensions.cs`. See [`HaddySimHub/Displays/README.md`](./HaddySimHub/Displays/README.md) for the full convention and how to add a new game.
-- **Console logging**: the backend writes coloured logs directly to the console and keeps daily log files. Set `HADDYSIMHUB_DEBUG=1` for debug-level logging plus per-frame data logs.
-- **End-to-end tests**: from `ClientApp/`, run `npm run test:e2e`. Playwright starts the backend with `--e2e` (which enables the loopback-only `POST /__e2e/display-update` data injection route and disables game display polling) plus the Vite frontend; no simulator is needed.
-- **Project skills**: shared skills live in `.agents/skills/` and are committed. Claude-specific personal settings and IDE scratch files under `.claude/` stay ignored.
-- **Dependency updates**: CI installs npm packages through Safe Chain (`ClientApp/scripts/safe-chain-wrapper.sh`), which refuses any package below a minimum age of roughly two days. A blocked install fails the **Frontend tests** check with `403 Forbidden - blocked by safe-chain direct download minimum package age` — that is the policy working, not a test failure, so hold the version back instead of skipping the check. Every version held back goes in [`ClientApp/DEPENDENCY-PINS.md`](./ClientApp/DEPENDENCY-PINS.md) with the reason and a removal condition; `overrides` entries especially, because the scheduled `deps-update.yml` workflow preserves that block and `npm outdated` never reveals it. Read that file at the start of every dependency update and drop the entries whose condition has been met.
-- **Backend tests use MSTest**: assert exceptions with `Assert.Throws<T>()`, `Assert.ThrowsExactly<T>()`, or `Assert.ThrowsAsync<T>()`. The legacy `Assert.ThrowsException<T>()` does **not** exist in this MSTest version and will fail to compile.
+- **Crates** (see [`docs/architecture.md`](./docs/architecture.md)): `simhub-app`
+  (the exe), `simhub-games` (game list and feed threads), `simhub-telemetry`
+  (readers), `simhub-model` (display contract and telemetry structs),
+  `simhub-convert` (telemetry → `DisplayUpdate`), `simhub-core` (display selection
+  and dashboard snapshots), `simhub-ui` (Slint window), `simhub-update` (self-update
+  and single instance).
+- **Prefer existing crates** over in-house code. Write our own only where no
+  maintained crate covers the need or the crate fails a concrete requirement, and
+  say why in the module docs ([ADR-0006](./docs/adr/0006-use-existing-crates-and-drop-raw-capture.md)).
+- **Readers split decoding from acquisition**: decoding bytes into a telemetry
+  struct is pure and unit-tested against the layouts in
+  `fixtures/telemetry/manifest/`; acquisition stays thin.
+- **Adding a game**: telemetry struct → reader → converter → feed and `GAMES` entry.
+  The steps are in `docs/architecture.md`.
+- **Dashboard text** follows the web dashboards the app replaced; the truck
+  dashboard is Dutch.
+- **Zero warnings**: keep `cargo test` and `cargo build` free of warnings.
+- **Tests** are named as sentences describing the behaviour
+  (`a_short_datagram_is_rejected`).
+- **Command-line options** are defined with clap in `crates/simhub-app/src/main.rs`;
+  unknown options are rejected.
+- **Logging**: `log` macros everywhere; `simhub-app` sets up flexi_logger (console
+  plus daily file in `log/`). `HADDYSIMHUB_DEBUG=1` enables debug level,
+  `RUST_LOG` overrides it.
+- **Version**: CD bakes the release tag into the exe through `HADDYSIMHUB_VERSION`;
+  the self-updater compares it with the latest GitHub release.
+- **Project skills**: shared skills live in `.agents/skills/` and are committed.
+  Claude-specific personal settings and IDE scratch files under `.claude/` stay
+  ignored.
+- **Live checks**: questions only a running game can answer are tracked in
+  [`docs/live-verification.md`](./docs/live-verification.md). Remove an entry once
+  a session has settled it.
 
 ## Do Not
 
-- Do not use `npm install` from the repository root — always run from ClientApp/
-- Do not use `dotnet build --watch` without understanding it doesn't auto-rebuild changed files reliably
-- Do not ignore compiler warnings in .NET code — TreatWarningsAsErrors is enabled and tests will fail
-- Do not modify generated files in dist/ (frontend output)
-- Do not commit node_modules or bin/obj directories
-
-## Common Pitfalls
-
-- **Multiple directories**: Frontend commands must be run from ClientApp/; backend commands from repo root
-- **Linting failures block CI**: Frontend linting (ESLint + Stylelint) runs in CI; address all linting warnings
-- **Compiler warnings fail builds**: The backend has `TreatWarningsAsErrors` enabled, so unused variables or type issues will break the build
-- **Node version mismatch**: The frontend requires Node 24.15.0+ and npm 11.6.2+; older versions will cause unexpected failures
-- **Snap dotnet SDK mismatch**: Snap-installed dotnet may not include SDK 10.0.201 by default. See "Environment & Setup" section for how to install it to ~/.dotnet and update PATH.
-
-## Supply Chain Security (Aikido Safe Chain)
-
-Frontend package downloads (`npm install`/`npm ci`) are protected by [Aikido Safe Chain](https://github.com/AikidoSec/safe-chain) — a local proxy that checks every downloaded package against Aikido's real-time malware database.
-
-### How it works in CI
-
-Both `ci.yml` and `cd.yml` call `npm run ci` instead of `npm ci` directly. This runs `ClientApp/scripts/safe-chain-wrapper.sh`, which:
-
-1. Checks if Safe Chain is already installed (binary at `~/.safe-chain/bin/safe-chain`)
-2. If not, downloads the installer from a pinned GitHub release and **verifies it against a hardcoded SHA256 checksum** before executing it — preventing tampering with the installer itself
-3. Adds Safe Chain shims to `PATH`
-4. Delegates to `npm ci`
-
-The Safe Chain binary's own checksum is also verified during its installation (the release pipeline bakes SHA256 hashes into the installer script).
-
-### For local development
-
-Install Safe Chain once on your machine to protect all npm/pnpm/yarn operations:
-
-```bash
-# From ClientApp/ directory:
-npm run safe-chain:install
-
-# Restart your terminal, then verify:
-npm safe-chain-verify
-```
-
-This downloads the installer, verifies its checksum against `ClientApp/scripts/safe-chain-checksums.txt`, then runs it. After installation, all `npm install`, `npm ci`, `pnpm install`, etc. are automatically wrapped by Safe Chain.
-
-### Upgrading Safe Chain
-
-1. Download the new installer: `curl -fsSL https://github.com/AikidoSec/safe-chain/releases/download/<version>/install-safe-chain.sh | sha256sum`
-2. Update the version and hash in:
-   - `ClientApp/scripts/safe-chain-checksums.txt`
-   - `ClientApp/scripts/safe-chain-wrapper.sh` (the `SAFE_CHAIN_VERSION` variable)
-   - `ClientApp/scripts/install-safe-chain.sh` (the `SAFE_CHAIN_VERSION` variable)
-3. Commit with a note about the version bump
+- Do not run cargo from the repository root; the workspace and toolchain file are in
+  `rust/`.
+- Do not commit `rust/target/` or `log/`.
+- Do not enable simetry's default features: they run bindgen and need libclang.
 
 ## Git & Pull Requests
 
 - `main` is a protected branch. Direct pushes are rejected — land changes via a pull request.
-- Required status checks must pass before merge: **Server tests** and **Frontend tests** (both defined in `.github/workflows/ci.yml`).
+- Required status check: **Rust tests** (defined in `.github/workflows/ci.yml`).
 - Admin enforcement is on (`enforce_admins`), so even `gh pr merge --admin` still requires green checks. Auto-merge is not enabled for this repository.
 - No approving review is required (required review count is 0), but the checks above are mandatory.
 - GitHub Actions are pinned to commit SHAs with a trailing `# vX.Y.Z` comment in the workflow files. When updating an action, change both the SHA and the version comment.
 
 ## Security & Deployment
 
-- **Deployment architecture**: iRacingSDK integration for race data (Windows-only runtime)
-- **Authentication model**: Uses SSE (Server-Sent Events) for real-time game data updates (endpoint `/display-data/stream`)
-- **Data handling**: Game telemetry data from iRacing is piped through DisplayBase implementations; no external API calls
-- **Trust boundaries**: Backend is trusted; frontend displays are renderer processes that trust GameDataHub updates
-- **CI/CD**: GitHub Actions workflows in .github/workflows/ handle build, test, and deployment automation
+- **Runtime**: a single Windows executable; no web server, no network listener
+  except the UDP telemetry ports of DiRT Rally 2 (20777) and Forza Horizon 5 (5300)
+  while that game is selected.
+- **Network access**: only the startup update check against the GitHub releases API
+  (skipped with `--no-update`).
+- **Release**: CD builds `HaddySimHub.exe`, zips it as `haddy-simhub.zip` and creates
+  the `v0.1.<run>` GitHub release that installed copies update from.

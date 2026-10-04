@@ -1,0 +1,29 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/simhub-core",
+    "crates/simhub-model",
+    "crates/simhub-convert",
+    "crates/simhub-telemetry",
+    "crates/simhub-ui",
+    "crates/simhub-app",
+    "crates/simhub-update",
+    "crates/simhub-games",
+]
+
+[workspace.package]
+edition = "2024"
+rust-version = "1.92"
+
+[workspace.dependencies]
+log = "0.4"
+chrono = { version = "0.4", default-features = false, features = ["clock"] }
+simhub-core = { path = "crates/simhub-core" }
+simhub-model = { path = "crates/simhub-model" }
+simhub-convert = { path = "crates/simhub-convert" }
+simhub-telemetry = { path = "crates/simhub-telemetry" }
+simhub-ui = { path = "crates/simhub-ui" }
+simhub-update = { path = "crates/simhub-update" }
+simhub-games = { path = "crates/simhub-games" }
+slint = "1.12"
+slint-build = "1.12"

@@ -4,6 +4,24 @@ All notable changes to this project are documented in this file.
 
 ## Unreleased
 
+### Rewritten in Rust
+- HaddySimHub is now a single Rust executable with a Slint dashboard window. The .NET backend, the Lit web frontend, the web server and the separate updater are gone; nothing needs the .NET runtime or a browser.
+- All eight games are supported as before. Assetto Corsa, Competizione and iRacing are read through the `simetry` crate; AC Rally, ETS2, DiRT Rally 2, Forza Horizon 5 and MSFS through tested decoders of our own.
+- The app shows a waiting screen while no game runs, and `--demo <race|rally|truck|flight>` shows a dashboard with sample data.
+- The window remembers its monitor, position, size and maximized state, saved as soon as they change, and reopens there. A position on a monitor that is no longer connected is ignored.
+- Self-update replaces `HaddySimHub.exe` in place from the latest GitHub release and only moves forward; it no longer installs an older release whose tag merely differs.
+- CI and releases run on Windows runners only.
+
+### Removed
+- `--e2e` and `--capture`, together with the web host and the raw telemetry capture they served.
+- The scheduled dependency-update workflow.
+
+### Known gaps
+- Behaviour against running games is still to be confirmed for the items in `docs/live-verification.md`.
+- ACC no longer shows the session lap total in lap-limited races: `simetry` does not expose it.
+- The course deviation indicator of the flight dashboard is shown as values rather than drawn as a needle.
+- The dashboard window is at least 1440×900; unlike the web page it does not shrink below that.
+
 ### Added
 - Microsoft Flight Simulator 2020 support, with a new flight dashboard showing the primary instruments (airspeed, artificial horizon, altitude, heading tape with heading bug and ground track), autopilot modes and targets, flight plan progress with distances and ETA, and engine, fuel and airframe configuration.
 - Telemetry is read over SimConnect through a hand-written interop layer, because the SDK's managed wrapper is a .NET Framework mixed-mode assembly that this application cannot load. `SimConnect.dll` is located next to the executable or in an MSFS SDK install; when it is missing the display stays inactive and logs where it looked.

@@ -1,0 +1,20 @@
+[package]
+name = "simhub-ui"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+build = "build.rs"
+
+[dependencies]
+chrono.workspace = true
+directories = "6"
+log.workspace = true
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+simhub-core.workspace = true
+slint.workspace = true
+# Only to check a saved window position still lies on a connected monitor.
+windows = { version = "0.62", features = ["Win32_Foundation", "Win32_Graphics_Gdi"] }
+
+[build-dependencies]
+slint-build.workspace = true

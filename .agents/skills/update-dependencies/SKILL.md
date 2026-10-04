@@ -1,137 +1,64 @@
 ---
 name: update-dependencies
-description: Update NuGet and npm dependencies on a branch, respecting the Safe Chain minimum-age policy and recording any version held back. Use when asked to update, bump, or refresh dependencies, or to prepare the dependency-update PR by hand instead of waiting for the scheduled workflow.
+description: Update the Rust crate dependencies on a branch and record any version held back. Use when asked to update, bump, or refresh dependencies.
 ---
 
 # Updating dependencies
 
-The scheduled `.github/workflows/deps-update.yml` does this on the 1st and 15th.
-Doing it by hand follows the same rules, plus one this file exists for: **every
-version held back gets written down in `ClientApp/DEPENDENCY-PINS.md`.**
+Dependencies are updated by hand; there is no scheduled workflow. One rule matters
+most: **every version held back is written down next to the dependency it holds
+back.**
 
 ## Branch
 
-`deps/update-YYYY-MM-DD`, matching the workflow's naming.
+`deps/update-YYYY-MM-DD`.
 
-## NuGet
+## Compatible updates
 
-```bash
-dotnet list HaddySimHub.sln package --outdated
-dotnet add <project> package <name> --version <version>
-```
-
-Two things to check afterwards:
-
-- `dotnet add package` reformats the `.csproj` it touches, and has been seen
-  collapsing a multi-line `<Target>` onto one line. Read the diff and restore any
-  formatting change that is not a version bump.
-- `iRacingSDK.Net/` holds two project files. Only `iRacingSDK.Net.csproj` is in the
-  solution; `iRacingSDK.csproj` is not referenced and should be left alone.
-
-## npm
-
-Run from `ClientApp/`.
+Run from `rust/`.
 
 ```bash
-npx npm-check-updates@latest                  # see what is on offer
-npx npm-check-updates@latest -u --target minor
-npm install
+cargo update            # newest versions Cargo.toml allows; changes Cargo.lock only
 ```
 
-**Leave `engines` and `overrides` alone** when taking bulk updates — the scheduled
-workflow saves and restores `engines` for exactly this reason. Change `overrides`
-only as a deliberate pin, and then record it (see below).
+## Majors
 
-Take majors one at a time, and only with a reason to believe they fit:
+`cargo update` never crosses a major (or a `0.x` minor). List what is on offer with
+`cargo search <crate>` or crates.io, and take them one at a time, each with a reason
+to believe it fits:
 
-- Check the peer range before bumping anything Angular type-checks against.
-  `@angular/compiler-cli` declares a narrow `typescript` range, and a TypeScript
-  major outside it is an unmet peer dependency, not a risk to weigh.
-- `@types/node` tracks the major in `engines.node`. A newer major type-checks
-  against APIs the runtime does not have.
-
-After a `playwright` bump, `npx playwright install chromium` is needed once locally
-before the tests will run. CI installs its own.
-
-## The Safe Chain minimum-age policy
-
-CI installs through `scripts/safe-chain-wrapper.sh`, which blocks packages below a
-minimum age — roughly two days. This catches the case where a compromised release
-is published and pulled shortly after, so **do not reach for
-`--safe-chain-skip-minimum-package-age`.** A blocked install is the policy working.
-
-The failure surfaces as a red "Frontend tests" check whose log ends in
-`403 Forbidden - blocked by safe-chain direct download minimum package age`,
-followed by the list of packages. It reads like a test failure and is not one.
-
-The scheduled workflow runs `ClientApp/scripts/check-package-ages.mjs` after the npm
-update and **before it commits or opens the PR**, so a young version fails the run
-instead of producing a PR with red checks.
-
-Catch it by hand the same way, ageing the versions the update actually introduces
-against the last committed lockfile:
-
-```bash
-# from ClientApp/ — compares the working-tree lockfile against HEAD
-node scripts/check-package-ages.mjs
-```
-
-Pass `CHECK_PACKAGE_AGES_BASE_REF` to compare against a different ref (e.g.
-`origin/main`), and `MIN_AGE_HOURS` to change the gate (default 48). For a single
-package, `npm view <package>@<version> time --json` gives the same answer. Skip the
-check with `CHECK_PACKAGE_AGES_SKIP=1` only if you know the failure is wrong.
-
-Anything under two days old will be blocked. Hold it back:
-
-- **Direct dependency** — `npm install --save-dev <pkg>@<older-version>`. Lowering
-  the range in `package.json` alone is not enough: `npm install` will not downgrade
-  a version the lockfile already satisfies, and `npm ci` installs from the lockfile.
-- **Transitive dependency** — an `overrides` entry in `package.json`, then
-  `npm install`. Confirm it landed by reading the version out of the lockfile.
+- `simetry` and `yaml-rust` are pinned together on purpose: `SimState::session_info`
+  returns simetry's `Yaml`, so the two must resolve to the same crate.
+- `slint` and `slint-build` move together.
+- `windows` is pinned to the version already in the lockfile through other crates,
+  so a bump there pulls a second copy into the build unless they move too.
 
 ## Recording what was held back
 
-Every pin goes in `ClientApp/DEPENDENCY-PINS.md` before the PR opens, with:
+A hold is invisible otherwise: the range in `Cargo.toml` looks satisfied, so nothing
+says the version was kept back deliberately. Put a comment directly above the
+dependency with:
 
-- what is pinned and to which version
-- for a transitive pin, the path that reaches it
-- the date and the reason
-- **a removal condition someone can check** — a date the age gate clears, an
-  upstream release, a peer range that has to widen
+- the version it is held at and the date
+- the reason
+- **a removal condition someone can check** — an upstream release, a fixed issue,
+  another crate that has to move first
 
-Pins are otherwise invisible: the range in `package.json` looks satisfied, so
-`npm outdated` says nothing and the next person has no way to know the hold was
-deliberate or whether it still applies. `overrides` entries are worse, because the
-scheduled workflow preserves them, so they outlive the reason unless someone
-removes them by hand.
-
-Read that file at the start of every dependency update and drop the entries whose
-condition has been met. That is the point of writing them down.
+Read those comments at the start of every update and drop the holds whose condition
+has been met.
 
 ## Verifying
 
-Backend, from the repo root:
+From `rust/`:
 
 ```bash
-dotnet build HaddySimHub.sln     # TreatWarningsAsErrors is on: 0 warnings expected
-dotnet test HaddySimHub.sln
+cargo fmt --all -- --check
+cargo test --workspace --locked
+cargo build --release --locked -p simhub-app
 ```
-
-Frontend, from `ClientApp/`:
-
-```bash
-npm run build
-npm run test_ci
-npm run lint
-npm audit --omit=dev
-```
-
-The `truck-display` and `rally-display` SCSS budget warnings are long-standing. Do
-not report them as new unless a stylesheet or budget setting actually changed.
 
 ## The PR
 
 State plainly which majors were taken and which were held back, with the reason for
-each. "Held back out of caution" is not a reason; "outside the peer range Angular
-declares" is. Link anything recorded in `DEPENDENCY-PINS.md` so a reviewer can see
-the hold is tracked rather than forgotten.
+each. "Held back out of caution" is not a reason; "simetry has not released against
+the new yaml-rust" is.

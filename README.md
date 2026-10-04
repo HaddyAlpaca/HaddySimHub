@@ -6,37 +6,37 @@
 
 ## Purpose
 
-HaddySimHub is a tool that reads data from various racing simulators and provides a web-based interface to view real-time information and telemetry. It acts as a central hub for all your sim racing data.
+HaddySimHub is a Windows app that detects which simulator you are running and
+shows a live dashboard for it: race, rally, truck or flight. It is a single
+executable written in Rust with a [Slint](https://slint.dev) UI.
 
-## Architecture and development
+## Supported games
 
-- [Architecture overview](docs/architecture.md) — repository structure,
-  runtime flow, boundaries, and extension points.
-- [Documentation index](docs/README.md) — architecture decisions and related
-  guides.
-- [Game display pipeline](HaddySimHub/Displays/README.md) — how to add or
-  debug a simulator integration.
-- [AGENTS.md](AGENTS.md) — SDK versions, build/test commands, conventions, and
-  CI details.
+| Game | Dashboard |
+| --- | --- |
+| iRacing | Race |
+| Assetto Corsa | Race |
+| Assetto Corsa Competizione | Race |
+| Forza Horizon 5 | Race |
+| DiRT Rally 2.0 | Rally |
+| Assetto Corsa Rally | Rally |
+| Euro Truck Simulator 2 | Truck |
+| Microsoft Flight Simulator 2020 | Flight |
 
-## Supported Games
+Some games need their telemetry switched on:
 
-Currently, HaddySimHub supports the following games:
-
-*   iRacing
-*   Euro Truck Simulator 2
-*   American Truck Simulator
-*   DiRT Rally 2.0
-*   Assetto Corsa
-*   Assetto Corsa Competizione
-*   Assetto Corsa Rally
-*   Microsoft Flight Simulator 2020
+* **DiRT Rally 2.0** — set `udp enabled="true"`, port `20777` and `extradata="3"`
+  in `hardware_settings_config.xml`.
+* **Forza Horizon 5** — enable *Data Out* in the HUD settings, IP `127.0.0.1`,
+  port `5300`.
+* **Euro Truck Simulator 2** — install the
+  [SCS telemetry plugin](https://github.com/RenCloud/scs-sdk-plugin).
 
 ### Microsoft Flight Simulator: SimConnect.dll
 
 MSFS telemetry is read over SimConnect, whose client library ships with the
-**MSFS SDK** rather than with the simulator itself. HaddySimHub looks for
-`SimConnect.dll` in this order:
+**MSFS SDK** rather than with the simulator itself. HaddySimHub loads
+`SimConnect.dll` at runtime and looks for it in this order:
 
 1.  next to `HaddySimHub.exe`;
 2.  `%MSFS_SDK%\SimConnect SDK\lib\SimConnect.dll`;
@@ -44,41 +44,33 @@ MSFS telemetry is read over SimConnect, whose client library ships with the
 
 If you have not installed the SDK (in MSFS: *Options → General → Developers →
 Developer Mode*, then *Help → SDK Installer*), copy the 64-bit `SimConnect.dll`
-next to the executable. Without it the flight dashboard simply stays inactive and
-logs where it looked - nothing else is affected. A copy placed next to the
-executable survives updates, because the updater only overwrites files that are in
-the release archive.
+next to the executable. Without it the flight dashboard stays inactive and the
+log says where it looked; nothing else is affected. Releases do not include the
+library: redistributing it is a licensing decision.
 
-Released archives do not contain `SimConnect.dll`: the release workflow builds on a
-Linux runner with no MSFS SDK, and redistributing the library is a licensing
-decision rather than something publishing should do by itself. To build a package
-that includes it:
+## Running
 
-```bash
-dotnet publish ./HaddySimHub -r win-x64 -p:IncludeSimConnectOnPublish=true
+Start `HaddySimHub.exe`. It checks GitHub for a newer release, installs it and
+restarts, then waits for a supported game.
+
+```text
+HaddySimHub [--no-update] [--demo <race|rally|truck|flight>]
 ```
 
-That reads the SDK location from `%MSFS_SDK%` and fails with a clear message if the
-library is not there, so a package can never quietly ship without it. Override the
-location with `-p:SimConnectDllPath=<path>`.
+* `--no-update` — skip the update check.
+* `--demo <dashboard>` — show a dashboard with sample data, no game needed.
 
-## Referenced/cloned repositories
-* https://github.com/hfoxy/iRacingSDK.Net
-* https://github.com/RenCloud/scs-sdk-plugin
+Logs go to the console and to a daily file in `log/` next to the executable.
+Set `HADDYSIMHUB_DEBUG=1` for debug logging, or `RUST_LOG=trace` to also log every
+display update.
 
-## Console output
+## Development
 
-The backend writes colour-coded logs to the console and keeps a daily log file.
-With `HADDYSIMHUB_DEBUG=1`, debug messages and per-frame telemetry logs are also
-enabled.
-
-Keyboard shortcuts:
-
-* `Ctrl+C` — quit.
-
-Environment variables:
-
-* `HADDYSIMHUB_DEBUG=1` — enable debug-level logging and per-frame data logs.
+- [Architecture overview](docs/architecture.md) — crates, runtime flow, and how
+  to add a game.
+- [Documentation index](docs/README.md) — architecture decisions and related
+  guides.
+- [AGENTS.md](AGENTS.md) — toolchain, build and test commands, conventions.
 
 ## Releases
 

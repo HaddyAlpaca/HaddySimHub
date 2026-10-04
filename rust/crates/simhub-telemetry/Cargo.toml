@@ -1,0 +1,32 @@
+[package]
+name = "simhub-telemetry"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+simhub-model.workspace = true
+
+# Pinned to the version simetry uses, so cargo unifies the two and the `Yaml`
+# that `SimState::session_info` returns is the same type this crate parses.
+yaml-rust = "0.4.5"
+
+# simetry reads the Assetto Corsa, Competizione and iRacing pages. Its default
+# features are off: `with_r3e` and `with_truck_simulator` both run bindgen at
+# build time (so need libclang), and neither is used — ETS2 is read through the
+# byte decoder here, because simetry's SCS client spins while the game is paused.
+simetry = { version = "0.2.3", default-features = false }
+
+# Named file mappings for the pages simetry does not cover.
+windows = { version = "0.62", features = [
+    "Win32_Foundation",
+    "Win32_Security",
+    "Win32_System_Memory",
+] }
+
+# Binds SimConnect.dll at runtime. The DLL comes with the MSFS SDK rather than
+# with us, so linking it at build time would stop the app starting without it.
+libloading = "0.8.9"
