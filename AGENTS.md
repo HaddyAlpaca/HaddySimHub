@@ -15,9 +15,7 @@ All commands run from `rust/`, so the toolchain pinned in `rust/rust-toolchain.t
 
 ## Environment & Setup
 
-- Windows only. CI, CD and CodeQL run on `windows-latest`. CodeQL uses its own
-  workflow (`codeql.yml`, Rust and Actions), because the default setup has no Rust;
-  the default setup is therefore off.
+- Windows only. CI and CD run on `windows-latest`. There is no CodeQL scanning.
 - Needs the MSVC C++ build tools (Visual Studio Build Tools, "Desktop development
   with C++") and `rustup`. libclang is **not** needed: `simetry` is built without the
   features that run bindgen.
