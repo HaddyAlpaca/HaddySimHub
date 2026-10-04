@@ -1,11 +1,13 @@
 slint::include_modules!();
 
+pub mod window_state;
+
 use chrono::Local;
 use simhub_core::{
     DashboardKind, DashboardSnapshot, EngineGaugeSnapshot, Metric as CoreMetric,
     MetricGroup as CoreMetricGroup, TelemetryPoint,
 };
-use slint::{Color, ModelRc, Timer, TimerMode, VecModel};
+use slint::{Color, ComponentHandle, ModelRc, Timer, TimerMode, VecModel};
 use std::error::Error;
 use std::sync::{Arc, Mutex};
 use std::{fmt::Write as _, time::Duration};
@@ -18,12 +20,14 @@ const IDLE_KIND: i32 = 4;
 pub struct DashboardUi {
     window: DashboardWindow,
     _clock: Timer,
+    _placement: Option<Timer>,
 }
 
 impl DashboardUi {
     pub fn new() -> Result<Self, Box<dyn Error>> {
         let window = DashboardWindow::new()?;
         window.set_dashboard_kind(IDLE_KIND);
+        let placement = remember_placement(&window);
 
         let weak_window = window.as_weak();
         let clock = Timer::default();
@@ -37,6 +41,7 @@ impl DashboardUi {
         Ok(Self {
             window,
             _clock: clock,
+            _placement: placement,
         })
     }
 
@@ -57,6 +62,66 @@ impl DashboardUi {
         self.window.run()?;
         Ok(())
     }
+}
+
+/// How often the window placement is checked and, when it changed, saved.
+const PLACEMENT_CHECK: Duration = Duration::from_secs(1);
+
+/// Puts the window back where it was last placed, then keeps saving its
+/// placement whenever it changes. Saving as it goes, rather than on close,
+/// means arranging the window on a sim rig is remembered without ever closing
+/// it, and survives the app being stopped any other way.
+///
+/// The returned timer does the saving and has to be kept alive.
+fn remember_placement(window: &DashboardWindow) -> Option<Timer> {
+    let Some(path) = window_state::default_path() else {
+        log::warn!("No settings directory; the window position will not be remembered");
+        return None;
+    };
+
+    let saved = window_state::load(&path);
+    if let Some(state) = saved {
+        if window_state::on_a_monitor(state.centre()) {
+            window
+                .window()
+                .set_position(slint::PhysicalPosition::new(state.x, state.y));
+        } else {
+            log::info!("The saved window position is off every monitor; using the default");
+        }
+        window
+            .window()
+            .set_size(slint::PhysicalSize::new(state.width, state.height));
+        if state.maximized {
+            window.window().set_maximized(true);
+        }
+    }
+
+    let weak = window.as_weak();
+    let mut last = saved;
+    let timer = Timer::default();
+    timer.start(TimerMode::Repeated, PLACEMENT_CHECK, move || {
+        let Some(window) = weak.upgrade() else {
+            return;
+        };
+        let window = window.window();
+        if !window.is_visible() || window.is_minimized() {
+            return;
+        }
+        let state = window_state::WindowState::capture(
+            window.position(),
+            window.size(),
+            window.is_maximized(),
+            last,
+        );
+        if last == Some(state) {
+            return;
+        }
+        match window_state::save(&path, &state) {
+            Ok(()) => last = Some(state),
+            Err(error) => log::warn!("Could not save the window position: {error}"),
+        }
+    });
+    Some(timer)
 }
 
 /// Sends snapshots to the dashboard from any thread.
