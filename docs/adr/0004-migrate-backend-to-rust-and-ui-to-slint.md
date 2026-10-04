@@ -1,6 +1,6 @@
 # ADR-0004: Migrate the backend to Rust and the UI to Slint
 
-- **Status:** Accepted
+- **Status:** Accepted; completed 2026-10-04, with the deviations recorded in [ADR-0006](0006-use-existing-crates-and-drop-raw-capture.md)
 - **Date:** 2026-09-27
 
 ## Context

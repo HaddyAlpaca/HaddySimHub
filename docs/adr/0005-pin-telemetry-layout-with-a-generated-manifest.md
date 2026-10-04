@@ -1,6 +1,6 @@
 # ADR-0005: Capture raw game-source telemetry
 
-- **Status:** Accepted
+- **Status:** Superseded by [ADR-0006](0006-use-existing-crates-and-drop-raw-capture.md)
 - **Date:** 2026-09-27
 
 ## Context

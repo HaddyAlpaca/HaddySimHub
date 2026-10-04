@@ -1,5 +1,10 @@
 # Rust reader strategy: dependencies versus in-house
 
+> Written while planning the migration, when the C# app was still the reference.
+> What was actually built, and why it differs, is in
+> [architecture.md](architecture.md) and
+> [ADR-0006](adr/0006-use-existing-crates-and-drop-raw-capture.md).
+
 Which Rust implementations we take as dependencies, which we write ourselves,
 and why. Dependency health figures were measured on 2026-10-03 and should be
 re-checked before any of these decisions is acted on.

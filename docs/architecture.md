@@ -1,199 +1,128 @@
 # Architecture overview
 
-HaddySimHub is a Windows desktop application that reads telemetry from racing
-and flight simulators, converts it to a shared dashboard model, and serves a
-web frontend on port `3333`. The backend owns simulator integration and
-display selection. The frontend is a renderer: it receives display updates over
-Server-Sent Events (SSE) and chooses the matching dashboard component.
+HaddySimHub is a Windows desktop application that detects which simulator is
+running, reads its telemetry, converts it to a shared dashboard model, and draws
+the matching dashboard in a Slint window. It is a single Rust executable,
+`HaddySimHub.exe`; there is no web server, browser or .NET runtime.
 
 ## Repository map
 
 ```text
-HaddySimHub.sln
-├── HaddySimHub/              ASP.NET Core host and application composition
-│   ├── Displays/              simulator providers, converters, and lifecycle
-│   ├── Extensions/            dependency registration and HTTP endpoints
-│   ├── Infrastructure/        process guard, update checks, and web host
-│   ├── Interfaces/            small seams between application responsibilities
-│   ├── Models/                shared backend display contracts
-│   └── Services/              SSE broadcasting and shared conversions
-├── HaddySimHub.Shared/        code shared by the application and helpers
-├── HaddySimHub.Tests/         MSTest unit and integration-style tests
-├── ClientApp/                 Lit + Vite dashboard frontend
-│   ├── src/app/displays/      dashboard components and display-specific models
-│   ├── src/app/state/         frontend display state
-│   └── src/app/sse.service.ts SSE connection and reconnect behavior
-├── SCSSdkClient/              vendored SCS telemetry SDK integration
-├── iRacingSDK.Net/            vendored iRacing SDK integration
-├── HaddySimHubUpdater/        updater project
-├── rust/                     parallel Rust + Slint prototype (synthetic data only)
-├── tools/                    developer and telemetry-support tools
-├── docs/                      architecture documentation and ADRs
-└── .github/workflows/         build, test, and deployment automation
+rust/                         Cargo workspace (run cargo from here)
+├── crates/simhub-app/         the HaddySimHub executable: startup, logging, runner thread
+├── crates/simhub-games/       the supported games and their feed threads
+├── crates/simhub-telemetry/   reading each game's source: decoders and acquisition
+├── crates/simhub-model/       the display contract (DisplayUpdate) and telemetry structs
+├── crates/simhub-convert/     telemetry → DisplayUpdate, one module per game
+├── crates/simhub-core/        display selection, and DisplayUpdate → dashboard snapshot
+├── crates/simhub-ui/          the Slint window (ui/dashboard.slint) and its bindings
+└── crates/simhub-update/      single-instance guard and self-update from GitHub releases
+fixtures/telemetry/manifest/  byte layouts of the game structs, pinned by tests
+docs/                         architecture documentation and ADRs
+.github/workflows/            CI and release automation
 ```
 
-`bin/`, `obj/`, `node_modules/`, `dist/`, coverage output, and runtime logs are
-generated artifacts. They are not architectural source and should not be
-edited.
+`rust/target/` and the `log/` directory the app writes next to itself are
+generated and not source.
 
 ## Runtime flow
 
 ```text
-Program
-  └─ WebServerHost
-       ├─ AddHaddySimHubApplication
-       │    ├─ register providers, converters, and displays
-       │    ├─ register SseBroadcastService
-       │    └─ start DisplayRunnerHostedService
-       └─ ConfigureHaddySimHubPipeline
-            ├─ serve ClientApp static files
-            └─ expose GET /display-data/stream
+main (simhub-app)
+  ├─ parse options (clap), set up logging (flexi_logger)
+  ├─ stop other instances, update from GitHub unless --no-update
+  ├─ runner thread, every 2 s:
+  │    sysinfo process list → DisplaysRunner::tick
+  │      → starts/stops one GameDisplay, or shows the waiting screen
+  └─ UI thread: Slint event loop
 
-simulator
-  → game data provider
-  → game-specific converter
-  → DisplayBase / SimpleGameDisplay
-  → DisplaysRunner
-  → SseBroadcastService
-  → SSE stream
-  → ClientApp AppStore
-  → dashboard component
+GameDisplay feed thread (one at a time):
+  game source (shared memory / UDP / SimConnect / simetry)
+    → simhub-telemetry decoder → telemetry struct
+    → simhub-convert → DisplayUpdate
+    → simhub-core::live::LiveDashboard → DashboardSnapshot
+    → simhub-ui::DashboardHandle::show → repaint on the UI thread
 ```
 
-`Program` performs startup orchestration: logging, single-instance handling,
-update checking, cancellation, and web-server startup. Dependency registration
-and HTTP endpoint definitions live in `Extensions/ApplicationCompositionExtensions.cs`.
-The web host listens on all interfaces in normal mode and only on loopback in
-`--e2e` mode.
+## Boundaries
 
-## Backend boundaries
+### Telemetry sources
 
-### Simulator integration
+`simhub-telemetry` splits every source in two. **Decoding** — bytes to a
+telemetry struct — is pure and unit-tested against offsets taken from the
+committed layout manifests, so a wrong offset fails a build rather than drawing
+a plausible dashboard. **Acquisition** is thin:
 
-Every game-specific integration lives below `HaddySimHub/Displays/<Game>/`.
-The provider owns acquisition of raw telemetry; the converter maps that
-telemetry to `Models.DisplayUpdate`; the display lifecycle handles subscription,
-start/stop, and forwarding. Providers may use shared memory, UDP, a vendor SDK,
-or native SimConnect interop. These protocol details must not leak into the
-frontend.
+| Game | Source | Reader |
+| --- | --- | --- |
+| Assetto Corsa, ACC | shared memory pages | `simetry` |
+| iRacing | shared memory ring buffers + session YAML | `simetry` |
+| Assetto Corsa Rally | shared memory pages | `shm` + byte decoder |
+| Euro Truck Simulator 2 | SCS plugin map | `shm` + byte decoder |
+| DiRT Rally 2.0 | UDP port 20777 | byte decoder |
+| Forza Horizon 5 | UDP port 5300 | byte decoder |
+| MSFS 2020 | SimConnect, loaded at runtime | `msfs` |
 
-The full contract, registration pattern, telemetry-source notes, and debugging
-steps are documented in
-[the game display pipeline guide](../HaddySimHub/Displays/README.md).
+Existing crates are preferred over our own code (ADR-0006). Where this crate
+reads a source itself, it is because nothing maintained covers it, or because
+the crate that does fails a requirement: simetry does not know AC Rally, its SCS
+client spins without yielding while ETS2 is paused, and its DiRT Rally 2 reader
+drops the sector times the rally dashboard shows.
 
 ### Display selection
 
-`DisplaysRunner` polls registered displays approximately every two seconds. It
-selects one active display and keeps it selected while that game remains
-active. This prevents different display types from interleaving on one SSE
-stream. When no game is active, it publishes a `DisplayType.None` update.
+`simhub-core::lifecycle::DisplaysRunner` decides which game feeds the dashboard.
+Only one runs at a time, so two open games never interleave frames of different
+dashboard types, and the one already running keeps its turn while its game is
+up. Detection is by process name (case-insensitive, without `.exe`): the three
+Assetto Corsa titles publish under the same shared memory names, so only the
+process tells them apart. A detected process does not mean telemetry is flowing;
+each feed retries until its source is ready and logs when it connects.
 
-Process detection and telemetry connectivity are separate concerns: a running
-process can be detected before its provider has received telemetry.
+### Display contract
 
-### Transport contract
+`simhub_model::DisplayUpdate` is the seam between telemetry and the UI
+(ADR-0001): `Race`, `Rally`, `Truck`, `Flight`, or `None`. Converters produce it;
+nothing upstream of a converter knows about dashboards, and nothing downstream
+knows about games.
 
-`SseBroadcastService` broadcasts each `DisplayUpdate` to all connected clients.
-Each SSE client has a bounded channel with `DropOldest` behavior, so a slow
-browser does not block telemetry production. The endpoint sends JSON using
-camel-case property names:
+### Dashboard
 
-```json
-{
-  "type": "RaceDashboard",
-  "data": {}
-}
-```
+`simhub-core::live` turns a `DisplayUpdate` into a `DashboardSnapshot`: labels,
+formatted values, warning flags, and the numbers the custom instruments draw
+from. It follows the web dashboards this application replaced, including the
+Dutch truck labels. `simhub-ui` owns the Slint window; `DashboardHandle` accepts
+snapshots from any thread but keeps only the newest and queues at most one
+repaint, so telemetry faster than the screen never builds a backlog.
 
-The backend model is `HaddySimHub.Models.DisplayUpdate`. The frontend mirror is
-the `DisplayUpdate` interface in `ClientApp/src/app/sse.service.ts`. Changes to
-the display type or data shape must update both sides and their tests.
+The window is at least 1440×900 and may be larger. Its placement — position,
+size and maximized state, in physical pixels — is checked every second and saved
+to `%APPDATA%\HaddySimHub\config\window.json` when it changes, so arranging it on
+a multi-monitor rig needs no restart or close. At startup it is restored, unless
+the saved position no longer lies on a connected monitor.
 
-The `--e2e` mode adds loopback-only health and display-update endpoints and does
-not start the normal display runner. It exists to drive the frontend without a
-running simulator.
+### Update and single instance
 
-The opt-in `--capture <dir>` mode records raw source-boundary data for all
-eight registered games before C# telemetry struct/DTO conversion; for MSFS
-that boundary is the SimConnect API dispatch payload, not the underlying
-transport. It does not capture converted telemetry or display updates. Source
-coverage and its completeness limits are documented in
-[the raw telemetry capture guide](telemetry-corpus.md), and community Rust
-reader candidates are surveyed in
-[the Rust implementation research](rust-telemetry-implementations.md).
+`simhub-update` wraps `self_update`: at startup it compares the version baked in
+at build time (`HADDYSIMHUB_VERSION`, set by CD to the release tag) with the
+latest GitHub release, replaces `HaddySimHub.exe` with the one in
+`haddy-simhub.zip`, and restarts with `--no-update`. Failures are logged and
+never stop the app. A second launch stops the first instance.
 
-## Rust prototype
+## Adding a game
 
-`rust/` is developed alongside the current application and is not the default
-runtime. The workspace pins Rust 1.92.0 in `rust/rust-toolchain.toml`.
-`simhub-core` prepares typed dashboard snapshots for race, rally,
-truck, and flight; `simhub-ui` renders a screen-specific Slint layout for each;
-and `simhub-app` starts the prototype using explicitly labeled synthetic data.
-The layouts follow the existing dashboard hierarchy: race session, speed, fuel,
-and telemetry; rally progress, driving instruments, and sectors; truck route,
-damage, speed, and vehicle status; and flight instruments, navigation,
-autopilot, and engine data. Custom instruments such as the flight attitude
-indicator and race telemetry trace are still simplified rather than exact
-pixel/feature-parity ports. The prototype runs without a simulator or
-browser, but it does not contain game providers or prove telemetry parity.
-Porting a game converter remains blocked on that game's captured frames and
-layout manifest.
+1. Add a telemetry struct to `simhub-model/src/telemetry/`.
+2. Add a reader to `simhub-telemetry`: a pure decoder with tests, plus the
+   acquisition, or an adapter from an existing crate.
+3. Add a converter to `simhub-convert` producing a `DisplayUpdate`.
+4. Add a feed function to `simhub-games/src/feeds.rs`, reusing the shared
+   memory, UDP or simetry helpers there, and an entry in `GAMES` with the
+   process name.
 
-From `rust/`, run `cargo test --workspace --locked` to test the workspace.
-Run `cargo run -p simhub-app -- race` to open the race prototype; replace
-`race` with `rally`, `truck`, or `flight` to open another demo screen. On
-Ubuntu, install `libfontconfig1-dev` first to provide Slint's Fontconfig build
-dependency.
+## Build and release
 
-## Frontend boundaries
-
-`ClientApp/src/main.ts` is the Vite entry point and registers the application
-element. `AppElement` owns the composition of the page: clock, connection
-status, and the dashboard selected by `DisplayType`.
-
-The frontend flow is:
-
-```text
-SseService → AppStore → AppElement → haddy-*-display
-```
-
-`SseService` owns the browser `EventSource`, connection status, reconnect
-handling, and parsing of backend updates. `AppStore` owns the current display
-type and data. Individual dashboard elements render their own display-specific
-data and styles. Shared controls belong under `src/app/shared/`.
-
-The frontend must remain independent of simulator protocols. It should consume
-only the shared update contract.
-
-## How to extend the system
-
-### Add a simulator
-
-Follow the steps in the [game display pipeline guide](../HaddySimHub/Displays/README.md):
-
-1. Add a game folder and provider.
-2. Add a converter to `DisplayUpdate`.
-3. Add a typed definition in `DisplayDefinitions`.
-4. Register the display in `ApplicationCompositionExtensions`.
-5. Add converter/provider tests and update the pipeline documentation when the
-   integration has game-specific requirements.
-6. Add or reuse a frontend dashboard only if the shared display contract needs
-   a new display type.
-
-### Change the display contract
-
-Update the backend model, frontend types, rendering branch, and tests together.
-Document compatibility or migration consequences in an ADR when the change
-affects the SSE contract or existing dashboards.
-
-### Change startup or hosting
-
-Keep `Program` as orchestration and place concrete startup concerns in
-`Infrastructure/`. Update this document when the process model, listening
-address, test mode, or deployment boundary changes.
-
-## Related decisions
-
-- [ADR-0001: shared game-display pipeline](adr/0001-game-display-pipeline.md)
-- [ADR-0002: one active display and separate telemetry detection](adr/0002-single-active-display-and-telemetry-detection.md)
-- [ADR-0003: explicit application structure](adr/0003-prefer-explicit-and-boring-application-structure.md)
+From `rust/`: `cargo test --workspace --locked`, `cargo fmt --all -- --check`.
+CI runs those and a release build on `windows-latest`. CD builds with
+`HADDYSIMHUB_VERSION=v0.1.<run>`, zips `HaddySimHub.exe` into
+`haddy-simhub.zip`, and publishes a GitHub release that installed copies update
+from.
