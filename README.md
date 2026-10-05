@@ -1,9 +1,5 @@
 # Haddy SimHub
 
-[![CI](https://github.com/HaddyAlpaca/HaddySimHub/actions/workflows/ci.yml/badge.svg)](https://github.com/HaddyAlpaca/HaddySimHub/actions/workflows/ci.yml)
-
-[![CD](https://github.com/HaddyAlpaca/HaddySimHub/actions/workflows/cd.yml/badge.svg)](https://github.com/HaddyAlpaca/HaddySimHub/actions/workflows/cd.yml)
-
 ## Purpose
 
 HaddySimHub is a Windows app that detects which simulator you are running and
