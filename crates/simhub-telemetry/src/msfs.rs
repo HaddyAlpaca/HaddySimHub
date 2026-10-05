@@ -23,8 +23,8 @@
 //! the data definition, with no padding. [`DEFINITIONS`] *is* that order, and
 //! [`decode`] walks it. Reorder one and not the other and every field after the
 //! change reads a plausible but wrong value, with no error from the simulator —
-//! which is why the tests below pin the order against the committed layout
-//! manifest and each simvar against the field it lands in.
+//! which is why the tests below pin the order against the layout in
+//! `msfs/layout.json` and each simvar against the field it lands in.
 //!
 //! The split mirrors the rest of this crate: [`decode`] and the dispatch
 //! parsing in [`dispatch`] are pure and tested anywhere; [`MsfsSource`] is the
@@ -591,10 +591,11 @@ mod tests {
     }
 
     #[test]
-    fn offsets_and_sizes_match_the_committed_layout_manifest() {
-        // The manifest is generated from the C# struct the sim used to write
-        // into, so agreeing with it means agreeing with the C# reader.
-        let manifest = include_str!("../../../../fixtures/telemetry/manifest/msfs.json");
+    fn offsets_and_sizes_match_the_recorded_layout() {
+        // The layout was generated from the C# struct the sim used to write
+        // into, so agreeing with it means reading the block the way the C#
+        // app did.
+        let manifest = include_str!("msfs/layout.json");
         let numbers = |key: &str| -> Vec<usize> {
             manifest
                 .lines()

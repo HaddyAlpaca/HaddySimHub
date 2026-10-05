@@ -2,8 +2,8 @@
 
 ## Build & Test
 
-All commands run from `rust/`, so the toolchain pinned in `rust/rust-toolchain.toml`
-(Rust 1.92.0) is selected.
+The Cargo workspace is the repository root; run cargo from there. The toolchain is
+pinned in `rust-toolchain.toml` (Rust 1.92.0).
 
 - Test: `cargo test --workspace --locked`
 - Format check: `cargo fmt --all -- --check` (fix with `cargo fmt --all`)
@@ -33,8 +33,8 @@ All commands run from `rust/`, so the toolchain pinned in `rust/rust-toolchain.t
   maintained crate covers the need or the crate fails a concrete requirement, and
   say why in the module docs ([ADR-0006](./docs/adr/0006-use-existing-crates-and-drop-raw-capture.md)).
 - **Readers split decoding from acquisition**: decoding bytes into a telemetry
-  struct is pure and unit-tested against the layouts in
-  `fixtures/telemetry/manifest/`; acquisition stays thin.
+  struct is pure and unit-tested against the offsets the game publishes;
+  acquisition stays thin.
 - **Adding a game**: telemetry struct → reader → converter → feed and `GAMES` entry.
   The steps are in `docs/architecture.md`.
 - **Dashboard text** follows the web dashboards the app replaced; the truck
@@ -58,9 +58,7 @@ All commands run from `rust/`, so the toolchain pinned in `rust/rust-toolchain.t
 
 ## Do Not
 
-- Do not run cargo from the repository root; the workspace and toolchain file are in
-  `rust/`.
-- Do not commit `rust/target/` or `log/`.
+- Do not commit `target/` or `log/`.
 - Do not enable simetry's default features: they run bindgen and need libclang.
 
 ## Git & Pull Requests

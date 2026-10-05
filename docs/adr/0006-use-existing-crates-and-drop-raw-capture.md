@@ -28,8 +28,9 @@ Drop raw capture (`--capture`, the corpus format and its validator) and the
 parity gates built on it. Replace the C# application in a single change rather
 than running both side by side.
 
-The committed layout manifests stay: they are the published layout the byte
-decoders are tested against, now as fixed files rather than generated from C#.
+The layout manifests are dropped as well. The byte decoders carry their offsets
+as constants with tests, and only MSFS keeps its recorded layout, beside the
+test that pins its simvar order to it.
 
 ## Consequences
 

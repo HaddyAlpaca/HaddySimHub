@@ -23,9 +23,6 @@ jobs:
     needs: ci
     permissions:
       contents: write
-    defaults:
-      run:
-        working-directory: ./rust
 
     env:
       RELEASE_VERSION: v0.1.${{ github.run_number }}
@@ -44,8 +41,8 @@ jobs:
           ~/.cargo/registry/index
           ~/.cargo/registry/cache
           ~/.cargo/git/db
-          rust/target
-        key: cargo-release-${{ runner.os }}-${{ hashFiles('rust/Cargo.lock', 'rust/rust-toolchain.toml') }}
+          target
+        key: cargo-release-${{ runner.os }}-${{ hashFiles('Cargo.lock', 'rust-toolchain.toml') }}
         restore-keys: |
           cargo-release-${{ runner.os }}-
 
@@ -54,10 +51,9 @@ jobs:
 
     # The updater takes HaddySimHub.exe from the root of this archive.
     - name: Zip build result
-      run: Compress-Archive -Path ./target/release/HaddySimHub.exe -DestinationPath ../haddy-simhub.zip
+      run: Compress-Archive -Path ./target/release/HaddySimHub.exe -DestinationPath ./haddy-simhub.zip
 
     - name: Create release and upload assets
-      working-directory: .
       run: gh release create ${{ env.RELEASE_VERSION }} haddy-simhub.zip --title "Release ${{ env.RELEASE_VERSION }}" --notes "Automated Release"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

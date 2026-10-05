@@ -33,7 +33,7 @@ pub const DASH_HORIZON_DATAGRAM_SIZE: usize = 324;
 /// Where the shared sled block ends and Horizon's own values begin.
 pub const SLED_BLOCK_SIZE: usize = 232;
 
-// Offsets within the packet, matching the generated layout manifest.
+// Offsets within the packet, as the published layout gives them.
 const IS_RACE_ON: usize = 0;
 const ENGINE_MAX_RPM: usize = 8;
 const CURRENT_ENGINE_RPM: usize = 16;

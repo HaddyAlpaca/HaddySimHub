@@ -17,7 +17,7 @@ pub const PORT: u16 = 20777;
 /// Length of the `extradata="3"` packet.
 pub const PACKET_SIZE: usize = 264;
 
-// Offsets within the packet, matching the generated layout manifest.
+// Offsets within the packet, as the published layout gives them.
 const LAP_TIME: usize = 4;
 const DISTANCE: usize = 8;
 const PROGRESS: usize = 12;

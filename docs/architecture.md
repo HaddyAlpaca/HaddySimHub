@@ -8,7 +8,7 @@ the matching dashboard in a Slint window. It is a single Rust executable,
 ## Repository map
 
 ```text
-rust/                         Cargo workspace (run cargo from here)
+Cargo.toml                    workspace manifest; rust-toolchain.toml pins Rust
 ├── crates/simhub-app/         the HaddySimHub executable: startup, logging, runner thread
 ├── crates/simhub-games/       the supported games and their feed threads
 ├── crates/simhub-telemetry/   reading each game's source: decoders and acquisition
@@ -17,12 +17,11 @@ rust/                         Cargo workspace (run cargo from here)
 ├── crates/simhub-core/        display selection, and DisplayUpdate → dashboard snapshot
 ├── crates/simhub-ui/          the Slint window (ui/dashboard.slint) and its bindings
 └── crates/simhub-update/      single-instance guard and self-update from GitHub releases
-fixtures/telemetry/manifest/  byte layouts of the game structs, pinned by tests
 docs/                         architecture documentation and ADRs
 .github/workflows/            CI and release automation
 ```
 
-`rust/target/` and the `log/` directory the app writes next to itself are
+`target/` and the `log/` directory the app writes next to itself are
 generated and not source.
 
 ## Runtime flow
@@ -49,8 +48,8 @@ GameDisplay feed thread (one at a time):
 ### Telemetry sources
 
 `simhub-telemetry` splits every source in two. **Decoding** — bytes to a
-telemetry struct — is pure and unit-tested against offsets taken from the
-committed layout manifests, so a wrong offset fails a build rather than drawing
+telemetry struct — is pure and unit-tested against the offsets each game
+publishes, so a wrong offset fails a build rather than drawing
 a plausible dashboard. **Acquisition** is thin:
 
 | Game | Source | Reader |
@@ -121,7 +120,7 @@ never stop the app. A second launch stops the first instance.
 
 ## Build and release
 
-From `rust/`: `cargo test --workspace --locked`, `cargo fmt --all -- --check`.
+From the repository root: `cargo test --workspace --locked`, `cargo fmt --all -- --check`.
 CI runs those and a release build on `windows-latest`. CD builds with
 `HADDYSIMHUB_VERSION=v0.1.<run>`, zips `HaddySimHub.exe` into
 `haddy-simhub.zip`, and publishes a GitHub release that installed copies update
