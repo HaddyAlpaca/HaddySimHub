@@ -1,7 +1,0 @@
-# Shell scripts run under bash on the Windows CI runners, which check out with
-# autocrlf on; a CRLF line ending breaks them there.
-*.sh text eol=lf
-
-# The layout manifests are compared byte for byte with what the tests generate,
-# so a checkout must not rewrite their line endings.
-fixtures/telemetry/manifest/*.json text eol=lf

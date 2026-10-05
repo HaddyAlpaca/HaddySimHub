@@ -33,8 +33,8 @@ All commands run from `rust/`, so the toolchain pinned in `rust/rust-toolchain.t
   maintained crate covers the need or the crate fails a concrete requirement, and
   say why in the module docs ([ADR-0006](./docs/adr/0006-use-existing-crates-and-drop-raw-capture.md)).
 - **Readers split decoding from acquisition**: decoding bytes into a telemetry
-  struct is pure and unit-tested against the layouts in
-  `fixtures/telemetry/manifest/`; acquisition stays thin.
+  struct is pure and unit-tested against the offsets the game publishes;
+  acquisition stays thin.
 - **Adding a game**: telemetry struct → reader → converter → feed and `GAMES` entry.
   The steps are in `docs/architecture.md`.
 - **Dashboard text** follows the web dashboards the app replaced; the truck

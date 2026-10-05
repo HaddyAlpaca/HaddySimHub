@@ -17,7 +17,6 @@ rust/                         Cargo workspace (run cargo from here)
 ├── crates/simhub-core/        display selection, and DisplayUpdate → dashboard snapshot
 ├── crates/simhub-ui/          the Slint window (ui/dashboard.slint) and its bindings
 └── crates/simhub-update/      single-instance guard and self-update from GitHub releases
-fixtures/telemetry/manifest/  byte layouts of the game structs, pinned by tests
 docs/                         architecture documentation and ADRs
 .github/workflows/            CI and release automation
 ```
@@ -49,8 +48,8 @@ GameDisplay feed thread (one at a time):
 ### Telemetry sources
 
 `simhub-telemetry` splits every source in two. **Decoding** — bytes to a
-telemetry struct — is pure and unit-tested against offsets taken from the
-committed layout manifests, so a wrong offset fails a build rather than drawing
+telemetry struct — is pure and unit-tested against the offsets each game
+publishes, so a wrong offset fails a build rather than drawing
 a plausible dashboard. **Acquisition** is thin:
 
 | Game | Source | Reader |

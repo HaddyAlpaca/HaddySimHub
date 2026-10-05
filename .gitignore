@@ -17,5 +17,3 @@ tmpclaude-*
 *.claude
 .claude/
 
-# Local queue contents (git-ignored)
-.queue/
