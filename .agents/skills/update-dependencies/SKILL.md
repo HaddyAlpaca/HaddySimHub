@@ -15,7 +15,7 @@ back.**
 
 ## Compatible updates
 
-Run from `rust/`.
+Run from the repository root.
 
 ```bash
 cargo update            # newest versions Cargo.toml allows; changes Cargo.lock only
@@ -49,7 +49,7 @@ has been met.
 
 ## Verifying
 
-From `rust/`:
+From the repository root:
 
 ```bash
 cargo fmt --all -- --check

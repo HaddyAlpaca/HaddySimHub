@@ -2,8 +2,8 @@
 
 ## Build & Test
 
-All commands run from `rust/`, so the toolchain pinned in `rust/rust-toolchain.toml`
-(Rust 1.92.0) is selected.
+The Cargo workspace is the repository root; run cargo from there. The toolchain is
+pinned in `rust-toolchain.toml` (Rust 1.92.0).
 
 - Test: `cargo test --workspace --locked`
 - Format check: `cargo fmt --all -- --check` (fix with `cargo fmt --all`)
@@ -58,9 +58,7 @@ All commands run from `rust/`, so the toolchain pinned in `rust/rust-toolchain.t
 
 ## Do Not
 
-- Do not run cargo from the repository root; the workspace and toolchain file are in
-  `rust/`.
-- Do not commit `rust/target/` or `log/`.
+- Do not commit `target/` or `log/`.
 - Do not enable simetry's default features: they run bindgen and need libclang.
 
 ## Git & Pull Requests

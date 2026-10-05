@@ -8,7 +8,7 @@ the matching dashboard in a Slint window. It is a single Rust executable,
 ## Repository map
 
 ```text
-rust/                         Cargo workspace (run cargo from here)
+Cargo.toml                    workspace manifest; rust-toolchain.toml pins Rust
 ├── crates/simhub-app/         the HaddySimHub executable: startup, logging, runner thread
 ├── crates/simhub-games/       the supported games and their feed threads
 ├── crates/simhub-telemetry/   reading each game's source: decoders and acquisition
@@ -21,7 +21,7 @@ docs/                         architecture documentation and ADRs
 .github/workflows/            CI and release automation
 ```
 
-`rust/target/` and the `log/` directory the app writes next to itself are
+`target/` and the `log/` directory the app writes next to itself are
 generated and not source.
 
 ## Runtime flow
@@ -120,7 +120,7 @@ never stop the app. A second launch stops the first instance.
 
 ## Build and release
 
-From `rust/`: `cargo test --workspace --locked`, `cargo fmt --all -- --check`.
+From the repository root: `cargo test --workspace --locked`, `cargo fmt --all -- --check`.
 CI runs those and a release build on `windows-latest`. CD builds with
 `HADDYSIMHUB_VERSION=v0.1.<run>`, zips `HaddySimHub.exe` into
 `haddy-simhub.zip`, and publishes a GitHub release that installed copies update

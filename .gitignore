@@ -1,5 +1,5 @@
 # Rust build output
-/rust/target/
+/target/
 
 # Log files the app writes next to itself when run from the repository
 log/
