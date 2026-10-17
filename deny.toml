@@ -1,0 +1,59 @@
+# Policy for `cargo deny check` (see AGENTS.md - Code Quality).
+
+[advisories]
+# Advisories that cannot be fixed from this repository. Each one reaches us
+# through a dependency that pins it; add an entry only with the reason here.
+ignore = [
+    # h2 0.3.27 comes in through simetry -> hyper 0.14. The fix is in h2 0.4,
+    # which hyper 0.14 cannot use.
+    { id = "RUSTSEC-2026-0258", reason = "reached via simetry's hyper 0.14, which needs h2 0.3" },
+    # ttf-parser is unmaintained. It comes through slint -> winit -> sctk-adwaita
+    # and we cannot pick a replacement at this level.
+    { id = "RUSTSEC-2026-0192", reason = "unmaintained, pulled in by slint/winit" },
+    # yaml-rust is pinned to the version simetry uses so that the `Yaml` returned
+    # by `SimState::session_info` is the same type we parse; the maintained
+    # yaml-rust2 is a different type. See simhub-telemetry/Cargo.toml.
+    { id = "RUSTSEC-2024-0320", reason = "pinned to simetry's yaml-rust so the Yaml types match" },
+]
+
+[licenses]
+# The licenses this dependency tree actually uses. Slint is the only copyleft
+# entry: its crates are `GPL-3.0-only OR LicenseRef-Slint-Royalty-free-2.0 OR
+# LicenseRef-Slint-Software-3.0`, and we rely on the royalty-free option, so
+# plain GPL is deliberately not allowed here.
+allow = [
+    "0BSD",
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "BSL-1.0",
+    "CC0-1.0",
+    "CDLA-Permissive-2.0",
+    "ISC",
+    "MIT",
+    "MPL-2.0",
+    "Unicode-3.0",
+    "Unlicense",
+    "Zlib",
+    "LicenseRef-Slint-Royalty-free-2.0",
+    "LicenseRef-Slint-Software-3.0",
+]
+
+# Workspace crates are private and carry no license field.
+[licenses.private]
+ignore = true
+
+[bans]
+# A duplicate version of a crate is a warning, not a build failure: it is often
+# out of our hands.
+multiple-versions = "warn"
+wildcards = "deny"
+# Workspace members depend on each other by path only; that is not a wildcard
+# version requirement to ban.
+allow-wildcard-paths = true
+
+[sources]
+# Everything comes from crates.io.
+unknown-registry = "deny"
+unknown-git = "deny"

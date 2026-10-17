@@ -5,6 +5,10 @@
 log/
 *.log
 
+# Coverage output
+lcov.info
+*.profraw
+
 # Editors
 .vs/
 .vscode/
