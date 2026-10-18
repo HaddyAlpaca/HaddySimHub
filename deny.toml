@@ -1,5 +1,14 @@
 # Policy for `cargo deny check` (see AGENTS.md - Code Quality).
 
+[graph]
+# The app ships for Windows only (see AGENTS.md). Checking just this target
+# keeps the graph to the crates we actually build and keeps Linux-only
+# dependencies of Slint's backends - accesskit_unix, ksni, sctk-adwaita and the
+# zbus/zvariant stack - out of the license and advisory checks.
+targets = [
+    { triple = "x86_64-pc-windows-msvc" },
+]
+
 [advisories]
 # Advisories that cannot be fixed from this repository. Each one reaches us
 # through a dependency that pins it; add an entry only with the reason here.
@@ -7,9 +16,6 @@ ignore = [
     # h2 0.3.27 comes in through simetry -> hyper 0.14. The fix is in h2 0.4,
     # which hyper 0.14 cannot use.
     { id = "RUSTSEC-2026-0258", reason = "reached via simetry's hyper 0.14, which needs h2 0.3" },
-    # ttf-parser is unmaintained. It comes through slint -> winit -> sctk-adwaita
-    # and we cannot pick a replacement at this level.
-    { id = "RUSTSEC-2026-0192", reason = "unmaintained, pulled in by slint/winit" },
     # yaml-rust is pinned to the version simetry uses so that the `Yaml` returned
     # by `SimState::session_info` is the same type we parse; the maintained
     # yaml-rust2 is a different type. See simhub-telemetry/Cargo.toml.
