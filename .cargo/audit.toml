@@ -1,0 +1,8 @@
+# `cargo audit` config. Keep the ignore list in sync with [advisories] in
+# `deny.toml`; both tools use the RustSec database but fail on different things
+# (cargo-audit fails on vulnerabilities, cargo-deny also fails on unmaintained
+# crates).
+[advisories]
+ignore = [
+    "RUSTSEC-2026-0258", # reached via simetry's hyper 0.14, which needs h2 0.3
+]

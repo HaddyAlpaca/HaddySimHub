@@ -13,6 +13,19 @@ pinned in `rust-toolchain.toml` (Rust 1.92.0).
 - Run with sample data: `cargo run -p simhub-app -- --demo race` (also `rally`,
   `truck`, `flight`)
 
+## Code Quality
+
+Run these from the repository root; CI runs all of them. They are not required to
+compile the app, so install them on demand.
+
+- Unused dependencies: `cargo machete` (`cargo install cargo-machete`).
+- Licenses, duplicate crates, bans and advisories: `cargo deny check`
+  (`cargo install cargo-deny`); the policy lives in `deny.toml`.
+- RustSec advisories: `cargo audit` (`cargo install cargo-audit`).
+- Coverage: `cargo llvm-cov --workspace --locked --lcov --output-path lcov.info`
+  (`cargo install cargo-llvm-cov`). It needs the `llvm-tools-preview` component:
+  `rustup component add llvm-tools-preview`.
+
 ## Environment & Setup
 
 - Windows only. CI and CD run on `windows-latest`. There is no CodeQL scanning.
@@ -65,6 +78,7 @@ pinned in `rust-toolchain.toml` (Rust 1.92.0).
 
 - `main` is a protected branch. Direct pushes are rejected — land changes via a pull request.
 - Required status check: **Rust tests** (defined in `.github/workflows/ci.yml`).
+  The `Rust quality` and `Coverage` jobs run on every pull request too.
 - Admin enforcement is on (`enforce_admins`), so even `gh pr merge --admin` still requires green checks. Auto-merge is not enabled for this repository.
 - No approving review is required (required review count is 0), but the checks above are mandatory.
 - GitHub Actions are pinned to commit SHAs with a trailing `# vX.Y.Z` comment in the workflow files. When updating an action, change both the SHA and the version comment.

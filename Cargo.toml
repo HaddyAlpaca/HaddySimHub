@@ -14,6 +14,9 @@ members = [
 [workspace.package]
 edition = "2024"
 rust-version = "1.92"
+# The workspace is an application, not published crates. This also lets
+# `cargo deny` ignore our own crates in the license check (see deny.toml).
+publish = false
 
 [workspace.dependencies]
 log = "0.4"
