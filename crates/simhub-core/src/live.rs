@@ -13,9 +13,26 @@ use simhub_model::{
     TruckData,
 };
 use std::collections::VecDeque;
+use std::time::{Duration, Instant};
 
-/// How many pedal samples the race trace keeps, matching the demo trace.
-pub const TRACE_LENGTH: usize = 96;
+/// How many seconds of pedal history the race trace shows.
+pub const TRACE_SECONDS: u32 = 20;
+
+/// The trace is resampled to this rate so it always covers the same span,
+/// however often a game sends updates. The shared-memory and iRacing feeds
+/// deliver about sixty frames a second, which filled the old 96 samples in
+/// under two seconds.
+const TRACE_SAMPLES_PER_SECOND: u32 = 20;
+
+/// How many pedal samples the race trace keeps when the feed is fast enough.
+pub const TRACE_LENGTH: usize = (TRACE_SECONDS * TRACE_SAMPLES_PER_SECOND) as usize;
+
+/// The time span the trace covers.
+const TRACE_WINDOW: Duration = Duration::from_secs(TRACE_SECONDS as u64);
+
+/// The smallest gap between two samples in the trace.
+const TRACE_SAMPLE_INTERVAL: Duration =
+    Duration::from_millis(1_000 / TRACE_SAMPLES_PER_SECOND as u64);
 
 /// iRacing reports an unlimited session as a week remaining.
 const UNLIMITED_SESSION_SECONDS: f32 = 168.0 * 3600.0;
@@ -23,7 +40,8 @@ const UNLIMITED_SESSION_SECONDS: f32 = 168.0 * 3600.0;
 /// State carried from one update to the next. Only the race trace needs any.
 #[derive(Default)]
 pub struct LiveDashboard {
-    trace: VecDeque<TelemetryPoint>,
+    trace: VecDeque<(Instant, TelemetryPoint)>,
+    last_sample: Option<Instant>,
 }
 
 impl LiveDashboard {
@@ -34,14 +52,24 @@ impl LiveDashboard {
     /// The snapshot for an update, or `None` when no game is feeding the
     /// dashboard and it should show its idle screen.
     pub fn snapshot(&mut self, update: &DisplayUpdate) -> Option<DashboardSnapshot> {
+        self.snapshot_at(update, Instant::now())
+    }
+
+    /// [`Self::snapshot`] with an explicit clock, so the trace's sampling rate
+    /// can be tested without sleeping.
+    fn snapshot_at(&mut self, update: &DisplayUpdate, now: Instant) -> Option<DashboardSnapshot> {
         match update {
             DisplayUpdate::None => {
                 self.trace.clear();
+                self.last_sample = None;
                 None
             }
             DisplayUpdate::Race(data) => {
-                self.record_pedals(data);
-                Some(race(data, self.trace.iter().cloned().collect()))
+                self.record_pedals(data, now);
+                Some(race(
+                    data,
+                    self.trace.iter().map(|(_, point)| point.clone()).collect(),
+                ))
             }
             DisplayUpdate::Rally(data) => Some(rally(data)),
             DisplayUpdate::Truck(data) => Some(truck(data)),
@@ -49,15 +77,30 @@ impl LiveDashboard {
         }
     }
 
-    fn record_pedals(&mut self, data: &RaceData) {
+    fn record_pedals(&mut self, data: &RaceData, now: Instant) {
+        if self
+            .last_sample
+            .is_some_and(|last| now.duration_since(last) < TRACE_SAMPLE_INTERVAL)
+        {
+            return;
+        }
+        self.last_sample = Some(now);
+
+        let cutoff = now.checked_sub(TRACE_WINDOW).unwrap_or(now);
+        while self.trace.front().is_some_and(|(at, _)| *at < cutoff) {
+            self.trace.pop_front();
+        }
         if self.trace.len() == TRACE_LENGTH {
             self.trace.pop_front();
         }
-        self.trace.push_back(TelemetryPoint {
-            brake: data.brake_pct as f32,
-            clutch: data.clutch_pct as f32,
-            throttle: data.throttle_pct as f32,
-        });
+        self.trace.push_back((
+            now,
+            TelemetryPoint {
+                brake: data.brake_pct as f32,
+                clutch: data.clutch_pct as f32,
+                throttle: data.throttle_pct as f32,
+            },
+        ));
     }
 }
 
@@ -1105,19 +1148,80 @@ mod tests {
     #[test]
     fn the_pedal_trace_keeps_the_most_recent_samples() {
         let mut dashboard = LiveDashboard::new();
+        let start = Instant::now();
         for throttle in 0..(TRACE_LENGTH as i32 + 10) {
-            dashboard.snapshot(&DisplayUpdate::Race(RaceData {
-                throttle_pct: throttle,
-                ..RaceData::default()
-            }));
+            dashboard.snapshot_at(
+                &DisplayUpdate::Race(RaceData {
+                    throttle_pct: throttle,
+                    ..RaceData::default()
+                }),
+                start + TRACE_SAMPLE_INTERVAL * throttle as u32,
+            );
         }
         let snapshot = dashboard
-            .snapshot(&DisplayUpdate::Race(RaceData::default()))
+            .snapshot_at(
+                &DisplayUpdate::Race(RaceData::default()),
+                start + TRACE_SAMPLE_INTERVAL * (TRACE_LENGTH as u32 + 10),
+            )
             .unwrap();
 
         assert_eq!(snapshot.telemetry_trace.len(), TRACE_LENGTH);
         assert_eq!(snapshot.telemetry_trace.last().unwrap().throttle, 0.0);
         assert_eq!(snapshot.telemetry_trace[0].throttle, 11.0);
+    }
+
+    #[test]
+    fn the_pedal_trace_is_resampled_when_the_game_sends_updates_faster() {
+        let mut dashboard = LiveDashboard::new();
+        let start = Instant::now();
+        // A hundred updates in one second, as a game sending at 100 Hz would.
+        for throttle in 0..100 {
+            dashboard.snapshot_at(
+                &DisplayUpdate::Race(RaceData {
+                    throttle_pct: throttle,
+                    ..RaceData::default()
+                }),
+                start + Duration::from_millis(throttle as u64 * 10),
+            );
+        }
+        let snapshot = dashboard
+            .snapshot_at(
+                &DisplayUpdate::Race(RaceData::default()),
+                start + Duration::from_millis(990),
+            )
+            .unwrap();
+
+        assert_eq!(
+            snapshot.telemetry_trace.len(),
+            TRACE_SAMPLES_PER_SECOND as usize
+        );
+    }
+
+    #[test]
+    fn the_pedal_trace_drops_samples_older_than_its_window() {
+        let mut dashboard = LiveDashboard::new();
+        let start = Instant::now();
+        // A slow feed: one update a second for half a minute.
+        for throttle in 0..30 {
+            dashboard.snapshot_at(
+                &DisplayUpdate::Race(RaceData {
+                    throttle_pct: throttle,
+                    ..RaceData::default()
+                }),
+                start + Duration::from_secs(throttle as u64),
+            );
+        }
+        let snapshot = dashboard
+            .snapshot_at(
+                &DisplayUpdate::Race(RaceData::default()),
+                start + Duration::from_secs(29),
+            )
+            .unwrap();
+
+        assert!(
+            (TRACE_SECONDS as usize..=TRACE_SECONDS as usize + 1)
+                .contains(&snapshot.telemetry_trace.len())
+        );
     }
 
     #[test]

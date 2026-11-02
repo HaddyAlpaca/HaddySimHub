@@ -5,7 +5,7 @@ pub mod window_state;
 use chrono::Local;
 use simhub_core::{
     DashboardKind, DashboardSnapshot, EngineGaugeSnapshot, Metric as CoreMetric,
-    MetricGroup as CoreMetricGroup, TelemetryPoint,
+    MetricGroup as CoreMetricGroup, TelemetryPoint, live::TRACE_SECONDS,
 };
 use slint::{Color, ComponentHandle, ModelRc, Timer, TimerMode, VecModel};
 use std::error::Error;
@@ -235,6 +235,7 @@ fn apply(window: &DashboardWindow, snapshot: Option<DashboardSnapshot>, status: 
     window.set_needle_path(needle_path.into());
     window.set_gauge_ticks(ModelRc::new(VecModel::from(gauge_ticks)));
     window.set_gauge_arc(ModelRc::new(VecModel::from(gauge_arc)));
+    window.set_trace_window_label(format!("LAST {TRACE_SECONDS} S").into());
     window.set_brake_trace(brake_trace.into());
     window.set_clutch_trace(clutch_trace.into());
     window.set_throttle_trace(throttle_trace.into());
