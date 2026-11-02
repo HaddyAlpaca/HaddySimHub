@@ -10,8 +10,8 @@ discover from the folder names alone.
 - [Checks that need a running game](live-verification.md) — the open questions
   only a play session can settle.
 - [Existing Rust telemetry implementations](rust-telemetry-implementations.md)
-  — surveys community readers and protocol libraries for the supported games,
-  including coverage and license caveats.
+  - the dependency survey behind the reader choices, including coverage and
+  license caveats, written while planning the migration.
 
 ## Architecture decisions
 

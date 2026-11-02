@@ -1,13 +1,14 @@
 # Rust reader strategy: dependencies versus in-house
 
 > Written while planning the migration, when the C# app was still the reference.
-> What was actually built, and why it differs, is in
+> The dependency health figures and candidate verdicts are kept as the record
+> behind the choices; what was actually built is in
 > [architecture.md](architecture.md) and
 > [ADR-0006](adr/0006-use-existing-crates-and-drop-raw-capture.md).
 
 Which Rust implementations we take as dependencies, which we write ourselves,
 and why. Dependency health figures were measured on 2026-10-03 and should be
-re-checked before any of these decisions is acted on.
+re-checked before revisiting these choices.
 
 ## The two axes
 
@@ -42,17 +43,17 @@ all.
 | `0x20F/forza-telemetry` | 2026-05 | **none** | Unusable: same |
 | `EffortlessMetrics/OpenRacing` | 2026-09 | NOASSERTION | Unusable without clarification |
 | `simconnect-sdk` | 2026-02 | MIT | **Archived** |
-| `acr_telemetry` | — | PolyForm Noncommercial | Excluded; do not read while writing our AC Rally reader |
+| `acr_telemetry` | — | PolyForm Noncommercial | Excluded; do not consult while maintaining our AC Rally reader |
 
 ## Decisions
 
 | Source | Decision | Reasoning |
 | --- | --- | --- |
-| ACC | **Dependency:** `acc_shared_memory_rs` | Clean dual permissive license, published, frozen low-churn layout. The only candidate passing both filters outright, and our first port, so it tests the approach early |
-| Dirt Rally 2.0 | Dependency candidate: `cm-telemetry` | MIT, frozen Codemasters EGO format on port 20777. Staleness is not a risk for a format that stopped changing |
-| Assetto Corsa | Dependency candidate: `simetry` AC path | MIT, frozen 2014-era layout, documented at the assettocorsamods reference |
-| ETS2 | **In-house** | `scs-sdk-telemetry` is MPL-2.0 and we would modify its files. The real contract is the RenCloud plugin ABI, which we already depend on in any language; pin its revision |
-| iRacing | **In-house** | The one actively maintained project with the right shape, `racedirector/iracing.rs`, has no license and is unpublished. `iracing-telem` is BSD-3 but two years quiet against a protocol that actually drifts |
+| ACC | **Dependency:** `simetry` | MIT, published, frozen low-churn layout. It covers the AC, ACC and iRacing pages in one crate, so the three titles share one acquisition path |
+| Dirt Rally 2.0 | **In-house** | `cm-telemetry` is MIT and the EGO format is frozen, but the crate drops the sector times the rally dashboard shows |
+| Assetto Corsa | **Dependency:** `simetry` | MIT, frozen 2014-era layout, documented at the assettocorsamods reference |
+| ETS2 | **In-house** | `scs-sdk-telemetry` is MPL-2.0 and we would modify its files. The real contract is the RenCloud plugin ABI, which we read directly from its shared memory map |
+| iRacing | **Dependency:** `simetry` | MIT and already carries the shared-memory ring buffers and session YAML. `racedirector/iracing.rs` has no license and is unpublished; `iracing-telem` is BSD-3 but two years quiet against a protocol that actually drifts |
 | Forza Horizon 5 | **In-house** | Not a maintenance question: every Forza candidate is unlicensed or NOASSERTION. License is a hard blocker regardless of freeze |
 | MSFS 2020 | **In-house FFI to `SimConnect.dll`** | See below |
 | AC Rally | **In-house** | No published layout, and the only project is noncommercial |
@@ -69,18 +70,14 @@ We are not taking it. We stay on the vendor DLL with our own FFI bindings:
 - MSFS 2020 is superseded by MSFS 2024, so its ABI is frozen. The reason to
   take a dependency — someone else tracks the protocol — buys nothing when
   there is no protocol movement left to track.
-- It preserves the capture boundary we already have. Moving to the wire
-  protocol makes the existing MSFS corpus the wrong shape and forces a
-  re-capture at pipe level, which the C# application cannot produce without a
-  pipe shim.
-- `SimConnect.dll` ships with the simulator, so the FFI route adds no install
-  burden.
+- `SimConnect.dll` comes with the MSFS SDK, which anyone using SimConnect
+  already needs, so the FFI route adds no install burden.
 - The crate's risk is immaturity rather than staleness: 0.2.0, published one
   month ago, three stars, one maintainer, 51% documented, and MIT declared only
   in crates.io metadata with no LICENSE file in the repository.
 
 The wire-protocol route buys freedom from vendor binaries. Against a frozen sim
-that is purity, not future-proofing, and it costs a re-capture.
+that is purity, not future-proofing, and it would cost a rewrite of the reader.
 
 ## AC Rally and the ACC layout
 
@@ -91,7 +88,7 @@ ACC-derived rather than AC-derived.
 
 This is the weakest position of the eight, because three things stack:
 
-- The identical manifests show our two C# structs are copies of each other,
+- The identical manifests show our two Rust structs are copies of each other,
   not that the two games publish the same bytes.
 - The AC Rally implementation has never been validated against the running
   game, so nothing has ever tested the copy.
@@ -103,28 +100,26 @@ AC Rally — which suggests the two do drift where it matters. AC Rally also
 reads a third page, `acpmf_static` (820 B, 45 fields), that our ACC reader does
 not map at all, so no ACC reference covers it.
 
-`HaddySimHub/Displays/README.md` states the three titles share no page layout,
-which contradicts the manifests for this pair. A capture of both games settles
-it, and should happen before any AC Rally Rust work starts.
+The old dashboard notes claimed the three titles share no page layout, which
+contradicts the manifests for this pair. A session in both games settles it;
+until then the reader stays marked in `docs/live-verification.md`.
 
-## Oracle status
+## Validation status
 
-The migration plan treats the existing C# behavior as a temporary oracle. That
-holds for only half the set.
+Only half the set has been run against its game.
 
 | Validated against the running game | Never run against the game |
 | --- | --- |
 | ACC, iRacing, ETS2, Dirt Rally 2.0 | Assetto Corsa, AC Rally, Forza Horizon 5, MSFS 2020 |
 
-For the right-hand column a passing Rust-versus-C# parity test proves only that
-two implementations decode identically, not correctly: a layout error is
-inherited by the port and the gate still goes green. Those four need validation
-against the published format and against plausible live values, not against our
-own implementation. AC, FH5 and MSFS 2020 have documentation to fall back on.
-AC Rally has none.
+For the right-hand column a passing unit test proves only that the decoder
+matches the layout we wrote down, not that the game publishes that layout: a
+layout error is inherited and the test still passes. Those four need a session
+against the published format and against plausible live values. AC, FH5 and
+MSFS 2020 have documentation to fall back on; AC Rally has none.
 
 ## Status
 
 This lists discoverable material and measured project health, not correctness
-against live simulators. Corpus capture and replay parity remain the gate for
-every reader, bought in or written here.
+against live simulators. A session in each game remains the gate for the readers
+that have never run against it, bought in or written here.
