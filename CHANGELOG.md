@@ -12,37 +12,33 @@ All notable changes to this project are documented in this file.
 - Self-update replaces `HaddySimHub.exe` in place from the latest GitHub release and only moves forward; it no longer installs an older release whose tag merely differs.
 - CI and releases run on Windows runners only.
 
+### Added
+- Microsoft Flight Simulator 2020 support, with a flight dashboard showing the primary instruments (airspeed, artificial horizon, altitude, heading tape with heading bug and ground track), autopilot modes and targets, flight plan progress with distances and ETA, and engine, fuel and airframe configuration.
+- Telemetry is read over SimConnect through a hand-written FFI layer, because there is no maintained Rust binding for the vendor DLL. `SimConnect.dll` is located next to the executable or in an MSFS SDK install; when it is missing the display stays inactive and logs where it looked.
+- A course deviation indicator, driven by the navigation radio when a station is received and by the flight plan otherwise, with the glideslope shown alongside when a localiser carries one. The flight plan scale tightens from two nautical miles to a third of one once an approach is active, so the deviation stays readable on final.
+- The race dashboard uses larger text for the session and fuel cards, so lap times, lap deltas and brake balance are readable. The pedal trace covers a fixed twenty-second window at 20 Hz instead of the last few seconds of input.
+
 ### Removed
-- `--e2e` and `--capture`, together with the web host and the raw telemetry capture they served.
+- The .NET backend, the Lit web frontend, the web server and the separate updater.
+- `--e2e` and `--capture`, together with the loopback test-update route and the Playwright end-to-end suite they served.
+- Raw telemetry capture and replay, which ADR-0006 replaced with readers built on existing crates.
 - The scheduled dependency-update workflow.
+
+### Changed
+- Direct colour-coded console logging and a daily file in `log/` replace the live console dashboard, keeping debug and per-frame logging without a terminal UI.
+- The dashboard keeps only the newest snapshot and queues at most one repaint, so telemetry faster than the screen never builds a backlog.
+
+### Tests
+- Every decoder is unit-tested against the byte layout its game publishes; the remaining checks that need a running game are tracked in `docs/live-verification.md`.
+
+### Build
+- CI checks formatting, tests, unused dependencies, licenses, bans, advisories and coverage on every pull request. CD builds `HaddySimHub.exe`, zips it as `haddy-simhub.zip` and publishes the GitHub release that installed copies update from.
 
 ### Known gaps
 - Behaviour against running games is still to be confirmed for the items in `docs/live-verification.md`.
 - ACC no longer shows the session lap total in lap-limited races: `simetry` does not expose it.
 - The course deviation indicator of the flight dashboard is shown as values rather than drawn as a needle.
 - The dashboard window is at least 1440×900; unlike the web page it does not shrink below that.
-
-### Added
-- Microsoft Flight Simulator 2020 support, with a new flight dashboard showing the primary instruments (airspeed, artificial horizon, altitude, heading tape with heading bug and ground track), autopilot modes and targets, flight plan progress with distances and ETA, and engine, fuel and airframe configuration.
-- Telemetry is read over SimConnect through a hand-written interop layer, because the SDK's managed wrapper is a .NET Framework mixed-mode assembly that this application cannot load. `SimConnect.dll` is located next to the executable or in an MSFS SDK install; when it is missing the display stays inactive and logs where it looked.
-- A course deviation indicator, driven by the navigation radio when a station is received and by the flight plan otherwise, with the glideslope shown alongside when a localiser carries one. The flight plan scale tightens from two nautical miles to a third of one once an approach is active, so the needle keeps meaning something on final.
-- Playwright end-to-end tests can publish controlled race, rally, truck and flight updates through a loopback-only backend route, then verify the rendered dashboards without a simulator.
-
-### Tests
-- Added `SimVarDefinitionsTests`, pinning the simvar list against the layout of `MsfsTelemetry`. SimConnect reports nothing when the two drift apart, so this is what turns a silently misread telemetry block into a build failure.
-- Added `MsfsDataConverterTests` covering the unit and sign conventions the simulator uses, including which source drives the course deviation indicator, and `MsfsGameDataProviderTests` covering connect, reconnect and shutdown against a fake SimConnect client.
-- Added browser end-to-end coverage for all four dashboards and the backend test-update endpoint, including invalid update rejection.
-
-### Changed
-- A rejected simulation variable now reports every rejection at once rather than stopping at the first, so diagnosing a bad simvar name against a real simulator takes one run instead of several.
-- The live console dashboard was removed in favour of direct colour-coded console logging, reducing startup and runtime complexity while keeping debug and per-frame file logging available.
-- Replaced manual test displays and the `Ctrl+T` test-mode toggle with explicit e2e-only data injection; normal application runs do not expose the injection route.
-
-### Build
-- `dotnet publish -p:IncludeSimConnectOnPublish=true` bundles `SimConnect.dll` from an MSFS SDK install into the published output, and fails with a clear message when the library is not found. It is opt-in, because the release workflow builds on a Linux runner without the SDK and redistributing the library is a licensing decision.
-
-### Documentation
-- Documented where `SimConnect.dll` comes from in the README, including how to bundle it into a build, and the SimConnect telemetry source in `Displays/README.md`.
 
 ## v0.1.503 - 2026-06-20
 
