@@ -395,7 +395,7 @@ fn truck_dashboard() -> DashboardSnapshot {
 }
 
 fn demo_telemetry_trace() -> Vec<TelemetryPoint> {
-    (0..96)
+    (0..live::TRACE_LENGTH)
         .map(|index| {
             let phase = index % 24;
             let (brake, clutch, throttle) = match phase {
@@ -553,7 +553,7 @@ mod tests {
         assert_eq!(race.hero_value, "184");
         assert_eq!(race.groups_top.len(), 2);
         assert_eq!(race.pedals.len(), 3);
-        assert_eq!(race.telemetry_trace.len(), 96);
+        assert_eq!(race.telemetry_trace.len(), live::TRACE_LENGTH);
         assert_eq!(
             race.pedals
                 .iter()

@@ -29,12 +29,13 @@ export struct GaugeArcSegment {
 
 component MetricLine inherits Rectangle {
     in property <Metric> metric;
+    in property <bool> large: false;
 
     background: transparent;
-    min-height: 34px;
+    min-height: root.large ? 46px : 34px;
 
     VerticalLayout {
-        spacing: 2px;
+        spacing: root.large ? 4px : 2px;
 
         HorizontalLayout {
             spacing: 12px;
@@ -42,7 +43,7 @@ component MetricLine inherits Rectangle {
             Text {
                 text: root.metric.label;
                 color: #aeb5c6;
-                font-size: 14px;
+                font-size: root.large ? 17px : 14px;
                 vertical-alignment: center;
                 horizontal-stretch: 1;
             }
@@ -50,7 +51,7 @@ component MetricLine inherits Rectangle {
             Text {
                 text: root.metric.value;
                 color: root.metric.critical ? #ff5252 : root.metric.warning ? #ffc14b : root.metric.active ? #45d483 : #ffffff;
-                font-size: 15px;
+                font-size: root.large ? 21px : 15px;
                 font-weight: 600;
                 horizontal-alignment: right;
                 vertical-alignment: center;
@@ -61,7 +62,7 @@ component MetricLine inherits Rectangle {
             Text {
                 text: root.metric.delta_value;
                 color: root.metric.delta_status < 0 ? #45d483 : root.metric.delta_status > 0 ? #ff5252 : #ffffff;
-                font-size: 14px;
+                font-size: root.large ? 18px : 14px;
                 font-weight: 600;
                 vertical-alignment: center;
                 visible: root.metric.delta_value != "";
@@ -69,7 +70,7 @@ component MetricLine inherits Rectangle {
         }
 
         Rectangle {
-            height: 5px;
+            height: root.large ? 6px : 5px;
             background: #3a3d51;
             visible: root.metric.ratio > 0;
             Rectangle {
@@ -92,6 +93,7 @@ component MetricLine inherits Rectangle {
 component MetricGroupCard inherits Rectangle {
     in property <MetricGroup> group;
     in property <bool> flight_style: false;
+    in property <bool> large: false;
 
     background: root.flight_style ? #1d2b42 : #252840;
     border-width: 1px;
@@ -107,7 +109,7 @@ component MetricGroupCard inherits Rectangle {
         Text {
             text: root.group.title;
             color: root.group.accent;
-            font-size: 14px;
+            font-size: root.large ? 17px : 14px;
             font-weight: 700;
             letter-spacing: 0.8px;
         }
@@ -118,6 +120,7 @@ component MetricGroupCard inherits Rectangle {
 
             for metric in root.group.metrics: MetricLine {
                 metric: metric;
+                large: root.large;
             }
         }
     }
@@ -135,7 +138,7 @@ component HeaderMetric inherits Rectangle {
         Text {
             text: root.metric.label;
             color: #8e96ab;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 700;
             horizontal-alignment: center;
         }
@@ -143,7 +146,7 @@ component HeaderMetric inherits Rectangle {
         Text {
             text: root.metric.delta_value != "" ? root.metric.delta_value : root.metric.value;
             color: root.metric.delta_status < 0 ? #45d483 : root.metric.delta_status > 0 ? #ff5252 : #ffffff;
-            font-size: 15px;
+            font-size: 18px;
             font-weight: 700;
             horizontal-alignment: center;
         }
@@ -159,15 +162,15 @@ component TelemetryLegend inherits Rectangle {
         alignment: center;
         spacing: 6px;
         Rectangle {
-            width: 9px;
-            height: 9px;
-            border-radius: 5px;
+            width: 11px;
+            height: 11px;
+            border-radius: 6px;
             background: root.metric.label == "BRAKE" ? #ff3333 : root.metric.label == "CLUTCH" ? #ffcc00 : #00cc66;
         }
         Text {
             text: root.metric.label + "  " + root.metric.value;
             color: #d1d8e6;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 700;
             vertical-alignment: center;
         }
@@ -176,6 +179,7 @@ component TelemetryLegend inherits Rectangle {
 
 component TelemetryTracePanel inherits Rectangle {
     in property <[Metric]> metrics;
+    in property <string> window_label;
     in property <string> brake_trace;
     in property <string> clutch_trace;
     in property <string> throttle_trace;
@@ -193,17 +197,24 @@ component TelemetryTracePanel inherits Rectangle {
         spacing: 6px;
 
         HorizontalLayout {
-            height: 22px;
+            height: 26px;
             spacing: 12px;
             Text {
                 text: "TELEMETRY";
                 color: #aeb5c6;
-                font-size: 13px;
+                font-size: 15px;
                 font-weight: 700;
                 horizontal-stretch: 1;
                 vertical-alignment: center;
             }
             for metric in root.metrics: TelemetryLegend { metric: metric; }
+            Text {
+                text: root.window_label;
+                color: #8e96ab;
+                font-size: 13px;
+                font-weight: 600;
+                vertical-alignment: center;
+            }
         }
 
         Rectangle {
@@ -291,14 +302,14 @@ component SpeedometerReadout inherits Rectangle {
         Text {
             text: root.rpm;
             color: #ffffff;
-            font-size: root.rally_style ? 54px : 32px;
+            font-size: root.rally_style ? 54px : 42px;
             font-weight: 700;
             horizontal-alignment: center;
         }
         Text {
             text: "RPM";
             color: root.rally_style ? #f5a623 : #aeb5c6;
-            font-size: root.rally_style ? 27px : 14px;
+            font-size: root.rally_style ? 27px : 16px;
             font-weight: root.rally_style ? 600 : 400;
             letter-spacing: root.rally_style ? 2px : 0px;
             horizontal-alignment: center;
@@ -306,14 +317,14 @@ component SpeedometerReadout inherits Rectangle {
         Text {
             text: root.gear;
             color: #ffffff;
-            font-size: root.rally_style ? 108px : 64px;
+            font-size: root.rally_style ? 108px : 84px;
             font-weight: 900;
             horizontal-alignment: center;
         }
         Text {
             text: "GEAR";
             color: root.rally_style ? #f5a623 : #aeb5c6;
-            font-size: root.rally_style ? 27px : 14px;
+            font-size: root.rally_style ? 27px : 16px;
             font-weight: root.rally_style ? 600 : 400;
             letter-spacing: root.rally_style ? 2px : 0px;
             horizontal-alignment: center;
@@ -321,14 +332,14 @@ component SpeedometerReadout inherits Rectangle {
         Text {
             text: root.speed;
             color: #ffffff;
-            font-size: root.rally_style ? 54px : 32px;
+            font-size: root.rally_style ? 54px : 42px;
             font-weight: 700;
             horizontal-alignment: center;
         }
         Text {
             text: "KM/H";
             color: root.rally_style ? #f5a623 : #aeb5c6;
-            font-size: root.rally_style ? 27px : 14px;
+            font-size: root.rally_style ? 27px : 16px;
             font-weight: root.rally_style ? 600 : 400;
             letter-spacing: root.rally_style ? 2px : 0px;
             horizontal-alignment: center;
@@ -1020,6 +1031,7 @@ export component DashboardWindow inherits Window {
     in property <string> attitude_reference_path;
     in property <string> attitude_aircraft_path;
     in property <float> attitude_slip_x;
+    in property <string> trace_window_label;
     in property <string> brake_trace;
     in property <string> clutch_trace;
     in property <string> throttle_trace;
@@ -1051,7 +1063,7 @@ export component DashboardWindow inherits Window {
             Text {
                 text: root.status_text;
                 color: #ffc14b;
-                font-size: 11px;
+                font-size: 13px;
                 font-weight: 700;
                 horizontal-alignment: right;
                 horizontal-stretch: 1;
@@ -1090,6 +1102,7 @@ export component DashboardWindow inherits Window {
                 MetricGroupCard {
                     group: root.groups_top[0];
                     width: parent.width * 0.25;
+                    large: true;
                 }
                 SpeedPanel {
                     width: parent.width * 0.50;
@@ -1100,12 +1113,14 @@ export component DashboardWindow inherits Window {
                 MetricGroupCard {
                     group: root.groups_top[1];
                     width: parent.width * 0.25;
+                    large: true;
                 }
             }
 
             TelemetryTracePanel {
                 height: 148px;
                 metrics: root.pedals;
+                window_label: root.trace_window_label;
                 brake_trace: root.brake_trace;
                 clutch_trace: root.clutch_trace;
                 throttle_trace: root.throttle_trace;
