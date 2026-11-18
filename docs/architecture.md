@@ -94,11 +94,14 @@ Dutch truck labels. `simhub-ui` owns the Slint window; `DashboardHandle` accepts
 snapshots from any thread but keeps only the newest and queues at most one
 repaint, so telemetry faster than the screen never builds a backlog.
 
-The window is at least 1440×900 and may be larger. Its placement — position,
-size and maximized state, in physical pixels — is checked every second and saved
-to `%APPDATA%\HaddySimHub\config\window.json` when it changes, so arranging it on
-a multi-monitor rig needs no restart or close. At startup it is restored, unless
-the saved position no longer lies on a connected monitor.
+The dashboard is laid out for a single 1680×1050 display: typography and panel
+sizes are fixed for that resolution, while the rows stretch to fill the exact
+client height. The window is opened at 1680×1050 and that size is reapplied at
+startup, so a size saved by an older build cannot squeeze the larger text into a
+smaller box. Its position and maximized state, in physical pixels, are checked
+every second and saved to `%APPDATA%\HaddySimHub\config\window.json` when they
+change, so arranging it on a sim rig needs no restart or close. At startup the
+position is restored unless it no longer lies on a connected monitor.
 
 ### Update and single instance
 

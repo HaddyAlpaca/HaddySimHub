@@ -26,6 +26,12 @@ pub struct DashboardUi {
 impl DashboardUi {
     pub fn new() -> Result<Self, Box<dyn Error>> {
         let window = DashboardWindow::new()?;
+        let scale_factor = window.window().scale_factor();
+        if (scale_factor - 1.0).abs() > 0.01 {
+            log::warn!(
+                "The dashboard is laid out for 1680x1050 at 100% scaling; current scale factor is {scale_factor}"
+            );
+        }
         window.set_dashboard_kind(IDLE_KIND);
         let placement = remember_placement(&window);
 
@@ -67,10 +73,16 @@ impl DashboardUi {
 /// How often the window placement is checked and, when it changed, saved.
 const PLACEMENT_CHECK: Duration = Duration::from_secs(1);
 
-/// Puts the window back where it was last placed, then keeps saving its
-/// placement whenever it changes. Saving as it goes, rather than on close,
-/// means arranging the window on a sim rig is remembered without ever closing
-/// it, and survives the app being stopped any other way.
+/// The display the dashboard is laid out for. A size saved by an older build is
+/// ignored so the larger typography is not squeezed into the old 1440x900 box.
+const DISPLAY_WIDTH: u32 = 1680;
+const DISPLAY_HEIGHT: u32 = 1050;
+
+/// Puts the window back where it was last placed, at the display size the
+/// dashboard is laid out for, then keeps saving its placement whenever it
+/// changes. Saving as it goes, rather than on close, means arranging the window
+/// on a sim rig is remembered without ever closing it, and survives the app
+/// being stopped any other way.
 ///
 /// The returned timer does the saving and has to be kept alive.
 fn remember_placement(window: &DashboardWindow) -> Option<Timer> {
@@ -80,6 +92,9 @@ fn remember_placement(window: &DashboardWindow) -> Option<Timer> {
     };
 
     let saved = window_state::load(&path);
+    window
+        .window()
+        .set_size(slint::PhysicalSize::new(DISPLAY_WIDTH, DISPLAY_HEIGHT));
     if let Some(state) = saved {
         if window_state::on_a_monitor(state.centre()) {
             window
@@ -88,9 +103,6 @@ fn remember_placement(window: &DashboardWindow) -> Option<Timer> {
         } else {
             log::info!("The saved window position is off every monitor; using the default");
         }
-        window
-            .window()
-            .set_size(slint::PhysicalSize::new(state.width, state.height));
         if state.maximized {
             window.window().set_maximized(true);
         }
