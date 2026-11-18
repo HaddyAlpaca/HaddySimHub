@@ -6,4 +6,6 @@
 ignore = [
     "RUSTSEC-2026-0258", # reached via simetry's hyper 0.14, which needs h2 0.3
     "RUSTSEC-2024-0320", # yaml-rust is pinned to simetry's version so the Yaml types match
+    "RUSTSEC-2026-0543", # unmaintained with no upgrade; pulled in by flexi_logger and Slint 1.18
+    "RUSTSEC-2026-0441", # archived with no upgrade; used by spin_on in Slint's build macros
 ]

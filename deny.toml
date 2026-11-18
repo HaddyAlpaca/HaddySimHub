@@ -20,6 +20,12 @@ ignore = [
     # by `SimState::session_info` is the same type we parse; the maintained
     # yaml-rust2 is a different type. See simhub-telemetry/Cargo.toml.
     { id = "RUSTSEC-2024-0320", reason = "pinned to simetry's yaml-rust so the Yaml types match" },
+    # chrono is unmaintained with no safe upgrade. It reaches us through
+    # flexi_logger and Slint 1.18; track it until those dependencies move.
+    { id = "RUSTSEC-2026-0543", reason = "unmaintained with no upgrade; pulled in by flexi_logger and Slint 1.18" },
+    # pin-utils is archived with no replacement release. It is used by spin_on
+    # inside Slint's build macros; track it until Slint stops using it.
+    { id = "RUSTSEC-2026-0441", reason = "archived with no upgrade; used by spin_on in Slint's build macros" },
 ]
 
 [licenses]
